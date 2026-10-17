@@ -447,7 +447,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       {onPier && (
         <mesh position={[pier[0], -0.25, pier[1]]}>
           <cylinderGeometry args={[0.5, 0.65, 0.5, 8]} />
-          <meshStandardMaterial color="#1a2329" roughness={0.9} flatShading />
+          <meshStandardMaterial color="#1a1f29" roughness={0.9} flatShading />
         </mesh>
       )}
       <group scale={GYROID_SCALE}>

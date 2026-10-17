@@ -3,6 +3,7 @@ import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { LAND } from '../theme/palette'
 import Gyroid from '../characters/Gyroid'
 import CountNull, { CROWN_Y } from '../characters/CountNull'
 import {
@@ -24,7 +25,8 @@ import {
   wallAt,
 } from '../data/introScript'
 
-const TEAL = new THREE.Color('#3ecfbf')
+const STONE = new THREE.Color(LAND.stone)
+const ROUTE = new THREE.Color(LAND.causeway) // causeway glow
 const VIOLET = new THREE.Color('#8a3cff')
 
 // ---------------------------------------------------------------- islands
@@ -62,8 +64,8 @@ function RingIsland() {
     group.current.scale.setScalar(Math.max(0.0001, s.shrink))
     group.current.visible = s.shrink > 0.001
     group.current.rotation.y = t * 0.05
-    mat.current.color.copy(TEAL).lerp(VIOLET, s.corrupt).multiplyScalar(0.55)
-    mat.current.emissive.copy(TEAL).lerp(VIOLET, s.corrupt)
+    mat.current.color.copy(STONE).lerp(VIOLET, s.corrupt * 0.6)
+    mat.current.emissive.copy(STONE).lerp(VIOLET, s.corrupt)
     mat.current.emissiveIntensity = 0.35 + s.corrupt * 0.9 + Math.sin(t * 20) * 0.2 * s.corrupt
 
     beacons.current.children.forEach((b, i) => {
@@ -82,7 +84,7 @@ function RingIsland() {
     <group position={RING}>
       <group ref={group}>
         <mesh geometry={geo}>
-          <meshStandardMaterial ref={mat} color="#2a8c84" roughness={0.45} metalness={0.2} emissive="#3ecfbf" emissiveIntensity={0.35} />
+          <meshStandardMaterial ref={mat} color={LAND.stone} roughness={0.55} metalness={0.15} emissive={LAND.stone} emissiveIntensity={0.25} />
         </mesh>
         <group ref={beacons}>
           {Array.from({ length: 8 }, (_, i) => (
@@ -105,7 +107,7 @@ function Rock({ radius = 2, depth = 3 }) {
   return (
     <mesh position={[0, -depth / 2, 0]} rotation={[Math.PI, 0, 0]}>
       <coneGeometry args={[radius, depth, 7, 1]} />
-      <meshStandardMaterial color="#1a2329" roughness={0.95} flatShading />
+      <meshStandardMaterial color={LAND.rock} roughness={0.95} flatShading />
     </mesh>
   )
 }
@@ -115,7 +117,7 @@ function TorusIsland({ position, R = 1.6, r = 0.4, tilt = 0 }) {
     <group position={position} rotation={[tilt, 0, tilt * 0.5]}>
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[R, r, 20, 64]} />
-        <meshStandardMaterial color="#2a7f78" roughness={0.45} emissive="#3ecfbf" emissiveIntensity={0.3} />
+        <meshStandardMaterial color={LAND.stone} roughness={0.55} emissive={LAND.stone} emissiveIntensity={0.2} />
       </mesh>
     </group>
   )
@@ -128,7 +130,7 @@ function WedgeIsland({ position }) {
       {[-1, 1].map((sd) => (
         <mesh key={sd} position={[sd * 1.2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.2, 0.28, 16, 48]} />
-          <meshStandardMaterial color="#2a7f78" roughness={0.45} emissive="#3ecfbf" emissiveIntensity={0.3} />
+          <meshStandardMaterial color={LAND.stone} roughness={0.55} emissive={LAND.stone} emissiveIntensity={0.2} />
         </mesh>
       ))}
       <mesh position={[0, 0.35, 0]}>
@@ -147,7 +149,7 @@ function OrbIsland({ position, radius = 1.3 }) {
     <group position={position}>
       <mesh scale={[1, 0.45, 1]}>
         <sphereGeometry args={[radius, 24, 16]} />
-        <meshStandardMaterial color="#25605c" roughness={0.6} emissive="#1e8a80" emissiveIntensity={0.25} />
+        <meshStandardMaterial color={LAND.stoneDark} roughness={0.6} emissive={LAND.stone} emissiveIntensity={0.15} />
       </mesh>
       <group position={[0, -0.2, 0]}>
         <Rock radius={radius * 0.9} depth={radius * 2.2} />
@@ -174,11 +176,11 @@ function Causeway({ a, b, lift = 2.5, fromRing = false }) {
     ref.current.position.y = -9 * f * f
     ref.current.rotation.z = f * 0.25
     mat.current.opacity = 1 - f
-    mat.current.emissive.copy(TEAL).lerp(VIOLET, seg(t, 15, 18))
+    mat.current.emissive.copy(ROUTE).lerp(VIOLET, seg(t, 15, 18))
   })
   return (
     <mesh ref={ref} geometry={geo}>
-      <meshStandardMaterial ref={mat} color="#1d4e4a" emissive="#3ecfbf" emissiveIntensity={1.1} transparent toneMapped={false} />
+      <meshStandardMaterial ref={mat} color={LAND.causewayCore} emissive={LAND.causeway} emissiveIntensity={0.9} transparent toneMapped={false} />
     </mesh>
   )
 }
@@ -253,7 +255,7 @@ function Walkway() {
       {slabs.map((s, i) => (
         <mesh key={i} ref={(el) => (refs.current[i] = el)} position={[s.x, WALK_Y - 0.2, WALK_Z]}>
           <boxGeometry args={[SLAB * 0.96, 0.38, 1.5]} />
-          <meshStandardMaterial color="#2d6e6a" emissive="#1a6b63" emissiveIntensity={0.35} roughness={0.5} transparent opacity={0.9} />
+          <meshStandardMaterial color={LAND.stone} emissive={LAND.stoneEmissive} emissiveIntensity={0.5} roughness={0.55} transparent opacity={0.95} />
         </mesh>
       ))}
       {/* the amber spine: the part that stays fixed */}
@@ -264,7 +266,7 @@ function Walkway() {
       {[-12, -7, -2, 3].map((x) => (
         <mesh key={x} position={[x, WALK_Y - 3.6, WALK_Z]}>
           <cylinderGeometry args={[0.18, 0.5, 6.4, 7]} />
-          <meshStandardMaterial color="#14262b" roughness={0.9} flatShading />
+          <meshStandardMaterial color={LAND.rock} roughness={0.9} flatShading />
         </mesh>
       ))}
     </group>
@@ -367,7 +369,7 @@ export default function IntroWorld({ onTick }) {
       <hemisphereLight args={['#4a7fa8', '#0a0a14', 0.5]} />
       <directionalLight position={[10, 18, 12]} intensity={1.1} color="#cfe8f4" />
       <pointLight position={[6, 3, 12]} intensity={8} distance={14} color="#ffb347" />
-      <pointLight position={[0, 4, 0]} intensity={6} distance={14} color="#3ecfbf" />
+      <pointLight position={[0, 4, 0]} intensity={6} distance={14} color={LAND.light} />
 
       <Stars radius={90} depth={40} count={2500} factor={3} fade speed={0.4} />
       <Sparkles count={160} scale={[50, 10, 50]} position={[0, 2, 0]} size={2.2} speed={0.25} color="#7fe8dc" />

@@ -4,13 +4,14 @@ import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import ReefGame from './ReefGame'
+import { LAND } from '../../theme/palette'
 import { slidePosition } from './retraction'
 
 const TILE_H = 0.22
-const C_TILE = new THREE.Color('#2f8f87')
+const C_TILE = new THREE.Color(LAND.stone)
 const C_FALL = new THREE.Color('#7a3cff')
 const C_TEAR = new THREE.Color('#ff4d5e')
-const C_DONE = new THREE.Color('#3ecfbf')
+const C_DONE = new THREE.Color(LAND.stoneLit)
 
 // ---------------------------------------------------------------- Null's forgeries (strip, spine z = 0)
 
@@ -90,7 +91,7 @@ function Tiles({ samples, simRef, tRef, forgery, tornSet }) {
   return (
     <instancedMesh ref={mesh} args={[null, null, samples.count]} key={samples.count}>
       <boxGeometry args={[size, TILE_H, size]} />
-      <meshStandardMaterial roughness={0.45} metalness={0.15} emissive="#0d3b37" emissiveIntensity={0.5} />
+      <meshStandardMaterial roughness={0.45} metalness={0.15} emissive={LAND.stoneEmissive} emissiveIntensity={0.5} />
     </instancedMesh>
   )
 }
@@ -110,7 +111,7 @@ function Footprint({ samples }) {
   return (
     <instancedMesh ref={mesh} args={[null, null, samples.count]} key={samples.count}>
       <boxGeometry args={[samples.h, 0.04, samples.h]} />
-      <meshBasicMaterial color="#1d4b52" transparent opacity={0.55} />
+      <meshBasicMaterial color={LAND.footprint} transparent opacity={0.6} />
     </instancedMesh>
   )
 }
@@ -304,7 +305,7 @@ export default function ReefBoard({ stage, samples, shape, strokes, liveStroke, 
       <ambientLight intensity={0.35} />
       <hemisphereLight args={['#5b8fb8', '#0a0a14', 0.55]} />
       <directionalLight position={[4, 10, 6]} intensity={1.2} color="#d8eef8" />
-      <pointLight position={[0, 3, 0]} intensity={4} distance={10} color="#3ecfbf" />
+      <pointLight position={[0, 3, 0]} intensity={4} distance={10} color={LAND.light} />
       <Stars radius={60} depth={30} count={1500} factor={3} fade speed={0.3} />
       <Sparkles count={70} scale={[16, 3, 12]} position={[0, 0.8, 0]} size={2} speed={0.25} color="#7fe8dc" />
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
