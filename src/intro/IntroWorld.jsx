@@ -4,8 +4,9 @@ import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../characters/Gyroid'
-import CountNull from '../characters/CountNull'
+import CountNull, { CROWN_Y } from '../characters/CountNull'
 import {
+  INTRO_START,
   NULL_POS,
   NULL_ROT_Y,
   RING,
@@ -19,6 +20,8 @@ import {
   nullScript,
   ringScript,
   seg,
+  storyAt,
+  wallAt,
 } from '../data/introScript'
 
 const TEAL = new THREE.Color('#3ecfbf')
@@ -296,7 +299,7 @@ function Spire() {
 
 function CollapseBeam() {
   const ref = useRef()
-  const from = useMemo(() => new THREE.Vector3(NULL_POS[0], NULL_POS[1] + 3.05, NULL_POS[2]), [])
+  const from = useMemo(() => new THREE.Vector3(NULL_POS[0], NULL_POS[1] + CROWN_Y + 0.03, NULL_POS[2]), [])
   const to = useMemo(() => new THREE.Vector3(RING[0], RING[1] + 0.3, RING[2]), [])
   const { mid, quat, len } = useMemo(() => {
     const d = to.clone().sub(from)
@@ -323,20 +326,22 @@ function CollapseBeam() {
 
 // ---------------------------------------------------------------- camera
 
+/**
+ * Owns the clock: counts real seconds and writes the paced story time into
+ * clock.elapsedTime, which every other useFrame in the scene reads.
+ * Priority -1 runs it before them each frame.
+ */
 function Director({ onTick }) {
   const { camera, clock } = useThree()
   const look = useMemo(() => new THREE.Vector3(), [])
-  // dev: ?t=20 jumps to 20s; add &pause to hold that frame
+  // dev: ?t=20 jumps to story time 20; add &pause to hold that frame
   const params = useMemo(() => new URLSearchParams(window.location.search), [])
-  const seek = useRef(Number(params.get('t')) || 0)
-  const hold = useMemo(() => (params.has('pause') ? seek.current : null), [params])
-  useFrame(() => {
-    if (seek.current) {
-      clock.elapsedTime = seek.current // after the clock has started, or start() would reset it
-      seek.current = 0
-    }
-    if (hold !== null) clock.elapsedTime = hold
-    const t = clock.elapsedTime
+  const wall = useRef(null)
+  useFrame((_, dt) => {
+    if (wall.current === null) wall.current = wallAt(params.has('t') ? Number(params.get('t')) : INTRO_START)
+    else if (!params.has('pause')) wall.current += Math.min(dt, 0.1)
+    const t = storyAt(wall.current)
+    clock.elapsedTime = t
     const { pos, target } = cameraAt(t)
     const shake = seg(t, 19.8, 20.2) * (1 - seg(t, 20.2, 21.2)) * 0.25
     camera.position.set(
@@ -346,8 +351,8 @@ function Director({ onTick }) {
     )
     look.set(...target)
     camera.lookAt(look)
-    onTick(t)
-  })
+    onTick(t, wall.current)
+  }, -1)
   return null
 }
 

@@ -167,7 +167,17 @@ export default function Gyroid({ script, scale = 1 }) {
       knL: idle * 0.12 + run * (0.25 + Math.max(0, cs) * 1.5) + cast * 0.35,
       knR: idle * 0.2 + run * (0.25 + Math.max(0, -cs) * 1.5) + cast * 0.15,
     }
-    const k = Math.min(1, dt * 14)
+    // whip: wind the lash arm up and back, then crack it forward and down (overrides the arm)
+    const wp = s.whip || 0
+    if (wp > 0) {
+      const strike = wp < 0.3 ? 0 : (wp - 0.3) / 0.7
+      tgt.shRx = wp < 0.3 ? lerp(0, -2.9, wp / 0.3) : lerp(-2.9, -0.7, Math.min(1, strike * 1.6))
+      tgt.shRz = -0.25
+      tgt.elR = wp < 0.3 ? -1.2 : -0.15
+      tgt.twist = wp < 0.3 ? 0.35 : -0.3
+      tgt.lean = 0.18
+    }
+    const k = Math.min(1, dt * (wp > 0 ? 30 : 14))
     const c = cur.current
     for (const key in tgt) c[key] = c[key] === undefined ? tgt[key] : lerp(c[key], tgt[key], k)
 

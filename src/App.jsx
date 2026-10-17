@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import TitleScreen from './screens/TitleScreen'
 import IntroCutscene from './screens/IntroCutscene'
-import Level1 from './screens/Level1'
+import Level01 from './screens/Level01'
 
 const SCREENS = {
   title: TitleScreen,
   intro: IntroCutscene,
-  level1: Level1,
+  level1: Level01,
 }
 
 export default function App() {

@@ -2,9 +2,9 @@ import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import IntroWorld from '../intro/IntroWorld'
 import { createIntroScore } from '../audio/introScore'
-import { CAPTIONS, INTRO_TOTAL, TITLE_CARD, seg } from '../data/introScript'
+import { CAPTIONS, INTRO_START, INTRO_TOTAL, TITLE_CARD, seg, wallAt } from '../data/introScript'
 
-const CHARS_PER_SEC = 42
+const CHARS_PER_SEC = 30 // typing speed, in real seconds
 const MUTE_KEY = 'winding-world:muted'
 
 function readMuted() {
@@ -24,7 +24,11 @@ const PORTRAIT_CROP = {
 
 export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   // dev: ?t=…&pause starts the overlay at that time too
-  const [t, setT] = useState(() => Number(new URLSearchParams(window.location.search).get('t')) || 0)
+  const [t, setT] = useState(() => {
+    const q = new URLSearchParams(window.location.search)
+    return q.has('t') ? Number(q.get('t')) : INTRO_START
+  })
+  const [wall, setWall] = useState(() => wallAt(t))
   const lastTick = useRef(-1)
   const done = useRef(false)
   const score = useRef(null)
@@ -62,15 +66,16 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
 
   // The 3D scene drives the clock; the overlay only needs ~20 updates a second.
   const onTick = useCallback(
-    (time) => {
+    (time, wallTime) => {
       if (!scoreStarted.current && score.current) {
         scoreStarted.current = true
         score.current.start(time)
       }
-      const q = Math.floor(time * 20)
+      const q = Math.floor(wallTime * 20)
       if (q !== lastTick.current) {
         lastTick.current = q
         setT(time)
+        setWall(wallTime)
       }
       if (time >= INTRO_TOTAL && !done.current) {
         done.current = true
@@ -90,10 +95,10 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   }, [onSkipIntro])
 
   const cap = CAPTIONS.find((c) => t >= c.t && t < c.end)
-  const shown = cap ? cap.text.slice(0, Math.floor((t - cap.t) * CHARS_PER_SEC)) : ''
+  const shown = cap ? cap.text.slice(0, Math.floor((wall - wallAt(cap.t)) * CHARS_PER_SEC)) : ''
   const title = seg(t, TITLE_CARD.t, TITLE_CARD.t + 1.2) * (1 - seg(t, TITLE_CARD.end - 0.8, TITLE_CARD.end))
-  const fade = Math.max(1 - seg(t, 0, 1.2), seg(t, INTRO_TOTAL - 0.8, INTRO_TOTAL))
-  const level1 = (concept?.levels || []).find((l) => l.level_number === 1)
+  const fade = Math.max(1 - seg(t, INTRO_START, INTRO_START + 1.2), seg(t, INTRO_TOTAL - 0.8, INTRO_TOTAL))
+  const level1 = concept?.worlds?.[0]?.levels?.[0]
   const story = concept?.story || {}
   const base = import.meta.env.BASE_URL
 
@@ -145,7 +150,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
           <div className="intro-title" style={{ opacity: title }}>
             <h1>{story.title || 'Winding World'}</h1>
             <p className="tagline">{story.tagline || "Shape can change. Topology can't."}</p>
-            {level1 && <p className="level-tag">Level 1 — {level1.title}</p>}
+            {level1 && <p className="level-tag">World 0 · Level 1 — {level1.title}</p>}
           </div>
         )}
       </div>

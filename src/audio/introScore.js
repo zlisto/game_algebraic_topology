@@ -1,7 +1,9 @@
 /**
  * Procedural score for the intro cinematic, synthesized with Web Audio and
- * cued to the shot list in data/introScript.js (times in seconds).
+ * cued to the shot list in data/introScript.js (times in story seconds; the
+ * scheduler maps them through the intro's pacing, so slowed scenes stretch).
  *
+ *  -30–0   prelude       slow D minor pads, sparse celesta, Gyroid's figure
  *   0–6    wonder        D minor pads + celesta arpeggios
  *   6–13   Count Null    sub drone, dissonant pads, timpani, his motif D–E♭–D–A
  *   13–21  the collapse  pulsing bass, riser, boom on the flash, eerie tail
@@ -10,6 +12,8 @@
  *   34–40  Null watches  drone + music-box motif
  *   40–46  title         main theme, resolves to D major
  */
+
+import { wallAt } from '../data/introScript'
 
 const NOTE = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 }
 const hz = (name) => {
@@ -67,10 +71,10 @@ export function createIntroScore() {
     return b
   }
 
-  // ---- scheduling: score time → audio time
-  let origin = 0 // audio time corresponding to score time 0
+  // ---- scheduling: score (story) time → audio time
+  let origin = 0 // audio time at which the intro's real clock reads 0
   let offset = 0 // score time we started from (dev seeking)
-  const at = (t) => origin + t
+  const at = (t) => Math.max(0, origin + wallAt(t)) // events before a dev seek land at 0 and start at once
   const live = (t, len) => t + len > offset // skip events that ended before the seek point
 
   function out(node, wet = 0.5) {
@@ -81,11 +85,13 @@ export function createIntroScore() {
   }
 
   function env(g, t0, peak, attack, hold, release) {
-    const a = at(t0)
-    g.gain.setValueAtTime(0, Math.max(ctx.currentTime, a))
+    const now = ctx.currentTime
+    const a = Math.max(now, at(t0))
+    g.gain.setValueAtTime(0, a)
     g.gain.linearRampToValueAtTime(peak, a + attack)
-    g.gain.setValueAtTime(peak, a + attack + hold)
-    g.gain.linearRampToValueAtTime(0, a + attack + hold + release)
+    const end = Math.max(a + attack, at(t0 + attack + hold)) // sustain stretches with the pacing
+    g.gain.setValueAtTime(peak, end)
+    g.gain.linearRampToValueAtTime(0, end + release)
   }
 
   // ---- instruments
@@ -264,6 +270,23 @@ export function createIntroScore() {
 
   // ---------------------------------------------------------------- the score
   function compose() {
+    // P · prelude (-30–0): the world before the collapse
+    const prelude = [
+      ['D2', ['D3', 'A3', 'E4', 'F4']],
+      ['Bb1', ['Bb2', 'F3', 'A3', 'D4']],
+      ['G1', ['G2', 'D3', 'F3', 'Bb3']],
+      ['A1', ['A2', 'E3', 'G3', 'C#4']],
+    ]
+    for (let i = 0; i < 6; i++) {
+      const t0 = -30 + i * 5
+      const [root, chord] = prelude[i % 4]
+      pad(t0, chord, 5.4, { vel: 0.035, cutoff: 1200, attack: 2, release: 2 })
+      bass(t0, root, 4.8, 0.04, 260)
+      ;[0.9, 2.4, 3.6].forEach((dt, j) => celesta(t0 + dt, chord[(j + i) % chord.length].replace(/\d/, (o) => String(Number(o) + 2)), 0.05))
+    }
+    // Gyroid's figure, as the camera finds them on the reef
+    phrase(-9.4, [['A4', 1], ['D5', 1], ['E5', 0.5], ['F5', 1.5], ['E5', 1], ['C#5', 1], ['A4', 3]], (t, n, d) => lead(t, n, d * 0.95, 0.035, 1800))
+
     // A · wonder (0–6)
     pad(0, ['D3', 'A3', 'E4', 'F4'], 3.4, { vel: 0.045, cutoff: 1500, attack: 1.6 })
     pad(3.2, ['Bb2', 'F3', 'A3', 'D4'], 3.2, { vel: 0.045, cutoff: 1500 })
@@ -367,7 +390,7 @@ export function createIntroScore() {
     /** begin playback with score time `fromT` happening now */
     start(fromT = 0) {
       offset = fromT
-      origin = ctx.currentTime + 0.05 - fromT
+      origin = ctx.currentTime + 0.05 - wallAt(fromT)
       compose()
       // fade out across the title card
       master.gain.setValueAtTime(master.gain.value, at(45))
