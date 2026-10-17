@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Winding World — Game Bible</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #e8eef0;
+      --ink-soft: #b7c4c8;
+      --muted: #7d8c92;
+      --line: #2a353a;
+      --paper: #0e1417;
+      --panel: #161e22;
+      --wash: #1c2a2e;
+      --accent: #3ecfbf;
+      --accent-deep: #7ee0d4;
+      --warn: #f0b27a;
+      --warn-bg: #2a2118;
+      --radius: 10px;
+      --shadow: 0 1px 0 rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.35);
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "IBM Plex Sans", system-ui, sans-serif;
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.55;
+      background:
+        radial-gradient(1000px 480px at 8% -12%, rgba(62, 207, 191, 0.14) 0%, transparent 55%),
+        radial-gradient(900px 420px at 100% 0%, rgba(180, 140, 80, 0.08) 0%, transparent 50%),
+        var(--paper);
+    }
+
+    .shell {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    header.hero {
+      margin-bottom: 1.5rem;
+    }
+
+    .cover-wrap {
+      margin: 0 0 1.25rem;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background: #0a1012;
+    }
+    .cover-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(70vh, 560px);
+      object-fit: contain;
+      object-position: center;
+      vertical-align: middle;
+    }
+
+    header.hero .eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+      margin: 0 0 0.5rem;
+    }
+
+    header.hero h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      line-height: 1.15;
+      margin: 0 0 0.4rem;
+      color: var(--ink);
+    }
+
+    header.hero .tagline {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 1.05rem;
+      max-width: 40rem;
+    }
+
+    header.hero .meta {
+      margin-top: 0.85rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin: 1.25rem 0 1rem;
+      padding: 0.35rem;
+      background: rgba(22, 30, 34, 0.88);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      position: sticky;
+      top: 0.5rem;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .tabs button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.55rem 0.95rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .tabs button:hover { background: var(--wash); color: var(--ink); }
+    .tabs button[aria-selected="true"] {
+      background: var(--accent);
+      color: #0a1514;
+      font-weight: 600;
+    }
+    .tabs button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .panel {
+      display: none;
+      animation: fade 0.18s ease;
+    }
+    .panel.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .toolbar button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink-soft);
+      font: inherit;
+      font-size: 0.85rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .card h2, .card h3 {
+      font-family: var(--font-display);
+      margin: 0 0 0.5rem;
+      line-height: 1.25;
+    }
+    .card h2 { font-size: 1.35rem; }
+    .card h3 { font-size: 1.1rem; }
+
+    .stack > * + * { margin-top: 0.85rem; }
+
+    .prose p { margin: 0 0 0.75rem; color: var(--ink-soft); }
+    .prose p:last-child { margin-bottom: 0; }
+
+    ul.clean {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    ul.clean li {
+      position: relative;
+      padding: 0.55rem 0 0.55rem 1.1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink-soft);
+    }
+    ul.clean li:last-child { border-bottom: 0; }
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.95rem;
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    details.block {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 0.65rem;
+      overflow: hidden;
+    }
+
+    details.block > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.9rem 1.1rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem 1rem;
+      align-items: baseline;
+      user-select: none;
+    }
+    details.block > summary::-webkit-details-marker { display: none; }
+    details.block > summary .title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    details.block > summary .aside {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    details.block > summary .chev {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      align-self: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: var(--wash);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      transition: transform 0.15s ease;
+    }
+    details.block[open] > summary .chev { transform: rotate(90deg); }
+    details.block > .body {
+      padding: 0 1.1rem 1.1rem;
+      border-top: 1px solid var(--line);
+    }
+
+    details.nested {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin: 0.55rem 0;
+      background: #12191d;
+    }
+    details.nested > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.7rem 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      align-items: baseline;
+      font-weight: 500;
+    }
+    details.nested > summary::-webkit-details-marker { display: none; }
+    details.nested > summary .page {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
+    details.nested .inner { padding: 0 0.85rem 0.85rem; }
+
+    .fields { display: grid; gap: 0.65rem; }
+    .field {
+      background: var(--wash);
+      border-radius: 8px;
+      padding: 0.7rem 0.85rem;
+    }
+    .field .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+    .field .value { color: var(--ink-soft); font-size: 0.95rem; }
+    .field .value a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(62, 207, 191, 0.35);
+      word-break: break-all;
+    }
+    .field .value a:hover { border-bottom-color: var(--accent); }
+
+    .field.warn {
+      background: var(--warn-bg);
+    }
+    .field.warn .label { color: var(--warn); }
+
+    .level-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.75rem;
+      height: 1.75rem;
+      padding: 0 0.4rem;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #0a1514;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 0.45rem;
+    }
+
+    .pun {
+      display: inline-block;
+      margin-top: 0.15rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .cast-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .status {
+      padding: 1.5rem;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      background: rgba(22, 30, 34, 0.7);
+      color: var(--ink-soft);
+    }
+    .status.error { border-color: #8a4545; background: #241616; color: #f0c0c0; }
+    .status code {
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.06);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+    }
+
+    .placeholder {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      color: var(--muted);
+    }
+    .placeholder strong { color: var(--ink-soft); display: block; margin-bottom: 0.35rem; }
+
+    .media-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (max-width: 560px) {
+      .media-row { grid-template-columns: 1fr; }
+    }
+    .media-row img.thumb {
+      width: 100%;
+      max-width: 140px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--wash);
+    }
+    .media-row img.thumb.icon {
+      aspect-ratio: 1;
+      object-fit: contain;
+      padding: 0.35rem;
+      background: #0c1215;
+    }
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+    .chip {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      background: var(--wash);
+      color: var(--ink-soft);
+      border: 1px solid var(--line);
+    }
+
+    footer.note {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="cover-wrap">
+      <img
+        id="cover-image"
+        src="./assets/cover.png"
+        alt="Winding World — Gyroid facing Count Null"
+        width="1600"
+        height="900"
+      />
+    </div>
+    <header class="hero">
+      <h1 id="page-title">Algebraic Topology</h1>
+      <p class="tagline" id="page-tagline">Loading design notes…</p>
+      <div class="meta" id="page-meta"></div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Game bible sections" id="tab-bar"></nav>
+    <main id="panels"></main>
+
+    <footer class="note">
+      Open this folder with a local server so JSON can load
+      (<code>python -m http.server</code> from <code>games/algebraic_topology</code>).
+      Loads <code>contents.json</code> + <code>game_concept.json</code>. Add tabs in <code>TABS</code> as design packs land.
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Extensible tab registry. Each tab: { id, label, render(ctx) -> HTMLElement|string }
+     * ctx = { contents, concept }
+     */
+    const TABS = [
+      { id: "contents", label: "Contents", render: renderContents },
+      { id: "concept", label: "Concept", render: renderConcept },
+      { id: "story", label: "Story", render: renderStory },
+      { id: "levels", label: "Levels", render: renderLevels },
+      { id: "characters", label: "Characters", render: renderCharacters },
+      { id: "assets", label: "Assets", render: renderAssets },
+      { id: "locations", label: "Locations", render: renderLocations },
+    ];
+
+    const esc = (s) => String(s ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+    /** Repo-relative asset paths → paths relative to this folder. */
+    function assetUrl(path) {
+      if (!path) return "";
+      let p = String(path).replace(/\\/g, "/");
+      const marker = "games/algebraic_topology/";
+      const i = p.indexOf(marker);
+      if (i >= 0) p = p.slice(i + marker.length);
+      if (p.startsWith("./")) return p;
+      return "./" + p.replace(/^\//, "");
+    }
+
+    function lookupById(list, id) {
+      return (list || []).find((x) => x.id === id) || null;
+    }
+
+    function chips(items) {
+      if (!items?.length) return "";
+      return `<div class="chip-row">${items.map((x) => `<span class="chip">${esc(x)}</span>`).join("")}</div>`;
+    }
+
+    function field(label, value, opts = {}) {
+      if (value == null || value === "") return "";
+      const cls = opts.warn ? "field warn" : "field";
+      const inner = opts.href
+        ? `<a href="${esc(opts.href)}" target="_blank" rel="noopener noreferrer">${esc(value)}</a>`
+        : esc(value);
+      return `<div class="${cls}"><div class="label">${esc(label)}</div><div class="value">${inner}</div></div>`;
+    }
+
+    function entryFields(entry) {
+      if (entry.summary_error) {
+        return `<div class="fields">${field("Summary error", entry.summary_error, { warn: true })}</div>`;
+      }
+      return `<div class="fields">
+        ${field("Summary", entry.summary)}
+        ${field("Learner can do", entry.learner_can_do)}
+        ${field("Game hook", entry.game_hook)}
+      </div>`;
+    }
+
+    function topicDetails(topic) {
+      const title = topic.title || topic.id || "Topic";
+      const page = topic.page != null ? `p. ${topic.page}` : "";
+      return `<details class="nested">
+        <summary><span>${esc(title)}</span><span class="page">${esc(page)}</span></summary>
+        <div class="inner">${entryFields(topic)}</div>
+      </details>`;
+    }
+
+    function sectionDetails(section) {
+      const num = section.number ? `${section.number}. ` : "";
+      const title = `${num}${section.title || section.id}`;
+      const page = section.page != null ? `p. ${section.page}` : "";
+      const topics = (section.topics || []).map(topicDetails).join("");
+      return `<details class="nested">
+        <summary><span>${esc(title)}</span><span class="page">${esc(page)}</span></summary>
+        <div class="inner">
+          ${entryFields(section)}
+          ${topics}
+        </div>
+      </details>`;
+    }
+
+    function chapterBlock(chapter, { open = false } = {}) {
+      const num = chapter.number != null ? `Chapter ${chapter.number}` : (chapter.title || "Section");
+      const title = chapter.number != null ? `${num}: ${chapter.title}` : chapter.title;
+      const page = chapter.page != null ? `p. ${chapter.page}` : "";
+      const sections = (chapter.sections || []).map(sectionDetails).join("");
+      const extras = (chapter.additional_topics || []).length
+        ? `<details class="nested">
+            <summary><span>Additional topics</span><span class="page">${chapter.additional_topics.length}</span></summary>
+            <div class="inner">${chapter.additional_topics.map(sectionDetails).join("")}</div>
+          </details>`
+        : "";
+
+      return `<details class="block"${open ? " open" : ""}>
+        <summary>
+          <span class="title">${esc(title)}</span>
+          <span class="chev">›</span>
+          <span class="aside">${esc(page)}</span>
+        </summary>
+        <div class="body">
+          ${entryFields(chapter)}
+          ${sections}
+          ${extras}
+        </div>
+      </details>`;
+    }
+
+    function renderContents(ctx) {
+      const data = ctx.contents;
+      const el = document.createElement("div");
+      el.innerHTML = `
+        <div class="toolbar">
+          <button type="button" data-action="expand">Expand all</button>
+          <button type="button" data-action="collapse">Collapse all</button>
+        </div>
+        <div class="stack" id="toc-tree"></div>
+      `;
+      const tree = el.querySelector("#toc-tree");
+      let html = "";
+
+      if (data.front_matter?.length) {
+        html += `<details class="block">
+          <summary>
+            <span class="title">Front matter</span>
+            <span class="chev">›</span>
+            <span class="aside">${data.front_matter.length} items</span>
+          </summary>
+          <div class="body">${data.front_matter.map(sectionDetails).join("")}</div>
+        </details>`;
+      }
+
+      (data.chapters || []).forEach((ch, i) => {
+        html += chapterBlock(ch, { open: i === 0 });
+      });
+
+      if (data.back_matter?.length) {
+        html += `<details class="block">
+          <summary>
+            <span class="title">Back matter</span>
+            <span class="chev">›</span>
+            <span class="aside">${data.back_matter.length} items</span>
+          </summary>
+          <div class="body">${data.back_matter.map((item) => {
+            const nested = (item.sections || []).map(topicDetails).join("");
+            return `<details class="nested">
+              <summary><span>${esc(item.title)}</span><span class="page">${item.page != null ? `p. ${item.page}` : ""}</span></summary>
+              <div class="inner">${entryFields(item)}${nested}</div>
+            </details>`;
+          }).join("")}</div>
+        </details>`;
+      }
+
+      tree.innerHTML = html;
+
+      el.querySelector('[data-action="expand"]').onclick = () => {
+        el.querySelectorAll("details").forEach((d) => { d.open = true; });
+      };
+      el.querySelector('[data-action="collapse"]').onclick = () => {
+        el.querySelectorAll("details").forEach((d) => { d.open = false; });
+      };
+      return el;
+    }
+
+    function renderConcept(ctx) {
+      const c = ctx.concept || {};
+      const story = c.story || {};
+      const src = c.source || {};
+      const el = document.createElement("div");
+      el.className = "stack";
+      el.innerHTML = `
+        <div class="card">
+          <h2>${esc(story.title || "Game concept")}</h2>
+          <div class="prose"><p>${esc(story.tagline || "")}</p></div>
+          ${chips([
+            `${(c.levels || []).length} levels`,
+            `${(c.characters || []).length} characters`,
+            `${(c.assets || []).length} assets`,
+            `${(c.locations || []).length} locations`,
+          ])}
+        </div>
+        <div class="card">
+          <h3>Teaching spine</h3>
+          <div class="prose"><p>${esc(story.teaching_spine || "")}</p></div>
+        </div>
+        <div class="card">
+          <h3>Tone</h3>
+          <div class="prose"><p>${esc(story.tone || "")}</p></div>
+        </div>
+        <div class="card">
+          <h3>Source attribution</h3>
+          <div class="fields">
+            ${field("Book", src.book_title)}
+            ${field("Author", src.book_author, src.author_url ? { href: src.author_url } : {})}
+            ${field("Author page", src.author_url, src.author_url ? { href: src.author_url } : {})}
+            ${field("PDF", src.pdf)}
+            ${field("Contents", src.contents)}
+          </div>
+        </div>
+      `;
+      return el;
+    }
+
+    function renderStory(ctx) {
+      const story = (ctx.concept || {}).story || {};
+      const levels = (ctx.concept || {}).levels || [];
+      const el = document.createElement("div");
+      el.className = "stack";
+      el.innerHTML = `
+        <div class="card">
+          <h2>${esc(story.title || "Story")}</h2>
+          <div class="prose"><p>${esc(story.premise || "")}</p></div>
+        </div>
+        <div class="card">
+          <h3>Campaign shape</h3>
+          <div class="prose"><p>${esc(levels.length)} levels. ${esc(story.teaching_spine || "")}</p></div>
+        </div>
+      `;
+      return el;
+    }
+
+    function mediaCard(item, { open = false, kind = "portrait" } = {}) {
+      const img = item.image_path
+        ? `<img class="thumb ${kind === "icon" ? "icon" : ""}" src="${esc(assetUrl(item.image_path))}" alt="${esc(item.name)}" loading="lazy" />`
+        : `<div class="thumb" style="display:grid;place-items:center;color:var(--muted);font-size:0.8rem;">No image</div>`;
+      return `<details class="block"${open ? " open" : ""}>
+        <summary>
+          <span class="title">${esc(item.name)}</span>
+          <span class="chev">›</span>
+          <span class="aside">${esc(item.role || item.kind || "")}</span>
+        </summary>
+        <div class="body">
+          <div class="media-row">
+            ${img}
+            <div class="fields">
+              ${field("Description", item.description)}
+              ${field("Levels", (item.appears_in_levels || item.used_in_levels || []).join(", "))}
+              ${field("Book sections", (item.book_section_ids || []).join(", "))}
+            </div>
+          </div>
+        </div>
+      </details>`;
+    }
+
+    function renderCharacters(ctx) {
+      const chars = (ctx.concept || {}).characters || [];
+      const byRole = (role) => chars.filter((c) => c.role === role);
+      const el = document.createElement("div");
+      el.className = "stack";
+      const sections = [
+        ["Hero", byRole("hero")],
+        ["Allies", byRole("ally")],
+        ["Bosses", byRole("boss")],
+        ["Villains", byRole("villain")],
+        ["NPCs", byRole("npc")],
+      ].filter(([, list]) => list.length);
+
+      el.innerHTML = `
+        <div class="card">
+          <h2>Characters</h2>
+          <div class="prose"><p>From <code>game_concept.json</code> with Gemini portraits under <code>assets/characters/</code>.</p></div>
+        </div>
+        ${sections.map(([title, list], si) => `
+          <div class="card">
+            <h3>${esc(title)}</h3>
+            <div class="cast-grid">${list.map((c, i) => mediaCard(c, { open: si === 0 && i === 0 })).join("")}</div>
+          </div>
+        `).join("")}
+      `;
+      return el;
+    }
+
+    function renderAssets(ctx) {
+      const assets = (ctx.concept || {}).assets || [];
+      const el = document.createElement("div");
+      el.className = "stack";
+      el.innerHTML = `
+        <div class="card">
+          <h2>Assets</h2>
+          <div class="prose"><p>Weapons, items, and tools from the concept pass.</p></div>
+        </div>
+        <div class="cast-grid">
+          ${assets.map((a, i) => mediaCard(a, { open: i === 0, kind: "icon" })).join("") || '<div class="placeholder">No assets yet.</div>'}
+        </div>
+      `;
+      return el;
+    }
+
+    function renderLocations(ctx) {
+      const locs = (ctx.concept || {}).locations || [];
+      const el = document.createElement("div");
+      el.className = "stack";
+      el.innerHTML = `
+        <div class="card">
+          <h2>Locations</h2>
+          <div class="prose"><p>Places tied to levels and book sections.</p></div>
+        </div>
+        ${locs.map((loc, i) => `
+          <details class="block"${i === 0 ? " open" : ""}>
+            <summary>
+              <span class="title">${esc(loc.name)}</span>
+              <span class="chev">›</span>
+              <span class="aside">${esc(loc.id)}</span>
+            </summary>
+            <div class="body">
+              <div class="fields">
+                ${field("Description", loc.description)}
+                ${field("Book sections", (loc.book_section_ids || []).join(", "))}
+              </div>
+            </div>
+          </details>
+        `).join("") || '<div class="placeholder">No locations yet.</div>'}
+      `;
+      return el;
+    }
+
+    function renderLevels(ctx) {
+      const concept = ctx.concept || {};
+      const levels = concept.levels || [];
+      const el = document.createElement("div");
+      el.innerHTML = `
+        <div class="toolbar">
+          <button type="button" data-action="expand">Expand all</button>
+          <button type="button" data-action="collapse">Collapse all</button>
+        </div>
+        <div class="stack" id="levels-tree"></div>
+      `;
+      const tree = el.querySelector("#levels-tree");
+      tree.innerHTML = levels.map((lv, i) => {
+        const loc = lookupById(concept.locations, lv.location_id);
+        const charNames = (lv.character_ids || [])
+          .map((id) => lookupById(concept.characters, id)?.name || id);
+        const assetNames = (lv.asset_ids || [])
+          .map((id) => lookupById(concept.assets, id)?.name || id);
+        return `
+        <details class="block"${i === 0 ? " open" : ""}>
+          <summary>
+            <span class="title"><span class="level-num">${esc(lv.level_number)}</span>${esc(lv.title)}</span>
+            <span class="chev">›</span>
+            <span class="aside">${esc(loc?.name || lv.location_id || "")}</span>
+          </summary>
+          <div class="body">
+            <div class="fields">
+              ${field("Story", lv.story)}
+              ${field("Goal", lv.goal)}
+              ${field("Teaches", lv.teaches)}
+              ${field("Location", loc?.name || lv.location_id)}
+              ${field("Characters", charNames.join(", "))}
+              ${field("Assets", assetNames.join(", "))}
+              ${field("Book sections", (lv.book_section_ids || []).join(", "))}
+            </div>
+            ${chips(lv.book_section_ids || [])}
+          </div>
+        </details>`;
+      }).join("");
+
+      el.querySelector('[data-action="expand"]').onclick = () => {
+        el.querySelectorAll("details").forEach((d) => { d.open = true; });
+      };
+      el.querySelector('[data-action="collapse"]').onclick = () => {
+        el.querySelectorAll("details").forEach((d) => { d.open = false; });
+      };
+      return el;
+    }
+
+    function countSummaries(contents) {
+      let n = 0;
+      const walk = (obj) => {
+        if (!obj || typeof obj !== "object") return;
+        if (Array.isArray(obj)) { obj.forEach(walk); return; }
+        if (obj.summary) n += 1;
+        Object.values(obj).forEach(walk);
+      };
+      walk(contents);
+      return n;
+    }
+
+    function activateTab(id) {
+      document.querySelectorAll(".tabs button").forEach((btn) => {
+        btn.setAttribute("aria-selected", btn.dataset.tab === id ? "true" : "false");
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === `panel-${id}`);
+      });
+      history.replaceState(null, "", `#${id}`);
+    }
+
+    function mount(ctx) {
+      const story = (ctx.concept || {}).story || {};
+      const src = ctx.contents.source || {};
+      const conceptSrc = (ctx.concept || {}).source || {};
+      document.getElementById("page-title").textContent =
+        story.title || src.title || "Game Bible";
+      document.getElementById("page-tagline").textContent = story.tagline || "";
+      document.getElementById("page-meta").innerHTML = [
+        (conceptSrc.book_author || src.author)
+          ? `<span>Author: ${esc(conceptSrc.book_author || src.author)}</span>`
+          : "",
+        `<span>${esc((ctx.concept?.levels || []).length)} levels</span>`,
+        `<span>${esc((ctx.concept?.characters || []).length)} characters</span>`,
+        `<span>${countSummaries(ctx.contents)} summaries</span>`,
+        (conceptSrc.pdf || src.pdf)
+          ? `<span>Source: ${esc(conceptSrc.pdf || src.pdf)}</span>`
+          : "",
+      ].filter(Boolean).join("");
+
+      const bar = document.getElementById("tab-bar");
+      const panels = document.getElementById("panels");
+      bar.innerHTML = "";
+      panels.innerHTML = "";
+
+      TABS.forEach((tab) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.role = "tab";
+        btn.dataset.tab = tab.id;
+        btn.textContent = tab.label;
+        btn.setAttribute("aria-selected", "false");
+        if (tab.enabled === false) btn.disabled = true;
+        btn.onclick = () => activateTab(tab.id);
+        bar.appendChild(btn);
+
+        const panel = document.createElement("section");
+        panel.className = "panel";
+        panel.id = `panel-${tab.id}`;
+        panel.setAttribute("role", "tabpanel");
+        const node = tab.render(ctx);
+        if (typeof node === "string") panel.innerHTML = node;
+        else panel.appendChild(node);
+        panels.appendChild(panel);
+      });
+
+      const initial = (location.hash || "").replace(/^#/, "") || "concept";
+      const known = TABS.some((t) => t.id === initial && t.enabled !== false);
+      activateTab(known ? initial : "concept");
+    }
+
+    async function boot() {
+      const panels = document.getElementById("panels");
+      try {
+        const [contentsRes, conceptRes] = await Promise.all([
+          fetch("./contents.json"),
+          fetch("./game_concept.json"),
+        ]);
+        if (!contentsRes.ok || !conceptRes.ok) {
+          throw new Error(`HTTP ${contentsRes.status}/${conceptRes.status}`);
+        }
+        const contents = await contentsRes.json();
+        const concept = await conceptRes.json();
+        mount({ contents, concept });
+      } catch (err) {
+        panels.innerHTML = `<div class="status error">
+          Could not load <code>contents.json</code> / <code>game_concept.json</code>.
+          Browsers block local file fetches — serve this folder, then reload:<br /><br />
+          <code>cd games/algebraic_topology</code><br />
+          <code>python -m http.server 8765</code><br />
+          then open <code>http://localhost:8765</code><br /><br />
+          <small>${esc(err.message || err)}</small>
+        </div>`;
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>

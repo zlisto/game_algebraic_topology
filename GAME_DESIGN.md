@@ -1,6 +1,6 @@
 # Winding World
 
-*Trace the loop. Deform the lie. Lash what χ cannot explain.*
+*Shape can change. Topology can’t.*
 
 Self-contained game world — no Arcade of Alexandria fiction inside the game.
 
