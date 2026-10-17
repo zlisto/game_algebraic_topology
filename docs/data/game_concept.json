@@ -1,0 +1,541 @@
+{
+  "source": {
+    "contents": "games/algebraic_topology/contents.json",
+    "book_title": "Algebraic Topology",
+    "book_author": "Allen Hatcher",
+    "author_url": "https://pi.math.cornell.edu/~hatcher/",
+    "pdf": "books/Algebraic Topology.pdf"
+  },
+  "cover": {
+    "image_path": "games/algebraic_topology/assets/cover.png",
+    "alt": "Winding World cover art — Gyroid facing Count Null",
+    "reference_images": [
+      "games/algebraic_topology/assets/characters/gyroid.png",
+      "games/algebraic_topology/assets/characters/count-null.png"
+    ],
+    "prompt": "Using Gyroid and Count Null character refs as anchors: wide cinematic key art, no text — Gyroid and Count Null face off; looped causeway, stitched spheres, covering sheets; violet collapse vs amber repairs; painterly stylized 3D; teal–amber–violet."
+  },
+  "story": {
+    "title": "Winding World",
+    "tagline": "Shape can change. Topology can’t.",
+    "premise": "The Winding World is a living landscape of looped causeways, stitched surfaces, and towers whose rooms unfold into higher dimensions. When Count Null activates the Null Crown, he promises to simplify every province into a perfect point, but his machinery destroys essential holes and gluing data rather than preserving their shape. Gyroid, a surface-born courier carrying an anchor spool, escapes the first collapse and joins engineer Emmy Boundary to reconnect the world's severed routes. To reach the Crown, Gyroid must outmaneuver Null's enforcer, the Commutator, follow paths through hidden covering sheets, rebuild cycles and their dual signals, and recover the twists that hold the world's upper tower together. Every repair is a construction or obstruction the player can demonstrate: the final victory restores the world's compatible connections without erasing the differences that make its provinces distinct.",
+    "tone": "Wonder-filled mathematical adventure; tactile, luminous, gently punning, with threatening geometric machinery and hopeful reconstruction.",
+    "teaching_spine": "Ten sequential spatial-puzzle levels progress from homotopy and CW constructions through fundamental groups and covers, chains and homology, cohomology rings and duality, then higher homotopy and Postnikov-stage obstructions. Player actions manipulate actual paths, attaching maps, signed chains, cochains, and a finite authored tower model; invariant feedback explains why a move works or cannot work. Guided low-dimensional examples introduce each tool before synthesis encounters, and advanced stages explicitly display the hypotheses and ranges under which their tools apply."
+  },
+  "levels": [
+    {
+      "level_number": 1,
+      "title": "A Good Deformation",
+      "story": "Null's first collapse strikes Retract Reef. Gyroid rescues Emmy by shrinking thickened walkways onto their intact graph spines, discovering that simplifying a space need not erase its holes.",
+      "goal": "Deformation-retract three walkway neighborhoods onto marked spines while keeping every spine point fixed throughout; guide both survivors to the beacon without cutting or identifying paths.",
+      "location_id": "retract_reef",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary"
+      ],
+      "asset_ids": [
+        "anchor_spool"
+      ],
+      "book_section_ids": [
+        "0.homotopy-and-homotopy-type",
+        "0.the-homotopy-extension-property"
+      ],
+      "teaches": "Continuous deformation versus tearing; deformation retractions and fixed subspaces. A final guided CW-pair puzzle extends a prescribed boundary homotopy across a cylinder, with its initial map fixed."
+    },
+    {
+      "level_number": 2,
+      "title": "Some Assembly Required",
+      "story": "Emmy leads Gyroid into Skeleton Foundry to rebuild the road to Null's frontier. Its machines distinguish honest cell attachments from the Crown's indiscriminate crushing.",
+      "goal": "Build a torus gate from one vertex, two oriented edges, and a disk attached along aba⁻¹b⁻¹; then collapse only a marked spanning tree in its approach graph and cross the surviving loop bridges.",
+      "location_id": "skeleton_foundry",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary"
+      ],
+      "asset_ids": [
+        "anchor_spool",
+        "cell_smith"
+      ],
+      "book_section_ids": [
+        "0.cell-complexes",
+        "0.operations-on-spaces",
+        "0.two-criteria-for-homotopy-equivalence"
+      ],
+      "teaches": "CW skeleta and attaching maps; quotient constructions versus homotopy equivalences. Collapsing a contractible subcomplex in a CW pair preserves homotopy type. Cell counts provide a consistency check, not a complete invariant; cone and suspension models preview later spaces."
+    },
+    {
+      "level_number": 3,
+      "title": "Order in the Fort",
+      "story": "The Commutator blocks Bouquet Bastion with a patrol that confuses loops having the same winding totals. Gyroid discovers that route order still matters in the unfilled figure-eight, unlike the torus gate just repaired.",
+      "goal": "Combine the two districts' loop generators at their shared basepoint, reduce a patrol word by adjacent inverse cancellations, and evade the Commutator along aba⁻¹b⁻¹, whose nonempty reduced word proves it cannot contract in this graph.",
+      "location_id": "bouquet_bastion",
+      "character_ids": [
+        "gyroid",
+        "commutator"
+      ],
+      "asset_ids": [
+        "anchor_spool",
+        "van_kampen_clasp"
+      ],
+      "book_section_ids": [
+        "1.1",
+        "1.2"
+      ],
+      "teaches": "Based loops, endpoint-fixed homotopy, concatenation and inverses; van Kampen on a thickened bouquet with contractible intersection. Free-group words preserve order; the commutator is nontrivial here but becomes trivial after attaching the torus relation disk."
+    },
+    {
+      "level_number": 4,
+      "title": "Under Cover",
+      "story": "The Commutator seals the surface roads. Emmy reveals a connected three-sheet graph cover whose lifted routes bypass his blockade and lead to the damaged Chain Delta.",
+      "goal": "Repair the cover so each vertex has exactly one incoming and outgoing edge of each base label. Starting on sheet zero, lift a supplied route to rescue Emmy on sheet two, then find a base loop whose lift closes at the extraction beacon.",
+      "location_id": "sheetwater_viaduct",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary",
+        "commutator"
+      ],
+      "asset_ids": [
+        "anchor_spool",
+        "sheet_compass"
+      ],
+      "book_section_ids": [
+        "1.3"
+      ],
+      "teaches": "Local covering condition, unique path lifting from a chosen starting point, monodromy, and the subgroup of loops with closed lifts. A loop in the base need not lift to a loop; no teleporting between sheets is permitted."
+    },
+    {
+      "level_number": 5,
+      "title": "Chain Reaction",
+      "story": "The Chain Delta's rescue channels have broken into oriented simplex tiles. Gyroid and Emmy rebuild its circulation, discovering that a closed chain need not bound any available surface.",
+      "goal": "Assemble a triangulated annulus with consistent face gluings; cancel interior edges in a signed sum of triangles, repair three chains to have zero boundary, and power the exit with a cycle around the missing center that is not a boundary.",
+      "location_id": "chain_delta",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary"
+      ],
+      "asset_ids": [
+        "cell_smith",
+        "boundary_blade"
+      ],
+      "book_section_ids": [
+        "2.1"
+      ],
+      "teaches": "Oriented simplicial chains, signed boundary maps, boundary squared equals zero, and H_n=ker boundary/im boundary. Adding a boundary changes a representative, not its homology class. Mapped simplex projections introduce singular chains without claiming every singular simplex is an embedded tile."
+    },
+    {
+      "level_number": 6,
+      "title": "The Third Degree",
+      "story": "Count Null drains the Degree Dynamo, claiming that any closed surface can be flattened to a point without consequence. Gyroid rebuilds its spherical generator and exposes the obstruction in Null's proposed retraction.",
+      "goal": "Glue northern and southern patches along an equatorial overlap and route their Mayer–Vietoris data to recover the sphere's H₂ generator. Compose degree −1 and degree −1 sphere maps to deliver degree +1 power; block Null's ball-to-boundary retractor by tracing its impossible induced-map factorization through H₂(B³)=0.",
+      "location_id": "degree_dynamo",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary",
+        "count_null"
+      ],
+      "asset_ids": [
+        "cell_smith",
+        "boundary_blade"
+      ],
+      "book_section_ids": [
+        "2.2",
+        "2.3"
+      ],
+      "teaches": "Cellular homology and Mayer–Vietoris in a guided sphere example; exactness as image equals kernel; functorial induced maps, degree and multiplicativity. The no-retraction obstruction is demonstrated algebraically, not by failed physical attempts."
+    },
+    {
+      "level_number": 7,
+      "title": "A Cup of Counterexample",
+      "story": "The Commutator replaces the torus signal station with a wedge of two circles and a sphere, trusting their matching homology groups to conceal the substitution. Emmy turns the restored chains into cochain sensors so Gyroid can expose the false station.",
+      "goal": "Assign integer edge cochains, make their coboundaries vanish, and evaluate their cup product on the torus fundamental cycle. Activate the station with a pair whose product evaluates to one; reject the wedge decoy where all degree-one products vanish, disabling the Commutator's disguise.",
+      "location_id": "cup_product_gardens",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary",
+        "commutator"
+      ],
+      "asset_ids": [
+        "boundary_blade",
+        "cup_caster"
+      ],
+      "book_section_ids": [
+        "3.1",
+        "3.2"
+      ],
+      "teaches": "Cochains as evaluations, cocycles modulo coboundaries, and pullback reversing map direction. On ordered triangles the cup product multiplies front-edge and back-edge values. Cohomology rings distinguish T² from S¹ wedge S¹ wedge S² although their integral homology groups agree."
+    },
+    {
+      "level_number": 8,
+      "title": "Both Sides of the Story",
+      "story": "The restored signal reveals a hidden dual road through Poincaré Reach. Null has reversed orientation seams to prevent the districts from coordinating; Gyroid must distinguish a repairable orientation mismatch from a genuinely nonorientable route.",
+      "goal": "Orient the triangles of a closed torus consistently, assemble its fundamental cycle, and cap two degree-one cocycles with it to illuminate dual crossing routes. In a separate closed projective-plane annex, switch to mod-two coefficients to assemble a fundamental cycle and open the tower approach.",
+      "location_id": "poincare_reach",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary"
+      ],
+      "asset_ids": [
+        "boundary_blade",
+        "cup_caster"
+      ],
+      "book_section_ids": [
+        "3.3"
+      ],
+      "teaches": "Local manifold neighborhoods, orientability, fundamental classes and cap-product duality H^k(M) to H_(n-k)(M) for closed orientable manifolds. Nonorientable closed manifolds admit mod-two fundamental classes; changing coefficients changes the problem rather than fixing orientability."
+    },
+    {
+      "level_number": 9,
+      "title": "Suspension of Disbelief",
+      "story": "Above Poincaré Reach, the tower's lift accepts sphere-maps rather than ordinary paths. Emmy equips Gyroid to navigate higher-dimensional chambers while Null tries to lure them into applying trustworthy tools outside their valid range.",
+      "goal": "Keep cube boundaries at the basepoint while sliding two interior map-packets past one another; match a degree-one S² map to its H₂ generator using Hurewicz, then power the suspension lift by transferring a π₂(S²) probe to π₃(S³). Reject the claim that the same suspension guarantees an isomorphism on π₃(S²), and reach the Crown's lower stage.",
+      "location_id": "freudenthal_ascent",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary",
+        "count_null"
+      ],
+      "asset_ids": [
+        "anchor_spool",
+        "suspension_sling"
+      ],
+      "book_section_ids": [
+        "4.1",
+        "4.2"
+      ],
+      "teaches": "Based sphere/cube maps and higher homotopy groups; commutativity for dimensions at least two. For simply connected S², the first nonzero Hurewicz map π₂ to H₂ is an isomorphism. Freudenthal for S² guarantees suspension isomorphisms for i<3 and a surjection for i=3, not an isomorphism at that boundary. Visual chambers are finite models, not literal drawings of all higher dimensions."
+    },
+    {
+      "level_number": 10,
+      "title": "A Twist in the Tower",
+      "story": "At Postnikov Spire, Count Null has replaced the tower's linking data with empty couplings. Gyroid and Emmy recover the missing k-invariants, using the provinces' repaired signals to reconnect its stages. Null is defeated not by crushing his fortress but by demonstrating and restoring the structure his Crown cannot erase honestly.",
+      "goal": "Repair two authored stages of a simply connected Postnikov model: represent each supplied cohomology class by a map to K(G,n), install the recorded k-invariant coupling, and compute its pullback along a proposed access map. For the nonzero obstruction, reroute the access map rather than forcing a lift; for the zero class, construct a cochain primitive witnessing a nullhomotopy and unlock the lift. Reach the Crown, disconnect its collapse drive, and send the restored signal to all nine provinces.",
+      "location_id": "postnikov_spire",
+      "character_ids": [
+        "gyroid",
+        "emmy_boundary",
+        "count_null"
+      ],
+      "asset_ids": [
+        "anchor_spool",
+        "cup_caster",
+        "suspension_sling",
+        "null_crown"
+      ],
+      "book_section_ids": [
+        "4.3",
+        "3.1",
+        "4.1"
+      ],
+      "teaches": "Cohomology represented by maps to Eilenberg–MacLane spaces; Postnikov fibrations with fiber K(π_n,n) and k-invariant in H^(n+1) of the preceding stage. In this simply connected principal-stage model, a lift requires nullhomotopy of the pulled-back k-map. Finite supplied cochain data make the obstruction calculation playable; this is a truncated model, not a finite construction of an entire arbitrary space. Homotopy groups alone omit essential linking data."
+    }
+  ],
+  "locations": [
+    {
+      "id": "retract_reef",
+      "name": "Retract Reef",
+      "description": "Turquoise thickened graph walkways over a luminous sea. Amber spines remain fixed as their neighborhoods retract; cylinder workshops let players extend boundary motions continuously.",
+      "book_section_ids": [
+        "0.homotopy-and-homotopy-type",
+        "0.the-homotopy-extension-property"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "skeleton_foundry",
+      "name": "Skeleton Foundry",
+      "description": "An open industrial valley of vertex furnaces, oriented edge cranes and disk presses. A torus gate displays its attaching polygon and glued form side by side; the approach network has a marked collapsible spanning tree.",
+      "book_section_ids": [
+        "0.cell-complexes",
+        "0.operations-on-spaces",
+        "0.two-criteria-for-homotopy-equivalence"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "bouquet_bastion",
+      "name": "Bouquet Bastion",
+      "description": "Two unfilled loop districts meet at a single beacon. Red and violet causeways keep travel order visible; thickened open neighborhoods provide the connected overlap for the van Kampen construction.",
+      "book_section_ids": [
+        "1.1",
+        "1.2"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "sheetwater_viaduct",
+      "name": "Sheetwater Viaduct",
+      "description": "A connected three-sheet cover of the bouquet, shown as layered glass routes with locally matched labeled ports. Sheet changes occur only by traversing lifted edges, never by jumping between visual layers.",
+      "book_section_ids": [
+        "1.3"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "chain_delta",
+      "name": "Chain Delta",
+      "description": "An annular wetland built from oriented triangular platforms, with a conspicuously absent central region. Signed face projections reveal interior-edge cancellation while the missing center preserves a nonbounding cycle.",
+      "book_section_ids": [
+        "2.1"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "degree_dynamo",
+      "name": "Degree Dynamo",
+      "description": "A spherical power station with overlapping polar maintenance patches and an equatorial belt. Map projectors show signed sphere wraps; a transparent ball chamber exposes the false boundary retractor's induced-map contradiction.",
+      "book_section_ids": [
+        "2.2",
+        "2.3"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "cup_product_gardens",
+      "name": "Cup Product Gardens",
+      "description": "A toroidal signal garden beside a counterfeit wedge of two circles and a sphere. Ordered triangulations and cochain sensors let players distinguish the stations by cup products rather than silhouettes or homology groups alone.",
+      "book_section_ids": [
+        "3.1",
+        "3.2"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "poincare_reach",
+      "name": "Poincaré Reach",
+      "description": "A closed toroidal province with primal and dual route networks, and a separate projective-plane annex displayed through a disk with antipodal boundary identifications. Orientation transport and coefficient switching reveal different fundamental-class rules.",
+      "book_section_ids": [
+        "3.3"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "freudenthal_ascent",
+      "name": "Freudenthal Ascent",
+      "description": "A vertical series of double-cone lifts and based-cube projection chambers. Dimension and connectivity controls expose suspension's valid range; higher-dimensional spaces are represented by manipulable finite diagrams and slices.",
+      "book_section_ids": [
+        "4.1",
+        "4.2"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    },
+    {
+      "id": "postnikov_spire",
+      "name": "Postnikov Spire",
+      "description": "Count Null's fortress of linked stages suspended above the provinces. Two authored simply connected Postnikov-stage consoles display finite cochain models, k-invariant couplings and obstruction witnesses; restored lifts lead to the Crown's collapse engine.",
+      "book_section_ids": [
+        "4.3"
+      ],
+      "image_prompt": null,
+      "image_path": null
+    }
+  ],
+  "characters": [
+    {
+      "id": "gyroid",
+      "name": "Gyroid",
+      "role": "hero",
+      "description": "A curious surface-born courier whose sea-glass armor has the saddle-shaped passages of a gyroid minimal surface. Uses anchored deformations and constructive proofs rather than destructive force. Learns alongside the player; failed moves reveal a concrete continuity, boundary, or obstruction witness.",
+      "appears_in_levels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "book_section_ids": [
+        "0.homotopy-and-homotopy-type",
+        "1.1",
+        "2.1",
+        "3.1",
+        "4.1",
+        "4.3"
+      ],
+      "image_prompt": "Game-ready full-body hero portrait of Gyroid, an agile androgynous surface-born courier, sculptural teal sea-glass armor with flowing gyroid minimal-surface saddle passages and rounded perforations, warm amber face visor, coral scarf, brass anchor spool at hip trailing a luminous loop, hopeful adventurous pose. Painterly high-end stylized 3D fantasy, readable silhouette, midnight blue simple background, soft rim light. No text, letters, interface or watermark.",
+      "image_path": "games/algebraic_topology/assets/characters/gyroid.png"
+    },
+    {
+      "id": "emmy_boundary",
+      "name": "Emmy Boundary",
+      "role": "ally",
+      "description": "A practical engineer with stitched triangular workwear and a portable cell forge. Offers manipulable examples and hypothesis checks instead of answers; her evolving workshop converts chains into cochain sensors.",
+      "appears_in_levels": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "book_section_ids": [
+        "0.cell-complexes",
+        "2.1",
+        "2.3",
+        "3.1",
+        "3.3"
+      ],
+      "image_prompt": "Game-ready full-body portrait of Emmy Boundary, warm older woman engineer with dark skin and silver coiled hair, amber goggles, indigo patchwork coat assembled from triangular panels with copper seams, tool belt, holding a floating luminous triangular cell in articulated brass gloves. Confident friendly pose, painterly stylized 3D fantasy, midnight blue plain background, teal and amber lighting. No text, letters, interface or watermark.",
+      "image_path": "games/algebraic_topology/assets/characters/emmy-boundary.png"
+    },
+    {
+      "id": "commutator",
+      "name": "The Commutator",
+      "role": "boss",
+      "description": "Count Null's theatrical route marshal, wearing two loop-shaped pauldrons and wielding ordered ribbon patrols. His first encounter exposes noncommuting routes; his final counterfeit station is defeated by a nonzero cup product, showing that matching homology groups do not guarantee matching topology.",
+      "appears_in_levels": [
+        3,
+        4,
+        7
+      ],
+      "book_section_ids": [
+        "1.1",
+        "1.2",
+        "1.3",
+        "3.2"
+      ],
+      "image_prompt": "Full-body game boss portrait, The Commutator, elegant geometric armored marshal with two enormous asymmetrical loop pauldrons, one red copper one violet steel, four ordered ribbon trails sweeping around a narrow black mask, angular boots, theatrical fencing stance, menacing but whimsical mathematical fantasy. Strong readable silhouette, painterly stylized 3D, midnight blue background, crimson and violet rim lighting. No text, letters, interface or watermark.",
+      "image_path": "games/algebraic_topology/assets/characters/commutator.png"
+    },
+    {
+      "id": "count_null",
+      "name": "Count Null",
+      "role": "villain",
+      "description": "An austere sovereign who mistakes erasing structure for simplifying it. His collapse machinery can physically destroy holes but cannot make the resulting maps homotopy equivalences. Challenges the hero with false retractions, overextended theorems, and missing tower couplings; defeated by restored constructions and explicit obstruction witnesses.",
+      "appears_in_levels": [
+        6,
+        9,
+        10
+      ],
+      "book_section_ids": [
+        "0.two-criteria-for-homotopy-equivalence",
+        "2.2",
+        "4.2",
+        "4.3"
+      ],
+      "image_prompt": "Full-body main villain portrait of Count Null, tall austere geometric sovereign in layered obsidian robes converging toward a tiny dark orb, pale porcelain mask, floating broken circular crown of black metal with violet inward-pointing prongs, luminous torn surface fragments orbiting one gloved hand. Regal threatening mathematical fantasy, distinct silhouette, painterly stylized 3D, plain midnight background, violet rim light with amber accents. No text, letters, interface or watermark.",
+      "image_path": "games/algebraic_topology/assets/characters/count-null.png"
+    }
+  ],
+  "assets": [
+    {
+      "id": "anchor_spool",
+      "name": "Homotopy Anchor Spool",
+      "kind": "item",
+      "description": "Gyroid's brass reel pins designated subspaces and basepoints while the player drags a continuous deformation. Ghost trails show the full motion, not just endpoints; invalid moves highlight the first broken constraint. Later anchors cube boundaries and tower access maps.",
+      "used_in_levels": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10
+      ],
+      "image_prompt": "Isolated game item icon of an intricate brass spool with teal glass core, luminous turquoise thread forming a flexible closed loop and three amber anchor pins, tactile mathematical fantasy tool, stylized painterly 3D, readable silhouette, dark navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/anchor-spool.png"
+    },
+    {
+      "id": "cell_smith",
+      "name": "CW Cell-Smith",
+      "kind": "item",
+      "description": "A portable forge that builds vertices, oriented edges and disks with selectable boundary attachments. Preview the attaching map before committing; quotient and cone settings are explicitly different from homotopy-preserving collapse tools.",
+      "used_in_levels": [
+        2,
+        5,
+        6
+      ],
+      "image_prompt": "Isolated game item render of a portable brass and indigo geometric forge gauntlet, levitating a point bead, curved edge and translucent triangular disk above its palm, luminous amber attachment seams, stylized painterly 3D, navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/cell-smith.png"
+    },
+    {
+      "id": "van_kampen_clasp",
+      "name": "Van Kampen Clasp",
+      "kind": "item",
+      "description": "Joins route records at a shared basepoint and keeps generator order visible as colored beads. Adjacent inverse pairs snap away; rearranging unlike generators is forbidden unless an installed relation justifies it.",
+      "used_in_levels": [
+        3
+      ],
+      "image_prompt": "Isolated fantasy puzzle tool, two copper clasp jaws joining red and violet loop cords at one brilliant amber bead, ordered colored beads along cords, finely crafted brass, stylized painterly 3D inventory icon, navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/van-kampen-clasp.png"
+    },
+    {
+      "id": "sheet_compass",
+      "name": "Deckhand's Sheet Compass",
+      "kind": "item",
+      "description": "Tracks a path's current sheet and projects its unique lift from a chosen starting vertex. Local ports reveal invalid covering edges; its needle never allows arbitrary sheet switching.",
+      "used_in_levels": [
+        4
+      ],
+      "image_prompt": "Isolated magical compass with three stacked translucent glass disks, tiny connected luminous route bridges between layers, brass rim and coral needle, teal amber violet palette, stylized painterly 3D inventory icon on navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/sheet-compass.png"
+    },
+    {
+      "id": "boundary_blade",
+      "name": "Boundary Blade ∂",
+      "kind": "weapon",
+      "description": "A non-destructive geometric blade that extracts the signed boundary of a selected chain. Oppositely oriented shared faces cancel in its projection; applying it twice leaves zero. Repairs chains and dismantles false boundary shields without cutting the underlying space.",
+      "used_in_levels": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "image_prompt": "Isolated hero weapon icon, elegant brass hilt with a hollow triangular energy blade, three luminous oriented edge ribbons surrounding an empty translucent center, teal and amber light, mathematical fantasy, painterly stylized 3D, dark navy background, no writing symbols or UI.",
+      "image_path": "games/algebraic_topology/assets/items/boundary-blade.png"
+    },
+    {
+      "id": "cup_caster",
+      "name": "Cup-and-Cap Caster",
+      "kind": "weapon",
+      "description": "Twin-channel cochain gauntlet evaluates front and back simplex faces to form cup products; its cap mode turns cocycles and a chosen fundamental cycle into dual routes. Requires declared coefficients and exposes coboundary errors instead of granting arbitrary magic.",
+      "used_in_levels": [
+        7,
+        8,
+        10
+      ],
+      "image_prompt": "Isolated fantasy gauntlet weapon with twin cup-shaped copper emitters, teal and coral light streams meeting over a floating triangular crystal, layered indigo bracer, precise geometric filigree, painterly stylized 3D inventory render, navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/cup-caster.png"
+    },
+    {
+      "id": "suspension_sling",
+      "name": "Freudenthal Suspension Sling",
+      "kind": "item",
+      "description": "Projects a space between two cone tips and transports sphere-map probes under suspension. A hypothesis latch checks connectivity and probe dimension before promising an isomorphism; boundary-range probes receive only a surjection guarantee.",
+      "used_in_levels": [
+        9,
+        10
+      ],
+      "image_prompt": "Isolated mathematical fantasy tool shaped as an elegant brass sling, two opposed glowing cone tips enclosing a suspended teal sphere, curved indigo handle with amber joints, crisp silhouette, painterly stylized 3D on dark navy background, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/suspension-sling.png"
+    },
+    {
+      "id": "null_crown",
+      "name": "Null Crown",
+      "kind": "other",
+      "description": "Count Null's destructive collapse engine, a crown coupled to the tower. It erases geometric structure rather than proving homotopy equivalence. In the finale the player disconnects its drive after repairing the missing stage couplings, preserving the reconstructed world.",
+      "used_in_levels": [
+        10
+      ],
+      "image_prompt": "Isolated final boss artifact, floating broken obsidian crown with inward violet prongs surrounding a tiny dark orb, torn luminous geometric surface fragments caught at its rim, ominous yet elegant stylized painterly 3D, dark navy backdrop, no text or UI.",
+      "image_path": "games/algebraic_topology/assets/items/null-crown.png"
+    }
+  ],
+  "meta": {
+    "stage": "concept_complete"
+  }
+}

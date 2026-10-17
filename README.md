@@ -31,7 +31,15 @@ npm run preview
 - `public/assets/` — cover, characters, items  
 - Optional concept viewer: `public/bible.html`
 
-## Deploy
+## Deploy (GitHub Pages)
 
-Push to `main` on [zlisto/game_algebraic_topology](https://github.com/zlisto/game_algebraic_topology).  
-GitHub Action builds Vite and deploys Pages.
+Pages serves the **`docs/`** folder (Vite build output), not the source `index.html`.
+
+```bash
+npm run build
+git add docs
+git commit -m "Update Pages build"
+git push
+```
+
+Repo settings → Pages → Deploy from branch → `main` / `/docs`.
