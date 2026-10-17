@@ -1,133 +1,153 @@
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import * as THREE from 'three'
-import { INTRO_BEATS, INTRO_TOTAL } from '../data/introScript'
+import { Canvas } from '@react-three/fiber'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import IntroWorld from '../intro/IntroWorld'
+import { createIntroScore } from '../audio/introScore'
+import { CAPTIONS, INTRO_TOTAL, TITLE_CARD, seg } from '../data/introScript'
 
-function CollapseWorld({ phase }) {
-  const group = useRef()
-  const spheres = useMemo(() => {
-    return Array.from({ length: 14 }, (_, i) => ({
-      id: i,
-      position: [
-        Math.sin(i * 1.7) * (2.2 + (i % 3) * 0.35),
-        Math.cos(i * 0.9) * 1.1,
-        Math.cos(i * 1.3) * 1.8 - 1,
-      ],
-      scale: 0.25 + (i % 4) * 0.08,
-    }))
+const CHARS_PER_SEC = 42
+const MUTE_KEY = 'winding-world:muted'
+
+function readMuted() {
+  try {
+    return localStorage.getItem(MUTE_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+// Zoom each full-body character sheet in on the face: [zoom %, x %, y %]
+const PORTRAIT_CROP = {
+  gyroid: ['400%', '63%', '9%'],
+  'count-null': ['600%', '50%', '26%'],
+  'emmy-boundary': ['400%', '54%', '5%'],
+}
+
+export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
+  // dev: ?t=…&pause starts the overlay at that time too
+  const [t, setT] = useState(() => Number(new URLSearchParams(window.location.search).get('t')) || 0)
+  const lastTick = useRef(-1)
+  const done = useRef(false)
+  const score = useRef(null)
+  const scoreStarted = useRef(false)
+  const [muted, setMuted] = useState(readMuted)
+
+  // Music: created on mount (New Game click unlocks audio), started on the scene's first frame
+  useEffect(() => {
+    const s = createIntroScore()
+    score.current = s
+    scoreStarted.current = false
+    if (!s) return
+    s.setMuted(readMuted())
+    s.resume()
+    const unlock = () => s.resume() // e.g. dev links that open the intro without a click
+    window.addEventListener('pointerdown', unlock)
+    window.addEventListener('keydown', unlock)
+    return () => {
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+      s.stop()
+    }
   }, [])
 
-  useFrame((_, dt) => {
-    if (!group.current) return
-    group.current.rotation.y += dt * (phase === 'collapse' ? 0.35 : 0.12)
-  })
+  const toggleMute = () => {
+    const next = !muted
+    setMuted(next)
+    score.current?.setMuted(next)
+    try {
+      localStorage.setItem(MUTE_KEY, next ? '1' : '0')
+    } catch {
+      /* storage unavailable: mute just won't persist */
+    }
+  }
 
-  const collapsing = phase === 'collapse' || phase === 'escape' || phase === 'handoff'
-  const holeScale = collapsing ? 0.15 : 1
-
-  return (
-    <group ref={group}>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.2, 0]}>
-        <torusGeometry args={[2.4, 0.08, 12, 64]} />
-        <meshStandardMaterial
-          color="#3ecfbf"
-          emissive="#1a6b63"
-          emissiveIntensity={phase === 'world' ? 0.6 : 1.2}
-        />
-      </mesh>
-
-      {spheres.map((s) => (
-        <mesh key={s.id} position={s.position} scale={s.scale * (collapsing ? 0.55 : 1)}>
-          <sphereGeometry args={[1, 16, 16]} />
-          <meshStandardMaterial
-            color={collapsing ? '#3a2048' : '#2a3540'}
-            emissive={collapsing ? '#6b2d8a' : '#000000'}
-            emissiveIntensity={collapsing ? 0.8 : 0}
-            wireframe={collapsing && s.id % 2 === 0}
-          />
-          {/* “hole” cue */}
-          <mesh scale={[holeScale, holeScale, holeScale]} position={[0.35, 0.2, 0.4]}>
-            <sphereGeometry args={[0.35, 10, 10]} />
-            <meshBasicMaterial color="#0a1012" />
-          </mesh>
-        </mesh>
-      ))}
-
-      {/* Null Crown cue */}
-      <mesh position={[0, 2.1, -1.2]} rotation={[0.2, 0, 0]}>
-        <torusGeometry args={[0.55, 0.06, 8, 6]} />
-        <meshStandardMaterial
-          color="#1a1218"
-          emissive="#7a3cff"
-          emissiveIntensity={phase === 'threat' || phase === 'collapse' ? 2.2 : 0.4}
-        />
-      </mesh>
-      <mesh position={[0, 2.1, -1.2]}>
-        <coneGeometry args={[0.12, 0.45, 5]} />
-        <meshStandardMaterial color="#0d0a10" emissive="#5a2a9a" emissiveIntensity={1} />
-      </mesh>
-    </group>
+  // The 3D scene drives the clock; the overlay only needs ~20 updates a second.
+  const onTick = useCallback(
+    (time) => {
+      if (!scoreStarted.current && score.current) {
+        scoreStarted.current = true
+        score.current.start(time)
+      }
+      const q = Math.floor(time * 20)
+      if (q !== lastTick.current) {
+        lastTick.current = q
+        setT(time)
+      }
+      if (time >= INTRO_TOTAL && !done.current) {
+        done.current = true
+        onIntroDone?.()
+      }
+    },
+    [onIntroDone],
   )
-}
-
-function IntroScene({ phase }) {
-  return (
-    <>
-      <color attach="background" args={['#070b0e']} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[4, 6, 2]} intensity={1.1} color="#cfe8e4" />
-      <pointLight position={[-2, 2, 2]} intensity={phase === 'collapse' ? 2 : 0.8} color="#a86bff" />
-      <CollapseWorld phase={phase} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.35, 0]}>
-        <circleGeometry args={[8, 32]} />
-        <meshStandardMaterial color="#0c1216" />
-      </mesh>
-    </>
-  )
-}
-
-export default function IntroCutscene({ onSkipIntro, onIntroDone }) {
-  const [elapsed, setElapsed] = useState(0)
-  const started = useRef(performance.now())
+  const scene = useMemo(() => <IntroWorld onTick={onTick} />, [onTick])
 
   useEffect(() => {
-    let raf
-    const tick = () => {
-      const t = (performance.now() - started.current) / 1000
-      setElapsed(t)
-      if (t >= INTRO_TOTAL) {
-        onIntroDone?.()
-        return
-      }
-      raf = requestAnimationFrame(tick)
+    const onKey = (e) => {
+      if (e.key === 'Escape' || e.key === 'Enter') onSkipIntro?.()
     }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [onIntroDone])
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onSkipIntro])
 
-  const beat =
-    INTRO_BEATS.find((b) => elapsed >= b.t && elapsed < b.t + b.duration) ||
-    INTRO_BEATS[INTRO_BEATS.length - 1]
+  const cap = CAPTIONS.find((c) => t >= c.t && t < c.end)
+  const shown = cap ? cap.text.slice(0, Math.floor((t - cap.t) * CHARS_PER_SEC)) : ''
+  const title = seg(t, TITLE_CARD.t, TITLE_CARD.t + 1.2) * (1 - seg(t, TITLE_CARD.end - 0.8, TITLE_CARD.end))
+  const fade = Math.max(1 - seg(t, 0, 1.2), seg(t, INTRO_TOTAL - 0.8, INTRO_TOTAL))
+  const level1 = (concept?.levels || []).find((l) => l.level_number === 1)
+  const story = concept?.story || {}
+  const base = import.meta.env.BASE_URL
 
   return (
-    <div className="screen">
-      <Canvas camera={{ position: [0, 1.2, 6.5], fov: 45 }} dpr={[1, 1.5]}>
-        <IntroScene phase={beat.phase} />
+    <div className="screen intro">
+      <Canvas camera={{ position: [20, 12, 20], fov: 40, near: 0.1, far: 200 }} dpr={[1, 1.75]}>
+        {scene}
       </Canvas>
+
+      <div className="letterbox top" />
+      <div className="letterbox bottom" />
+      <div className="intro-fade" style={{ opacity: fade }} />
 
       <div className="ui-overlay">
         <div className="hud-top">
           <div />
-          <button type="button" className="btn" onClick={onSkipIntro}>
-            Skip intro
-          </button>
-        </div>
-        <div className="hud-bottom">
-          <div className="caption">
-            <span className="speaker">{beat.speaker}</span>
-            <p>{beat.text}</p>
+          <div className="btn-row">
+            <button type="button" className="btn ghost" onClick={toggleMute} aria-pressed={muted}>
+              {muted ? '♪ Sound off' : '♪ Sound on'}
+            </button>
+            <button type="button" className="btn ghost" onClick={onSkipIntro}>
+              Skip ▸
+            </button>
           </div>
         </div>
+
+        {cap && (
+          <div key={cap.t} className={`intro-caption ${cap.portrait ? 'has-portrait' : 'narrator'}`}>
+            {cap.portrait && (
+              <div
+                className="portrait"
+                role="img"
+                aria-label={cap.speaker}
+                style={{
+                  backgroundImage: `url(${base}assets/characters/${cap.portrait}.png)`,
+                  backgroundSize: PORTRAIT_CROP[cap.portrait][0],
+                  backgroundPosition: `${PORTRAIT_CROP[cap.portrait][1]} ${PORTRAIT_CROP[cap.portrait][2]}`,
+                }}
+              />
+            )}
+            <div>
+              <span className="speaker">{cap.speaker}</span>
+              <p>{shown}</p>
+            </div>
+          </div>
+        )}
+
+        {title > 0 && (
+          <div className="intro-title" style={{ opacity: title }}>
+            <h1>{story.title || 'Winding World'}</h1>
+            <p className="tagline">{story.tagline || "Shape can change. Topology can't."}</p>
+            {level1 && <p className="level-tag">Level 1 — {level1.title}</p>}
+          </div>
+        )}
       </div>
     </div>
   )

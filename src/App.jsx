@@ -10,7 +10,9 @@ const SCREENS = {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState('title')
+  const [screen, setScreen] = useState(
+    () => new URLSearchParams(window.location.search).get('screen') || 'title', // dev: ?screen=intro
+  )
   const [concept, setConcept] = useState(null)
 
   useEffect(() => {
