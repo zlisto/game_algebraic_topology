@@ -49,29 +49,52 @@ button {
 }
 
 .title-screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
   display: grid;
-  place-items: center;
-  background: #0a1012 center / cover no-repeat;
+  justify-items: center;
+  align-items: end;
+  background: #0b0f1d;
+}
+
+.title-backdrop,
+.title-art {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.title-backdrop {
+  background-size: cover;
+  filter: blur(36px) brightness(0.45) saturate(1.2);
+  transform: scale(1.15);
+}
+
+.title-art {
+  background-size: contain;
 }
 
 .title-screen::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(8, 12, 14, 0.35) 0%,
-    rgba(8, 12, 14, 0.55) 45%,
-    rgba(8, 12, 14, 0.92) 100%
+    rgba(8, 12, 14, 0) 0%,
+    rgba(8, 12, 14, 0) 55%,
+    rgba(8, 12, 14, 0.9) 100%
   );
 }
 
 .title-card {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: center;
   max-width: 36rem;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem clamp(1.5rem, 6vh, 3.5rem);
 }
 
 .title-card h1 {
