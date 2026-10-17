@@ -2,6 +2,8 @@
 
 Teaching game concept from Allen Hatcher's *Algebraic Topology*.
 
-**Live:** GitHub Pages (this repo)
+**Live:** https://zlisto.github.io/game_algebraic_topology/
 
-Source: https://pi.math.cornell.edu/~hatcher/
+Repo: https://github.com/zlisto/game_algebraic_topology
+
+Author page: https://pi.math.cornell.edu/~hatcher/
