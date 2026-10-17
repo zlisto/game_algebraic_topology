@@ -51,6 +51,24 @@
       margin-bottom: 1.5rem;
     }
 
+    .cover-wrap {
+      margin: 0 0 1.25rem;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background: #0a1012;
+    }
+    .cover-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: min(52vh, 420px);
+      object-fit: cover;
+      object-position: center;
+      vertical-align: middle;
+    }
+
     header.hero .eyebrow {
       font-size: 0.75rem;
       letter-spacing: 0.12em;
@@ -402,6 +420,15 @@
 </head>
 <body>
   <div class="shell">
+    <div class="cover-wrap">
+      <img
+        id="cover-image"
+        src="./assets/cover.png"
+        alt="Winding World cover art"
+        width="1600"
+        height="900"
+      />
+    </div>
     <header class="hero">
       <p class="eyebrow">Game Bible · self-contained world</p>
       <h1 id="page-title">Algebraic Topology</h1>

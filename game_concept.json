@@ -6,6 +6,11 @@
     "author_url": "https://pi.math.cornell.edu/~hatcher/",
     "pdf": "books/Algebraic Topology.pdf"
   },
+  "cover": {
+    "image_path": "games/algebraic_topology/assets/cover.png",
+    "alt": "Winding World cover art",
+    "prompt": "Wide game key art, no text: a teal gyroid-surface courier on a luminous looped causeway that twists through a night landscape of stitched spheres and open holes, brass anchor spool trailing a glowing based loop; above them, a fractured black crown of inward spikes hovers over a collapsing tower whose rooms peel into translucent covering sheets; violet collapse machinery erases holes into points on one side while amber repaired cycles reconnect the other. Painterly stylized 3D fantasy, strong silhouette, teal–amber–violet palette, cinematic lighting. No UI, letters, or watermark."
+  },
   "story": {
     "title": "Winding World",
     "tagline": "Bend the world. Keep what matters.",
