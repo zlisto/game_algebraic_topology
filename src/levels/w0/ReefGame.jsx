@@ -1,8 +1,10 @@
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
+import { sfxCrack, sfxHit, sfxHurt, sfxPop, sfxWhoosh } from '../../audio/chip'
+import { MirrorSpawn, SnapperSpawn, SphereSpawn, TorusSpawn } from '../../characters/Spawn'
 
 /**
  * The playable layer of Retract Reef. Gyroid runs (WASD / arrows) and carries two
@@ -12,12 +14,14 @@ import Gyroid from '../../characters/Gyroid'
  *   sphere spawn — one lash: every loop slides right off a sphere, so it collapses to a point
  *   torus spawn  — two lashes: it holds two loops it can't shed (around the tube, through
  *                  the hole); each lash lights one, and with both caught it collapses
+ *   snapper      — one lash: a crab from Tidewarp Flats (0-2) that goes for ribbons and
+ *                  clips them (a clipped ribbon is no longer a continuous map)
  *
  * (A preview of World 1, where the torus has two independent loops and the sphere none.)
  */
 
 export const GYROID_SCALE = 0.7
-const SPEED = 2.8
+const SPEED = 3.6
 const WHIP_TIME = 0.42
 const WHIP_HIT_AT = 0.45 // fraction of the swing when the lash lands
 const WHIP_RANGE = 1.35
@@ -26,90 +30,10 @@ const CONTACT = 0.36
 const HEARTS = 3
 
 const ENEMY = {
-  sphere: { hp: 1, speed: 0.85, radius: 0.22 },
-  torus: { hp: 2, speed: 0.65, radius: 0.3 },
-}
-
-// ---------------------------------------------------------------- enemy visuals
-
-function SphereSpawn({ e }) {
-  const g = useRef()
-  const body = useRef()
-  useFrame(({ clock }) => {
-    const t = clock.elapsedTime
-    g.current.visible = e.alive || e.dying > 0
-    g.current.position.set(e.x, 0.28 + Math.sin(t * 3 + e.seed) * 0.05, e.z)
-    const s = e.dying > 0 ? Math.max(0.001, e.dying / 0.5) : 1 // collapses to a point
-    g.current.scale.setScalar(s)
-    body.current.material.emissiveIntensity = e.flash > 0 ? 3 : 0.6
-  })
-  return (
-    <group ref={g}>
-      <mesh ref={body}>
-        <sphereGeometry args={[0.22, 20, 14]} />
-        <meshStandardMaterial color="#1a1222" emissive="#8a3cff" emissiveIntensity={0.6} roughness={0.3} />
-      </mesh>
-      <mesh scale={1.08}>
-        <sphereGeometry args={[0.22, 20, 14]} />
-        <meshBasicMaterial color="#a259ff" side={THREE.BackSide} transparent opacity={0.8} toneMapped={false} />
-      </mesh>
-      {[-1, 1].map((sd) => (
-        <mesh key={sd} position={[sd * 0.07, 0.04, 0.19]}>
-          <sphereGeometry args={[0.03, 8, 6]} />
-          <meshBasicMaterial color="#e6d4ff" toneMapped={false} />
-        </mesh>
-      ))}
-    </group>
-  )
-}
-
-function TorusSpawn({ e }) {
-  const g = useRef()
-  const spin = useRef()
-  const meridian = useRef()
-  const longitude = useRef()
-  useFrame(({ clock }, dt) => {
-    const t = clock.elapsedTime
-    g.current.visible = e.alive || e.dying > 0
-    g.current.position.set(e.x, 0.42 + Math.sin(t * 2.4 + e.seed) * 0.05, e.z)
-    g.current.rotation.y = e.face
-    spin.current.rotation.z += dt * (e.stun > 0 ? 6 : 1.5)
-    const s = e.dying > 0 ? Math.max(0.001, e.dying / 0.6) : 1
-    g.current.scale.setScalar(s)
-    const caught = ENEMY.torus.hp - e.hp // loops lashed so far
-    meridian.current.visible = caught >= 1 || e.dying > 0
-    longitude.current.visible = caught >= 2 || e.dying > 0
-  })
-  return (
-    <group ref={g}>
-      <group ref={spin}>
-        <mesh>
-          <torusGeometry args={[0.26, 0.1, 14, 36]} />
-          <meshStandardMaterial color="#1a1222" emissive="#8a3cff" emissiveIntensity={0.55} roughness={0.3} />
-        </mesh>
-        <mesh scale={1.06}>
-          <torusGeometry args={[0.26, 0.1, 14, 36]} />
-          <meshBasicMaterial color="#a259ff" side={THREE.BackSide} transparent opacity={0.8} toneMapped={false} />
-        </mesh>
-        {/* first lash: a loop around the tube */}
-        <mesh ref={meridian} position={[0.26, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.13, 0.014, 6, 28]} />
-          <meshBasicMaterial color="#ffd27a" toneMapped={false} />
-        </mesh>
-        {/* second lash: a loop through the hole */}
-        <mesh ref={longitude}>
-          <torusGeometry args={[0.26, 0.014, 6, 48]} />
-          <meshBasicMaterial color="#ffd27a" toneMapped={false} />
-        </mesh>
-      </group>
-      {[-1, 1].map((sd) => (
-        <mesh key={sd} position={[sd * 0.06, 0.02, 0.11]}>
-          <sphereGeometry args={[0.028, 8, 6]} />
-          <meshBasicMaterial color="#e6d4ff" toneMapped={false} />
-        </mesh>
-      ))}
-    </group>
-  )
+  sphere: { hp: 1, speed: 0.95, radius: 0.32 },
+  torus: { hp: 2, speed: 0.72, radius: 0.44 },
+  snapper: { hp: 1, speed: 1.25, radius: 0.42 },
+  mirror: { hp: 1, speed: 0.9, radius: 0.36 },
 }
 
 /** The Fundamental Lash: an amber cord cracked from Gyroid's hand. */
@@ -154,6 +78,19 @@ function Lash({ state }) {
 
 // ---------------------------------------------------------------- the game
 
+/** Renders the spawn list, picking up spawn added mid-play. */
+function EnemyList({ enemies }) {
+  const [n, setN] = useState(enemies.current.length)
+  useFrame(() => {
+    if (enemies.current.length !== n) setN(enemies.current.length)
+  })
+  return enemies.current
+    .slice(0, n)
+    .map((e, i) =>
+      e.type === 'torus' ? <TorusSpawn key={i} e={e} maxHp={ENEMY.torus.hp} /> : e.type === 'snapper' ? <SnapperSpawn key={i} e={e} /> : e.type === 'mirror' ? <MirrorSpawn key={i} e={e} /> : <SphereSpawn key={i} e={e} />,
+    )
+}
+
 /** Aim marker on the reef under the mouse. */
 function Reticle({ aim, tool }) {
   const g = useRef()
@@ -196,7 +133,36 @@ function SpoolLoop({ state, tool }) {
   )
 }
 
-export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool, sim, tRef, onStrokeStart, onStrokeMove, onStrokeEnd, onEnemies, onHearts, onSpooling }) {
+/** The Tide Glass (0-2): a small amber hourglass held up while scrubbing time. */
+function GlassProp({ state, tool }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const s = state.current
+    g.current.visible = tool === 'glass'
+    const fx = Math.sin(s.face)
+    const fz = Math.cos(s.face)
+    g.current.position.set(s.x + fx * 0.3 - fz * 0.18, 0.72 + Math.sin(clock.elapsedTime * 2) * 0.03, s.z + fz * 0.3 + fx * 0.18)
+    g.current.rotation.y = clock.elapsedTime * 0.8
+  })
+  return (
+    <group ref={g}>
+      {[1, -1].map((sd) => (
+        <mesh key={sd} position={[0, sd * 0.07, 0]} rotation={[sd > 0 ? Math.PI : 0, 0, 0]}>
+          <coneGeometry args={[0.08, 0.14, 16, 1, true]} />
+          <meshStandardMaterial color="#ffe6a8" emissive="#ffb347" emissiveIntensity={1.2} transparent opacity={0.75} side={THREE.DoubleSide} toneMapped={false} />
+        </mesh>
+      ))}
+      {[1, -1].map((sd) => (
+        <mesh key={`c${sd}`} position={[0, sd * 0.15, 0]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.02, 16]} />
+          <meshStandardMaterial color="#c98a2a" emissive="#ffb347" emissiveIntensity={0.6} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool, sim, tRef, stateRef, spawnRef, ribbonApi, onStrokeStart, onStrokeMove, onStrokeEnd, onEnemies, onHearts, onSpooling }) {
   const b = shape.bounds
   const start = stage.start || [b.minX + 0.4, b.maxZ - 0.4]
   const pier = useMemo(() => [b.minX - 0.9, b.maxZ * 0.5], [b])
@@ -218,11 +184,16 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
     }
   }
   const enemies = useRef(null)
-  if (!enemies.current) {
-    enemies.current = (stage.enemies || []).map(([type, x, z], i) => ({
+  const makeEnemy = (def, i) => {
+      const [type, x, z, site] = Array.isArray(def) ? def : [def.type, def.x, def.z, def.site]
+      return {
+      axis: Array.isArray(def) ? undefined : def.axis, // mirror spawn: their reflection's mirror line
       type,
+      site,
       x,
       z,
+      hx: x, // home: spawn stay near where they were placed
+      hz: z,
       hp: ENEMY[type].hp,
       alive: true,
       dying: 0,
@@ -233,15 +204,44 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       tx: x,
       tz: z,
       retarget: 0,
-    }))
+      snipping: 0,
+      cooldown: type === 'snapper' ? 3.5 : 0, // Snappers size things up before the first snip
+      }
+  }
+  if (!enemies.current) enemies.current = (stage.enemies || []).map(makeEnemy)
+  if (stateRef) stateRef.current = state.current
+  if (spawnRef) {
+    // levels can add spawn mid-play (waves, Snappers arriving)
+    spawnRef.current = (defs) => {
+      const n = enemies.current.length
+      enemies.current.push(...defs.map((d, k) => makeEnemy(d, n + k)))
+      report()
+    }
+  }
+  // alive spawn per site (or the total, for single-stage boards)
+  const report = () => {
+    const by = {}
+    for (const e of enemies.current) if (e.alive) by[e.site ?? 'all'] = (by[e.site ?? 'all'] || 0) + 1
+    onEnemies?.(stage.bySite || stage.enemies?.some((d) => !Array.isArray(d)) ? by : by.all || 0)
   }
   const keys = useRef({})
   const aim = useRef(null) // reef point under the mouse
   const clicks = useRef([]) // clicks waiting for the game loop
-  if (import.meta.env.DEV) window.__game = { state: state.current, enemies: enemies.current, click: (x, z) => clicks.current.push([x, z]) } // dev inspection
+  if (import.meta.env.DEV) {
+    // dev inspection / test shortcuts
+    window.__game = {
+      state: state.current,
+      enemies: enemies.current,
+      click: (x, z) => clicks.current.push([x, z]),
+      killSite: (site) => {
+        for (const e of enemies.current) if (e.site === site) e.alive = false
+        report()
+      },
+    }
+  }
 
   useEffect(() => {
-    onEnemies?.(enemies.current.filter((e) => e.alive).length)
+    report()
     onHearts?.(state.current.hearts)
     const MOVE = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
     const down = (e) => {
@@ -266,8 +266,9 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
   }, [])
 
   const inside = (x, z) => shape.inside(x, z)
+  const enemyInside = (x, z) => (shape.insideForSpawn || shape.inside)(x, z)
 
-  useFrame((_, rawDt) => {
+  useFrame(({ clock }, rawDt) => {
     const dt = Math.min(rawDt, 0.05)
     const s = state.current
     const t = tRef.current
@@ -320,21 +321,29 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       if (tool === 'spool') {
         if (!canSpool) continue
         if (!s.spooling) {
+          if (onStrokeStart(s.x, s.z, cx, cz) === false) continue // nothing to take hold of here
           s.spooling = true
-          onStrokeStart(s.x, s.z)
           onSpooling?.(true)
         } else {
+          // (the level may pick something else up in onStrokeEnd and set spooling again)
           s.spooling = false
-          onStrokeEnd()
           onSpooling?.(false)
+          onStrokeEnd(cx, cz)
         }
-      } else if (s.whip === 0) {
+      } else if (tool === 'lash' && s.whip === 0) {
         s.face = Math.atan2(cx - s.x, cz - s.z)
         s.whip = 0.0001
         s.hitDone = false
+        sfxWhoosh()
       }
     }
     clicks.current.length = 0
+    if (s.spooling && s.spoolDropped) {
+      // the level let go for us (e.g. the ribbon was clipped)
+      s.spooling = false
+      s.spoolDropped = false
+      onSpooling?.(false)
+    }
     if (s.spooling && !canSpool) {
       // switched weapons or the stage moved on: tie off the thread
       s.spooling = false
@@ -348,6 +357,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       s.whip += dt / WHIP_TIME
       if (!s.hitDone && s.whip >= WHIP_HIT_AT) {
         s.hitDone = true
+        sfxCrack()
         for (const e of enemies.current) {
           if (!e.alive) continue
           const dx = e.x - s.x
@@ -358,15 +368,17 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
           if (d < WHIP_RANGE + ENEMY[e.type].radius && Math.abs(da) < WHIP_ARC) {
             e.hp--
             e.flash = 0.15
+            sfxHit()
             e.stun = 0.5
             const kb = 0.55 / (d || 1)
             const kx = e.x + dx * kb
             const kz = e.z + dz * kb
-            if (inside(kx, kz)) (e.x = kx), (e.z = kz)
+            if (enemyInside(kx, kz)) (e.x = kx), (e.z = kz)
             if (e.hp <= 0) {
               e.alive = false
               e.dying = e.type === 'torus' ? 0.6 : 0.5
-              onEnemies?.(enemies.current.filter((q) => q.alive).length)
+              sfxPop()
+              report()
             }
           }
         }
@@ -376,8 +388,10 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
 
     // --- spawn: wander, chase when close, hurt on contact
     s.hurt = Math.max(0, s.hurt - dt)
+    const drift = playEnabled && stage.drift ? stage.drift(clock.elapsedTime) : null
     for (const e of enemies.current) {
       e.flash = Math.max(0, e.flash - dt)
+      e.snipping = Math.max(0, e.snipping - dt)
       if (e.dying > 0) {
         e.dying = Math.max(0, e.dying - dt)
         continue
@@ -391,14 +405,32 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       const dx = s.x - e.x
       const dz = s.z - e.z
       const d = Math.hypot(dx, dz)
-      if (d < 3.2 && playEnabled && !onPier) {
+      const leash = Math.hypot(s.x - e.hx, s.z - e.hz) < 6.5 // spawn guard their own patch of reef
+      e.cooldown = Math.max(0, e.cooldown - dt)
+      const ribbonGoal = e.type === 'snapper' && e.cooldown === 0 && playEnabled && !onPier ? ribbonApi?.current?.target(e) : null
+      if (drift && e.type !== 'snapper') {
+        // spawn drift with the tide
+        const nx = e.x + drift[0] * dt
+        const nz = e.z + drift[1] * dt
+        if (enemyInside(nx, nz)) (e.x = nx), (e.z = nz)
+      }
+      if (ribbonGoal && d > 1.4) {
+        // Snappers go for the ribbon; when they reach it, they clip it
+        e.tx = ribbonGoal[0]
+        e.tz = ribbonGoal[1]
+        if (Math.hypot(e.tx - e.x, e.tz - e.z) < 0.28) {
+          if (ribbonApi.current.snip(e.x, e.z)) e.snipping = 0.5
+          e.cooldown = 6
+          e.retarget = 0
+        }
+      } else if (d < 3.2 && leash && playEnabled && !onPier) {
         e.tx = s.x
         e.tz = s.z
       } else if ((e.retarget -= dt) <= 0 || Math.hypot(e.tx - e.x, e.tz - e.z) < 0.2) {
         for (let tries = 0; tries < 20; tries++) {
-          const rx = b.minX + Math.random() * (b.maxX - b.minX)
-          const rz = b.minZ + Math.random() * (b.maxZ - b.minZ)
-          if (inside(rx, rz)) {
+          const rx = e.hx + (Math.random() * 2 - 1) * 3
+          const rz = e.hz + (Math.random() * 2 - 1) * 3
+          if (enemyInside(rx, rz)) {
             e.tx = rx
             e.tz = rz
             break
@@ -412,13 +444,16 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       if (vl > 0.01 && playEnabled) {
         const nx = e.x + (vx / vl) * cfg.speed * dt
         const nz = e.z + (vz / vl) * cfg.speed * dt
-        if (inside(nx, nz)) (e.x = nx), (e.z = nz)
+        if (enemyInside(nx, nz)) (e.x = nx), (e.z = nz)
+        else if (enemyInside(nx, e.z)) e.x = nx
+        else if (enemyInside(e.x, nz)) e.z = nz
         else e.retarget = 0
         e.face = Math.atan2(vx, vz)
       }
       if (d < CONTACT + cfg.radius * 0.5 && s.hurt === 0 && playEnabled && !onPier) {
         s.hurt = 1.3
         s.hearts = Math.max(0, s.hearts - 1)
+        sfxHurt()
         onHearts?.(s.hearts)
         const kx = s.x + (dx / (d || 1)) * 0.7
         const kz = s.z + (dz / (d || 1)) * 0.7
@@ -455,7 +490,8 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       </group>
       <Lash state={state} />
       {!onPier && <SpoolLoop state={state} tool={tool} />}
-      {enemies.current.map((e, i) => (e.type === 'torus' ? <TorusSpawn key={i} e={e} /> : <SphereSpawn key={i} e={e} />))}
+      {!onPier && <GlassProp state={state} tool={tool} />}
+      <EnemyList enemies={enemies} />
       {playEnabled && <Reticle aim={aim} tool={tool} />}
 
       {/* mouse: aim under the cursor; click to lash toward it, or to start / stop the thread */}
@@ -471,7 +507,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
           clicks.current.push([e.point.x, e.point.z])
         }}
       >
-        <planeGeometry args={[80, 80]} />
+        <planeGeometry args={[240, 240]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
     </>

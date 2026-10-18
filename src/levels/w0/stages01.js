@@ -59,7 +59,7 @@ export const STAGES = [
     cleared: [
       E('Walkway’s clear. Now, this walkway is too thick to hold — but its amber spine is solid. We shrink the walkway onto the spine.'),
       E('Watch the faint lines: every point slides along its own path to the spine, all arriving together. Points already on the spine never move.'),
-      E('Drag the time dial from t = 0 to t = 1, or press Slide. You’re standing on the reef — you’ll ride along.'),
+      E('Press Slide. You’re standing on the reef — you’ll ride along.'),
     ],
     success: [
       E('That’s a deformation retraction. Look at the rules — every one held.'),

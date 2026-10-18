@@ -12,6 +12,7 @@ const C_TILE = new THREE.Color(LAND.stone)
 const C_FALL = new THREE.Color('#7a3cff')
 const C_TEAR = new THREE.Color('#ff4d5e')
 const C_DONE = new THREE.Color(LAND.stoneLit)
+const C_SAVED = new THREE.Color(LAND.stoneLit).lerp(new THREE.Color('#ffd27a'), 0.18) // a reef restored along its spine
 
 // ---------------------------------------------------------------- Null's forgeries (strip, spine z = 0)
 
@@ -19,7 +20,7 @@ const HALF_W = 0.85
 const clampX = (x) => Math.max(-3.2, Math.min(3.2, x))
 
 /** Each forgery breaks exactly one rule of a deformation retraction. */
-function forgeryPosition(id, x, z, t, out) {
+export function forgeryPosition(id, x, z, t, out) {
   let tx = clampX(x)
   let tz = 0
   let sx = x
@@ -43,7 +44,7 @@ const wobble = (x, z, t) => 0.32 * Math.sin(Math.PI * t) * Math.sin(x * 1.6 + t 
 
 // ---------------------------------------------------------------- pieces
 
-function Tiles({ samples, simRef, tRef, forgery, tornSet }) {
+export function Tiles({ samples, simRef, tRef, forgery, tornSet, saved = false }) {
   const mesh = useRef()
   const dummy = useMemo(() => new THREE.Object3D(), [])
   const p = useMemo(() => [0, 0, 0], [])
@@ -52,7 +53,7 @@ function Tiles({ samples, simRef, tRef, forgery, tornSet }) {
 
   useEffect(() => {
     last.current.t = -1
-  }, [samples, forgery])
+  }, [samples, forgery, saved])
 
   useFrame(() => {
     const t = tRef.current
@@ -80,6 +81,7 @@ function Tiles({ samples, simRef, tRef, forgery, tornSet }) {
       if (fallen) color.copy(C_FALL)
       else if (tornSet && tornSet.has(i) && t > 0.03) color.copy(C_TILE).lerp(C_TEAR, Math.min(1, t * 3))
       else if (sim?.bad?.[i] && t > 0.03) color.copy(C_TILE).lerp(C_TEAR, Math.min(0.45, t)) // the region that can't collapse
+      else if (saved) color.copy(C_SAVED)
       else color.copy(C_TILE).lerp(C_DONE, sim?.valid ? t : 0)
       mesh.current.setColorAt(i, color)
     }
@@ -97,7 +99,7 @@ function Tiles({ samples, simRef, tRef, forgery, tornSet }) {
 }
 
 /** Dim copy of the reef where it started — the footprint that f₀ must match. */
-function Footprint({ samples }) {
+export function Footprint({ samples }) {
   const mesh = useRef()
   useEffect(() => {
     const d = new THREE.Object3D()
@@ -116,7 +118,7 @@ function Footprint({ samples }) {
   )
 }
 
-function Trails({ samples, sim, tRef }) {
+export function Trails({ samples, sim, tRef }) {
   const ref = useRef()
   const geo = useMemo(() => {
     if (!sim) return null
@@ -141,7 +143,7 @@ function Trails({ samples, sim, tRef }) {
 }
 
 /** Red seams between neighbors that tear apart. */
-function TearLines({ samples, simRef, tRef, forgery, pairs }) {
+export function TearLines({ samples, simRef, tRef, forgery, pairs }) {
   const ref = useRef()
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry()
@@ -177,7 +179,7 @@ function TearLines({ samples, simRef, tRef, forgery, pairs }) {
   )
 }
 
-function Spine({ strokes, forgery, tRef, glow }) {
+export function Spine({ strokes, forgery, tRef, glow }) {
   const group = useRef()
   const wobbly = forgery === 'wobbly-spine'
   const lines = useRef([])
@@ -224,7 +226,7 @@ function Spine({ strokes, forgery, tRef, glow }) {
   )
 }
 
-function Beacon({ position, state }) {
+export function Beacon({ position, state }) {
   const gem = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime

@@ -791,3 +791,296 @@ button {
     box-shadow: 0 0 0 6px rgba(255, 207, 106, 0.15);
   }
 }
+
+/* ---------- overworld HUD ---------- */
+
+.objective {
+  font-size: 0.85rem;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 179, 71, 0.12);
+  border: 1px solid rgba(255, 179, 71, 0.45);
+  color: #ffd9a0;
+}
+
+.here {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.here strong {
+  color: var(--ink);
+}
+
+.minimap {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  width: min(15rem, 38vw);
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .minimap {
+    top: 6.5rem;
+    bottom: auto;
+    width: 9rem;
+  }
+}
+
+/* ---------- Level 0-2: Tide Glass panel, toasts */
+.glass-panel .glass-t {
+  margin: 0 0 0.4rem;
+  font-size: 1.12rem;
+  font-family: 'Cambria Math', 'STIX Two Math', serif;
+  color: #ffe6a8;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.glass-panel input[type='range'] {
+  width: 100%;
+  accent-color: #ffb347;
+}
+.glass-panel .btn {
+  margin-top: 0.55rem;
+}
+.glass-panel kbd {
+  margin-left: 0.35rem;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.toast {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(40, 18, 60, 0.85);
+  border: 1px solid rgba(197, 139, 255, 0.5);
+  color: #ead9ff;
+  font-size: 0.88rem;
+  z-index: 5;
+}
+
+/* ---------- lesson movies: the diagram beside the 3D demo */
+.screen.intro.embedded {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #060a14;
+}
+.lesson-card {
+  position: absolute;
+  right: clamp(1rem, 4vw, 3rem);
+  top: 50%;
+  transform: translateY(-58%);
+  width: min(17rem, 34vw);
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(8, 12, 22, 0.78);
+  border: 1px solid rgba(255, 210, 122, 0.25);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+.lesson-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.lesson-steps h4 {
+  margin: 0 0 0.6rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffd27a;
+}
+.lesson-step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.5rem;
+  margin: 0.25rem 0;
+  border-radius: 8px;
+  color: #8f9ab4;
+  font-size: 0.95rem;
+  transition: background 0.2s, color 0.2s;
+}
+.lesson-step kbd {
+  min-width: 2.6rem;
+  text-align: center;
+  padding: 0.15rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.78rem;
+  color: #c9d3ea;
+}
+.lesson-step.on {
+  background: rgba(255, 179, 71, 0.16);
+  color: #fff2d6;
+}
+.lesson-step.on kbd {
+  border-color: #ffd27a;
+  color: #ffd27a;
+}
+.lesson-step.bad.on {
+  background: rgba(162, 89, 255, 0.18);
+}
+.lesson-step.bad.on kbd {
+  border-color: #c58bff;
+  color: #c58bff;
+}
+.lesson-math {
+  margin: 0.35rem 0 0;
+  font-family: 'Cambria Math', 'STIX Two Math', serif;
+  font-size: 1.08rem;
+  color: #ffe6a8;
+}
+.lesson-note {
+  margin: 0.1rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: #9fb0d0;
+}
+@media (max-width: 700px) {
+  .lesson-card {
+    top: 4.2rem;
+    transform: none;
+    width: min(15rem, 60vw);
+  }
+}
+
+/* ---------- debug level select (title screen) */
+.level-select {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(4, 7, 14, 0.7);
+  z-index: 30;
+  padding: 1rem;
+}
+.level-select-card {
+  width: min(26rem, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding: 1rem 1.1rem 1.2rem;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+}
+.level-select-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+.level-select-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+.level-select-head .btn {
+  margin-left: auto;
+}
+.level-select-group h3 {
+  margin: 0.9rem 0 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.level-select-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  margin: 0.2rem 0;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.level-select-item:hover,
+.level-select-item:focus-visible {
+  background: rgba(255, 179, 71, 0.14);
+  border-color: rgba(255, 210, 122, 0.5);
+}
+
+/* ---------- movie captions hold until clicked (FF7 style) */
+.intro-caption {
+  cursor: pointer;
+}
+.caption-next {
+  align-self: flex-end;
+  margin-left: auto;
+  color: #ffd27a;
+  font-size: 0.9rem;
+  animation: caption-next 0.8s ease-in-out infinite;
+}
+@keyframes caption-next {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(3px); opacity: 0.5; }
+}
+
+/* ---------- 0-2: numbered stakes (the order to hook them in) */
+.stake-badge {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1a1206;
+  background: #ffd27a;
+  box-shadow: 0 0 12px rgba(255, 179, 71, 0.8);
+  border: 2px solid #fff2c4;
+}
+.stake-badge.lit {
+  background: #3ecfbf;
+  border-color: #c8fff7;
+  box-shadow: 0 0 12px rgba(62, 207, 191, 0.8);
+}
+
+/* ---------- narrow screens: keep the rules / Tide Glass panel off the puzzle */
+@media (max-width: 760px) {
+  .rules-panel {
+    top: auto;
+    bottom: 6.6rem;
+    left: 0.75rem;
+    right: auto;
+    width: min(15rem, calc(100% - 1.5rem));
+    padding: 0.55rem 0.65rem;
+  }
+  .rules-panel:not(.glass-panel) .rule-math {
+    display: none;
+  }
+  .rules-panel .rule-label {
+    font-size: 0.85rem;
+  }
+  .rules-panel .forgery-count {
+    font-size: 0.72rem;
+  }
+}
+
+/* ---------- text boxes keep one size, FF7 style: the whole line is laid out from the
+   start (the untyped part is invisible), and every box is at least three lines tall */
+.untyped {
+  visibility: hidden;
+}
+.dialog p {
+  min-height: calc(1.45em * 3);
+}
+.intro-caption p {
+  min-height: calc(1.45em * 3);
+}

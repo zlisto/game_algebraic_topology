@@ -4,6 +4,7 @@ import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { LAND } from '../theme/palette'
+import ReefScenery from '../world/ReefScenery'
 import Gyroid from '../characters/Gyroid'
 import CountNull, { CROWN_Y } from '../characters/CountNull'
 import {
@@ -62,6 +63,7 @@ function RingIsland() {
     geo.computeBoundingSphere()
 
     group.current.scale.setScalar(Math.max(0.0001, s.shrink))
+    group.current.position.y = s.corrupt * 1.5 // lifted out of the sea as Null's beam takes it, so the ball reads whole
     group.current.visible = s.shrink > 0.001
     group.current.rotation.y = t * 0.05
     mat.current.color.copy(STONE).lerp(VIOLET, s.corrupt * 0.6)
@@ -77,6 +79,7 @@ function RingIsland() {
     const f = s.flash
     flash.current.visible = f > 0 && f < 1
     flash.current.scale.setScalar(0.2 + f * 9)
+    flash.current.position.y = 1.5
     flash.current.material.opacity = (1 - f) ** 2
   })
 
@@ -99,61 +102,6 @@ function RingIsland() {
         <sphereGeometry args={[1, 32, 16]} />
         <meshBasicMaterial color="#d9b8ff" transparent opacity={0} toneMapped={false} depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
-    </group>
-  )
-}
-
-function Rock({ radius = 2, depth = 3 }) {
-  return (
-    <mesh position={[0, -depth / 2, 0]} rotation={[Math.PI, 0, 0]}>
-      <coneGeometry args={[radius, depth, 7, 1]} />
-      <meshStandardMaterial color={LAND.rock} roughness={0.95} flatShading />
-    </mesh>
-  )
-}
-
-function TorusIsland({ position, R = 1.6, r = 0.4, tilt = 0 }) {
-  return (
-    <group position={position} rotation={[tilt, 0, tilt * 0.5]}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[R, r, 20, 64]} />
-        <meshStandardMaterial color={LAND.stone} roughness={0.55} emissive={LAND.stone} emissiveIntensity={0.2} />
-      </mesh>
-    </group>
-  )
-}
-
-function WedgeIsland({ position }) {
-  // two loops meeting at one point — a wedge of circles
-  return (
-    <group position={position}>
-      {[-1, 1].map((sd) => (
-        <mesh key={sd} position={[sd * 1.2, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[1.2, 0.28, 16, 48]} />
-          <meshStandardMaterial color={LAND.stone} roughness={0.55} emissive={LAND.stone} emissiveIntensity={0.2} />
-        </mesh>
-      ))}
-      <mesh position={[0, 0.35, 0]}>
-        <octahedronGeometry args={[0.22, 0]} />
-        <meshStandardMaterial color="#ffd27a" emissive="#ffb347" emissiveIntensity={2.2} toneMapped={false} />
-      </mesh>
-      <group position={[0, -0.3, 0]}>
-        <Rock radius={1.2} depth={2.4} />
-      </group>
-    </group>
-  )
-}
-
-function OrbIsland({ position, radius = 1.3 }) {
-  return (
-    <group position={position}>
-      <mesh scale={[1, 0.45, 1]}>
-        <sphereGeometry args={[radius, 24, 16]} />
-        <meshStandardMaterial color={LAND.stoneDark} roughness={0.6} emissive={LAND.stone} emissiveIntensity={0.15} />
-      </mesh>
-      <group position={[0, -0.2, 0]}>
-        <Rock radius={radius * 0.9} depth={radius * 2.2} />
-      </group>
     </group>
   )
 }
@@ -185,32 +133,14 @@ function Causeway({ a, b, lift = 2.5, fromRing = false }) {
   )
 }
 
-function Archipelago() {
-  const isl = {
-    west: [-12, 1, -4],
-    east: [12, -0.5, -5],
-    north: [5, 2, -16],
-    far: [-4, -0.5, -22],
-    wedge: [16, 1.5, 6],
-    sw: [-11, 0, 6],
-  }
+/** The Ringed Isle's causeways to the real sites — they snap loose when Null collapses it. */
+function RingCauseways() {
   return (
     <group>
-      <TorusIsland position={isl.west} R={1.7} r={0.42} tilt={0.08} />
-      <OrbIsland position={isl.east} radius={1.6} />
-      <TorusIsland position={isl.north} R={2.2} r={0.5} tilt={-0.06} />
-      <OrbIsland position={isl.far} radius={2} />
-      <WedgeIsland position={isl.wedge} />
-      <TorusIsland position={isl.sw} R={1.2} r={0.35} tilt={0.12} />
-      <Causeway a={[-3.2, 0.2, 0]} b={isl.west} fromRing />
-      <Causeway a={[3.2, 0.2, -0.5]} b={isl.east} fromRing />
-      <Causeway a={[1.2, 0.2, -3]} b={isl.north} fromRing lift={3} />
-      <Causeway a={[-1, 0.2, 3]} b={[-4, WALK_Y, WALK_Z]} fromRing lift={2} />
-      <Causeway a={isl.west} b={isl.far} lift={4} />
-      <Causeway a={isl.north} b={isl.far} lift={3} />
-      <Causeway a={isl.east} b={isl.wedge} lift={3} />
-      <Causeway a={isl.west} b={isl.sw} lift={2} />
-      <Causeway a={isl.wedge} b={[WALK_X1, WALK_Y, WALK_Z]} lift={2.5} />
+      <Causeway a={[-1.4, 0.2, 2.6]} b={[-3, WALK_Y, WALK_Z]} fromRing lift={2} />
+      <Causeway a={[-2.9, 0.2, 0.4]} b={[-17.3, 0.3, 1.6]} fromRing lift={3} />
+      <Causeway a={[-0.9, 0.2, -2.8]} b={[-3.6, 0.3, -9.9]} fromRing lift={2.4} />
+      <Causeway a={[2.9, 0.2, -0.6]} b={[12.2, 0.2, -2.2]} fromRing lift={2.6} />
     </group>
   )
 }
@@ -333,7 +263,7 @@ function CollapseBeam() {
  * clock.elapsedTime, which every other useFrame in the scene reads.
  * Priority -1 runs it before them each frame.
  */
-function Director({ onTick }) {
+function Director({ onTick, gate }) {
   const { camera, clock } = useThree()
   const look = useMemo(() => new THREE.Vector3(), [])
   // dev: ?t=20 jumps to story time 20; add &pause to hold that frame
@@ -341,7 +271,12 @@ function Director({ onTick }) {
   const wall = useRef(null)
   useFrame((_, dt) => {
     if (wall.current === null) wall.current = wallAt(params.has('t') ? Number(params.get('t')) : INTRO_START)
-    else if (!params.has('pause')) wall.current += Math.min(dt, 0.1)
+    else if (!params.has('pause')) {
+      // captions hold the movie until clicked through (gate returns the time to stop at)
+      const next = wall.current + Math.min(dt, 0.1)
+      const stop = gate ? gate(storyAt(wall.current), storyAt(next)) : null
+      wall.current = stop === null ? next : Math.max(wall.current, wallAt(stop))
+    }
     const t = storyAt(wall.current)
     clock.elapsedTime = t
     const { pos, target } = cameraAt(t)
@@ -360,7 +295,7 @@ function Director({ onTick }) {
 
 // ---------------------------------------------------------------- scene
 
-export default function IntroWorld({ onTick }) {
+export default function IntroWorld({ onTick, gate }) {
   return (
     <>
       <color attach="background" args={['#060912']} />
@@ -373,13 +308,15 @@ export default function IntroWorld({ onTick }) {
 
       <Stars radius={90} depth={40} count={2500} factor={3} fade speed={0.4} />
       <Sparkles count={160} scale={[50, 10, 50]} position={[0, 2, 0]} size={2.2} speed={0.25} color="#7fe8dc" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -6, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.6, 0]}>
         <planeGeometry args={[400, 400]} />
         <meshStandardMaterial color="#04161a" emissive="#06343a" emissiveIntensity={0.4} roughness={0.25} metalness={0.6} />
       </mesh>
 
       <RingIsland />
-      <Archipelago />
+      {/* the real Retract Reef — the same layout the level and the bible map use */}
+      <ReefScenery y={0.3} staticSites skipSites={['the_walkway']} ruin={false} throne={false} />
+      <RingCauseways />
       <Walkway />
       <Spire />
       <CollapseBeam />
@@ -389,7 +326,7 @@ export default function IntroWorld({ onTick }) {
       </group>
       <Gyroid script={gyroidScript} />
 
-      <Director onTick={onTick} />
+      <Director onTick={onTick} gate={gate} />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={1.1} luminanceThreshold={0.6} luminanceSmoothing={0.2} />
         <Vignette offset={0.25} darkness={0.75} />
