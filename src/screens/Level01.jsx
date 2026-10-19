@@ -130,6 +130,8 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
   const [here, setHere] = useState({ site: null, pos: startPos })
   const judged = useRef(null)
   const [shown, setShown] = useState(0) // characters of the current line typed out so far
+  const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  shownNow.current = shown
   const [muted, setMuted] = useState(readMuted)
   const reported = useRef(false) // the game has reported spawn counts at least once
 
@@ -397,6 +399,8 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
         }
         return Math.max(n, i)
       })
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (shownNow.current >= line.text.length) return clearInterval(id)
       const ch = line.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(line.speaker)
       if (i >= line.text.length) clearInterval(id)

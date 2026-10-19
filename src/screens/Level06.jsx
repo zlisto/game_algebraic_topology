@@ -108,6 +108,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
   const [lineIdx, setLineIdx] = useState(0)
   const [phase, setPhase] = useState('play')
   const [shown, setShown] = useState(0)
+  const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  shownNow.current = shown
   const [hearts, setHearts] = useState(3)
   const [knockouts, setKnockouts] = useState(0)
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1.2, SITE[STATION_ORDER[skipTo]].pos[1] + 3.2] : layout.start))
@@ -585,6 +587,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
         }
         return Math.max(n, i)
       })
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (shownNow.current >= line.text.length) return clearInterval(id)
       const ch = line.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(line.speaker)
       if (i >= line.text.length) clearInterval(id)
@@ -617,7 +621,9 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey])
-  frameRef.current = current && here.site === current && met[current] ? { center: SITE[current].pos, size: current === 'census' ? 15.5 : 12 } : null
+  // zoom in on the deck being worked — close enough to read, with the whole tangle still in view
+  const FRAME = { one_edge: 8.0, spanning_tree: 8.8, wrong_cut: 8.8, census: 12.6 }
+  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + (current === 'census' ? 0.6 : 1.0), SITE[current].pos[1] + 0.3], size: FRAME[current], follow: 0.12 } : null
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
   if (import.meta.env.DEV) window.__lvl6 = { here, done, goalIdx, yard, phase, enemies, setTool, current, goal, SITE, originOf, visibleGraphs } // dev
@@ -783,7 +789,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
           </button>
         )}
 
-        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" />}
+        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" />}
 
         {!talking && !levelClear && !askOpen && (
           <div className="controls">

@@ -146,6 +146,8 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const [lineIdx, setLineIdx] = useState(0)
   const [phase, setPhase] = useState('play')
   const [shown, setShown] = useState(0)
+  const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  shownNow.current = shown
   const [hearts, setHearts] = useState(3)
   const [knockouts, setKnockouts] = useState(0)
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? SITE[STATION_ORDER[skipTo]].pos.map((v, i) => v + (i ? 2.2 : 0)) : layout.start))
@@ -558,6 +560,8 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
         }
         return Math.max(n, i)
       })
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (shownNow.current >= line.text.length) return clearInterval(id)
       const ch = line.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(line.speaker)
       if (i >= line.text.length) clearInterval(id)
@@ -782,7 +786,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {toast && !line && <div className="toast">{toast}</div>}
 
-        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" />}
+        {!levelClear && !line && !chiOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" />}
 
         {canTalk && (
           <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>

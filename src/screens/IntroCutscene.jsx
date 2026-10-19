@@ -119,6 +119,8 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   const cap = CAPTIONS.find((c) => t >= c.t && t < c.end)
   // each line types out on its own clock, so it finishes even while the movie holds
   const [typed, setTyped] = useState(0)
+  const typedNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  typedNow.current = typed
   useEffect(() => {
     setTyped(0)
     if (!cap) return
@@ -127,6 +129,8 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
     const id = setInterval(() => {
       i++
       setTyped((n) => Math.max(n, i))
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (typedNow.current >= cap.text.length) return clearInterval(id)
       const ch = cap.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(cap.speaker)
       if (i >= cap.text.length) clearInterval(id)

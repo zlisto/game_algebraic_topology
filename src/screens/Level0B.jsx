@@ -50,6 +50,8 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
   const [lineIdx, setLineIdx] = useState(0)
   const [phase, setPhase] = useState('play')
   const [shown, setShown] = useState(0)
+  const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  shownNow.current = shown
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)
@@ -176,6 +178,8 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
         }
         return Math.max(n, i)
       })
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (shownNow.current >= line.text.length) return clearInterval(id)
       const ch = line.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(line.speaker)
       if (i >= line.text.length) clearInterval(id)

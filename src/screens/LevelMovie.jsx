@@ -110,6 +110,8 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
   const cap = video.captions.find((c) => t >= c.t && t < c.end)
   // each line types out on its own clock (blips every couple of letters), even while the movie holds
   const [typed, setTyped] = useState(0)
+  const typedNow = useRef(0) // the typed count right now (a skip jumps it to the end)
+  typedNow.current = typed
   useEffect(() => {
     if (cap && cap !== lastCap.current) dialogOpen()
     lastCap.current = cap
@@ -120,6 +122,8 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
     const id = setInterval(() => {
       i++
       setTyped((n) => Math.max(n, i))
+      // skipped ahead (Enter, Space, ▶▶)? the line is done: stop typing, and stop the blips
+      if (typedNow.current >= cap.text.length) return clearInterval(id)
       const ch = cap.text[i - 1]
       if (ch && ch !== ' ' && i % 2 === 0) textBlip(cap.speaker)
       if (i >= cap.text.length) clearInterval(id)
