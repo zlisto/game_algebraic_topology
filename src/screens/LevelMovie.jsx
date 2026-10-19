@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import videos from '../../videos.json'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, stopMusic, switchMusic, textBlip, unlockAudio } from '../audio/chip'
 import { isAdvanceEvent, makeGate } from './captionHold'
+import MathText from './MathText'
 
 /**
  * Plays a level's intro movie from videos.json: a 3D scene driven by story time,
@@ -197,8 +198,7 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
             <div>
               <span className="speaker">{cap.speaker}</span>
               <p>
-                {shown}
-                <span className="untyped">{cap.text.slice(shown.length)}</span>
+                <MathText text={cap.text} shown={shown} />
               </p>
             </div>
             {isHeld && lineDone && (

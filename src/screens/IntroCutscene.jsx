@@ -5,6 +5,7 @@ import { createIntroScore } from '../audio/introScore'
 import { CAPTIONS, INTRO_START, INTRO_TOTAL, TITLE_CARD, seg, wallAt } from '../data/introScript'
 import { dialogOpen, textBlip } from '../audio/chip'
 import { isAdvanceEvent, makeGate } from './captionHold'
+import MathText from './MathText'
 
 const CHARS_PER_SEC = 30 // typing speed, in real seconds
 const MUTE_KEY = 'winding-world:muted'
@@ -191,8 +192,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
             <div>
               <span className="speaker">{cap.speaker}</span>
               <p>
-                {shown}
-                <span className="untyped">{cap.text.slice(shown.length)}</span>
+                <MathText text={cap.text} shown={shown} />
               </p>
             </div>
             {isHeld && lineDone && (

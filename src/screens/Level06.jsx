@@ -2,9 +2,10 @@ import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TimberScene from '../levels/w0/TimberScene'
 import LevelMovie from './LevelMovie'
+import LevelMap from './LevelMap'
 import { useExitTrigger } from './exitTrigger'
 import { PETAL_SIZE, chiOf, closesLoop, edgePath, nearestEdge, petalAngles, petalsOf, treeReach } from '../levels/w0/graphs'
-import { DEFINITION06, HINTS06, OPENING, STATIONS, STATION_ORDER } from '../levels/w0/stages06'
+import { DEFINITION06, HINTS06, OPENING, STATIONS, STATION_ORDER, emmyAdvice06 } from '../levels/w0/stages06'
 import layout from '../world/timberyard.json'
 import { buildSites, makeSiteWalkable } from '../world/sites'
 import {
@@ -19,12 +20,14 @@ import {
   sfxMark,
   sfxRefuse,
   sfxWrong,
+  sfxZoot,
   startTimberMusic,
   stopMusic,
   textBlip,
   unlockAudio,
 } from '../audio/chip'
 import TimberLesson, { TimberLessonOverlay } from '../movies/TimberLesson'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 6 "Timber!" — the Timber Yard.
@@ -34,7 +37,7 @@ import TimberLesson, { TimberLessonOverlay } from '../movies/TimberLesson'
  *                      from Loop-biters
  *   The Census Deck  — predict by χ which two tangles fell alike, fell them, forge the bridge
  * The Spool (2) marks and unmarks walkways (never closing a loop); the Cell-Smith (3) fells a
- * spanning tree at the root platform, restrings bitten petals, and forges the bridge.
+ * spanning tree onto whichever platform is clicked, restrings bitten petals, and forges the bridge.
  */
 
 const TYPE_CPS = 45
@@ -52,8 +55,10 @@ const originOf = (id, gi) => {
   const off = s.graphs[gi].offset || [0, 0]
   return [s.pos[0] + off[0], s.pos[1] + off[1]]
 }
-const freshYard = () => Object.fromEntries(STATION_ORDER.map((id) => [id, { marked: {}, felled: {}, bitten: {} }]))
+const freshYard = () => Object.fromEntries(STATION_ORDER.map((id) => [id, { marked: {}, felled: {}, bitten: {}, roots: {} }]))
 const nonTree = (g, tree) => g.edges.map((_, j) => j).filter((j) => !tree.includes(j))
+/** A tangle with the platform its tree was felled onto as its root (any platform will do). */
+const rooted = (g, r) => (r == null ? g : { ...g, root: r })
 const TOOL_KEYS = { Digit1: 'lash', Digit2: 'spool', Digit3: 'smith' }
 
 /** Which tangles a deck shows: the current goal's, else the last ones felled there. */
@@ -126,6 +131,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
   const afterTalk = useRef(null)
   const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
   const emmyTalking = useRef(false)
+  const [nearEmmy, setNearEmmy] = useState(false)
   const waveSeen = useRef(false)
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
@@ -185,6 +191,25 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
         return say(lines)
       }
       setGoalIdx((m) => ({ ...m, [station]: next }))
+      if (list[next].type === 'bridge') {
+        // the yard is clear: the bridge to the Throne builds itself — zzzooot
+        afterTalk.current = () => {
+          sfxZoot()
+          sfxBridge()
+          const t0 = performance.now()
+          const tick = () => {
+            bridgeK.current = Math.min(1, (performance.now() - t0) / 1800)
+            if (bridgeK.current < 1) requestAnimationFrame(tick)
+          }
+          requestAnimationFrame(tick)
+          setExitOpen(true)
+          setTimeout(() => {
+            setDone((d) => ({ ...d, [station]: true }))
+            say(list[next].done)
+          }, 1900)
+        }
+        return say(lines, 'after')
+      }
       if (list[next].type === 'ask') {
         afterTalk.current = () => setAskOpen(true)
         return say(lines, 'after')
@@ -200,6 +225,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
+      const em = emmyAt.current
+      setNearEmmy(Math.hypot(s.x - em.x, s.z - em.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
@@ -243,6 +270,11 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     say(STATIONS[st].arrive, first?.type === 'ask' ? 'ask' : 'play')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [here.site, phase, current, met, done, say])
+
+  // a question that's due always comes back (e.g. if a knockout interrupted the lines before it)
+  useEffect(() => {
+    if (goal?.type === 'ask' && phase === 'play' && !askOpen && here.site === current && met[current]) setAskOpen(true)
+  }, [goal, phase, askOpen, here.site, current, met])
 
   // knocked out
   useEffect(() => {
@@ -289,13 +321,13 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     setY(current, (yy) => ({ ...yy, marked: { ...yy.marked, [hit.g]: next } }))
     sfxMark(true)
     const r = treeReach(graph, next)
-    flash(r.spanning ? 'The tree reaches every platform — fell it: Cell-Smith (3) on the gold-ringed root' : HINTS06.notSpanning(r.reached, graph.nodes.length))
+    flash(r.spanning ? 'The tree reaches every platform — fell it: Cell-Smith (3), click any of its platforms' : HINTS06.notSpanning(r.reached, graph.nodes.length))
   }
 
   // ---------- the Cell-Smith: fell, restring, forge the bridge
-  const fell = (id, g) => {
+  const fell = (id, g, root) => {
     const tree = yard[id].marked[g] || []
-    setY(id, (yy) => ({ ...yy, felled: { ...yy.felled, [g]: tree } }))
+    setY(id, (yy) => ({ ...yy, felled: { ...yy.felled, [g]: tree }, roots: { ...yy.roots, [g]: root } }))
     sfxFell()
     const k = fellKs[id][g]
     k.current = 0
@@ -318,26 +350,30 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     if (!goal) return
     const y = yard[current]
     if (goal.type === 'fell') {
-      // the tangle whose root is nearest the click (forgiving)
+      // the platform nearest the click (forgiving): the tree falls onto it — any platform will do
       let best = null
       for (const g of goal.graphs) {
         if (y.felled[g]) continue
         const o = originOf(current, g)
         const graph = SITE[current].graphs[g]
-        const rp = graph.nodes[graph.root]
-        const d = Math.hypot(cx - o[0] - rp[0], cz - o[1] - rp[1])
-        const dc = Math.hypot(cx - o[0], cz - o[1])
-        const score = Math.min(d, dc + 0.8)
-        if (score < 3.4 && (!best || score < best.score)) best = { g, score }
+        graph.nodes.forEach((p, i) => {
+          const d = Math.hypot(cx - o[0] - p[0], cz - o[1] - p[1])
+          if (d < 1.6 && (!best || d < best.d)) best = { g, node: i, d }
+        })
+        // a click on the tangle but off its platforms falls onto its nearest platform
+        if (!best && Math.hypot(cx - o[0], cz - o[1]) < 3.2) {
+          const near = graph.nodes.map((p, i) => [Math.hypot(cx - o[0] - p[0], cz - o[1] - p[1]), i]).sort((a, b) => a[0] - b[0])[0]
+          best = { g, node: near[1], d: near[0] }
+        }
       }
-      if (!best) return flash('Click the gold-ringed root platform of a tangle')
+      if (!best) return flash('Click one of the tangle’s platforms')
       const graph = SITE[current].graphs[best.g]
       const r = treeReach(graph, y.marked[best.g] || [])
       if (!r.spanning) {
         sfxWrong()
         return flash(`${HINTS06.notSpanning(r.reached, graph.nodes.length)} (use the Spool, 2)`, 3400)
       }
-      return fell(current, best.g)
+      return fell(current, best.g, best.node)
     }
     if (goal.type === 'guard') {
       // restring a bitten petal near the click
@@ -347,8 +383,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
         if (!tree || !bit.length) continue
         const graph = SITE[current].graphs[g]
         const o = originOf(current, g)
-        const rp = graph.nodes[graph.root]
-        const angles = petalAngles(graph, nonTree(graph, tree).length)
+        const rp = graph.nodes[rooted(graph, y.roots?.[g]).root]
+        const angles = petalAngles(rooted(graph, y.roots?.[g]), nonTree(graph, tree).length)
         for (const p of bit) {
           const m = [o[0] + rp[0] + Math.cos(angles[p]) * PETAL_SIZE * 0.7, o[1] + rp[1] + Math.sin(angles[p]) * PETAL_SIZE * 0.7]
           if (Math.hypot(cx - m[0], cz - m[1]) < 1.6) {
@@ -419,8 +455,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
         if (e.type === 'biter') {
           if (!tree || fellKs[e.site][g].current < 1) continue
           const others = nonTree(graph, tree)
-          const angles = petalAngles(graph, others.length)
-          const rp = graph.nodes[graph.root]
+          const angles = petalAngles(rooted(graph, y.roots?.[g]), others.length)
+          const rp = graph.nodes[rooted(graph, y.roots?.[g]).root]
           others.forEach((_, p) => {
             if (!(y.bitten[g] || []).includes(p)) spots.push([o[0] + rp[0] + Math.cos(angles[p]) * PETAL_SIZE, o[1] + rp[1] + Math.sin(angles[p]) * PETAL_SIZE])
           })
@@ -445,8 +481,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
         const tree = y.felled[g]
         if (tree) {
           const others = nonTree(graph, tree)
-          const angles = petalAngles(graph, others.length)
-          const rp = graph.nodes[graph.root]
+          const angles = petalAngles(rooted(graph, y.roots?.[g]), others.length)
+          const rp = graph.nodes[rooted(graph, y.roots?.[g]).root]
           const p = others.findIndex((_, q) => !(y.bitten[g] || []).includes(q) && Math.hypot(o[0] + rp[0] + Math.cos(angles[q]) * PETAL_SIZE - x, o[1] + rp[1] + Math.sin(angles[q]) * PETAL_SIZE - z) < 0.9)
           if (p >= 0) {
             setY(id, (yy) => ({ ...yy, bitten: { ...yy.bitten, [g]: [...(yy.bitten[g] || []), p] } }))
@@ -479,6 +515,39 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     }
     window.addEventListener('keydown', key)
     return () => window.removeEventListener('keydown', key)
+  }, [])
+
+  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
+  const canTalk = nearEmmy && phase === 'play' && !askOpen && !levelClear && !lesson
+  const talkToEmmy = () => {
+    if (!canTalk) return
+    const s = stateRef.current
+    const em = emmyAt.current
+    if (s) em.rotY = Math.atan2(s.x - em.x, s.z - em.z) // she turns to face him
+    say(emmyAdvice06({
+        station: current,
+        goal,
+        here: here.site,
+        name: current ? SITE[current].name : '',
+        exitOpen,
+        enemies: current ? enemies[current] : 0,
+        tangles: current
+          ? visibleGraphs[current].map((gi) => {
+              const g = SITE[current].graphs[gi]
+              const r = treeReach(g, yard[current].marked[gi] || [])
+              return { label: g.label, reached: r.reached, total: g.nodes.length, spanning: r.spanning, felled: !!yard[current].felled[gi], bitten: (yard[current].bitten[gi] || []).length > 0 }
+            })
+          : [],
+      }))
+  }
+  const talkRef = useRef(null)
+  talkRef.current = talkToEmmy
+  useEffect(() => {
+    const k = (e) => {
+      if (e.code === 'KeyE') talkRef.current?.()
+    }
+    window.addEventListener('keydown', k)
+    return () => window.removeEventListener('keydown', k)
   }, [])
 
   // ---------- dialogue (FF7 style)
@@ -564,6 +633,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
       current={current}
       emmyAt={emmyAt}
       emmyTalking={emmyTalking}
+      emmyNear={nearEmmy && phase === 'play'}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -590,7 +660,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
     if (goal.type === 'guard') return 'Lash the Loop-biters (1) · restring bitten petals (3)'
     if (goal.type === 'bridge') return 'Cell-Smith (3): click the foot of the bridge'
     if (tool === 'spool') return 'Click walkways to mark a tree that reaches every platform'
-    if (tool === 'smith') return 'Click the gold-ringed root to fell a finished tree'
+    if (tool === 'smith') return 'Click any platform of a finished tree to fell it onto that platform'
     return 'Spool (2) to mark walkways · Cell-Smith (3) to fell'
   })()
 
@@ -679,8 +749,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -708,6 +777,14 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
 
         {toast && !line && <div className="toast">{toast}</div>}
 
+        {canTalk && (
+          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
+            💬 Talk to Emmy <kbd>E</kbd>
+          </button>
+        )}
+
+        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" />}
+
         {!talking && !levelClear && !askOpen && (
           <div className="controls">
             <div className="weapons" role="group" aria-label="Tool">
@@ -717,13 +794,13 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
               <button type="button" className={`weapon ${tool === 'spool' ? 'active' : ''}`} onClick={(e) => (setTool('spool'), e.currentTarget.blur())} title="The Spool: click walkways to mark a tree">
                 ◎ Spool <kbd>2</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell-Smith: fell a tree at its root; restring petals; forge the bridge">
+              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell-Smith: fell a finished tree onto a platform; restring petals; forge the bridge">
                 ✦ Cell-Smith <kbd>3</kbd>
               </button>
             </div>
           </div>
         )}
-        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD to move · click to crack the Lash · 2 Spool · 3 Cell-Smith'}</div>}
+        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD to move · click to crack the Lash · 2 Spool · 3 Cell-Smith · lost? walk up to Emmy and press E'}</div>}
       </div>
 
       {lesson && (
@@ -740,7 +817,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 6 clear</span>
             <h2>{levelMeta?.title || 'Timber!'}</h2>

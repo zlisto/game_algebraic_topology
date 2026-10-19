@@ -1158,3 +1158,58 @@ export function sfxFill() {
   const t = ctx.currentTime
   ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + i * 0.09, hz(m), { dur: 0.3, type: 'sine', vol: 0.06, out: echo }))
 }
+
+/** The Cell-Smith's hammer striking: a hard metal clang with a ringing tail. */
+export function sfxHammer() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 180, { dur: 0.06, type: 'square', vol: 0.12, slide: 0.4 }) // the thud of the strike
+  for (const [f, v, d] of [[1180, 0.08, 0.5], [1730, 0.05, 0.42], [2610, 0.035, 0.32], [3940, 0.02, 0.22]]) blipAt(t, f, { dur: d, type: 'sine', vol: v, out: echo })
+  blipAt(t, 2200, { dur: 0.03, type: 'square', vol: 0.04 }) // the bright tick on contact
+}
+
+// ---------------------------------------------------------------- ways out
+
+let longNoise = null
+/** A filtered noise sweep (for the exit whoosh): `from` → `to` Hz over `dur` seconds. */
+function sweptNoise(t, dur, from, to, vol) {
+  if (!longNoise) {
+    longNoise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
+    const d = longNoise.getChannelData(0)
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
+  }
+  const s = ctx.createBufferSource()
+  s.buffer = longNoise
+  const f = ctx.createBiquadFilter()
+  f.type = 'bandpass'
+  f.Q.value = 2.2
+  f.frequency.setValueAtTime(from, t)
+  f.frequency.exponentialRampToValueAtTime(to, t + dur)
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0.0001, t)
+  g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.25)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+  s.connect(f).connect(g).connect(sfxBus)
+  s.start(t)
+  s.stop(t + dur + 0.05)
+}
+
+/** A walkway materialising: "zzzooot" — a buzzy rising zap that lands on a bright note. */
+export function sfxZoot() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 90, { dur: 0.55, type: 'sawtooth', vol: 0.07, slide: 9 })
+  blipAt(t, 92, { dur: 0.55, type: 'square', vol: 0.035, slide: 8.6 })
+  sweptNoise(t, 0.5, 400, 4000, 0.12)
+  ;[84, 91].forEach((m, i) => blipAt(t + 0.5 + i * 0.06, hz(m), { dur: 0.5, type: 'sine', vol: 0.08, out: echo }))
+}
+
+/** Leaving a level: "zzzooosh" — a long falling rush of air with a low swell under it. */
+export function sfxExit() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  sweptNoise(t, 1.3, 5000, 160, 0.28)
+  blipAt(t, 520, { dur: 1.2, type: 'sawtooth', vol: 0.04, slide: 0.12 })
+  blipAt(t + 0.15, 110, { dur: 1.1, type: 'sine', vol: 0.12, slide: 0.5 })
+  ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + 1.15 + i * 0.07, hz(m), { dur: 0.9, type: 'triangle', vol: 0.05, out: echo }))
+}

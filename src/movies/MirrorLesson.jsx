@@ -220,6 +220,7 @@ const GOLD = '#ffd27a'
 const BLUE = '#9fd8ff'
 const INK = '#e8eefc'
 const DIM = '#5c6680'
+const PINK = '#ff8ad8' // math is pink everywhere
 const MATH = { fontFamily: "'Cambria Math', 'STIX Two Math', serif" }
 
 function Eight({ x, y, s = 1, color = GOLD }) {
@@ -245,7 +246,7 @@ function Diagram({ t }) {
       <svg viewBox="0 0 260 150" className="lesson-svg">
         <Eight x={70} y={60} s={1.6} />
         <Theta x={190} y={60} s={1.6} />
-        <text x="130" y="68" textAnchor="middle" fill={INK} fontSize="22" style={MATH}>
+        <text x="130" y="68" textAnchor="middle" fill={PINK} fontSize="22" style={MATH}>
           ≟
         </text>
         <text x="70" y="118" textAnchor="middle" fill="#9fb0d0" fontSize="15" style={MATH}>
@@ -272,7 +273,7 @@ function Diagram({ t }) {
             <path d="M0,0 L8,4 L0,8 z" fill={BLUE} />
           </marker>
         </defs>
-        <text x="130" y="32" textAnchor="middle" fill={GOLD} fontSize="17" style={MATH}>
+        <text x="130" y="32" textAnchor="middle" fill={PINK} fontSize="17" style={MATH}>
           f : X → Y
         </text>
         <text x="130" y="152" textAnchor="middle" fill={BLUE} fontSize="17" style={MATH}>
@@ -284,7 +285,7 @@ function Diagram({ t }) {
   if (t < 36)
     return (
       <svg viewBox="0 0 260 170" className="lesson-svg">
-        <text x="130" y="34" textAnchor="middle" fill={INK} fontSize="17" style={MATH}>
+        <text x="130" y="34" textAnchor="middle" fill={PINK} fontSize="17" style={MATH}>
           p ↦ f(p) ↦ g(f(p))
         </text>
         <text x="130" y="80" textAnchor="middle" fill={t >= 32.8 ? GOLD : DIM} fontSize="20" style={MATH}>
@@ -315,7 +316,7 @@ function Diagram({ t }) {
         <line x1="148" y1="72" x2="192" y2="112" stroke={t >= 44.85 ? GOLD : DIM} strokeWidth="2.5" />
         <Eight x={58} y={130} s={1.1} color={t < 44.85 ? GOLD : DIM} />
         <Theta x={202} y={130} s={1.1} color={t >= 44.85 ? GOLD : DIM} />
-        <text x="130" y="176" textAnchor="middle" fill={INK} fontSize="17" style={MATH}>
+        <text x="130" y="176" textAnchor="middle" fill={PINK} fontSize="17" style={MATH}>
           X ≃ Z ≃ Y
         </text>
       </svg>
@@ -324,7 +325,7 @@ function Diagram({ t }) {
     return (
       <svg viewBox="0 0 260 150" className="lesson-svg">
         <circle cx="62" cy="50" r="22" fill="#2d3a5c" stroke={DIM} />
-        <text x="110" y="56" textAnchor="middle" fill={INK} fontSize="18" style={MATH}>
+        <text x="110" y="56" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
           ≃
         </text>
         <circle cx="150" cy="50" r="4" fill={GOLD} />
@@ -332,7 +333,7 @@ function Diagram({ t }) {
           contractible
         </text>
         <circle cx="62" cy="112" r="20" fill="none" stroke="#2d3a5c" strokeWidth="9" />
-        <text x="110" y="118" textAnchor="middle" fill={INK} fontSize="18" style={MATH}>
+        <text x="110" y="118" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
           ≃ • ?
         </text>
         <text x="200" y="118" textAnchor="middle" fill="#9fb0d0" fontSize="12">

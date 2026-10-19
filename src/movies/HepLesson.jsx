@@ -98,17 +98,18 @@ const GOLD = '#ffd27a'
 const TEAL = '#5ad6c8'
 const INK = '#e8eefc'
 const SOFT = '#9fb0d0'
+const PINK = '#ff8ad8' // math is pink everywhere
 const MATH = { fontFamily: "'Cambria Math', 'STIX Two Math', serif" }
 
 function Card({ title, rows, foot }) {
   return (
     <svg viewBox="0 0 260 180" className="lesson-svg">
-      <text x="130" y="30" textAnchor="middle" fill={GOLD} fontSize="17" style={MATH}>
+      <text x="130" y="30" textAnchor="middle" fill={PINK} fontSize="17" style={MATH}>
         {title}
       </text>
       {rows.map(([a, b], i) => (
         <g key={i}>
-          <text x="18" y={66 + i * 28} fill={INK} fontSize="14" style={MATH}>
+          <text x="18" y={66 + i * 28} fill={PINK} fontSize="14" style={MATH}>
             {a}
           </text>
           <text x="242" y={66 + i * 28} fill={SOFT} fontSize="12" textAnchor="end">
@@ -129,7 +130,7 @@ function Card({ title, rows, foot }) {
 function Retraction() {
   return (
     <svg viewBox="0 0 260 180" className="lesson-svg">
-      <text x="130" y="24" textAnchor="middle" fill={GOLD} fontSize="15" style={MATH}>
+      <text x="130" y="24" textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
         Dⁿ × I → Dⁿ × {'{0}'} ∪ ∂Dⁿ × I
       </text>
       <rect x="80" y="70" width="100" height="80" fill="rgba(255,210,122,0.12)" />

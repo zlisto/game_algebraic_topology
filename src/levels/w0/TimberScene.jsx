@@ -9,12 +9,13 @@ import { LiveLine } from './FlatsScenery'
 import { edgePath, felledAt } from './graphs'
 import { DevAdvance, FollowCamera } from './OverworldScene'
 import ReefGame from './ReefGame'
+import { EmmyBubble } from './FoundryScene'
 import Seascape from '../../world/Seascape'
 
 /**
  * Level 0-6's scene: the Timber Yard at dusk, a web of wooden decks on pilings over the
  * sea. Each deck carries tangles — small platforms joined by narrow walkways. Marked
- * walkways glow amber; a felled tree pulls every platform onto the gold-ringed root and
+ * walkways glow amber; a felled tree pulls every platform onto the one Gyroid clicked, and
  * the leftover walkways round out into the petals of a bouquet. The unbuilt bridge runs
  * north toward the black spire of the Hollow Throne.
  */
@@ -124,10 +125,9 @@ export function Deck({ site, current }) {
 }
 
 /** One tangle: platforms and walkways, marked tree, felling animation, petals. */
-export function GraphView({ graph, origin, marked, tree, fellK, bitten, label, current }) {
+export function GraphView({ graph, origin, marked, tree, fellK, bitten, label, current, markColor = AMBER }) {
   const cur = useRef(null)
   const nodeRefs = useRef([])
-  const rootRing = useRef()
   const compute = () => {
     if (tree) return felledAt(graph, tree, fellK.current)
     return { nodes: graph.nodes, edges: graph.edges.map((ed) => ({ pts: edgePath(ed, graph.nodes[ed.a], graph.nodes[ed.b]), tree: false })) }
@@ -139,7 +139,6 @@ export function GraphView({ graph, origin, marked, tree, fellK, bitten, label, c
       const m = nodeRefs.current[i]
       if (m) m.position.set(p[0], 0.08, p[1])
     })
-    if (rootRing.current) rootRing.current.material.opacity = current ? 0.65 + Math.sin(clock.elapsedTime * 3) * 0.3 : 0.5
   })
   const lift = (pts) => pts.map(([x, z]) => [x, z, 0.12])
   return (
@@ -149,7 +148,7 @@ export function GraphView({ graph, origin, marked, tree, fellK, bitten, label, c
         const isMarked = !tree && marked.includes(i)
         const petalIdx = tree && !isTree ? graph.edges.map((_, j) => j).filter((j) => !tree.includes(j)).indexOf(i) : -1
         const isBitten = petalIdx >= 0 && bitten.includes(petalIdx)
-        const color = isTree ? AMBER : isMarked ? AMBER : petalIdx >= 0 ? (isBitten ? BITTEN : PETAL) : WOOD
+        const color = isTree ? markColor : isMarked ? markColor : petalIdx >= 0 ? (isBitten ? BITTEN : PETAL) : WOOD
         const get = () => {
           const e = cur.current.edges[i]
           if (isTree && fellK.current > 0.97) return null
@@ -165,14 +164,9 @@ export function GraphView({ graph, origin, marked, tree, fellK, bitten, label, c
       {graph.nodes.map((_, i) => (
         <mesh key={i} ref={(m) => (nodeRefs.current[i] = m)} position={[graph.nodes[i][0], 0.08, graph.nodes[i][1]]}>
           <cylinderGeometry args={[0.42, 0.46, 0.2, 18]} />
-          <meshStandardMaterial color={i === graph.root ? '#a07040' : '#6a4a30'} roughness={0.7} emissive={i === graph.root ? '#5a3008' : '#000'} emissiveIntensity={0.5} />
+          <meshStandardMaterial color="#8a6040" roughness={0.7} />
         </mesh>
       ))}
-      {/* the root: where the tree is felled */}
-      <mesh ref={rootRing} position={[graph.nodes[graph.root][0], 0.2, graph.nodes[graph.root][1]]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.5, 0.62, 32]} />
-        <meshBasicMaterial color={PETAL} transparent toneMapped={false} />
-      </mesh>
       {label && (
         <Html position={[0, 0.2, 2.9]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
           <div className="graph-label">{label}</div>
@@ -250,6 +244,7 @@ export default function TimberScene({
   current,
   emmyAt,
   emmyTalking,
+  emmyNear,
   exitOpen,
   walkable,
   game,
@@ -298,7 +293,7 @@ export default function TimberScene({
               return (
                 <GraphView
                   key={gi}
-                  graph={g}
+                  graph={y.roots?.[gi] != null ? { ...g, root: y.roots[gi] } : g}
                   origin={[s.pos[0] + off[0], s.pos[1] + off[1]]}
                   marked={y.marked[gi] || []}
                   tree={y.felled[gi] || null}
@@ -317,6 +312,7 @@ export default function TimberScene({
       <group scale={S}>
         <Emmy script={emmyScript} />
       </group>
+      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}

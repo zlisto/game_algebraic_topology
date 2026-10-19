@@ -7,6 +7,7 @@ import { allCells, canFill, cellAt, cellName, inA } from '../levels/w0/hep'
 import { DEFINITION0B, FLOORS, HINTS0B, OPENING } from '../levels/w0/stages0B'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxFill, sfxRefuse, startMusicBox, stopMusic, textBlip, unlockAudio } from '../audio/chip'
 import HepLesson, { HepLessonOverlay } from '../movies/HepLesson'
+import MathText from './MathText'
 
 /**
  * World 0 · Bonus "Extension Cord" — the Cylinder Works, a quiet puzzle room off the
@@ -273,8 +274,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -301,7 +301,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Bonus clear</span>
             <h2>Extension Cord</h2>

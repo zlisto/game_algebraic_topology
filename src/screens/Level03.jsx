@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MirrorScene from '../levels/w0/MirrorScene'
 import LevelMovie from './LevelMovie'
 import { useExitTrigger } from './exitTrigger'
+import { MapNext } from './LevelMap'
 import { cleanStroke, sampleShape, simulateSlide, snapPoint } from '../levels/w0/retraction'
 import { grab, hookedStakes, loopShrunk, makeLoopRibbon, makeSiteEnv, release } from '../levels/w0/ribbon'
 import { HINTS, RULES } from '../levels/w0/stages01'
@@ -25,6 +26,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import MirrorLesson, { MirrorLessonOverlay } from '../movies/MirrorLesson'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 3 "Same Shape, Different Look" — Mirror Shoals.
@@ -70,7 +72,7 @@ function Portrait({ id, name }) {
 }
 
 /** Minimap: reefs (gold once proven), causeways, the channel, Gyroid. */
-function ShoalsMap({ pos, done, current }) {
+function ShoalsMap({ pos, done, current, next, gateOpen }) {
   const P = ([x, z]) => [50 + x * 2.25, 30 + z * 1.8]
   const [gx, gz] = P(pos)
   const [c0] = P([layout.channel.x0, 0])
@@ -92,6 +94,7 @@ function ShoalsMap({ pos, done, current }) {
         const [x, y] = P(layout.gate.pos)
         return <rect x={x - 2.5} y={y - 1.5} width="5" height="3" fill="#ff8a3a" opacity="0.7" />
       })()}
+      <MapNext from={[gx, gz]} to={next ? P(SITE[next].pos) : gateOpen ? P(layout.gate.pos) : null} label={next ? 'NEXT' : 'EXIT'} />
       <circle cx={gx} cy={gz} r="1.6" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
@@ -627,7 +630,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         </div>
 
-        <ShoalsMap pos={here.pos} done={done} current={here.site} />
+        {!line && <ShoalsMap pos={here.pos} done={done} current={here.site} next={current} gateOpen={gateOpen} />}
 
         {showRules && (
           <div className="rules-panel">
@@ -661,8 +664,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -738,7 +740,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 3 clear</span>
             <h2>{levelMeta?.title || 'Same Shape, Different Look'}</h2>

@@ -248,17 +248,18 @@ export default function ConeLesson({ tRef }) {
 const GOLD = '#ffd27a'
 const INK = '#e8eefc'
 const SOFT = '#9fb0d0'
+const PINK = '#ff8ad8' // math is pink everywhere
 const MATH = { fontFamily: "'Cambria Math', 'STIX Two Math', serif" }
 
 function Card({ title, rows, foot }) {
   return (
     <svg viewBox="0 0 260 180" className="lesson-svg">
-      <text x="130" y="30" textAnchor="middle" fill={GOLD} fontSize="18" style={MATH}>
+      <text x="130" y="30" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
         {title}
       </text>
       {rows.map(([a, b], i) => (
         <g key={i}>
-          <text x="18" y={66 + i * 28} fill={INK} fontSize="15" style={MATH}>
+          <text x="18" y={66 + i * 28} fill={PINK} fontSize="15" style={MATH}>
             {a}
           </text>
           <text x="242" y={66 + i * 28} fill={SOFT} fontSize="12" textAnchor="end">

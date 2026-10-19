@@ -5,7 +5,7 @@ import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
-import { ForgeDoor } from './FoundryScene'
+import { EmmyBubble, ForgeDoor } from './FoundryScene'
 import { DevAdvance, FollowCamera } from './OverworldScene'
 import ReefGame from './ReefGame'
 import Seascape from '../../world/Seascape'
@@ -227,6 +227,7 @@ export default function ConeScene({
   carried,
   emmyAt,
   emmyTalking,
+  emmyNear,
   exitOpen,
   walkable,
   game,
@@ -286,6 +287,7 @@ export default function ConeScene({
       <group scale={S}>
         <Emmy script={emmyScript} />
       </group>
+      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}

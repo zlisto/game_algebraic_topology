@@ -2,8 +2,18 @@ import { useState } from 'react'
 
 /** Debug level select: every screen, plus 0-2's shrines. Local dev only (or ?debug on a build). */
 const DEBUG_ENTRIES = [
-  { group: 'Opening', items: [{ label: 'Intro movie', screen: 'intro' }] },
-  { group: 'World 0 · Level 1 — Retract Reef', items: [{ label: 'Level 0-1', screen: 'level1' }] },
+  { group: 'Opening — Intro movie', items: [{ label: 'Intro movie', screen: 'intro' }] },
+  {
+    group: 'World 0 · Level 1 — Retract Reef',
+    items: [
+      { label: 'Level 0-1 (from the start)', screen: 'level1' },
+      { label: '↳ The Walkway', screen: 'level1', opts: { startAt: 'the_walkway' } },
+      { label: '↳ The Fork', screen: 'level1', opts: { startAt: 'the_fork' } },
+      { label: '↳ The O', screen: 'level1', opts: { startAt: 'the_o' } },
+      { label: '↳ Twin Lagoons', screen: 'level1', opts: { startAt: 'twin_lagoons' } },
+      { label: '↳ Null’s Mirage', screen: 'level1', opts: { startAt: 'nulls_mirage' } },
+    ],
+  },
   {
     group: 'World 0 · Level 2 — Tidewarp Flats',
     items: [
@@ -89,6 +99,43 @@ const DEBUG_ENTRIES = [
 ]
 const SHOW_DEBUG = import.meta.env.DEV || new URLSearchParams(window.location.search).has('debug')
 
+/** Worlds → levels → entries: group the flat list by its "World N · …" prefix. */
+const TREE = (() => {
+  const out = []
+  for (const g of DEBUG_ENTRIES) {
+    const m = g.group.match(/^(World \d+) · /)
+    if (!m) {
+      out.push(g)
+      continue
+    }
+    let w = out.find((n) => n.world === m[1])
+    if (!w) out.push((w = { world: m[1], levels: [] }))
+    w.levels.push(g)
+  }
+  return out
+})()
+
+/** One level: a single entry is just a button; several fold away under the level's name. */
+function LevelGroup({ g, label, onGo }) {
+  const item = (it) => (
+    <button key={it.label} type="button" className="level-select-item" onClick={() => onGo(it.screen, it.opts)}>
+      {it.label}
+    </button>
+  )
+  if (g.items.length === 1)
+    return (
+      <button type="button" className="level-select-item ls-solo" onClick={() => onGo(g.items[0].screen, g.items[0].opts)}>
+        {label}
+      </button>
+    )
+  return (
+    <details className="ls-level">
+      <summary>{label}</summary>
+      <div className="ls-items">{g.items.map(item)}</div>
+    </details>
+  )
+}
+
 function LevelSelect({ onGo, onClose }) {
   return (
     <div className="level-select" role="dialog" aria-label="Level select">
@@ -100,16 +147,18 @@ function LevelSelect({ onGo, onClose }) {
             ✕
           </button>
         </div>
-        {DEBUG_ENTRIES.map((g) => (
-          <div key={g.group} className="level-select-group">
-            <h3>{g.group}</h3>
-            {g.items.map((it) => (
-              <button key={it.label} type="button" className="level-select-item" onClick={() => onGo(it.screen, it.opts)}>
-                {it.label}
-              </button>
-            ))}
-          </div>
-        ))}
+        {TREE.map((node) =>
+          node.world ? (
+            <details key={node.world} className="ls-world">
+              <summary>{node.world}</summary>
+              {node.levels.map((g) => (
+                <LevelGroup key={g.group} g={g} label={g.group.replace(/^World \d+ · /, '')} onGo={onGo} />
+              ))}
+            </details>
+          ) : (
+            <LevelGroup key={node.group} g={node} label={node.group} onGo={onGo} />
+          ),
+        )}
       </div>
     </div>
   )

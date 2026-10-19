@@ -11,7 +11,7 @@
       "stage": "station",
       "pos": [0, 5.5],
       "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.4 }] },
-      "tracks": [{ "angle": -1.5708, "length": 3.9 }],
+      "tracks": [{ "angle": 1.5708, "length": 3.9 }],
       "emmy": [-3.2, 2.6],
       "enemies": [["sphere", -3, -2.5], ["sphere", 3, -2.5]]
     },
@@ -31,7 +31,7 @@
       "stage": "station",
       "pos": [11, -3.5],
       "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.4 }] },
-      "tracks": [{ "angle": -1.5708, "length": 4.2 }],
+      "tracks": [{ "angle": 1.5708, "length": 4.2 }],
       "emmy": [-3.4, 2.4],
       "enemies": [["unglue", 3, -2.5], ["sphere", -3, -2.5]]
     },

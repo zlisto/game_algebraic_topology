@@ -5,6 +5,7 @@ import LevelMovie from './LevelMovie'
 import { BEACON_OFFSET, DEFINITION_CASTLE, HINTS_CASTLE, NULL_AT, OPENING, PANELS, PUNISH, RING, TRIALS, WAVES } from '../levels/w0/stagesCastle'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxWrong, startNullMusic, startReefMusic, stopMusic, textBlip, unlockAudio } from '../audio/chip'
 import CastleOutro from '../movies/CastleOutro'
+import MathText from './MathText'
 
 /**
  * World 0 · Castle "The Hollow Throne" — Count Null's three trials on the top of his spire.
@@ -341,8 +342,7 @@ export default function LevelCastle({ onBackToTitle, onGo, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -376,7 +376,7 @@ export default function LevelCastle({ onBackToTitle, onGo, startAt }) {
       )}
 
       {complete && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 complete — Retract Reef restored</span>
             <h2>The Hollow Throne</h2>

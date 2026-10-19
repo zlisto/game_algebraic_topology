@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import FlatsScene from '../levels/w0/FlatsScene'
 import LevelMovie from './LevelMovie'
 import { useExitTrigger } from './exitTrigger'
+import { MapNext } from './LevelMap'
 import TidewarpLesson, { LessonOverlay } from '../movies/TidewarpLesson'
 import {
   cut,
@@ -46,6 +47,7 @@ import {
   textBlip,
   unlockAudio,
 } from '../audio/chip'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 2 "Bend, Don't Break" — Tidewarp Flats. Gyroid crosses the mended
@@ -99,7 +101,7 @@ const segDist = (x, z, [ax, az], [bx, bz]) => {
 const zoneAt = (x, z) => layout.zones.find((zn) => Math.hypot(x - zn.center[0], z - zn.center[1]) < zn.radius) || null
 
 /** Minimap of the flats: outline, pools, shrines (gold once done), Gyroid. */
-function FlatsMap({ pos, done, current }) {
+function FlatsMap({ pos, done, current, next, exitOpen }) {
   const P = ([x, z]) => [50 + x * 2.3, 30 + z * 2.3]
   const outline = layout.outline.map((p) => P(p).join(',')).join(' ')
   const [gx, gz] = P(pos)
@@ -115,6 +117,7 @@ function FlatsMap({ pos, done, current }) {
         const [x, y] = P(zn.shrine)
         return <circle key={zn.id} cx={x} cy={y} r={zn.id === current ? 2.6 : 2} fill={done[zn.id] ? '#ffb347' : 'transparent'} stroke={zn.id === current ? '#fff' : '#ffb347'} strokeWidth="0.6" />
       })}
+      <MapNext from={[gx, gz]} to={next ? P(layout.zones.find((z) => z.id === next).shrine) : exitOpen ? P(layout.exit.b) : null} label={next ? 'NEXT' : 'EXIT'} />
       <circle cx={gx} cy={gz} r="1.6" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
@@ -758,7 +761,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         </div>
 
-        <FlatsMap pos={here.pos} done={done} current={here.zone} />
+        {!line && <FlatsMap pos={here.pos} done={done} current={here.zone} next={current} exitOpen={exitOpen} />}
 
         {showRules && (
           <div className="rules-panel">
@@ -824,8 +827,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -925,7 +927,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 2 clear</span>
             <h2>{levelMeta?.title || 'Bend, Don’t Break'}</h2>

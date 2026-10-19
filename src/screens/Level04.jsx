@@ -2,10 +2,11 @@ import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import FoundryScene from '../levels/w0/FoundryScene'
 import LevelMovie from './LevelMovie'
+import LevelMap from './LevelMap'
 import { useExitTrigger } from './exitTrigger'
 import { HUB_RADIUS, LETTERS, chi, identify, letterText, makeTrack, makeTracker, parseWord, sameWord } from '../levels/w0/cells'
 import { LETTER_COLORS } from '../levels/w0/Hologram'
-import { DEFINITION04, HINTS04, OPENING, STATIONS, STATION_ORDER, WRONG } from '../levels/w0/stages04'
+import { DEFINITION04, HINTS04, OPENING, STATIONS, STATION_ORDER, WRONG, emmyAdvice } from '../levels/w0/stages04'
 import layout from '../world/foundry.json'
 import { buildSites, makeSiteWalkable } from '../world/sites'
 import {
@@ -27,6 +28,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import CellsLesson, { CellsLessonOverlay } from '../movies/CellsLesson'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 4 "Some Assembly Required" — the Skeleton Foundry's Assembly Hall.
@@ -165,6 +167,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const afterTalk = useRef(null)
   const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
   const emmyTalking = useRef(false)
+  const [nearEmmy, setNearEmmy] = useState(false)
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -238,6 +241,8 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
+      const e = emmyAt.current
+      setNearEmmy(Math.hypot(s.x - e.x, s.z - e.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
@@ -279,6 +284,11 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     setMet((m) => ({ ...m, [st]: true }))
     say(STATIONS[st].arrive)
   }, [here.site, phase, current, met, done, say])
+
+  // the χ lock always comes back when it's due (e.g. if a knockout interrupted the lines before it)
+  useEffect(() => {
+    if (goal?.type === 'chi' && phase === 'play' && !chiOpen && !exitOpen && here.site === current && met[current]) setChiOpen(true)
+  }, [goal, phase, chiOpen, exitOpen, here.site, current, met])
 
   // knocked out
   useEffect(() => {
@@ -375,6 +385,23 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     if (word.some((l) => cx.edges.find((e) => e.letter === l.e)?.torn) || cx.edges.some((e) => e.torn)) return say([HINTS04.torn])
     // press: build what the walked word says, show it, then judge it against the blueprint
     const target = parseWord(goal.word)
+    if (goal.word !== '' && word.length === 0) {
+      // nothing walked yet: don't press — explain how to write the word
+      const first = target[0]
+      const fwd = first.s > 0
+      return say([
+        {
+          speaker: 'Emmy Boundary',
+          portrait: 'emmy-boundary',
+          text: `Not yet — the press needs a word to glue the disk along, and you write it with your feet. Walk the ${LETTERS[first.e]} track: out from the furnace, round its loop ${fwd ? 'the way its little arrows point' : 'against its arrows'}, and back onto the furnace. That writes $${letterText(first)}$.`,
+        },
+        {
+          speaker: 'Emmy Boundary',
+          portrait: 'emmy-boundary',
+          text: target.length > 1 ? `Keep going until “walked” on your panel reads $${target.map(letterText).join(' ')}$, then click the furnace.` : 'Then stand on the furnace and click it to press.',
+        },
+      ])
+    }
     const trial = { ...cx, disks: [...cx.disks, word] }
     const kind = identify(trial)
     const holoKind = kind === 'sphere' && trial.disks.length === 2 ? 'hemi' : ['sphere', 'disk', 'torus', 'klein', 'rp2', 'pinched'].includes(kind) ? kind : 'disk'
@@ -400,7 +427,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
             {
               speaker: 'Emmy Boundary',
               portrait: 'emmy-boundary',
-              text: `You walked ${word.length ? word.map(letterText).join(' ') : 'no letters'} — that made ${WRONG[kind] || 'something else'}. The blueprint wants ${goal.word ? goal.word.replace(/-/g, '⁻¹') : 'the rim crushed to the point'}. The press lets go — try again.`,
+              text: `You walked $${word.length ? word.map(letterText).join(' ') : '∅'}$, and that made ${WRONG[kind] || 'something else'}. The blueprint wants ${goal.word ? '$' + target.map(letterText).join(' ') + '$' : 'the rim crushed to the point'}. The press lets go — walk the word again (R clears it), then click.`,
             },
           ],
           'unpress',
@@ -470,6 +497,25 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       window.removeEventListener('keydown', key)
       window.removeEventListener('wheel', wheel)
     }
+  }, [])
+
+  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
+  const canTalk = nearEmmy && phase === 'play' && !chiOpen && !levelClear && !lesson
+  const talkToEmmy = () => {
+    if (!canTalk) return
+    const s = stateRef.current
+    const e = emmyAt.current
+    if (s) e.rotY = Math.atan2(s.x - e.x, s.z - e.z) // she turns to face him
+    say(emmyAdvice({ station: current, goal, cx, word, enemies: current ? enemies[current] : 0, here: here.site, exitOpen }))
+  }
+  const talkRef = useRef(null)
+  talkRef.current = talkToEmmy
+  useEffect(() => {
+    const k = (e) => {
+      if (e.code === 'KeyE') talkRef.current?.()
+    }
+    window.addEventListener('keydown', k)
+    return () => window.removeEventListener('keydown', k)
   }, [])
 
   // ---------- dialogue (FF7 style)
@@ -562,6 +608,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       current={current}
       emmyAt={emmyAt}
       emmyTalking={emmyTalking}
+      emmyNear={nearEmmy && phase === 'play'}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -707,8 +754,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -736,6 +782,14 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {toast && !line && <div className="toast">{toast}</div>}
 
+        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" />}
+
+        {canTalk && (
+          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
+            💬 Talk to Emmy <kbd>E</kbd>
+          </button>
+        )}
+
         {!talking && !levelClear && !chiOpen && (
           <div className="controls">
             <div className="weapons" role="group" aria-label="Weapon">
@@ -750,7 +804,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
         )}
         {playEnabled && phase === 'play' && !toast && (
           <div className="hint">
-            {atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith'}
+            {atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith · lost? walk up to Emmy and press E'}
           </div>
         )}
       </div>
@@ -769,7 +823,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 4 clear</span>
             <h2>{levelMeta?.title || 'Some Assembly Required'}</h2>

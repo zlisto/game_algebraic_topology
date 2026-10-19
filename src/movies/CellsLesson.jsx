@@ -1,11 +1,14 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { DevAdvance } from '../levels/w0/OverworldScene'
 import Hologram, { LETTER_COLORS } from '../levels/w0/Hologram'
 import { LiveLine } from '../levels/w0/FlatsScenery'
+import { Press, Track } from '../levels/w0/FoundryScene'
+import { makeTrack } from '../levels/w0/cells'
+import Gyroid from '../characters/Gyroid'
 
 /**
  * "Built from Cells" (videos.json level-0-4-lesson): cell complexes, slowly.
@@ -14,12 +17,15 @@ import { LiveLine } from '../levels/w0/FlatsScenery'
  *   C 22–34  the torus: one point, loops a and b, a square glued along a b a⁻¹ b⁻¹ (it folds)
  *   D 34–44  arrows matter: a disk along a a — the projective plane, which crosses itself in 3D
  *   E 44–52  χ = points − edges + disks
- *   F 52–62  how to play; G 62–68 summary
+ *   F 52–66 how to play: Gyroid works a furnace — forges the point, walks the track for
+ *            edge a, walks it again to write a, and presses the disk
+ *   G 66–72 summary
  * The diagram (CellsLessonOverlay) runs on the same clock.
  */
 
 const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)))
 const smooth = (x) => x * x * (3 - 2 * x)
+const mix = (a, b, k) => a + (b - a) * k
 
 /** Story time → camera. The demo sits left of center; the diagram card takes the right. */
 function LessonCamera({ tRef }) {
@@ -27,12 +33,103 @@ function LessonCamera({ tRef }) {
   const look = useMemo(() => new THREE.Vector3(), [])
   useFrame(() => {
     const t = tRef.current
-    const orbit = t * 0.12
-    camera.position.set(1.6 + Math.sin(orbit) * 1.2, 5.2, 8.6 + Math.cos(orbit) * 0.6)
-    look.set(1.6, 1.2, 0)
+    if (t >= 52 && t < 66) {
+      // the demo: close on the furnace and its track
+      camera.position.set(HUB[0] - 0.6, 7.6, HUB[1] + 10.4)
+      look.set(HUB[0] - 0.8, 0.5, HUB[1] + 1.3)
+    } else {
+      const orbit = t * 0.12
+      camera.position.set(0.9 + Math.sin(orbit) * 1.0, 5.8, 10.2 + Math.cos(orbit) * 0.6)
+      look.set(0.9, 1.0, 0)
+    }
     camera.lookAt(look)
   })
   return null
+}
+
+// ---------------------------------------------------------------- F: Gyroid works a furnace
+
+const S = 0.7
+const HUB = [1.6, -0.8]
+const DEMO_TRACK = makeTrack({ angle: Math.PI, length: 2.8 }, HUB)
+// the demo's beats (story seconds)
+export const DEMO = { walkIn: [52, 53.3], point: 53.7, edgeWalk: [54.1, 57.3], edge: 57.4, wordWalk: [57.9, 61.0], word: 61.0, press: 61.5 }
+
+function Demo({ tRef }) {
+  const hub = useRef()
+  const slam = useRef(0)
+  const fold = useRef(0)
+  const holo = useRef()
+  const progressRef = useRef(null)
+  const [edge, setEdge] = useState(null)
+  useFrame(() => {
+    const t = tRef.current
+    const lit = t >= DEMO.point
+    hub.current.material.color.set(lit ? '#ffd27a' : '#5a3a28')
+    hub.current.material.emissiveIntensity = lit ? 1.6 : 0.3
+    // the track lights up as he walks it
+    const walk = (a, b) => (t >= a && t < b ? (t - a) / (b - a) : null)
+    const w1 = walk(...DEMO.edgeWalk)
+    const w2 = walk(...DEMO.wordWalk)
+    const w = w1 ?? w2
+    progressRef.current = w != null ? { track: 0, dir: 1, best: w } : null
+    const wantEdge = t >= DEMO.edge
+    if (wantEdge !== !!edge) setEdge(wantEdge ? { letter: 0, dir: 1, torn: false } : null)
+    slam.current = t > DEMO.press && t < DEMO.press + 0.5 ? 1 - (t - DEMO.press) / 0.5 : 0
+    fold.current = smooth(seg(t, DEMO.press + 0.35, DEMO.press + 2.8))
+    holo.current.visible = t >= DEMO.press + 0.3
+  })
+  const gyro = () => {
+    const t = tRef.current
+    let x
+    let z
+    let rotY = Math.PI
+    let run = 0
+    const [a0, a1] = DEMO.walkIn
+    if (t < a1) {
+      const k = smooth(seg(t, a0, a1))
+      x = mix(HUB[0] + 0.4, HUB[0], k)
+      z = mix(HUB[1] + 2.4, HUB[1], k)
+      rotY = Math.atan2(-0.4, -2.4)
+      run = k > 0 && k < 1 ? 0.7 : 0
+    } else {
+      const lap = (a, b) => (t >= a && t < b ? (t - a) / (b - a) : null)
+      const u = lap(...DEMO.edgeWalk) ?? lap(...DEMO.wordWalk)
+      if (u != null) {
+        const p = DEMO_TRACK.at(u)
+        const q = DEMO_TRACK.at(Math.min(1, u + 0.02))
+        x = p[0]
+        z = p[1]
+        rotY = Math.atan2(q[0] - p[0], q[1] - p[1])
+        run = 0.8
+      } else {
+        x = HUB[0]
+        z = HUB[1]
+      }
+    }
+    const casting = Math.abs(t - DEMO.point) < 0.5 || Math.abs(t - DEMO.press) < 0.5
+    return { pos: [x / S, 0, z / S], rotY, run, cast: casting ? 1 : 0.35, whip: 0, loop: 0, loopDrop: 0 }
+  }
+  return (
+    <>
+      <mesh position={[HUB[0], 0.06, HUB[1]]}>
+        <cylinderGeometry args={[0.85, 0.95, 0.14, 32]} />
+        <meshStandardMaterial color="#3a2a22" roughness={0.5} />
+      </mesh>
+      <mesh ref={hub} position={[HUB[0], 0.14, HUB[1]]}>
+        <cylinderGeometry args={[0.55, 0.55, 0.04, 32]} />
+        <meshStandardMaterial color="#5a3a28" emissive="#ff8a2a" emissiveIntensity={0.3} toneMapped={false} />
+      </mesh>
+      <Track track={DEMO_TRACK} trackIdx={0} pos={[0, 0]} edge={edge} progressRef={progressRef} />
+      <Press pos={HUB} slamRef={slam} />
+      <group ref={holo} position={[HUB[0] - 1.7, 1.7, HUB[1] - 0.4]} scale={0.6}>
+        <Hologram kind="disk" word={[{ e: 0, s: 1 }]} kRef={fold} />
+      </group>
+      <group scale={S}>
+        <Gyroid script={gyro} />
+      </group>
+    </>
+  )
 }
 
 const P = [-1.2, 0.1, 0] // the one point (0-cell), in beat A
@@ -47,6 +144,7 @@ export default function CellsLesson({ tRef }) {
   const gSphere = useRef()
   const gTorus = useRef()
   const gRp2 = useRef()
+  const gDemo = useRef()
   const point = useRef()
   const disk = useRef()
   useFrame(() => {
@@ -56,7 +154,8 @@ export default function CellsLesson({ tRef }) {
     kRp2.current = smooth(seg(t, 37, 42))
     gA.current.visible = t < 12
     gSphere.current.visible = (t >= 12 && t < 22) || (t >= 44 && t < 52)
-    gTorus.current.visible = (t >= 22 && t < 34) || t >= 52
+    gTorus.current.visible = (t >= 22 && t < 34) || t >= 66
+    gDemo.current.visible = t >= 52 && t < 66
     gRp2.current.visible = t >= 34 && t < 44
     point.current.visible = t >= 1 && t < 12
     point.current.scale.setScalar(smooth(seg(t, 1, 2)))
@@ -121,6 +220,11 @@ export default function CellsLesson({ tRef }) {
         <Hologram kind="rp2" kRef={kRp2} word={[{ e: 0, s: 1 }, { e: 0, s: 1 }]} />
       </group>
 
+      {/* F: Gyroid works a furnace */}
+      <group ref={gDemo}>
+        <Demo tRef={tRef} />
+      </group>
+
       <LessonCamera tRef={tRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
@@ -136,6 +240,7 @@ export default function CellsLesson({ tRef }) {
 const GOLD = '#ffd27a'
 const INK = '#e8eefc'
 const DIM = '#5c6680'
+const PINK = '#ff8ad8' // math is pink everywhere
 const MATH = { fontFamily: "'Cambria Math', 'STIX Two Math', serif" }
 const A = LETTER_COLORS[0]
 const B = LETTER_COLORS[1]
@@ -174,7 +279,7 @@ function Diagram({ t }) {
         {row(0, 'X⁰', 'points — the 0-cells')}
         {row(1, 'X¹', 'edges, glued by their ends')}
         {row(2, 'X²', 'disks, glued along loops')}
-        <text x="130" y="160" textAnchor="middle" fill={INK} fontSize="15" style={MATH}>
+        <text x="130" y="160" textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
           X⁰ ⊂ X¹ ⊂ X²
         </text>
       </svg>
@@ -188,10 +293,10 @@ function Diagram({ t }) {
         <text x="80" y="140" textAnchor="middle" fill="#9fb0d0" fontSize="12">
           its whole rim → the point
         </text>
-        <text x="190" y="72" textAnchor="middle" fill={INK} fontSize="16" style={MATH}>
+        <text x="190" y="72" textAnchor="middle" fill={PINK} fontSize="16" style={MATH}>
           e⁰ ∪ e²
         </text>
-        <text x="190" y="100" textAnchor="middle" fill={GOLD} fontSize="18" style={MATH}>
+        <text x="190" y="100" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
           = S²
         </text>
       </svg>
@@ -216,10 +321,10 @@ function Diagram({ t }) {
         <text x="148" y="84" fill={B} fontSize="14" fontWeight="700">
           b
         </text>
-        <text x="210" y="70" textAnchor="middle" fill={INK} fontSize="15" style={MATH}>
+        <text x="210" y="70" textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
           a b a⁻¹ b⁻¹
         </text>
-        <text x="210" y="100" textAnchor="middle" fill={GOLD} fontSize="18" style={MATH}>
+        <text x="210" y="100" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
           = T²
         </text>
         <text x="130" y="172" textAnchor="middle" fill="#9fb0d0" fontSize="12">
@@ -239,10 +344,10 @@ function Diagram({ t }) {
         <text x="80" y="148" textAnchor="middle" fill={A} fontSize="14" fontWeight="700">
           a
         </text>
-        <text x="190" y="70" textAnchor="middle" fill={INK} fontSize="16" style={MATH}>
+        <text x="190" y="70" textAnchor="middle" fill={PINK} fontSize="16" style={MATH}>
           a a
         </text>
-        <text x="190" y="100" textAnchor="middle" fill={GOLD} fontSize="18" style={MATH}>
+        <text x="190" y="100" textAnchor="middle" fill={PINK} fontSize="18" style={MATH}>
           = ℝP²
         </text>
         <text x="190" y="128" textAnchor="middle" fill="#9fb0d0" fontSize="11">
@@ -253,7 +358,7 @@ function Diagram({ t }) {
   if (t < 52)
     return (
       <svg viewBox="0 0 260 180" className="lesson-svg">
-        <text x="130" y="32" textAnchor="middle" fill={INK} fontSize="17" style={MATH}>
+        <text x="130" y="32" textAnchor="middle" fill={PINK} fontSize="17" style={MATH}>
           χ = points − edges + disks
         </text>
         {[
@@ -266,10 +371,10 @@ function Diagram({ t }) {
             <text x="16" y={66 + i * 26} fill="#9fb0d0" fontSize="12">
               {n}
             </text>
-            <text x="160" y={66 + i * 26} fill={INK} fontSize="14" style={MATH}>
+            <text x="160" y={66 + i * 26} fill={PINK} fontSize="14" style={MATH}>
               {sum}
             </text>
-            <text x="236" y={66 + i * 26} fill={GOLD} fontSize="15" style={MATH} textAnchor="end">
+            <text x="236" y={66 + i * 26} fill={PINK} fontSize="15" style={MATH} textAnchor="end">
               {v}
             </text>
           </g>
@@ -280,7 +385,7 @@ function Diagram({ t }) {
 }
 
 function Steps({ t }) {
-  if (t >= 62)
+  if (t >= 66)
     return (
       <div className="lesson-steps">
         <h4>Cell complexes</h4>
@@ -292,13 +397,14 @@ function Steps({ t }) {
       </div>
     )
   const steps = [
-    ['2', 'hold the Cell-Smith', t < 53.4],
-    ['click', 'on the furnace: forge the point', t >= 53.4 && t < 55],
-    ['walk', 'a track out and back: forge an edge', t >= 55 && t < 57],
-    ['walk', 'the word along the edges', t >= 57 && t < 58.8],
-    ['click', 'on the furnace: press the disk', t >= 58.8 && t < 60.2],
-    ['⚡', 'lash Unglues; re-walk a torn edge', t >= 60.2],
+    ['2', 'hold the Cell-Smith; stand on the furnace', t < DEMO.point - 0.3],
+    ['click', 'the furnace: forge the point', t >= DEMO.point - 0.3 && t < DEMO.edgeWalk[0]],
+    ['walk', 'out round the track and back: edge a', t >= DEMO.edgeWalk[0] && t < DEMO.wordWalk[0]],
+    ['walk', 'it again: write a on the disk’s rim', t >= DEMO.wordWalk[0] && t < DEMO.press - 0.2],
+    ['click', 'the furnace: press the disk along a', t >= DEMO.press - 0.2 && t < 64.4],
+    ['⚡', 'lash Unglues; re-walk a torn edge', t >= 64.4],
   ]
+  const walked = t >= DEMO.word ? 'a' : '—'
   return (
     <div className="lesson-steps">
       <h4>✦ The Cell-Smith</h4>
@@ -308,13 +414,16 @@ function Steps({ t }) {
           <span>{label}</span>
         </div>
       ))}
+      <p className="lesson-note">
+        walked: <b className="math">{walked}</b>
+      </p>
     </div>
   )
 }
 
 /** The diagram beside the 3D demo. */
 export function CellsLessonOverlay({ t }) {
-  if (t >= 64.5) return null
+  if (t >= 69.5) return null
   return <div className="lesson-card">{t >= 52 ? <Steps t={t} /> : <Diagram t={t} />}</div>
 }
 

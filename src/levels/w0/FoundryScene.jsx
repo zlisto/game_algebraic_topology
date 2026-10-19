@@ -218,6 +218,24 @@ export function Track({ track, edge, progressRef, trackIdx, pos }) {
   )
 }
 
+/** A speech bubble over Emmy when Gyroid is close enough to talk to her. */
+export function EmmyBubble({ emmyAt, show }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const at = emmyAt.current
+    g.current.position.set(at.x, 2.15 + Math.sin(clock.elapsedTime * 3) * 0.06, at.z)
+  })
+  return (
+    <group ref={g}>
+      {show && (
+        <Html center zIndexRange={[6, 0]} style={{ pointerEvents: 'none' }}>
+          <div className="talk-bubble">💬 E</div>
+        </Html>
+      )}
+    </group>
+  )
+}
+
 /** The way out: a forge door that rolls open onto the causeway to the Cone Zone. */
 export function ForgeDoor({ exit, open }) {
   const left = useRef()
@@ -263,6 +281,7 @@ export default function FoundryScene({
   current,
   emmyAt,
   emmyTalking,
+  emmyNear,
   exitOpen,
   walkable,
   game,
@@ -321,6 +340,7 @@ export default function FoundryScene({
       <group scale={S}>
         <Emmy script={emmyScript} />
       </group>
+      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}

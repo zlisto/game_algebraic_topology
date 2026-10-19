@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { sfxExit } from '../audio/chip'
 
 /**
  * A level's exit: once `active` (the level is won and its way out is open), calls
@@ -15,7 +16,10 @@ export function useExitTrigger(active, stateRef, inside, onReach) {
       const s = stateRef.current
       if (!s) return
       const now = inside(s.x, s.z)
-      if (now && !was.current) cb.current()
+      if (now && !was.current) {
+        sfxExit() // zzzooosh — the screen irises shut while it plays
+        cb.current()
+      }
       was.current = now
     }, 150)
     return () => clearInterval(id)

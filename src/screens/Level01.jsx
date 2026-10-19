@@ -1,11 +1,13 @@
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useExitTrigger } from './exitTrigger'
+import { MapNext } from './LevelMap'
 import OverworldScene from '../levels/w0/OverworldScene'
 import { cleanStroke, sampleShape, simulateSlide, snapPoint } from '../levels/w0/retraction'
 import { DEFINITION, HINTS, RULES, STAGES } from '../levels/w0/stages01'
 import { SITE, SITES, gateSegments, layout, makeWalkable, siteAt, worldToMap } from '../world/reef'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxWrong, startReefMusic, stopReefMusic, textBlip, unlockAudio } from '../audio/chip'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 1 "A Good Deformation" as an overworld: Gyroid lands at the
@@ -58,6 +60,7 @@ function arrivalLines(site, stage) {
 
 /** Minimap from the same layout as the bible's map. */
 function Minimap({ pos, saved, current, gateOpen }) {
+  const nextId = ORDER.find((id) => !saved[id])
   const P = (x, z) => worldToMap(x, z)
   const [gx, gz] = P(pos[0], pos[1])
   const [fx, fz] = P(...layout.scenery.skeleton_foundry.pos)
@@ -84,17 +87,22 @@ function Minimap({ pos, saved, current, gateOpen }) {
         const fill = s.kind === 'start' ? '#3ecfbf' : saved[s.id] ? '#ffb347' : 'transparent'
         return <circle key={s.id} cx={x} cy={y} r={s.id === current ? 3.4 : 2.6} fill={fill} stroke={s.id === current ? '#fff' : '#ffb347'} strokeWidth="0.7" />
       })}
+      <MapNext from={[gx, gz]} to={nextId ? P(...SITE[nextId].pos) : gateOpen ? P(...layout.gate.b) : null} label={nextId ? 'NEXT' : 'EXIT'} />
       <circle cx={gx} cy={gz} r="1.8" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
 }
 
-export default function Level01({ concept, onBackToTitle, onNext }) {
+export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-1')
   const samplesBySite = useMemo(() => Object.fromEntries(PLAYABLE.map((s) => [s.id, sampleShape(s.shape)])), [])
   const given = (site) => (site.givenSpine ? site.givenSpine.map((s) => cleanStroke(s)) : [])
 
-  const [saved, setSaved] = useState({})
+  // debug: start at a later reef (or Null's Mirage), with the earlier reefs already saved
+  const skip = startAt === 'nulls_mirage' ? ORDER.length : Math.max(0, ORDER.indexOf(startAt))
+  const preSaved = Object.fromEntries(ORDER.slice(0, skip).map((id) => [id, true]))
+  const startPos = skip ? SITE[skip < ORDER.length ? ORDER[skip] : 'nulls_mirage'].pos : SITE.landing_pier.pos
+  const [saved, setSaved] = useState(preSaved)
   const [gateOpen, setGateOpen] = useState(false)
   const [strokesBySite, setStrokesBySite] = useState(() => Object.fromEntries(PLAYABLE.map((s) => [s.id, given(s)])))
   const [liveStroke, setLiveStroke] = useState(null)
@@ -107,19 +115,19 @@ export default function Level01({ concept, onBackToTitle, onNext }) {
   const [enemies, setEnemies] = useState({})
   const [hearts, setHearts] = useState(3)
   const [knockouts, setKnockouts] = useState(0)
-  const [checkpoint, setCheckpoint] = useState(SITE.landing_pier.pos)
+  const [checkpoint, setCheckpoint] = useState(startPos)
   const [tool, setTool] = useState('lash')
   const [spooling, setSpooling] = useState(false)
   const [lines, setLines] = useState([])
   const [lineIdx, setLineIdx] = useState(0)
   const [phase, setPhase] = useState('play') // play | talk:<next> | quiz | clear
-  const [met, setMet] = useState({})
+  const [met, setMet] = useState(preSaved)
   const [cleared, setCleared] = useState({})
   const [forgeryIdx, setForgeryIdx] = useState(0)
   const [answer, setAnswer] = useState(null)
   const [levelClear, setLevelClear] = useState(false)
   const stateRef = useRef(null)
-  const [here, setHere] = useState({ site: null, pos: SITE.landing_pier.pos })
+  const [here, setHere] = useState({ site: null, pos: startPos })
   const judged = useRef(null)
   const [shown, setShown] = useState(0) // characters of the current line typed out so far
   const [muted, setMuted] = useState(readMuted)
@@ -151,7 +159,9 @@ export default function Level01({ concept, onBackToTitle, onNext }) {
 
   // opening line
   useEffect(() => {
+    if (skip) return
     say([E('The spines held — so the reef can be saved. Start with the Walkway, just up from the pier. Every patch of reef we shrink onto its spine is one Null can’t erase.')])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [say])
 
   // where is Gyroid? (polled; drives arrivals, the HUD and the minimap)
@@ -527,7 +537,7 @@ export default function Level01({ concept, onBackToTitle, onNext }) {
           </div>
         </div>
 
-        <Minimap pos={here.pos} saved={saved} current={here.site} gateOpen={gateOpen} />
+        {!line && <Minimap pos={here.pos} saved={saved} current={here.site} gateOpen={gateOpen} />}
 
         {showRules && (
           <div className="rules-panel">
@@ -576,8 +586,7 @@ export default function Level01({ concept, onBackToTitle, onNext }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -650,7 +659,7 @@ export default function Level01({ concept, onBackToTitle, onNext }) {
       </div>
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 1 clear</span>
             <h2>{levelMeta?.title || 'A Good Deformation'}</h2>

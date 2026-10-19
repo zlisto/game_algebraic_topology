@@ -41,13 +41,13 @@ export const STATIONS = {
         expect: 'sphere',
         done: [
           E('The rim went to the point, so the disk closed up like a drawstring bag: a sphere. One 0-cell, one 2-cell.'),
-          E('Watch the counter on your gauntlet: χ = points − edges + disks = 1 − 0 + 1 = 2.'),
+          E('Watch the counter on your gauntlet: $χ = points − edges + disks = 1 − 0 + 1 = 2$.'),
           E('Now the same sphere, built differently. Clear the press…'),
         ],
       },
       { type: 'reset', done: [E('…Walk the track out from the furnace and back. Going round it forges an edge — a 1-cell whose two ends are glued to the point.')] },
-      { type: 'edges', n: 1, done: [E('An edge, a. Both its ends are the point, so it’s a loop — a circle. The arrow shows the way you walked it.'), E('Now walk a again, the same way, and click the furnace: the press glues a disk along a.')] },
-      { type: 'disk', word: 'a', expect: 'disk', done: [E('A disk glued along the circle: a bowl, a hemisphere. Do it once more — walk a, click the furnace.')] },
+      { type: 'edges', n: 1, done: [E('An edge, $a$. Both its ends are the point, so it’s a loop — a circle. The arrow shows the way you walked it.'), E('Now walk $a$ again, the same way, and click the furnace: the press glues a disk along $a$.')] },
+      { type: 'disk', word: 'a', expect: 'disk', done: [E('A disk glued along the circle: a bowl, a hemisphere. Do it once more — walk $a$, click the furnace.')] },
       {
         type: 'disk',
         word: 'a',
@@ -65,7 +65,7 @@ export const STATIONS = {
     blueprint: 'The torus',
     arrive: [
       E('Twin Loops. Two tracks, one furnace. This is where we forge a torus.'),
-      E('Point first, then walk each track out and back: two edges, a and b.'),
+      E('Point first, then walk each track out and back: two edges, $a$ and $b$.'),
     ],
     goals: [
       { type: 'point', done: [] },
@@ -74,7 +74,7 @@ export const STATIONS = {
         n: 2,
         done: [
           E('Two loops at one point: a figure-eight. That’s the torus’s 1-skeleton.'),
-          E('Now the disk. Its rim gets glued along a, b, a backwards, b backwards — walk a the way its arrow points, then b, then a against its arrow, then b against its arrow. Then click the furnace.'),
+          E('Now the disk. Its rim gets glued along $a b a⁻¹ b⁻¹$ — walk $a$ the way its arrow points, then $b$, then $a$ against its arrow, then $b$ against its arrow. Then click the furnace.'),
         ],
       },
       {
@@ -92,17 +92,17 @@ export const STATIONS = {
   },
   one_loop: {
     blueprint: 'Follow the arrows',
-    arrive: [E('One Loop. One point, one edge — and two very different disks you can glue to it.'), E('Point, then walk the track for edge a.')],
+    arrive: [E('One Loop. One point, one edge — and two very different disks you can glue to it.'), E('Point, then walk the track for edge $a$.')],
     goals: [
       { type: 'point', done: [] },
-      { type: 'edges', n: 1, done: [E('First blueprint: a disk along a, walked once. Walk it, click the furnace.')] },
+      { type: 'edges', n: 1, done: [E('First blueprint: a disk along $a$, walked once. Walk it, click the furnace.')] },
       {
         type: 'disk',
         word: 'a',
         expect: 'disk',
-        done: [E('The disk just fills the loop: you’ve made a disk. Nothing new — it shrinks to a point.'), E('Second blueprint: glue a disk along a twice, the same way both times: a, a. Clear the press first…')],
+        done: [E('The disk just fills the loop: you’ve made a disk. Nothing new — it shrinks to a point.'), E('Second blueprint: glue a disk along $a$ twice, the same way both times: $a a$. Clear the press first…')],
       },
-      { type: 'reset', keepEdges: true, done: [E('…now walk a, then a again, same direction. Click the furnace.')] },
+      { type: 'reset', keepEdges: true, done: [E('…now walk $a$, then $a$ again, same direction. Click the furnace.')] },
       {
         type: 'disk',
         word: 'a a',
@@ -121,12 +121,12 @@ export const STATIONS = {
     blueprint: 'The Klein bottle',
     arrive: [
       E('The Blueprint Wall — every place the Foundry ever made, written as cells.'),
-      E('This one: one point, edges a and b, and a disk along a, b, a backwards, b. Like the torus — but the last b goes forwards.'),
+      E('This one: one point, edges $a$ and $b$, and a disk along $a b a⁻¹ b$. Like the torus — but the last $b$ goes forwards.'),
       N('Forge all you like, Boundary. My Unglues will pull it apart faster.'),
     ],
     goals: [
       { type: 'point', done: [] },
-      { type: 'edges', n: 2, done: [E('Two edges. Now walk a, b, a backwards, b — and click the furnace.')], wave: true },
+      { type: 'edges', n: 2, done: [E('Two edges. Now walk $a$, $b$, $a$ backwards, $b$ — and click the furnace.')], wave: true },
       {
         type: 'disk',
         word: 'a b a- b',
@@ -160,7 +160,7 @@ export const HINTS04 = {
 export const WRONG = {
   sphere: 'a sphere',
   disk: 'a disk — the loop just got filled',
-  pinched: 'a sphere with two of its points glued together (a, then a backwards zips the disk shut — but both ends of a are the one point)',
+  pinched: 'a sphere with two of its points glued together ($a$, then $a⁻¹$ zips the disk shut — but both ends of $a$ are the one point)',
   torus: 'a torus',
   rp2: 'a projective plane',
   klein: 'a Klein bottle',
@@ -171,4 +171,39 @@ export const DEFINITION04 = {
   text: 'A cell complex is built in stages: start with a discrete set of points (0-cells); attach 1-cells (edges) by their endpoints; then attach 2-cells (disks) along maps of their boundary circles into what’s built so far — and so on in higher dimensions. The torus is one 0-cell, two 1-cells a and b, and a 2-cell along a b a⁻¹ b⁻¹; the projective plane is one cell of each dimension, its 2-cell attached along a a. The Euler characteristic counts cells with alternating signs.',
   cite: 'Paraphrasing Allen Hatcher, Algebraic Topology, Chapter 0, pp. 5–8 (χ: Example 0.2). That χ depends only on the space, not on how it was built, is Theorem 2.44 — proved in Chapter 2.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATpage.html',
+}
+
+/**
+ * What Emmy says when Gyroid walks up and talks to her: advice for exactly where he is.
+ * s = { station, goal, cx, word, enemies, here, exitOpen, chiOpen }
+ */
+export function emmyAdvice(s) {
+  const name = (id) => ({ sphere_press: 'the Sphere Press', twin_loops: 'Twin Loops', one_loop: 'One Loop', blueprint_wall: 'the Blueprint Wall' })[id]
+  if (s.exitOpen) return [E('That’s every press. The forge door to the north is open — walk through it to reach the Cone Zone.')]
+  if (!s.station) return [E('We’re done here.')]
+  if (s.here !== s.station)
+    return [E(`Next is ${name(s.station)} — I’ll wait for you there. Follow the walkways; I’m standing right beside it.`)]
+  const lines = []
+  if (s.enemies) lines.push(E('First, Null’s spawn are crawling on the press. Press 1 for the Lash and click toward them to crack it.'))
+  const g = s.goal
+  const torn = s.cx.edges.filter((e) => e.torn)
+  if (!g) return [E('This press is finished. On to the next one.')]
+  if (g.type === 'point')
+    lines.push(E('Stand on the glowing furnace in the middle of the platform, hold the Cell-Smith — press 2 — and click the furnace. That forges the point, a 0-cell. Everything here gets glued to it.'))
+  else if (g.type === 'edges') {
+    const k = s.cx.edges.length
+    lines.push(E(`Hold the Cell-Smith (2) and walk out along one of the dark tracks, round its loop, and all the way back to the furnace. That forges an edge — a 1-cell with both ends on the point. You have ${k} of ${g.n}.`))
+    if (k > 0 && k < g.n) lines.push(E('Walk the other track for the next one — each track makes its own edge.'))
+  } else if (g.type === 'disk' && g.word === '') {
+    lines.push(E('Stand on the furnace and click it with the Cell-Smith. The press stamps a disk and crushes its whole rim onto the point.'))
+  } else if (g.type === 'disk') {
+    const want = g.word.replace(/-/g, '⁻¹')
+    const walked = s.word.length ? s.word.map((l) => 'ab'[l.e] + (l.s < 0 ? '⁻¹' : '')).join(' ') : 'nothing yet'
+    lines.push(E(`The blueprint wants a disk glued along $${want}$. Each lap round a track adds one letter: walk the way its arrow points for the letter, against the arrow for its inverse.`))
+    lines.push(E(`So far you’ve walked: ${s.word.length ? '$' + walked + '$' : walked}. When it matches, step on the furnace and click to press. If you slip, press R to start the word over.`))
+  } else if (g.type === 'chi') {
+    lines.push(E('The door wants χ. Count what you built: points minus edges plus disks — it’s all on your gauntlet panel.'))
+  }
+  if (torn.length) lines.push(E('An Unglue tore an edge loose — it’s the violet dashed one. Walk that track again to re-forge it.'))
+  return lines
 }

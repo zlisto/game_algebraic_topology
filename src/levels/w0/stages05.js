@@ -186,3 +186,43 @@ export const DEFINITION05 = {
   cite: 'Paraphrasing Allen Hatcher, Algebraic Topology, Chapter 0, pp. 8–10. That collapsing a contractible subcomplex keeps the homotopy type is Proposition 0.17.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATpage.html',
 }
+
+/**
+ * What Emmy says when Gyroid walks up and talks to her: advice for exactly where he is.
+ * s = { station, goal, works, carried, here, exitOpen, enemies, name }
+ */
+export function emmyAdvice05(s) {
+  if (s.exitOpen) return [E('That’s every works. The gate to the Timber Yard is open — walk north through it.')]
+  if (!s.station) return [E('We’re done here.')]
+  if (s.here !== s.station) return [E(`Next is ${s.name} — I’ll wait for you there. Follow the walkways; I’m standing on the platform.`)]
+  const lines = []
+  const g = s.goal
+  const w = s.works
+  const opName = { cone: 'CONE', suspension: 'SUSPENSION', wedge: 'WEDGE', product: 'PRODUCT', quotient: 'QUOTIENT' }
+  const pick = (op) => (w.op === op ? '' : `First pick ${opName[op]} on your panel (top right). `)
+  if (s.enemies) lines.push(E('Lash the Coners before they plug things — press 1 and click toward them. A plugged pedestal you can fix: click it with the Cell-Smith.'))
+  if (w.shelf.some((x) => x?.plugged)) lines.push(E('Something on your shelf got plugged — the violet cone. That one’s ruined; make a fresh one.'))
+  if (s.carried) lines.push(E(`You’re carrying ${s.carried.name}. Click the machine to feed it in.`))
+  else if (w.hopper.length === 1) lines.push(E(`The machine already holds ${w.hopper[0].name} — feed it one more space.`))
+  if (!g) return lines.length ? lines : [E('This works is finished.')]
+  if (g.type === 'ask') {
+    lines.push(E('Answer the question on screen. Count the cells: they’re listed on your panel under “last made”.'))
+    return lines
+  }
+  const t = g.target
+  const tips = {
+    cone_circle: 'Hold the Cell-Smith (2), click the ring’s pedestal to pick up a copy, then click the machine. It cones whatever you feed it.',
+    vee: 'Now pick up the two points and feed them to the machine.',
+    circle: 'Pick up the two points and feed them to the machine: a tip above, a tip below.',
+    sphere: s.station === 'recipe_board' ? `${pick('quotient')}Feed it the disk: the quotient collapses the disk’s whole rim to one point. (Suspending a circle works too.)` : 'Pick the circle up off the shelf — the teal pedestal — and feed it back into the machine.',
+    s3: 'Take the sphere off the shelf and feed it in once more.',
+    eight: `${pick('wedge')}Feed it a ring, then another ring — pick up the ring pedestal twice.`,
+    torus:
+      s.station === 'recipe_board'
+        ? `Two suspensions and a product. ${pick('suspension')}Feed the two points twice — you’ll get two circles on the shelf. Then pick PRODUCT and feed both circles in.`
+        : `${pick('product')}Feed it a ring, then another ring.`,
+    sphere_circle: 'Make a circle (suspend the two points), suspend that circle to get a sphere, make another circle, then pick WEDGE and feed the sphere and the circle.',
+  }
+  lines.push(E(tips[t] || `Make ${t}.`))
+  return lines
+}

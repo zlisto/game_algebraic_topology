@@ -13,9 +13,9 @@ export const ZONE_ORDER = ['tide_line', 'hold_posts', 'the_pools', 'nulls_snap']
 /** The homotopy rules, checked live on the ribbon in front of a shrine. */
 export const RULES02 = [
   { id: 'whole', label: 'Ribbon unbroken', math: 'each fₜ : I → X continuous' },
-  { id: 'posts', label: 'Posts never move', math: 'fₜ(a) = a for a ∈ A' },
-  { id: 'land', label: 'Never crosses water', math: 'F : I × I → X' },
-  { id: 'target', label: 'Ends as the shrine’s path', math: 'f₁ ≃ g rel A' },
+  { id: 'posts', label: 'Posts never move', math: 'F(a, t) = F(a, 0) for a ∈ A' },
+  { id: 'land', label: 'Never crosses water', math: 'F(s, t) ∈ X for all s, t' },
+  { id: 'target', label: 'Ends as the shrine’s path', math: 'f₁ = g' },
 ]
 
 export const OPENING = [
@@ -58,7 +58,7 @@ export const ZONES = {
           G('Something’s moving in the water…'),
           E('Snappers! They clip ribbons, and a clipped ribbon isn’t a continuous map any more. Lash them, then re-tie the cut with the Spool.'),
         ],
-        done: [E('Posts held, ribbon whole, every frame flowing into the next. That’s a homotopy rel A — A being the posts and stakes.')],
+        done: [E('Posts held, ribbon whole, every frame flowing into the next. That’s a homotopy $rel A$ — $A$ being the points of the ribbon pinned to posts and stakes.')],
       },
     ],
     done: [E('On to the pool shrine, east across the flats.')],

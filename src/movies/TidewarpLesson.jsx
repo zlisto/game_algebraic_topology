@@ -17,7 +17,7 @@ import layout from '../world/tidewarpFlats.json'
  *   A 0–9    a path is a map f : I → X (bead on [0, 1] ↔ bead on the ribbon)
  *   B 9–21   a homotopy is a movie: frames fₜ freeze; the square I × I, one row per frame
  *   C 21–30  the Tide Glass scrubs t; ghosts of the neighbouring frames hug the ribbon
- *   D 30–38  rel A: the posts never move (the square's side edges)
+ *   D 30–38  rel A: the ribbon's pinned points never move (the square's side edges)
  *   E 38–50  the Spool: grab, walk, hook onto a stake (real ribbon physics)
  *   F 50–60  what breaks a homotopy: a cut, a jump, crossing water
  *   G 60–70  summary
@@ -55,12 +55,12 @@ export { SPOOL }
 
 // ---------------------------------------------------------------- camera
 
-const TOP = [[-0.4, 12.5, 1.9], [-0.4, 0, -3.4]] // ribbon in the left of frame; the diagram sits on the right
+const TOP = [[-1.4, 15.5, 2.4], [-1.4, 0, -3.3]] // both posts and the tide's bends in the left of frame; the diagram sits on the right
 const SPOOL_CAM = [[0.6, 7, 3.4], [-1.2, 0, -4]]
 const POOL_CAM = [[9.4, 8, 10], [9.4, 0, 3]]
 const WIDE = [[0, 24, 22], [0, 0, -2]]
 const SHOTS = [
-  [0, 38, TOP, [[-0.5, 12, 1.6], [-0.5, 0, -3.5]]],
+  [0, 38, TOP, [[-1.5, 15, 2.2], [-1.5, 0, -3.4]]],
   [38, 56.4, SPOOL_CAM, [[0.4, 6.7, 3.1], [-1.3, 0, -4.1]]],
   [56.4, 60, POOL_CAM, [[9.6, 7.7, 9.6], [9.5, 0, 3]]],
   [60, 70.5, [[9.6, 7.7, 9.6], [9.5, 0, 3]], WIDE],
@@ -272,27 +272,28 @@ export default function TidewarpLesson({ tRef }) {
 const GOLD = '#ffd27a'
 const DIM = '#5c6680'
 const INK = '#e8eefc'
+const PINK = '#ff8ad8' // math is pink everywhere
 const MATH = { fontFamily: "'Cambria Math', 'STIX Two Math', serif" }
 
 function Interval({ s }) {
   const x = 30 + 200 * s
   return (
     <svg viewBox="0 0 260 170" className="lesson-svg">
-      <text x="130" y="22" textAnchor="middle" fill={INK} fontSize="15" style={MATH}>
+      <text x="130" y="22" textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
         f : I → X
       </text>
       <line x1="30" y1="70" x2="230" y2="70" stroke={GOLD} strokeWidth="5" strokeLinecap="round" />
-      <text x="30" y="96" textAnchor="middle" fill={INK} fontSize="14" style={MATH}>
+      <text x="30" y="96" textAnchor="middle" fill={PINK} fontSize="14" style={MATH}>
         0
       </text>
-      <text x="230" y="96" textAnchor="middle" fill={INK} fontSize="14" style={MATH}>
+      <text x="230" y="96" textAnchor="middle" fill={PINK} fontSize="14" style={MATH}>
         1
       </text>
       <text x="130" y="52" textAnchor="middle" fill="#9fb0d0" fontSize="13" style={MATH}>
         I = [0, 1]
       </text>
       <circle cx={x} cy="70" r="8" fill="#fff2c4" />
-      <text x={x} y="118" textAnchor="middle" fill={GOLD} fontSize="15" style={MATH}>
+      <text x={x} y="118" textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
         s = {s.toFixed(2)}
       </text>
       <text x="130" y="152" textAnchor="middle" fill="#9fb0d0" fontSize="13">
@@ -328,17 +329,17 @@ function Square({ t, time }) {
         </>
       )}
       <line x1={X0} y1={rowY(t)} x2={X0 + W} y2={rowY(t)} stroke={GOLD} strokeWidth="4" />
-      <text x={X0 + W + 6} y={rowY(t) + 5} fill={GOLD} fontSize="14" style={MATH}>
+      <text x={X0 + W + 6} y={rowY(t) + 5} fill={PINK} fontSize="14" style={MATH}>
         fₜ
       </text>
       {relA && (
         <>
           <line x1={X0} y1={Y0} x2={X0} y2={Y0 + W} stroke={GOLD} strokeWidth="5" />
           <line x1={X0 + W} y1={Y0} x2={X0 + W} y2={Y0 + W} stroke={GOLD} strokeWidth="5" />
-          <text x={X0 - 8} y={Y0 + W / 2} textAnchor="end" fill={GOLD} fontSize="13" style={MATH}>
+          <text x={X0 - 8} y={Y0 + W / 2} textAnchor="end" fill={PINK} fontSize="13" style={MATH}>
             a
           </text>
-          <text x={X0 + W + 8} y={Y0 + W / 2 + 22} fill={GOLD} fontSize="13" style={MATH}>
+          <text x={X0 + W + 8} y={Y0 + W / 2 + 22} fill={PINK} fontSize="13" style={MATH}>
             b
           </text>
         </>
@@ -349,7 +350,7 @@ function Square({ t, time }) {
       <text x={X0 - 22} y={Y0 + 12} textAnchor="middle" fill="#9fb0d0" fontSize="13" style={MATH}>
         t ↑
       </text>
-      <text x="130" y={Y0 + W + 44} textAnchor="middle" fill={INK} fontSize="15" style={MATH}>
+      <text x="130" y={Y0 + W + 44} textAnchor="middle" fill={PINK} fontSize="15" style={MATH}>
         {relA ? 'F(0, t) = a,  F(1, t) = b' : 'F : I × I → X,  F(s, t) = fₜ(s)'}
       </text>
       {glass ? (
@@ -418,9 +419,9 @@ function Summary() {
     <div className="lesson-steps">
       <h4>Homotopy</h4>
       <p className="lesson-math">F : I × I → X continuous</p>
-      <p className="lesson-note">a movie of paths fₜ, one frame for each t</p>
-      <p className="lesson-math">rel A: fₜ(a) = a for every t</p>
-      <p className="lesson-note">the posts and stakes never move</p>
+      <p className="lesson-note">s runs along the ribbon, t is time: one frame fₜ(s) = F(s, t) for each t</p>
+      <p className="lesson-math">rel A: F(a, t) = F(a, 0) for a ∈ A</p>
+      <p className="lesson-note">A = the points of the ribbon pinned to posts and stakes; they never move</p>
       <div className="lesson-step on">
         <kbd>3</kbd>
         <span>⌛ Tide Glass — scrub t</span>

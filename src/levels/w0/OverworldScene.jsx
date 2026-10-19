@@ -13,8 +13,8 @@ const ZERO = { current: 0 }
 
 /**
  * Overhead three-quarter follow camera (classic Metal Gear / Zelda angle), fixed yaw.
- * `frameRef.current = { center: [x, z], size }` pulls it back to frame a whole puzzle
- * (a shrine) while Gyroid works it, still drifting with him.
+ * `frameRef.current = { center: [x, z], size, follow }` frames a whole puzzle (a shrine)
+ * while Gyroid works it, still drifting with him by `follow` (0 = locked on the puzzle).
  */
 export function FollowCamera({ stateRef, frameRef }) {
   const { camera, size } = useThree()
@@ -33,8 +33,9 @@ export function FollowCamera({ stateRef, frameRef }) {
     let up = narrow ? 15 : 10.5
     if (fr) {
       // frame the puzzle: look between Gyroid and its center, from higher and farther back
-      fx = s.x * 0.35 + fr.center[0] * 0.65
-      fz = s.z * 0.35 + fr.center[1] * 0.65
+      const f = fr.follow ?? 0.35 // how much the view still drifts with Gyroid
+      fx = s.x * f + fr.center[0] * (1 - f)
+      fz = s.z * f + fr.center[1] * (1 - f)
       const zoom = (fr.size || 10) / 10
       back = (narrow ? 15 : 10) * zoom
       up = (narrow ? 19 : 13.5) * zoom

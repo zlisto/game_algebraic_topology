@@ -445,7 +445,7 @@
           "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A retraction can be one snap. A deformation is the whole movie — and your snap tears things in between."
+          "text": "A retraction can be one snap. A deformation is the whole movie — every frame in between — and with a pool in the way, no such movie exists."
         },
         {
           "t": 25.8,
@@ -459,7 +459,7 @@
           "end": 31.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That's a homotopy rel those posts. Keep them still."
+          "text": "That's a homotopy $rel$ those posts: they stay still the whole time."
         }
       ],
       "title_card": {
@@ -6118,7 +6118,7 @@
           "start": 30,
           "end": 38,
           "title": "Rel A",
-          "description": "The two posts pulse gold; the square's left and right edges light up: F(0, t) = a, F(1, t) = b for every t."
+          "description": "The two posts pulse gold; the square's left and right edges light up: F(0, t) = a, F(1, t) = b for every t — the ribbon's ends are pinned (A)."
         },
         {
           "id": "E",
@@ -6148,28 +6148,28 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Let’s slow everything down. This gold ribbon is a path: a map f from the interval I = [0, 1] into the flats."
+          "text": "Let’s slow everything down. This gold ribbon is a path: a map $f$ from the interval $I = [0, 1]$ into the flats."
         },
         {
           "t": 4.8,
           "end": 8.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Slide s from 0 to 1, and f(s) runs along the ribbon from one post to the other."
+          "text": "Slide $s$ from 0 to 1, and $f(s)$ runs along the ribbon from one post to the other."
         },
         {
           "t": 9.4,
           "end": 13.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now let the tide move it. At each time t there’s a new path, fₜ. Here are a few frames."
+          "text": "Now let the tide move it. At each time $t$ there’s a new path, $fₜ$. Here are a few frames."
         },
         {
           "t": 13.6,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Stack every frame and you get one map F(s, t) on the square I × I. Each row of the square is one frame."
+          "text": "Stack every frame and you get one map $F(s, t)$ on the square $I × I$: $s$ along the ribbon, $t$ through time. Each row of the square is one frame."
         },
         {
           "t": 17.8,
@@ -6183,7 +6183,7 @@
           "end": 25.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Tide Glass scrubs that movie. Press 3 to hold it; Z and X — or the wheel — move t back and forth."
+          "text": "The Tide Glass scrubs that movie. Press 3 to hold it; Z and X — or the wheel — move $t$ back and forth."
         },
         {
           "t": 25.6,
@@ -6197,14 +6197,14 @@
           "end": 34.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And the posts? They never move, in any frame: F(0, t) = a and F(1, t) = b for every t."
+          "text": "And the posts? The ribbon’s ends never move, in any frame: $F(0, t) = a$ and $F(1, t) = b$ for every $t$."
         },
         {
           "t": 34.6,
           "end": 37.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s a homotopy relative to A — rel A — where A is the set of posts."
+          "text": "That’s a homotopy relative to $A$ — $rel A$ — where $A$ is the set of points on the ribbon that are pinned in place."
         },
         {
           "t": 38.4,
@@ -6225,7 +6225,7 @@
           "end": 49.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Click beside a stake to let go: the ribbon hooks on, and that stake joins A — another point that stays put."
+          "text": "Click beside a stake to let go: the ribbon hooks on, and that point joins $A$ — one more point that stays put."
         },
         {
           "t": 50.4,
@@ -6253,7 +6253,7 @@
           "end": 64.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So: a homotopy is a continuous movie of paths, and rel A means A stays put. That’s all the shrines ask."
+          "text": "So: a homotopy is a continuous movie of paths, and $rel A$ means the pinned points stay put. That’s all the shrines ask."
         },
         {
           "t": 64.8,
@@ -6465,7 +6465,7 @@
       "status": "built",
       "kind": "lesson",
       "story_start": 0,
-      "story_end": 68,
+      "story_end": 72,
       "pace": [
         [
           0,
@@ -6473,7 +6473,7 @@
           0.85
         ]
       ],
-      "synopsis": "Cell complexes, slowly: skeletons X⁰ ⊂ X¹ ⊂ X²; the sphere as a point and a disk; the torus as a square glued along a b a⁻¹ b⁻¹ (folded live); the projective plane along a a (crossing itself in 3D); χ; then the Cell-Smith's controls.",
+      "synopsis": "Cell complexes, slowly: skeletons X⁰ ⊂ X¹ ⊂ X²; the sphere as a point and a disk; the torus as a square glued along a b a⁻¹ b⁻¹ (folded live); the projective plane along a a (crossing itself in 3D); χ; then Gyroid works a furnace to show the controls.",
       "scenes": [
         {
           "id": "A",
@@ -6513,16 +6513,16 @@
         {
           "id": "F",
           "start": 52,
-          "end": 62,
-          "title": "The Cell-Smith",
-          "description": "Controls: furnace, tracks, words, the press; Unglues."
+          "end": 66,
+          "title": "At the furnace",
+          "description": "Gyroid steps onto a furnace, clicks to forge the point, walks the track out and back to forge edge a, walks it again to write a, and clicks to press a disk along a (a hemisphere folds above the press)."
         },
         {
           "id": "G",
-          "start": 62,
-          "end": 68,
+          "start": 66,
+          "end": 72,
           "title": "Summary",
-          "description": "Summary card; title card at 64.5."
+          "description": "The torus again; the summary card."
         }
       ],
       "captions": [
@@ -6566,7 +6566,7 @@
           "end": 26.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The torus: one point, two loops a and b, and one square disk. Its rim is glued along a, b, a backwards, b backwards."
+          "text": "The torus: one point, two loops $a$ and $b$, and one square disk. Its rim is glued along $a b a⁻¹ b⁻¹$."
         },
         {
           "t": 26.8,
@@ -6580,7 +6580,7 @@
           "end": 38.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now one loop, a, and a disk whose rim goes round a twice — the same way both times."
+          "text": "Now one loop, $a$, and a disk whose rim goes round $a$ twice — the same way both times."
         },
         {
           "t": 38.8,
@@ -6604,30 +6604,58 @@
           "text": "Build the same place two different ways and χ comes out the same — though proving that waits for World 2."
         },
         {
-          "t": 52.4,
-          "end": 56.4,
+          "t": 52.3,
+          "end": 53.5,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Foundry: hold the Cell-Smith, click the furnace to forge the point, and walk a track out and back to forge an edge."
+          "text": "Here's how it works at a furnace. Watch Gyroid."
         },
         {
-          "t": 56.6,
-          "end": 61.8,
+          "t": 53.6,
+          "end": 54.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Walk the disk’s word along your edges — with the arrow, or against it — then click the furnace to press. And lash those Unglues."
+          "text": "Click the furnace with the Cell-Smith: that's the point."
         },
         {
-          "t": 62.4,
-          "end": 66.6,
+          "t": 54.1,
+          "end": 57.3,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Walk out along the track, round its loop and back onto the furnace: an edge, $a$ — a loop at the point."
+        },
+        {
+          "t": 57.9,
+          "end": 61.0,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Walk it again, the way its arrows point. That writes $a$ on the disk's rim — see “walked” on the panel."
+        },
+        {
+          "t": 61.4,
+          "end": 64.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Then click the furnace: the press glues a disk along $a$. A bowl — a hemisphere."
+        },
+        {
+          "t": 64.4,
+          "end": 66.0,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "And lash the Unglues — if one tears an edge, walk that track again."
+        },
+        {
+          "t": 66.4,
+          "end": 69.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Points, edges, disks. Let’s build."
+          "text": "Points, edges, disks. Let's build."
         }
       ],
       "title_card": {
-        "t": 64.5,
-        "end": 68
+        "t": 69.5,
+        "end": 72
       }
     },
     {
@@ -6799,7 +6827,7 @@
       "status": "built",
       "kind": "lesson",
       "story_start": 0,
-      "story_end": 62,
+      "story_end": 70,
       "pace": [
         [
           0,
@@ -6807,54 +6835,61 @@
           0.85
         ]
       ],
-      "synopsis": "Collapsing trees in graphs, slowly: one walkway with two ends shrinks to a point; a tree reaches every platform without closing a loop; felling it leaves a bouquet of loops; shrinking a loop instead kills its hole; χ = V − E is unchanged by felling, and the bouquet has 1 − χ petals. Then the Spool and Cell-Smith controls.",
+      "synopsis": "Felling trees, slowly: a tree (no cycle) has n − 1 edges and collapses to a point safely; a graph with a cycle — a triangle with a tail — gets a spanning tree marked (n − 1 edges touching every node, the edge that would close the cycle refused), and felling it leaves the unmarked edge as a loop round the surviving hole; collapsing the cycle too kills the hole; χ = nodes − edges and petals = 1 − χ; then the Spool and Cell-Smith controls. Uses both names: nodes (platforms) and edges (walkways).",
       "scenes": [
         {
           "id": "A",
           "start": 0,
-          "end": 10,
-          "title": "One walkway",
-          "description": "Two platforms and a walkway; the far platform slides onto the near one as the walkway shrinks."
+          "end": 11,
+          "title": "A tree",
+          "description": "A tree of 4 nodes and 3 edges. Gyroid marks each edge amber (n − 1 = 3), then fells it: every node slides into one — a point."
         },
         {
           "id": "B",
-          "start": 10,
-          "end": 20,
-          "title": "A tree",
-          "description": "Five platforms, seven walkways. Four walkways light amber one by one, reaching every platform; a fifth flashes red — it would close a loop."
+          "start": 11,
+          "end": 19,
+          "title": "A cycle",
+          "description": "A triangle with a tail: 4 nodes, 4 edges. The triangle's three edges glow pink — a cycle — round a dark disk labelled 'hole'."
         },
         {
           "id": "C",
-          "start": 20,
-          "end": 32,
-          "title": "Timber",
-          "description": "The amber tree folds into the root platform; the three other walkways round out into petals."
+          "start": 19,
+          "end": 31,
+          "title": "A spanning tree",
+          "description": "Gyroid marks the tail and two sides of the triangle: 3 = n − 1 edges, every node reached. He tries the third side; it flashes red, refused — it would close the cycle."
         },
         {
           "id": "D",
-          "start": 32,
+          "start": 31,
           "end": 40,
-          "title": "The wrong cut",
-          "description": "A lone loop shrinks to nothing, violet: its hole is gone."
+          "title": "Fell",
+          "description": "The marked tree folds into one node; the unmarked side rounds out into a loop at that node, the hole carried inside it."
         },
         {
           "id": "E",
           "start": 40,
           "end": 48,
-          "title": "χ",
-          "description": "The bouquet again; diagram: 5 − 7 = −2 before, 1 − 3 = −2 after; petals = 1 − χ."
+          "title": "The wrong cut",
+          "description": "The same graph with all four edges marked violet, cycle included; it collapses to a point and the hole shrinks to nothing."
         },
         {
           "id": "F",
           "start": 48,
-          "end": 56,
-          "title": "How to play",
-          "description": "Spool marks walkways, loops refused; Cell-Smith fells at the gold root; lash Loop-biters."
+          "end": 55,
+          "title": "χ",
+          "description": "The petal again; diagram: tree 4 − 3 = 1 → no petals, cycle 4 − 4 = 0 → one petal, petals = 1 − χ."
         },
         {
           "id": "G",
-          "start": 56,
-          "end": 62,
+          "start": 55,
+          "end": 63,
+          "title": "How to play",
+          "description": "Spool marks edges, cycle-closing edges refused; Cell-Smith clicks any node to fell; lash Loop-biters."
+        },
+        {
+          "id": "H",
+          "start": 63,
+          "end": 70,
           "title": "Summary",
           "description": "Every connected graph is a bouquet of 1 − χ circles."
         }
@@ -6862,99 +6897,127 @@
       "captions": [
         {
           "t": 0.5,
-          "end": 4.8,
+          "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A walkway with two different ends can shrink to nothing. One platform just slides onto the other."
+          "text": "A graph is made of nodes — the platforms — joined by edges — the walkways. This one is a tree: it has no cycles."
         },
         {
-          "t": 5,
-          "end": 9.6,
+          "t": 4.8,
+          "end": 7.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Nothing is lost. Two platforms and one walkway: 2 − 1 = 1. One platform alone: 1 − 0 = 1."
+          "text": "A tree on $n$ nodes always has exactly $n − 1$ edges. Here: 4 nodes, 3 edges. Gyroid marks them all."
         },
         {
-          "t": 10.4,
-          "end": 16.6,
+          "t": 7.2,
+          "end": 10.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A tree is a set of walkways that reaches every platform and never closes a loop. Five platforms need four walkways."
+          "text": "Now he fells it: every edge shrinks, every node slides into one. A tree has no hole in it, so nothing is lost — it’s just a point."
         },
         {
-          "t": 16.8,
-          "end": 19.8,
+          "t": 11.4,
+          "end": 15.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A fifth would close a loop, so it can't join the tree."
+          "text": "This graph has a cycle: the triangle. Follow its three edges and you come back where you started."
         },
         {
-          "t": 20.4,
-          "end": 25,
+          "t": 15.8,
+          "end": 18.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A tree shrinks to a point, so we can fell the whole tree at once. Every platform slides onto the root."
+          "text": "A cycle goes round a hole. That hole is what makes this space more than a point, and we must not lose it."
         },
         {
-          "t": 25.2,
-          "end": 31.6,
+          "t": 19.4,
+          "end": 23.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The walkways that weren't in the tree are still there, but now both their ends are the root. They become loops: the petals of a bouquet."
+          "text": "So we don’t fell everything. Gyroid marks a spanning tree: edges that reach every node, never closing a cycle. That takes $n − 1 = 3$ edges."
         },
         {
-          "t": 32.4,
-          "end": 36.4,
+          "t": 24.0,
+          "end": 28.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But never shrink a loop. A loop has only one end; there's nowhere for it to slide."
+          "text": "The third side of the triangle? Refused. Marking it would close the cycle, and a cycle isn’t a tree."
         },
         {
-          "t": 36.6,
-          "end": 39.6,
+          "t": 29.0,
+          "end": 31.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Squash it anyway and its hole dies. That's a different space — Null's move."
+          "text": "Every node is touched, no cycle is closed. That’s a spanning tree."
+        },
+        {
+          "t": 32.0,
+          "end": 35.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Fell it. The tree shrinks into one node — safe, because a tree has no hole."
+        },
+        {
+          "t": 35.8,
+          "end": 39.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The edge he didn’t mark now starts and ends at that one node: it’s a loop, a petal. The hole is still inside it."
         },
         {
           "t": 40.4,
-          "end": 44.6,
+          "end": 44.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Count platforms minus walkways. Before felling: 5 − 7 = −2. After: 1 − 3 = −2. That number is χ."
+          "text": "Now the wrong cut: mark every edge, the cycle too, and squash it all."
         },
         {
-          "t": 44.8,
+          "t": 44.2,
           "end": 47.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So a tangle with χ = −2 becomes a bouquet of 1 − χ = 3 petals."
+          "text": "Everything goes to a point, and the hole dies with it. That’s a different space — Null’s move."
         },
         {
           "t": 48.4,
-          "end": 52,
+          "end": 52.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On the decks: hold the Spool and click walkways to mark a tree. A walkway that would close a loop is refused."
+          "text": "Count nodes minus edges: that’s $χ$. The tree: $4 − 3 = 1$. The cycle graph: $4 − 4 = 0$."
         },
         {
           "t": 52.2,
-          "end": 55.8,
+          "end": 54.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "When the tree reaches every platform, click the gold-ringed root with the Cell-Smith. And lash those Loop-biters."
+          "text": "Felling never changes $χ$, and the petals you end with number $1 − χ$."
         },
         {
-          "t": 56.4,
-          "end": 61,
+          "t": 55.4,
+          "end": 59.0,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "On the decks: hold the Spool and click edges to mark a spanning tree. An edge that would close a cycle is refused."
+        },
+        {
+          "t": 59.2,
+          "end": 62.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "When the tree reaches every node, take the Cell-Smith and click any node to fell onto it. And lash those Loop-biters."
+        },
+        {
+          "t": 63.4,
+          "end": 67.2,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Fell the tree, keep the loops. Timber!"
+          "text": "Mark a tree, keep the cycles. Timber!"
         }
       ],
       "title_card": {
-        "t": 58.5,
-        "end": 62
+        "t": 67.5,
+        "end": 70
       }
     },
     {

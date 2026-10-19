@@ -3,7 +3,7 @@ import { Line } from '@react-three/drei'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
-import { sfxCrack, sfxHit, sfxHurt, sfxPop, sfxWhoosh } from '../../audio/chip'
+import { sfxCrack, sfxHammer, sfxHit, sfxHurt, sfxPop, sfxWhoosh } from '../../audio/chip'
 import { BeaconSpawn, ConerSpawn, LoopBiterSpawn, ShardSpawn, MirrorSpawn, SnapperSpawn, SphereSpawn, TorusSpawn, UnglueSpawn } from '../../characters/Spawn'
 
 /**
@@ -168,38 +168,79 @@ function GlassProp({ state, tool }) {
 }
 
 /** The Cell-Smith (0-4): a brass-and-indigo gauntlet whose palm shows a point, a loop and a disk. */
+/**
+ * The Cell-Smith: a forge hammer — a dark wooden haft, a brass-bound steel head with a
+ * glowing gold rune band. Gyroid carries it at his side; a click winds it up and brings it
+ * down (state.swing 0 → 1), with a flash of sparks at the strike.
+ */
 function SmithProp({ state, tool }) {
   const g = useRef()
-  const orb = useRef()
+  const pivot = useRef()
+  const sparks = useRef()
+  const band = useRef()
   useFrame(({ clock }) => {
     const s = state.current
     g.current.visible = tool === 'smith'
     const fx = Math.sin(s.face)
     const fz = Math.cos(s.face)
-    g.current.position.set(s.x + fx * 0.22 - fz * 0.22, 0.58, s.z + fz * 0.22 + fx * 0.22)
+    // in his right hand, a little ahead
+    g.current.position.set(s.x + fx * 0.1 - fz * 0.26, 0.5, s.z + fz * 0.1 + fx * 0.26)
     g.current.rotation.y = s.face
-    orb.current.rotation.y = clock.elapsedTime * 2
-    orb.current.position.y = 0.2 + Math.sin(clock.elapsedTime * 3) * 0.03
+    const u = s.swing
+    // rest: head up and back over the shoulder; wind-up lifts it; strike slams it forward and down
+    let pitch = -0.5 + Math.sin(clock.elapsedTime * 2) * 0.03
+    if (u > 0) {
+      if (u < 0.4) pitch = -0.5 - 1.1 * Math.sin((u / 0.4) * (Math.PI / 2))
+      else if (u < 0.55) pitch = -1.6 + 3.3 * ((u - 0.4) / 0.15)
+      else pitch = 1.7 - 2.2 * ((u - 0.55) / 0.45)
+    }
+    pivot.current.rotation.x = pitch
+    const hit = u > 0.55 && u < 0.8
+    sparks.current.visible = hit
+    if (hit) {
+      const k = (u - 0.55) / 0.25
+      sparks.current.children.forEach((c, i) => {
+        const a = (i / sparks.current.children.length) * Math.PI * 2
+        c.position.set(Math.cos(a) * 0.25 * k, 0.05 + Math.sin(k * Math.PI) * 0.18, 0.55 + Math.sin(a) * 0.25 * k)
+        c.scale.setScalar(0.03 * (1 - k) + 0.005)
+      })
+    }
+    band.current.material.color.set(hit ? '#ffffff' : '#ffd27a')
   })
   return (
-    <group ref={g}>
-      <mesh>
-        <boxGeometry args={[0.12, 0.1, 0.16]} />
-        <meshStandardMaterial color="#b88a3a" metalness={0.85} roughness={0.3} emissive="#3a2408" emissiveIntensity={0.3} />
-      </mesh>
-      <mesh position={[0, 0.02, -0.1]}>
-        <cylinderGeometry args={[0.06, 0.07, 0.1, 10]} />
-        <meshStandardMaterial color="#2a2f7a" roughness={0.5} />
-      </mesh>
-      <group ref={orb}>
-        <mesh>
-          <torusGeometry args={[0.07, 0.01, 6, 24]} />
-          <meshBasicMaterial color="#ffd27a" toneMapped={false} />
+    <group ref={g} scale={1.8}>
+      <group ref={pivot}>
+        {/* the haft, running forward from the hand */}
+        <mesh position={[0, 0, 0.2]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[0.022, 0.026, 0.46, 8]} />
+          <meshStandardMaterial color="#4a2e1c" roughness={0.7} />
         </mesh>
-        <mesh>
-          <circleGeometry args={[0.065, 24]} />
-          <meshBasicMaterial color="#ffd27a" transparent opacity={0.35} side={THREE.DoubleSide} toneMapped={false} />
-        </mesh>
+        {/* the head, across the end of the haft */}
+        <group position={[0, 0, 0.43]}>
+          <mesh>
+            <boxGeometry args={[0.22, 0.11, 0.11]} />
+            <meshStandardMaterial color="#6a7078" metalness={0.9} roughness={0.3} />
+          </mesh>
+          {[-0.115, 0.115].map((x) => (
+            <mesh key={x} position={[x, 0, 0]}>
+              <boxGeometry args={[0.02, 0.125, 0.125]} />
+              <meshStandardMaterial color="#b88a3a" metalness={0.85} roughness={0.3} emissive="#3a2408" emissiveIntensity={0.3} />
+            </mesh>
+          ))}
+          <mesh ref={band}>
+            <boxGeometry args={[0.06, 0.115, 0.115]} />
+            <meshBasicMaterial color="#ffd27a" toneMapped={false} />
+          </mesh>
+        </group>
+      </group>
+      {/* sparks at the strike */}
+      <group ref={sparks} visible={false}>
+        {Array.from({ length: 8 }, (_, i) => (
+          <mesh key={i}>
+            <sphereGeometry args={[1, 6, 4]} />
+            <meshBasicMaterial color={i % 2 ? '#ffd27a' : '#fff2c4'} toneMapped={false} />
+          </mesh>
+        ))}
       </group>
     </group>
   )
@@ -219,6 +260,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       face: Math.PI / 2,
       moving: 0,
       whip: 0,
+      swing: 0, // the Cell-Smith's hammer swing, 0 → 1
       hitDone: false,
       hearts: HEARTS,
       hurt: 0,
@@ -380,7 +422,11 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
           onStrokeEnd(cx, cz)
         }
       } else if (tool === 'smith') {
-        onAction?.(s.x, s.z, cx, cz) // the Cell-Smith: the level decides what a click forges
+        // the Cell-Smith is a forge hammer: face the click, swing, and clang on the strike
+        s.face = Math.atan2(cx - s.x, cz - s.z)
+        s.swing = 0.0001
+        s.clanged = false
+        onAction?.(s.x, s.z, cx, cz) // the level decides what a click forges
       } else if (tool === 'lash' && s.whip === 0) {
         s.face = Math.atan2(cx - s.x, cz - s.z)
         s.whip = 0.0001
@@ -404,6 +450,14 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
     if (s.spooling && ml > 0) onStrokeMove(s.x, s.z)
 
     // --- whip
+    if (s.swing > 0) {
+      s.swing += dt / 0.42
+      if (!s.clanged && s.swing >= 0.55) {
+        s.clanged = true
+        sfxHammer()
+      }
+      if (s.swing >= 1) s.swing = 0
+    }
     if (s.whip > 0) {
       s.whip += dt / WHIP_TIME
       if (!s.hitDone && s.whip >= WHIP_HIT_AT) {

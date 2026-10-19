@@ -2,9 +2,10 @@ import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ConeScene from '../levels/w0/ConeScene'
 import LevelMovie from './LevelMovie'
+import LevelMap from './LevelMap'
 import { useExitTrigger } from './exitTrigger'
 import { OPS, SPECIMENS, canon, cellText, chiOf, fromResult } from '../levels/w0/spaces'
-import { DEFINITION05, HINTS05, OPENING, STATIONS, STATION_ORDER } from '../levels/w0/stages05'
+import { DEFINITION05, HINTS05, OPENING, STATIONS, STATION_ORDER, emmyAdvice05 } from '../levels/w0/stages05'
 import layout from '../world/conezone.json'
 import { buildSites, makeSiteWalkable } from '../world/sites'
 import {
@@ -24,6 +25,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import ConeLesson, { ConeLessonOverlay } from '../movies/ConeLesson'
+import MathText from './MathText'
 
 /**
  * World 0 · Level 5 "Cone Zone" — the terrace of operation works on the Foundry cliff.
@@ -121,6 +123,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
   const afterTalk = useRef(null)
   const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
   const emmyTalking = useRef(false)
+  const [nearEmmy, setNearEmmy] = useState(false)
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -192,6 +195,8 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
+      const em = emmyAt.current
+      setNearEmmy(Math.hypot(s.x - em.x, s.z - em.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
@@ -234,6 +239,11 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
     if (carried) setCarried(null) // nothing comes along from another works
     say(STATIONS[st].arrive)
   }, [here.site, phase, current, met, done, say, carried])
+
+  // a question that's due always comes back (e.g. if a knockout interrupted the lines before it)
+  useEffect(() => {
+    if (goal?.type === 'ask' && phase === 'play' && !askOpen && here.site === current && met[current]) setAskOpen(true)
+  }, [goal, phase, askOpen, here.site, current, met])
 
   // knocked out
   useEffect(() => {
@@ -439,6 +449,25 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [])
 
+  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
+  const canTalk = nearEmmy && phase === 'play' && !askOpen && !levelClear && !lesson
+  const talkToEmmy = () => {
+    if (!canTalk) return
+    const s = stateRef.current
+    const em = emmyAt.current
+    if (s) em.rotY = Math.atan2(s.x - em.x, s.z - em.z) // she turns to face him
+    say(emmyAdvice05({ station: current, goal, works: wk, carried, here: here.site, exitOpen, enemies: current ? enemies[current] : 0, name: current ? SITE[current].name : '' }))
+  }
+  const talkRef = useRef(null)
+  talkRef.current = talkToEmmy
+  useEffect(() => {
+    const k = (e) => {
+      if (e.code === 'KeyE') talkRef.current?.()
+    }
+    window.addEventListener('keydown', k)
+    return () => window.removeEventListener('keydown', k)
+  }, [])
+
   // ---------- dialogue (FF7 style)
   const advance = () => {
     const full = lines[lineIdx]?.text.length ?? 0
@@ -506,7 +535,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey])
-  frameRef.current = current && here.site === current && met[current] ? { center: SITE[current].pos, size: 12 } : null
+  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + 1.1, SITE[current].pos[1] + 0.4], size: 8.6, follow: 0.12 } : null
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
   if (import.meta.env.DEV) window.__lvl5 = { here, done, goalIdx, works, carried, phase, enemies, setTool, current, goal, chooseOp, SITE, W } // dev
@@ -522,6 +551,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
       carried={carried}
       emmyAt={emmyAt}
       emmyTalking={emmyTalking}
+      emmyNear={nearEmmy && phase === 'play'}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -640,8 +670,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                {line.text.slice(0, shown)}
-                <span className="untyped">{line.text.slice(shown)}</span>
+                <MathText text={line.text} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
@@ -669,6 +698,14 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
 
         {toast && !line && <div className="toast">{toast}</div>}
 
+        {canTalk && (
+          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
+            💬 Talk to Emmy <kbd>E</kbd>
+          </button>
+        )}
+
+        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Cone Zone" />}
+
         {!talking && !levelClear && !askOpen && (
           <div className="controls">
             <div className="weapons" role="group" aria-label="Weapon">
@@ -682,7 +719,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
         {playEnabled && !toast && (
-          <div className="hint">{atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith · lash Coners before their beam lands') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith'}</div>
+          <div className="hint">{atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith · lash Coners before their beam lands') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith · lost? walk up to Emmy and press E'}</div>
         )}
       </div>
 
@@ -700,7 +737,7 @@ export default function Level05({ concept, onBackToTitle, onNext, startAt }) {
       )}
 
       {levelClear && (
-        <div className="win-banner">
+        <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 5 clear</span>
             <h2>{levelMeta?.title || 'Cone Zone'}</h2>
