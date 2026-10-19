@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-/** Debug level select: every screen, plus 0-2's shrines. Local dev only (or ?debug on a build). */
+/** Level select: every movie, lesson and level, and each level's sections. Shown everywhere, including the live site. */
 const DEBUG_ENTRIES = [
   { group: 'Opening — Intro movie', items: [{ label: 'Intro movie', screen: 'intro' }] },
   {
@@ -97,7 +97,7 @@ const DEBUG_ENTRIES = [
     ],
   },
 ]
-const SHOW_DEBUG = import.meta.env.DEV || new URLSearchParams(window.location.search).has('debug')
+const SHOW_DEBUG = true // the level select is part of the game now, not just a dev tool
 
 /** Worlds → levels → entries: group the flat list by its "World N · …" prefix. */
 const TREE = (() => {
@@ -142,7 +142,6 @@ function LevelSelect({ onGo, onClose }) {
       <div className="level-select-card">
         <div className="level-select-head">
           <h2>Level select</h2>
-          <span className="lvl-kicker">debug</span>
           <button type="button" className="btn ghost small" onClick={onClose}>
             ✕
           </button>
@@ -168,7 +167,7 @@ export default function TitleScreen({ concept, onNewGame, onGo }) {
   const story = concept?.story || {}
   const title = story.title || 'Winding World'
   const tagline = story.tagline || "Shape can change. Topology can't."
-  const cover = `${import.meta.env.BASE_URL}assets/cover.png`
+  const cover = `${import.meta.env.BASE_URL}assets/cover.jpg` // 117 KB (the 2 MB PNG took seconds to appear)
   const [picking, setPicking] = useState(false)
 
   return (
