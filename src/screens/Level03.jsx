@@ -97,7 +97,7 @@ function ShoalsMap({ pos, done, current }) {
   )
 }
 
-export default function Level03({ concept, onBackToTitle, startAt }) {
+export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-3')
   const samplesBySite = useMemo(() => Object.fromEntries(SITES.map((s) => [s.id, sampleShape(s.shape)])), [])
   const skipTo = Math.max(0, SITE_ORDER.indexOf(startAt))
@@ -754,11 +754,11 @@ export default function Level03({ concept, onBackToTitle, startAt }) {
               <button type="button" className="btn" onClick={() => setLevelClear(false)}>
                 Keep exploring
               </button>
-              <button type="button" className="btn" disabled title="Level 0-4 is being built">
-                Continue ▸ <small>(0-4 coming soon)</small>
-              </button>
-              <button type="button" className="btn primary" onClick={onBackToTitle}>
+              <button type="button" className="btn" onClick={onBackToTitle}>
                 Back to title
+              </button>
+              <button type="button" className="btn primary" onClick={onNext}>
+                On to the Skeleton Foundry ▸
               </button>
             </div>
           </div>

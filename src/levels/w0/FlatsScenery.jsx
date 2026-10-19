@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import Seascape from '../../world/Seascape'
 import { LAND } from '../../theme/palette'
 import { CausewaySlab } from '../../world/ReefScenery'
 
@@ -287,10 +288,7 @@ export default function FlatsScenery({ layout, bridged = true, exitOpen = false 
       <pointLight position={[0, 6, 0]} intensity={8} distance={30} color="#7fe8dc" />
       <Stars radius={90} depth={40} count={2200} factor={3} fade speed={0.3} />
       <Sparkles count={220} scale={[44, 3, 30]} position={[0, 0.8, 0]} size={2} speed={0.2} color="#7fe8dc" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.55, 0]}>
-        <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial color={SEA} emissive="#06343a" emissiveIntensity={0.45} roughness={0.25} metalness={0.6} />
-      </mesh>
+      <Seascape y={-0.55} area={[0, 0, 70, 56]} seed={23} palette={{ water: '#0c4a5a', sand: '#3e6a5a', weed: '#2a5a38' }} lanterns={8} />
 
       <FlatsGround layout={layout} />
       {layout.pools.map((p) => (

@@ -782,7 +782,7 @@
             "0-3"
           ],
           "reuses": [],
-          "status": "planned",
+          "status": "built",
           "unlocks": "cell_smith",
           "location_id": "skeleton_foundry",
           "character_ids": [
@@ -797,52 +797,55 @@
             "scene": "Level 'Some Assembly Required' inside the Assembly Hall of the Skeleton Foundry, a vast basalt industrial hall with forges. Glowing vertex furnaces emit single bright points of light; mechanical crane arms lay curved glowing edges between points; a great press lowers a translucent glowing disk onto a closed loop. In the center, a flat glowing square sheet with arrow-marked edges is folding in mid-air: one pair of opposite edges has curled together into a tube and the tube is bending around to close into a torus. Gyroid stands at a forge wearing a brass-and-indigo gauntlet (the Cell-Smith) that levitates a point, a curved edge and a translucent triangle above his palm."
           },
           "design": {
-            "site": "Assembly Hall, Skeleton Foundry — a forge hall of vertex furnaces, edge cranes and disk presses.",
+            "site": "The Skeleton Foundry's Assembly Hall — four forge stations (round basalt platforms with a furnace hub and petal tracks) under a press gantry, and the forge door to the Cone Zone.",
             "story": "Through the Mirror Gate, Emmy's secret comes out: she built the Foundry's cell presses, and Null's engineers turned them into collapse engines. She gives Gyroid the Cell-Smith so they can build places back — cell by cell.",
-            "objective": "Forge the Foundry's blueprints — a sphere, a torus and a projective plane — from points, edges and disks.",
+            "objective": "Forge cell complexes at four presses — the sphere (twice), the torus, the projective plane and the Klein bottle — and open the forge door with χ.",
             "mechanics": [
-              "Cell-Smith (new): place a 0-cell (a point) at a furnace; walk between points to forge a 1-cell (an edge), gluing its ends.",
-              "Attach a 2-cell: walk the disk's boundary word along existing edges (e.g. a, b, a⁻¹, b⁻¹), following arrows; the press stamps a disk onto that loop.",
-              "The press folds the result into 3D so the player sees what was built.",
-              "Chi counter on the gauntlet: χ = (points) − (edges) + (disks), the same for every build of the same space."
+              "Cell-Smith (new): click the furnace hub to forge the point (the one 0-cell).",
+              "Walk a petal track out from the hub and back: an edge (a 1-cell), a loop at the point, arrow in the direction walked, lettered a, b.",
+              "Walk a word along the edges (forward = a, against the arrow = a⁻¹), then click the hub: the press glues a disk (a 2-cell) along that loop.",
+              "The press's hologram folds the flat cell into the space it makes; a wrong word builds something else, shown and explained, then let go.",
+              "χ = points − edges + disks, counted live on the blueprint card.",
+              "Unglues tear forged edges; re-walk a torn track to re-forge it."
             ],
-            "math_check": "CW complexes: cells attached along maps of their boundaries; the attaching word determines the space (aba⁻¹b⁻¹ torus, aa projective plane); Euler characteristic as a cell count.",
+            "math_check": "Cell complexes built skeleton by skeleton (Hatcher pp. 5–8); one-vertex structures: S² = e⁰ ∪ e² and also e⁰ ∪ e¹ ∪ 2e²; T² along a b a⁻¹ b⁻¹; RP² along a a; Klein bottle along a b a⁻¹ b; χ as even minus odd cells (Example 0.2). Flag: that χ depends only on the space is Theorem 2.44 (Chapter 2) — stated, not proved here. Also: with one vertex, a disk on a a⁻¹ is a sphere with two points glued (χ = 1), and the game says so.",
             "stages": [
               {
-                "name": "Point and Disk",
+                "name": "The Sphere Press",
                 "beat": "teach",
-                "description": "One point and one disk whose whole edge is glued to it: a sphere. Then build the sphere again as two hemispheres — same χ = 2."
+                "description": "Point + a disk with its rim crushed to it: a sphere. Again as one edge + two hemispheres: same χ = 2."
               },
               {
-                "name": "The Torus",
+                "name": "Twin Loops",
                 "beat": "practice",
-                "description": "One point, edges a and b, a disk along a b a⁻¹ b⁻¹. χ = 0."
+                "description": "Edges a, b; a disk along a b a⁻¹ b⁻¹: the torus folds (roll, then bend). χ = 0."
               },
               {
-                "name": "Follow the Arrows",
+                "name": "One Loop",
                 "beat": "twist",
-                "description": "Glue a disk along a a instead: the press folds a projective plane, not a sphere. Direction matters."
+                "description": "A disk along a just fills the loop (a disk); along a a it's the projective plane, which crosses itself in 3D."
               },
               {
-                "name": "Blueprint",
+                "name": "The Blueprint Wall",
                 "beat": "master",
-                "description": "Blueprints on the wall list cells and attaching words; build each and read off χ."
+                "description": "a b a⁻¹ b under an Unglue wave: the Klein bottle; then answer χ = 0 to open the forge door."
               }
             ],
             "enemies": [
               {
                 "name": "Unglue",
-                "description": "New: violet sprites that pull glued edges apart; a torn edge must be re-forged. One lash."
+                "description": "New: a violet seam-ripper that tears forged edges loose; re-walk the track to re-forge. One lash."
               },
               {
-                "name": "Sphere spawn",
-                "description": "One lash."
+                "name": "Sphere and torus spawn",
+                "description": "One and two lashes."
               }
             ],
             "tools": "Unlocks the Cell-Smith (cell_smith).",
-            "music": "Forge theme: anvil-like percussion on the off-beats, square-wave brass, the reef motif in a minor key.",
+            "music": "Forge theme: 100 bpm C minor — anvil strikes on the off-beats, square bass and brass, bellows swells, the reef melody in minor.",
             "visuals": "Basalt forge hall, furnaces glowing amber, cranes laying curved glowing edges, a square sheet folding into a torus mid-air; Gyroid's brass-and-indigo gauntlet.",
-            "movie": "level-0-4-intro “Emmy's Foundry” (scripted)."
+            "movie": "level-0-4-intro “Emmy's Foundry” and the lesson level-0-4-lesson “Built from Cells”.",
+            "status": "built"
           }
         },
         {
@@ -861,7 +864,7 @@
           "reuses": [
             "0-4"
           ],
-          "status": "planned",
+          "status": "built",
           "location_id": "skeleton_foundry",
           "character_ids": [
             "gyroid",
@@ -920,7 +923,8 @@
             "tools": "Uses the Cell-Smith; unlocks the Suspension Sling (suspension_sling).",
             "music": "Bright, mechanical: arpeggios that climb and fold back (cone up, cone down), a steady four-on-the-floor kick.",
             "visuals": "Terraced basalt stations under moonlight, glowing gold cones and double cones, a small circle sweeping a torus; violet drones with cone beams.",
-            "movie": "level-0-5-intro “Null's Plugs” (scripted)."
+            "movie": "level-0-5-intro “Null's Plugs” and the lesson level-0-5-lesson “New Spaces from Old”.",
+            "status": "built"
           }
         },
         {
@@ -941,7 +945,7 @@
             "0-1",
             "0-4"
           ],
-          "status": "planned",
+          "status": "built",
           "location_id": "skeleton_foundry",
           "character_ids": [
             "gyroid",
@@ -1001,7 +1005,8 @@
             "tools": "Uses the Spool and Cell-Smith.",
             "music": "Woodwind-like square leads and a log-drum pattern; a big chord on each successful fell.",
             "visuals": "A web of narrow basalt walkways, a highlighted amber tree folding inward, petals of a bouquet around one glowing node; the black spire across the water.",
-            "movie": "level-0-6-intro “Timber Yard” (scripted)."
+            "movie": "level-0-6-intro “Timber Yard” and the lesson level-0-6-lesson “Felling Trees”.",
+            "status": "built"
           }
         },
         {
@@ -1020,7 +1025,7 @@
           "reuses": [
             "0-1"
           ],
-          "status": "planned",
+          "status": "built",
           "location_id": "retract_reef",
           "character_ids": [
             "gyroid",
@@ -1075,7 +1080,8 @@
             "tools": "Uses the Cell-Smith.",
             "music": "A music-box version of the forge theme, sparse and warm.",
             "visuals": "A tall translucent cylinder filling with gold light cell by cell; an arched window onto the moonlit sea.",
-            "movie": "level-0-b-intro “The Cylinder Works” (scripted)."
+            "movie": "level-0-b-intro “The Cylinder Works” and the lesson level-0-b-lesson “One Cell at a Time”.",
+            "status": "built"
           }
         }
       ],
@@ -1124,7 +1130,8 @@
           "tools": "Everything from World 0: Lash, Spool, Tide Glass, Cell-Smith, Suspension Sling.",
           "music": "Null's motif (D–E♭–D–A) on a pipe-organ-like square pad, rising a semitone each phase; the reef theme returns in a minor key when Null escapes.",
           "visuals": "A circular throne room of black glass at the top of the spire, the Null Crown floating above, a reef-tile floor that ripples with Null's deformations, the moonlit world far below through open arches.",
-          "movie": "castle-0-intro “The Hollow Throne” and castle-0-outro “A Ring Is a Ring”."
+          "movie": "castle-0-intro “The Hollow Throne” and castle-0-outro “A Ring Is a Ring”.",
+          "status": "built"
         },
         "art": {
           "image_path": "games/algebraic_topology/assets/levels/castle-0-hollow-throne.png",

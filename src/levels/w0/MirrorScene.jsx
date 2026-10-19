@@ -1,8 +1,9 @@
 import { useFrame } from '@react-three/fiber'
-import { Line, MeshReflectorMaterial, Sparkles, Stars } from '@react-three/drei'
+import { Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import Seascape from '../../world/Seascape'
 import { LAND } from '../../theme/palette'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { LiveLine, Post } from './FlatsScenery'
@@ -22,21 +23,7 @@ import { grabPin, ribbonLength, ribbonPieces, stepRibbon } from './ribbon'
 export function MirrorSea({ channel }) {
   return (
     <>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
-        <planeGeometry args={[220, 220]} />
-        <MeshReflectorMaterial
-          resolution={512}
-          mirror={0.75}
-          blur={[200, 60]}
-          mixBlur={0.8}
-          mixStrength={2.2}
-          depthScale={0.4}
-          minDepthThreshold={0.6}
-          color="#0a1828"
-          metalness={0.6}
-          roughness={0.35}
-        />
-      </mesh>
+      <Seascape y={-0.5} area={[0, -8, 80, 76]} seed={31} calm palette={{ water: '#123a5a', sand: '#34505e', weed: '#24485a', coral: ['#9ad8ff', '#c58bff', '#e8eefc', '#7fe8dc'] }} lanterns={0} />
       {/* the channel: a band of still, starlit glass */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[(channel.x0 + channel.x1) / 2, -0.48, 0]}>
         <planeGeometry args={[channel.x1 - channel.x0, 60]} />

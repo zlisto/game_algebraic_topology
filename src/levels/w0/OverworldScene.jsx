@@ -4,6 +4,7 @@ import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import ReefScenery from '../../world/ReefScenery'
+import Seascape from '../../world/Seascape'
 import { SITES } from '../../world/reef'
 import { Beacon, Footprint, Spine, TearLines, Tiles, Trails } from './ReefBoard'
 import ReefGame from './ReefGame'
@@ -114,10 +115,7 @@ export default function OverworldScene({
       <directionalLight position={[8, 16, 10]} intensity={1.2} color="#d8eef8" />
       <Stars radius={90} depth={40} count={2200} factor={3} fade speed={0.3} />
       <Sparkles count={260} scale={[70, 4, 50]} position={[0, 1, -8]} size={2} speed={0.25} color="#7fe8dc" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
-        <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial color="#04161a" emissive="#06343a" emissiveIntensity={0.45} roughness={0.25} metalness={0.6} />
-      </mesh>
+      <Seascape y={-0.5} area={[0, -6, 90, 70]} seed={11} />
 
       <ReefScenery gateOpen={gateOpen} />
       {SITES.filter((s) => s.playable).map((site) => (

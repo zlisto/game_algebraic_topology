@@ -425,3 +425,256 @@ export function MirrorSpawn({ e }) {
     </>
   )
 }
+
+// ---------------------------------------------------------------- unglue (0-4)
+
+/**
+ * Unglue: a violet seam-ripper sprite from the Skeleton Foundry — a hooked needle head
+ * with one glaring eye and a whipping tail of torn thread. It goes for forged edges and
+ * pulls them loose (a torn edge must be re-forged). One lash.
+ */
+export function UnglueSpawn({ e }) {
+  const g = useRef()
+  const hook = useRef()
+  const tail = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.7 + Math.sin(t * 4) * 0.08, 0.5, t, 1.25)
+    hook.current.rotation.x = e.snipping > 0 ? -0.9 + Math.sin(t * 30) * 0.4 : -0.3 + Math.sin(t * 2.5) * 0.15
+    tail.current.children.forEach((c, i) => {
+      c.position.set(Math.sin(t * 6 + i * 0.8) * 0.05 * i, -0.1 - i * 0.07, -0.06 - i * 0.05)
+    })
+  })
+  return (
+    <group ref={g}>
+      {/* the body: a long needle */}
+      <mesh rotation={[Math.PI / 2.4, 0, 0]}>
+        <coneGeometry args={[0.1, 0.5, 8]} />
+        {obsidian()}
+      </mesh>
+      <mesh rotation={[Math.PI / 2.4, 0, 0]} scale={1.12}>
+        <coneGeometry args={[0.1, 0.5, 8]} />
+        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.55} toneMapped={false} />
+      </mesh>
+      {/* the ripper hook */}
+      <group ref={hook} position={[0, 0.05, 0.2]}>
+        <mesh position={[0, 0.06, 0.06]} rotation={[0, 0, Math.PI / 2]}>
+          <torusGeometry args={[0.07, 0.016, 6, 16, Math.PI * 1.3]} />
+          {glow()}
+        </mesh>
+      </group>
+      {/* one eye */}
+      <mesh position={[0, 0.06, 0.12]} scale={[0.05, 0.035, 0.03]}>
+        <sphereGeometry args={[1, 12, 8]} />
+        {glow(LAVENDER)}
+      </mesh>
+      {/* torn thread trailing behind */}
+      <group ref={tail}>
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <mesh key={i} scale={0.035 - i * 0.004}>
+            <sphereGeometry args={[1, 6, 4]} />
+            <meshBasicMaterial color={i % 2 ? '#ffd27a' : VIOLET} toneMapped={false} />
+          </mesh>
+        ))}
+      </group>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- coner (0-5)
+
+/**
+ * Coner: a violet engineer drone — a faceted body under a spinning rotor ring, with a
+ * projector that throws a cone of violet light down onto a space to plug its hole.
+ * While it beams (e.beam > 0) the cone of light grows; lash it before the beam finishes.
+ * Two lashes.
+ */
+export function ConerSpawn({ e }) {
+  const g = useRef()
+  const rotor = useRef()
+  const beam = useRef()
+  const eye = useRef()
+  useFrame(({ clock }, dt) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 1.25 + Math.sin(t * 2.4) * 0.08, 0.5, t, 1.2)
+    rotor.current.rotation.y += dt * 14
+    const b = e.beam > 0 ? 1 - e.beam / 2.6 : 0
+    beam.current.visible = e.beam > 0
+    beam.current.scale.set(0.3 + b * 0.9, 1, 0.3 + b * 0.9)
+    beam.current.material.opacity = 0.18 + b * 0.35
+    eye.current.material.color.set(e.beam > 0 ? '#ff6ad5' : LAVENDER)
+  })
+  return (
+    <group ref={g}>
+      <mesh scale={[1, 0.7, 1]}>
+        <octahedronGeometry args={[0.28, 0]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh scale={[1.08, 0.76, 1.08]}>
+        <octahedronGeometry args={[0.28, 0]} />
+        <meshBasicMaterial color={VIOLET} wireframe transparent opacity={0.8} toneMapped={false} />
+      </mesh>
+      <group ref={rotor} position={[0, 0.28, 0]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.32, 0.02, 6, 32]} />
+          {glow()}
+        </mesh>
+        {[0, 1, 2].map((i) => (
+          <mesh key={i} rotation={[0, (i * Math.PI * 2) / 3, 0]} position={[0, 0, 0]}>
+            <boxGeometry args={[0.6, 0.015, 0.06]} />
+            {obsidian()}
+          </mesh>
+        ))}
+      </group>
+      <mesh ref={eye} position={[0, -0.08, 0.2]} scale={[0.07, 0.045, 0.04]}>
+        <sphereGeometry args={[1, 12, 8]} />
+        <meshBasicMaterial color={LAVENDER} toneMapped={false} />
+      </mesh>
+      {/* the coning beam: a cone of light down onto its target */}
+      <mesh ref={beam} position={[0, -0.75, 0]}>
+        <coneGeometry args={[0.55, 1.3, 32, 1, true]} />
+        <meshBasicMaterial color="#c58bff" transparent opacity={0.3} side={THREE.DoubleSide} toneMapped={false} depthWrite={false} />
+      </mesh>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- loop-biter (0-6)
+
+/**
+ * Loop-biter: a violet beetle — an obsidian shell split down the middle, six legs that
+ * scuttle, and big crystal mandibles. It perches on a petal loop and chews it (e.beam > 0:
+ * the mandibles work and gold splinters fly); lash it before it finishes. Two lashes.
+ */
+export function LoopBiterSpawn({ e }) {
+  const g = useRef()
+  const jaws = useRef()
+  const legs = useRef()
+  const chips = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    const chewing = e.beam > 0
+    place(g.current, e, 0.18 + (chewing ? Math.abs(Math.sin(t * 14)) * 0.04 : 0), 0.5, t, 1.25)
+    const open = chewing ? 0.25 + Math.abs(Math.sin(t * 16)) * 0.5 : 0.25 + Math.sin(t * 2) * 0.08
+    jaws.current.children.forEach((c, i) => (c.rotation.y = (i ? -1 : 1) * open))
+    legs.current.children.forEach((c, i) => (c.rotation.x = Math.sin(t * 14 + i * 1.7) * (chewing ? 0.1 : 0.45)))
+    chips.current.visible = chewing
+    chips.current.children.forEach((c, i) => {
+      const u = (t * 2.2 + i * 0.27) % 1
+      c.position.set(Math.sin(i * 2.3) * 0.25 * u, 0.1 + u * 0.35 - u * u * 0.3, 0.32 + u * 0.15)
+    })
+  })
+  return (
+    <group ref={g}>
+      {/* the shell, split down the back */}
+      {[-1, 1].map((sd) => (
+        <mesh key={sd} position={[sd * 0.085, 0.12, -0.02]} rotation={[0, 0, sd * -0.25]} scale={[0.16, 0.12, 0.3]}>
+          <sphereGeometry args={[1, 14, 10, 0, Math.PI]} />
+          {obsidian({ side: THREE.DoubleSide })}
+        </mesh>
+      ))}
+      <mesh position={[0, 0.13, -0.02]} scale={[0.02, 0.13, 0.3]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {glow()}
+      </mesh>
+      {/* head and eyes */}
+      <mesh position={[0, 0.1, 0.28]} scale={[0.11, 0.08, 0.09]}>
+        <sphereGeometry args={[1, 12, 8]} />
+        {obsidian()}
+      </mesh>
+      {[-1, 1].map((sd) => (
+        <mesh key={sd} position={[sd * 0.06, 0.15, 0.34]} scale={0.025}>
+          <sphereGeometry args={[1, 8, 6]} />
+          {glow(LAVENDER)}
+        </mesh>
+      ))}
+      {/* mandibles */}
+      <group ref={jaws} position={[0, 0.08, 0.34]}>
+        {[-1, 1].map((sd) => (
+          <group key={sd} position={[sd * 0.05, 0, 0]}>
+            <mesh position={[sd * 0.04, 0, 0.09]} rotation={[Math.PI / 2, 0, sd * 0.5]}>
+              <coneGeometry args={[0.03, 0.2, 5]} />
+              {glow()}
+            </mesh>
+          </group>
+        ))}
+      </group>
+      {/* six legs */}
+      <group ref={legs}>
+        {[-1, 1].flatMap((sd) =>
+          [-0.14, 0, 0.14].map((z) => (
+            <mesh key={`${sd}${z}`} position={[sd * 0.2, 0.05, z]} rotation={[0, 0, sd * 0.9]}>
+              <cylinderGeometry args={[0.012, 0.008, 0.2, 5]} />
+              {obsidian()}
+            </mesh>
+          )),
+        )}
+      </group>
+      {/* gold splinters from the chewed loop */}
+      <group ref={chips}>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <mesh key={i} scale={0.022}>
+            <boxGeometry args={[1, 1, 2.5]} />
+            <meshBasicMaterial color="#ffd27a" toneMapped={false} />
+          </mesh>
+        ))}
+      </group>
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- castle (castle-0)
+
+/**
+ * A judgment beacon: a tall violet crystal on a black-glass stand above one of Null's
+ * demonstrations. Lash it to call that demonstration a forgery. It flares gold when hit.
+ * (Level code reads e.label for nothing — the beacon is the same everywhere.)
+ */
+export function BeaconSpawn({ e }) {
+  const g = useRef()
+  const gem = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0, 0.5, t, 1)
+    g.current.rotation.y = 0
+    gem.current.rotation.y = t * 0.8
+    gem.current.position.y = 1.25 + Math.sin(t * 2) * 0.06
+    gem.current.material.emissiveIntensity = e.flash > 0 ? 3 : 0.9 + Math.sin(t * 3) * 0.3
+  })
+  return (
+    <group ref={g}>
+      <mesh position={[0, 0.35, 0]}>
+        <cylinderGeometry args={[0.12, 0.26, 0.7, 6]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh ref={gem} position={[0, 1.25, 0]} scale={[0.32, 0.55, 0.32]}>
+        <octahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#c58bff" emissive="#8a3aff" emissiveIntensity={1} roughness={0.15} metalness={0.3} flatShading toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+/** A crown shard: a spinning violet splinter of the Null Crown that dives at Gyroid. One lash. */
+export function ShardSpawn({ e }) {
+  const g = useRef()
+  const m = useRef()
+  useFrame(({ clock }, dt) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.9 + Math.sin(t * 5) * 0.15, 0.4, t, 1.2)
+    m.current.rotation.x += dt * 6
+    m.current.rotation.z += dt * 4
+  })
+  return (
+    <group ref={g}>
+      <mesh ref={m} scale={[0.14, 0.38, 0.14]}>
+        <tetrahedronGeometry args={[1, 0]} />
+        <meshStandardMaterial color="#d8b8ff" emissive="#a259ff" emissiveIntensity={1.4} flatShading toneMapped={false} />
+      </mesh>
+      <mesh scale={0.35}>
+        <sphereGeometry args={[1, 10, 8]} />
+        {glow(VIOLET, { transparent: true, opacity: 0.18 })}
+      </mesh>
+    </group>
+  )
+}

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
 import { sfxCrack, sfxHit, sfxHurt, sfxPop, sfxWhoosh } from '../../audio/chip'
-import { MirrorSpawn, SnapperSpawn, SphereSpawn, TorusSpawn } from '../../characters/Spawn'
+import { BeaconSpawn, ConerSpawn, LoopBiterSpawn, ShardSpawn, MirrorSpawn, SnapperSpawn, SphereSpawn, TorusSpawn, UnglueSpawn } from '../../characters/Spawn'
 
 /**
  * The playable layer of Retract Reef. Gyroid runs (WASD / arrows) and carries two
@@ -34,6 +34,11 @@ const ENEMY = {
   torus: { hp: 2, speed: 0.72, radius: 0.44 },
   snapper: { hp: 1, speed: 1.25, radius: 0.42 },
   mirror: { hp: 1, speed: 0.9, radius: 0.36 },
+  unglue: { hp: 1, speed: 1.3, radius: 0.34 },
+  coner: { hp: 2, speed: 1.0, radius: 0.4 },
+  biter: { hp: 2, speed: 1.15, radius: 0.36 },
+  beacon: { hp: 1, speed: 0, radius: 0.6 }, // the castle's judgment beacons: they never move or bite
+  shard: { hp: 1, speed: 2.1, radius: 0.3 },
 }
 
 /** The Fundamental Lash: an amber cord cracked from Gyroid's hand. */
@@ -87,7 +92,7 @@ function EnemyList({ enemies }) {
   return enemies.current
     .slice(0, n)
     .map((e, i) =>
-      e.type === 'torus' ? <TorusSpawn key={i} e={e} maxHp={ENEMY.torus.hp} /> : e.type === 'snapper' ? <SnapperSpawn key={i} e={e} /> : e.type === 'mirror' ? <MirrorSpawn key={i} e={e} /> : <SphereSpawn key={i} e={e} />,
+      e.type === 'torus' ? <TorusSpawn key={i} e={e} maxHp={ENEMY.torus.hp} /> : e.type === 'snapper' ? <SnapperSpawn key={i} e={e} /> : e.type === 'mirror' ? <MirrorSpawn key={i} e={e} /> : e.type === 'unglue' ? <UnglueSpawn key={i} e={e} /> : e.type === 'coner' ? <ConerSpawn key={i} e={e} /> : e.type === 'biter' ? <LoopBiterSpawn key={i} e={e} /> : e.type === 'beacon' ? <BeaconSpawn key={i} e={e} /> : e.type === 'shard' ? <ShardSpawn key={i} e={e} /> : <SphereSpawn key={i} e={e} />,
     )
 }
 
@@ -162,7 +167,45 @@ function GlassProp({ state, tool }) {
   )
 }
 
-export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool, sim, tRef, stateRef, spawnRef, ribbonApi, onStrokeStart, onStrokeMove, onStrokeEnd, onEnemies, onHearts, onSpooling }) {
+/** The Cell-Smith (0-4): a brass-and-indigo gauntlet whose palm shows a point, a loop and a disk. */
+function SmithProp({ state, tool }) {
+  const g = useRef()
+  const orb = useRef()
+  useFrame(({ clock }) => {
+    const s = state.current
+    g.current.visible = tool === 'smith'
+    const fx = Math.sin(s.face)
+    const fz = Math.cos(s.face)
+    g.current.position.set(s.x + fx * 0.22 - fz * 0.22, 0.58, s.z + fz * 0.22 + fx * 0.22)
+    g.current.rotation.y = s.face
+    orb.current.rotation.y = clock.elapsedTime * 2
+    orb.current.position.y = 0.2 + Math.sin(clock.elapsedTime * 3) * 0.03
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <boxGeometry args={[0.12, 0.1, 0.16]} />
+        <meshStandardMaterial color="#b88a3a" metalness={0.85} roughness={0.3} emissive="#3a2408" emissiveIntensity={0.3} />
+      </mesh>
+      <mesh position={[0, 0.02, -0.1]}>
+        <cylinderGeometry args={[0.06, 0.07, 0.1, 10]} />
+        <meshStandardMaterial color="#2a2f7a" roughness={0.5} />
+      </mesh>
+      <group ref={orb}>
+        <mesh>
+          <torusGeometry args={[0.07, 0.01, 6, 24]} />
+          <meshBasicMaterial color="#ffd27a" toneMapped={false} />
+        </mesh>
+        <mesh>
+          <circleGeometry args={[0.065, 24]} />
+          <meshBasicMaterial color="#ffd27a" transparent opacity={0.35} side={THREE.DoubleSide} toneMapped={false} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool, sim, tRef, stateRef, spawnRef, ribbonApi, onAction, onStrokeStart, onStrokeMove, onStrokeEnd, onEnemies, onHearts, onSpooling }) {
   const b = shape.bounds
   const start = stage.start || [b.minX + 0.4, b.maxZ - 0.4]
   const pier = useMemo(() => [b.minX - 0.9, b.maxZ * 0.5], [b])
@@ -205,7 +248,8 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       tz: z,
       retarget: 0,
       snipping: 0,
-      cooldown: type === 'snapper' ? 3.5 : 0, // Snappers size things up before the first snip
+      cooldown: type === 'snapper' || type === 'unglue' || type === 'coner' || type === 'biter' ? 3.5 : 0, // they size things up before the first snip
+      beam: 0, // Coners: seconds of beaming left
       }
   }
   if (!enemies.current) enemies.current = (stage.enemies || []).map(makeEnemy)
@@ -215,6 +259,11 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
     spawnRef.current = (defs) => {
       const n = enemies.current.length
       enemies.current.push(...defs.map((d, k) => makeEnemy(d, n + k)))
+      report()
+    }
+    // …and take them away again (e.g. the castle's beacons between rounds)
+    spawnRef.current.remove = (test) => {
+      for (const e of enemies.current) if (e.alive && test(e)) (e.alive = false), (e.dying = 0.3)
       report()
     }
   }
@@ -330,6 +379,8 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
           onSpooling?.(false)
           onStrokeEnd(cx, cz)
         }
+      } else if (tool === 'smith') {
+        onAction?.(s.x, s.z, cx, cz) // the Cell-Smith: the level decides what a click forges
       } else if (tool === 'lash' && s.whip === 0) {
         s.face = Math.atan2(cx - s.x, cz - s.z)
         s.whip = 0.0001
@@ -370,7 +421,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
             e.flash = 0.15
             sfxHit()
             e.stun = 0.5
-            const kb = 0.55 / (d || 1)
+            const kb = e.type === 'beacon' ? 0 : 0.55 / (d || 1)
             const kx = e.x + dx * kb
             const kz = e.z + dz * kb
             if (enemyInside(kx, kz)) (e.x = kx), (e.z = kz)
@@ -397,8 +448,10 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
         continue
       }
       if (!e.alive) continue
+      if (e.type === 'beacon') continue // beacons just stand and wait to be judged
       if (e.stun > 0) {
         e.stun -= dt
+        e.beam = 0 // a lashed Coner loses its beam
         continue
       }
       const cfg = ENEMY[e.type]
@@ -407,8 +460,8 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       const d = Math.hypot(dx, dz)
       const leash = Math.hypot(s.x - e.hx, s.z - e.hz) < 6.5 // spawn guard their own patch of reef
       e.cooldown = Math.max(0, e.cooldown - dt)
-      const ribbonGoal = e.type === 'snapper' && e.cooldown === 0 && playEnabled && !onPier ? ribbonApi?.current?.target(e) : null
-      if (drift && e.type !== 'snapper') {
+      const ribbonGoal = (e.type === 'snapper' || e.type === 'unglue' || e.type === 'coner' || e.type === 'biter') && e.cooldown === 0 && playEnabled && !onPier ? ribbonApi?.current?.target(e) : null
+      if (drift && e.type !== 'snapper' && e.type !== 'unglue' && e.type !== 'coner' && e.type !== 'biter') {
         // spawn drift with the tide
         const nx = e.x + drift[0] * dt
         const nz = e.z + drift[1] * dt
@@ -418,7 +471,20 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
         // Snappers go for the ribbon; when they reach it, they clip it
         e.tx = ribbonGoal[0]
         e.tz = ribbonGoal[1]
-        if (Math.hypot(e.tx - e.x, e.tz - e.z) < 0.28) {
+        const beams = e.type === 'coner' || e.type === 'biter'
+        if (beams && Math.hypot(e.tx - e.x, e.tz - e.z) < 0.45) {
+          // Coners hover and beam, Loop-biters chew; it lands only if they run their course
+          if (!e.beam) e.beam = e.type === 'biter' ? 2.2 : 2.6
+          e.beam -= dt
+          e.tx = e.x
+          e.tz = e.z
+          if (e.beam <= 0) {
+            e.beam = 0
+            ribbonApi.current.snip(e.x, e.z)
+            e.cooldown = 8
+            e.retarget = 0
+          }
+        } else if (!beams && Math.hypot(e.tx - e.x, e.tz - e.z) < 0.28) {
           if (ribbonApi.current.snip(e.x, e.z)) e.snipping = 0.5
           e.cooldown = 6
           e.retarget = 0
@@ -491,6 +557,7 @@ export default function ReefGame({ stage, shape, playEnabled, spoolEnabled, tool
       <Lash state={state} />
       {!onPier && <SpoolLoop state={state} tool={tool} />}
       {!onPier && <GlassProp state={state} tool={tool} />}
+      {!onPier && <SmithProp state={state} tool={tool} />}
       <EnemyList enemies={enemies} />
       {playEnabled && <Reticle aim={aim} tool={tool} />}
 

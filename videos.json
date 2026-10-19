@@ -6455,6 +6455,653 @@
         "t": 66.5,
         "end": 70
       }
+    },
+    {
+      "id": "level-0-4-lesson",
+      "title": "Built from Cells",
+      "plays": "After the 0-4 intro, before play starts; replayable from the level's “How it works” button",
+      "world": 0,
+      "level_id": "0-4",
+      "status": "built",
+      "kind": "lesson",
+      "story_start": 0,
+      "story_end": 68,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Cell complexes, slowly: skeletons X⁰ ⊂ X¹ ⊂ X²; the sphere as a point and a disk; the torus as a square glued along a b a⁻¹ b⁻¹ (folded live); the projective plane along a a (crossing itself in 3D); χ; then the Cell-Smith's controls.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Built in stages",
+          "description": "A point appears; two loops grow out of it and back (edges glued at both ends); a disk fills one loop. The diagram lists X⁰ ⊂ X¹ ⊂ X²."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 22,
+          "title": "The sphere",
+          "description": "A flat disk curls up as its whole rim is drawn to one point: a sphere. Diagram: e⁰ ∪ e² = S²."
+        },
+        {
+          "id": "C",
+          "start": 22,
+          "end": 34,
+          "title": "The torus",
+          "description": "A square with arrowed edges a, b rolls into a tube (a meets a), then bends into a ring (b meets b). Diagram: a b a⁻¹ b⁻¹."
+        },
+        {
+          "id": "D",
+          "start": 34,
+          "end": 44,
+          "title": "Arrows matter",
+          "description": "A disk whose rim runs round loop a twice, the same way: it folds into a surface that passes through itself — the projective plane."
+        },
+        {
+          "id": "E",
+          "start": 44,
+          "end": 52,
+          "title": "χ",
+          "description": "Counting cells: points − edges + disks for each build."
+        },
+        {
+          "id": "F",
+          "start": 52,
+          "end": 62,
+          "title": "The Cell-Smith",
+          "description": "Controls: furnace, tracks, words, the press; Unglues."
+        },
+        {
+          "id": "G",
+          "start": 62,
+          "end": 68,
+          "title": "Summary",
+          "description": "Summary card; title card at 64.5."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.5,
+          "end": 4.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Everything in the Foundry is built in stages. First, points — the 0-cells."
+        },
+        {
+          "t": 4.8,
+          "end": 8.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Then edges, glued on by their two ends. Glue both ends to the same point and the edge becomes a loop."
+        },
+        {
+          "t": 8.6,
+          "end": 11.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Then disks, glued along loops. Each stage sits inside the next."
+        },
+        {
+          "t": 12.4,
+          "end": 16.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The simplest sphere: one point, and one disk whose entire rim is crushed onto that point."
+        },
+        {
+          "t": 16.8,
+          "end": 21.4,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Like pulling the drawstring on a bag until the opening's gone."
+        },
+        {
+          "t": 22.4,
+          "end": 26.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The torus: one point, two loops a and b, and one square disk. Its rim is glued along a, b, a backwards, b backwards."
+        },
+        {
+          "t": 26.8,
+          "end": 33.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Watch matching arrows meet: the two a-sides glue into a tube, then the two b-sides bend the tube round into a ring."
+        },
+        {
+          "t": 34.4,
+          "end": 38.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Now one loop, a, and a disk whose rim goes round a twice — the same way both times."
+        },
+        {
+          "t": 38.8,
+          "end": 43.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "There’s no room in our space to do that without the disk passing through itself. That’s the projective plane."
+        },
+        {
+          "t": 44.4,
+          "end": 48.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "And a count: points minus edges plus disks. That’s χ, the Euler characteristic."
+        },
+        {
+          "t": 48.4,
+          "end": 51.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Build the same place two different ways and χ comes out the same — though proving that waits for World 2."
+        },
+        {
+          "t": 52.4,
+          "end": 56.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "In the Foundry: hold the Cell-Smith, click the furnace to forge the point, and walk a track out and back to forge an edge."
+        },
+        {
+          "t": 56.6,
+          "end": 61.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Walk the disk’s word along your edges — with the arrow, or against it — then click the furnace to press. And lash those Unglues."
+        },
+        {
+          "t": 62.4,
+          "end": 66.6,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Points, edges, disks. Let’s build."
+        }
+      ],
+      "title_card": {
+        "t": 64.5,
+        "end": 68
+      }
+    },
+    {
+      "id": "level-0-5-lesson",
+      "title": "New Spaces from Old",
+      "plays": "After the 0-5 intro, before play starts; replayable from the level's “How it works” button",
+      "world": 0,
+      "level_id": "0-5",
+      "status": "built",
+      "kind": "lesson",
+      "story_start": 0,
+      "story_end": 62,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Operations on spaces, slowly: the cone (a ring's hole fills and every loop slides to the tip); the suspension (two points → a circle → a sphere); the wedge (two rings touch at one point); the product (a small ring swept round a big one: a torus, with a cell for each pair of cells); the quotient (a disk's rim collapsed: a sphere); then the works' controls.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 11,
+          "title": "The cone",
+          "description": "A glowing ring; its tip rises and pulls it into a cone. A loop on the rim slides up the cone and vanishes at the tip. Diagram: CX, X's cells plus one on each plus the tip; χ = 1."
+        },
+        {
+          "id": "B",
+          "start": 11,
+          "end": 22,
+          "title": "The suspension",
+          "description": "Two points sprout arcs to a tip above and below: a circle. The circle grows a double cone that rounds into a sphere. Diagram: S(S⁰) = S¹, S(S¹) = S²."
+        },
+        {
+          "id": "C",
+          "start": 22,
+          "end": 29,
+          "title": "The wedge",
+          "description": "Two rings glide together until they touch at one point: a figure-eight. Diagram: X ∨ Y, cells add, minus one point."
+        },
+        {
+          "id": "D",
+          "start": 29,
+          "end": 39,
+          "title": "The product",
+          "description": "A small ring travels round a big one, sweeping out a torus. Diagram: the four pairs of cells, 1 + 2 + 1."
+        },
+        {
+          "id": "E",
+          "start": 39,
+          "end": 47,
+          "title": "The quotient",
+          "description": "A disk's rim is drawn to one point and it closes into a sphere. Diagram: D²/∂D² = S²; collapsing something contractible keeps the shape."
+        },
+        {
+          "id": "F",
+          "start": 47,
+          "end": 56,
+          "title": "How to play",
+          "description": "The works' controls: pick up, feed, choose the operation, take the result off the shelf, pull plugs."
+        },
+        {
+          "id": "G",
+          "start": 56,
+          "end": 62,
+          "title": "Summary",
+          "description": "Cone, suspension, wedge, product, quotient — and the cells each adds."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.5,
+          "end": 5,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A cone: take a space and join every one of its points to a single new tip."
+        },
+        {
+          "t": 5.2,
+          "end": 10.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Cone a ring and the hole fills in. Any loop on it can slide up to the tip and shrink away — a cone always shrinks to its tip."
+        },
+        {
+          "t": 11.4,
+          "end": 16,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A suspension uses two tips, one above and one below. Suspend two points and you get two arcs: a circle."
+        },
+        {
+          "t": 16.2,
+          "end": 21.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Suspend the circle and you get a double cone, which is a sphere. Each suspension climbs one dimension."
+        },
+        {
+          "t": 22.4,
+          "end": 28.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A wedge glues two spaces together at a single point. Two rings make a figure-eight."
+        },
+        {
+          "t": 29.4,
+          "end": 33.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A product: every point of one space paired with every point of the other. A ring times a ring, swept round, is a torus."
+        },
+        {
+          "t": 33.8,
+          "end": 38.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Its cells come in pairs: point with point, point with edge, edge with point, edge with edge. That's one point, two edges and one disk."
+        },
+        {
+          "t": 39.4,
+          "end": 43.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A quotient collapses part of a space to a single point. Collapse a disk's rim and it closes up into a sphere."
+        },
+        {
+          "t": 43.8,
+          "end": 46.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The rim was a loop, so the shape changed. Collapse something that shrinks to a point and the shape stays the same."
+        },
+        {
+          "t": 47.4,
+          "end": 51.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "At each works: click a pedestal to pick up a copy of its space, then click the machine to feed it in."
+        },
+        {
+          "t": 51.8,
+          "end": 55.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "New spaces land on the shelf, and you can carry them back in. Lash the Coners. If one plugs a pedestal, click it to pull the plug."
+        },
+        {
+          "t": 56.4,
+          "end": 61,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Cone, suspend, wedge, multiply, collapse. Got it."
+        }
+      ],
+      "title_card": {
+        "t": 58.5,
+        "end": 62
+      }
+    },
+    {
+      "id": "level-0-6-lesson",
+      "title": "Felling Trees",
+      "plays": "After the 0-6 intro, before play starts; replayable from the level's “How it works” button",
+      "world": 0,
+      "level_id": "0-6",
+      "status": "built",
+      "kind": "lesson",
+      "story_start": 0,
+      "story_end": 62,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Collapsing trees in graphs, slowly: one walkway with two ends shrinks to a point; a tree reaches every platform without closing a loop; felling it leaves a bouquet of loops; shrinking a loop instead kills its hole; χ = V − E is unchanged by felling, and the bouquet has 1 − χ petals. Then the Spool and Cell-Smith controls.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 10,
+          "title": "One walkway",
+          "description": "Two platforms and a walkway; the far platform slides onto the near one as the walkway shrinks."
+        },
+        {
+          "id": "B",
+          "start": 10,
+          "end": 20,
+          "title": "A tree",
+          "description": "Five platforms, seven walkways. Four walkways light amber one by one, reaching every platform; a fifth flashes red — it would close a loop."
+        },
+        {
+          "id": "C",
+          "start": 20,
+          "end": 32,
+          "title": "Timber",
+          "description": "The amber tree folds into the root platform; the three other walkways round out into petals."
+        },
+        {
+          "id": "D",
+          "start": 32,
+          "end": 40,
+          "title": "The wrong cut",
+          "description": "A lone loop shrinks to nothing, violet: its hole is gone."
+        },
+        {
+          "id": "E",
+          "start": 40,
+          "end": 48,
+          "title": "χ",
+          "description": "The bouquet again; diagram: 5 − 7 = −2 before, 1 − 3 = −2 after; petals = 1 − χ."
+        },
+        {
+          "id": "F",
+          "start": 48,
+          "end": 56,
+          "title": "How to play",
+          "description": "Spool marks walkways, loops refused; Cell-Smith fells at the gold root; lash Loop-biters."
+        },
+        {
+          "id": "G",
+          "start": 56,
+          "end": 62,
+          "title": "Summary",
+          "description": "Every connected graph is a bouquet of 1 − χ circles."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.5,
+          "end": 4.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A walkway with two different ends can shrink to nothing. One platform just slides onto the other."
+        },
+        {
+          "t": 5,
+          "end": 9.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Nothing is lost. Two platforms and one walkway: 2 − 1 = 1. One platform alone: 1 − 0 = 1."
+        },
+        {
+          "t": 10.4,
+          "end": 16.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A tree is a set of walkways that reaches every platform and never closes a loop. Five platforms need four walkways."
+        },
+        {
+          "t": 16.8,
+          "end": 19.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A fifth would close a loop, so it can't join the tree."
+        },
+        {
+          "t": 20.4,
+          "end": 25,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A tree shrinks to a point, so we can fell the whole tree at once. Every platform slides onto the root."
+        },
+        {
+          "t": 25.2,
+          "end": 31.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The walkways that weren't in the tree are still there, but now both their ends are the root. They become loops: the petals of a bouquet."
+        },
+        {
+          "t": 32.4,
+          "end": 36.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "But never shrink a loop. A loop has only one end; there's nowhere for it to slide."
+        },
+        {
+          "t": 36.6,
+          "end": 39.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Squash it anyway and its hole dies. That's a different space — Null's move."
+        },
+        {
+          "t": 40.4,
+          "end": 44.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Count platforms minus walkways. Before felling: 5 − 7 = −2. After: 1 − 3 = −2. That number is χ."
+        },
+        {
+          "t": 44.8,
+          "end": 47.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "So a tangle with χ = −2 becomes a bouquet of 1 − χ = 3 petals."
+        },
+        {
+          "t": 48.4,
+          "end": 52,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "On the decks: hold the Spool and click walkways to mark a tree. A walkway that would close a loop is refused."
+        },
+        {
+          "t": 52.2,
+          "end": 55.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "When the tree reaches every platform, click the gold-ringed root with the Cell-Smith. And lash those Loop-biters."
+        },
+        {
+          "t": 56.4,
+          "end": 61,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Fell the tree, keep the loops. Timber!"
+        }
+      ],
+      "title_card": {
+        "t": 58.5,
+        "end": 62
+      }
+    },
+    {
+      "id": "level-0-b-lesson",
+      "title": "One Cell at a Time",
+      "plays": "After the 0-B intro; replayable from the level's “How it works” button",
+      "world": 0,
+      "level_id": "0-B",
+      "status": "built",
+      "kind": "lesson",
+      "story_start": 0,
+      "story_end": 52,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "The homotopy extension property, slowly: X × I as space × time; A's given motion as teal columns; extending over a free point (it stays put) and an edge (it stretches between its ends); a disk refused until its whole rim moves; why it always works (Dⁿ × I retracts onto its floor and walls); controls.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 10,
+          "title": "Space × time",
+          "description": "An edge on the cylinder floor; its left end's motion rises as a teal column."
+        },
+        {
+          "id": "B",
+          "start": 10,
+          "end": 20,
+          "title": "Extend",
+          "description": "The right point's column rises straight; then the edge's sheet stretches between the two columns."
+        },
+        {
+          "id": "C",
+          "start": 20,
+          "end": 32,
+          "title": "Boundary first",
+          "description": "A square with a disk: the disk is refused (its rim flashes red); points, then edges fill; then the disk's column."
+        },
+        {
+          "id": "D",
+          "start": 32,
+          "end": 40,
+          "title": "Why it works",
+          "description": "Diagram: projecting Dⁿ × I from a point above lands it on its floor and walls."
+        },
+        {
+          "id": "E",
+          "start": 40,
+          "end": 48,
+          "title": "How to play",
+          "description": "Click glowing cells; refused cells show what's missing."
+        },
+        {
+          "id": "F",
+          "start": 48,
+          "end": 52,
+          "title": "Summary",
+          "description": "Every CW pair has the homotopy extension property."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.5,
+          "end": 4.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The cylinder's floor is a space, X. Going up the cylinder is time."
+        },
+        {
+          "t": 5,
+          "end": 9.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Part of the floor, A, already has a motion chosen for it. Here it's the left point, drifting as time goes up."
+        },
+        {
+          "t": 10.4,
+          "end": 14.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "To extend the motion, start with the free point. It only has to start in the right place, so it can just stay put."
+        },
+        {
+          "t": 14.8,
+          "end": 19.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Now both ends of the edge are decided. The edge's column simply stretches between them."
+        },
+        {
+          "t": 20.4,
+          "end": 25,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A disk is different. Its column has a floor and walls, and the walls are its rim's columns. Until those are decided, it's refused."
+        },
+        {
+          "t": 25.2,
+          "end": 31.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "So go in order of dimension: points, then the edges around the disk, then the disk itself."
+        },
+        {
+          "t": 32.4,
+          "end": 36.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Why does the disk's column always fill? A box, disk times time, can be squashed onto just its floor and walls."
+        },
+        {
+          "t": 36.6,
+          "end": 39.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Shine a light from a point above it: every point of the box lands on the floor or a wall."
+        },
+        {
+          "t": 40.4,
+          "end": 44.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "In the Cylinder Works: click a glowing cell on the floor to raise its column."
+        },
+        {
+          "t": 44.8,
+          "end": 47.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "If its boundary isn't decided yet, the missing cells flash red."
+        },
+        {
+          "t": 48.4,
+          "end": 51.6,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "One cell at a time. Got it."
+        }
+      ],
+      "title_card": {
+        "t": 49,
+        "end": 52
+      }
     }
   ]
 }

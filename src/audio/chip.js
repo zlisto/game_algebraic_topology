@@ -468,6 +468,221 @@ export function startMirrorMusic() {
   startLoop(scheduleMirror, MIRROR_STEP)
 }
 
+// ---------------------------------------------------------------- the Skeleton Foundry theme
+
+/*
+ * 100 bpm in C minor: the reef's melody brought into the forge. Anvil strikes on the
+ * off-beats, a pumping square bass, square-wave brass stabs, a bellows swell every two
+ * bars, and the lead in the second phrase. 8 bars:
+ *   Cm – A♭ – E♭ – B♭ | Cm – Fm – G7 – Cm
+ */
+const FORGE_STEP = 60 / 100 / 4
+const FORGE_CHORDS = [
+  [36, [60, 63, 67]],
+  [32, [60, 63, 68]],
+  [39, [58, 63, 67]],
+  [34, [58, 62, 65]],
+  [36, [60, 63, 67]],
+  [41, [60, 65, 68]],
+  [43, [59, 62, 65, 67]],
+  [36, [60, 63, 67]],
+]
+const FORGE_LEAD = [
+  [0, 0, 72, 6], [0, 6, 74, 2], [0, 8, 75, 8],
+  [1, 0, 74, 4], [1, 4, 72, 4], [1, 8, 68, 8],
+  [2, 0, 70, 6], [2, 6, 72, 2], [2, 8, 74, 6], [2, 14, 75, 2],
+  [3, 0, 74, 12],
+  [4, 0, 75, 6], [4, 6, 74, 2], [4, 8, 72, 8],
+  [5, 0, 68, 4], [5, 4, 72, 4], [5, 8, 77, 8],
+  [6, 0, 75, 4], [6, 4, 74, 4], [6, 8, 71, 8],
+  [7, 0, 72, 16],
+]
+
+function anvilAt(t, vol = 0.07) {
+  // a bright metallic ping: inharmonic partials, fast decay
+  for (const [ratio, v] of [[1, vol], [2.76, vol * 0.6], [5.4, vol * 0.35]]) {
+    const o = ctx.createOscillator()
+    o.type = 'triangle'
+    o.frequency.value = 880 * ratio
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(v, t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.25)
+    o.connect(g).connect(musicBus)
+    o.start(t)
+    o.stop(t + 0.27)
+  }
+}
+
+function bellowsAt(t, buf, dur) {
+  const src = ctx.createBufferSource()
+  src.buffer = buf
+  src.loop = true
+  const f = ctx.createBiquadFilter()
+  f.type = 'bandpass'
+  f.frequency.setValueAtTime(300, t)
+  f.frequency.linearRampToValueAtTime(900, t + dur * 0.5)
+  f.frequency.linearRampToValueAtTime(300, t + dur)
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(0.04, t + dur * 0.5)
+  g.gain.linearRampToValueAtTime(0, t + dur)
+  src.connect(f).connect(g).connect(musicBus)
+  src.start(t)
+  src.stop(t + dur + 0.05)
+}
+
+function brassAt(t, notes, dur) {
+  const f = ctx.createBiquadFilter()
+  f.type = 'lowpass'
+  f.frequency.setValueAtTime(600, t)
+  f.frequency.linearRampToValueAtTime(2200, t + 0.05)
+  f.frequency.exponentialRampToValueAtTime(900, t + dur)
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(0.035, t + 0.02)
+  g.gain.setValueAtTime(0.035, t + dur * 0.7)
+  g.gain.linearRampToValueAtTime(0, t + dur)
+  f.connect(g).connect(musicBus)
+  for (const n of notes) {
+    const o = ctx.createOscillator()
+    o.type = 'square'
+    o.frequency.value = hz(n)
+    o.connect(f)
+    o.start(t)
+    o.stop(t + dur + 0.02)
+  }
+}
+
+function scheduleForge(step, t, buf) {
+  const total = FORGE_CHORDS.length * 16
+  const phrase = Math.floor(step / total) % 2
+  const s = step % total
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  const [root, tones] = FORGE_CHORDS[bar]
+  if (k % 2 === 0) blipAt(t, hz(root - 12 + (k % 4 === 2 ? 12 : 0)), { dur: FORGE_STEP * 1.6, type: 'square', vol: 0.045, bus: musicBus })
+  if (k === 4 || k === 12) anvilAt(t, 0.06)
+  if (k === 14 && bar % 2 === 1) anvilAt(t, 0.035)
+  if (k === 0 || k === 10) brassAt(t, tones, FORGE_STEP * (k === 0 ? 4 : 2))
+  if (k === 0 && bar % 2 === 0) bellowsAt(t, buf, FORGE_STEP * 32)
+  if (k === 0 || k === 8) blipAt(t, 60, { dur: 0.16, type: 'sine', vol: 0.18, bus: musicBus, slide: 0.5 }) // the hammer's thump
+  if (phrase === 1) {
+    for (const [lb, ls, midi, len] of FORGE_LEAD) if (lb === bar && ls === k) leadAt(t, midi, FORGE_STEP * len)
+  }
+}
+
+/** Start the Skeleton Foundry theme (looping). */
+export function startForgeMusic() {
+  startLoop(scheduleForge, FORGE_STEP)
+}
+
+// ---------------------------------------------------------------- the Cone Zone theme
+
+/*
+ * 116 bpm in F major, bright and mechanical: four-on-the-floor kick, arpeggios that
+ * climb to a tip and fold back down (cone up, cone down), a pulsing octave bass, and a
+ * square lead in the second phrase. 8 bars:
+ *   F – C/E – Dm – B♭ | F – Am – B♭ – C
+ */
+const CONE_STEP = 60 / 116 / 4
+const CONE_CHORDS = [
+  [41, [65, 69, 72, 77]],
+  [40, [64, 67, 72, 76]],
+  [38, [62, 65, 69, 74]],
+  [46, [62, 65, 70, 74]],
+  [41, [65, 69, 72, 77]],
+  [45, [64, 69, 72, 76]],
+  [46, [65, 70, 74, 77]],
+  [48, [64, 67, 72, 79]],
+]
+const CONE_UPDOWN = [0, 1, 2, 3, 3, 2, 1, 0] // up to the tip and back down
+const CONE_LEAD = [
+  [0, 0, 77, 4], [0, 4, 76, 2], [0, 6, 74, 2], [0, 8, 72, 8],
+  [1, 0, 72, 4], [1, 4, 74, 4], [1, 8, 76, 8],
+  [2, 0, 77, 4], [2, 4, 74, 4], [2, 8, 69, 8],
+  [3, 0, 70, 6], [3, 6, 72, 2], [3, 8, 74, 8],
+  [4, 0, 77, 4], [4, 4, 79, 4], [4, 8, 81, 8],
+  [5, 0, 79, 4], [5, 4, 76, 4], [5, 8, 72, 8],
+  [6, 0, 74, 4], [6, 4, 77, 4], [6, 8, 82, 8],
+  [7, 0, 79, 16],
+]
+
+function scheduleCone(step, t, buf) {
+  const total = CONE_CHORDS.length * 16
+  const phrase = Math.floor(step / total) % 2
+  const s = step % total
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  const [root, tones] = CONE_CHORDS[bar]
+  if (k % 4 === 0) blipAt(t, 62, { dur: 0.14, type: 'sine', vol: 0.22, bus: musicBus, slide: 0.45 }) // kick
+  if (k % 4 === 2) hatAt(t, buf, 0.035)
+  if (k % 2 === 0) blipAt(t, hz(root - 12 + (k % 4 === 2 ? 12 : 0)), { dur: CONE_STEP * 1.5, type: 'triangle', vol: 0.12, bus: musicBus })
+  const n = tones[CONE_UPDOWN[(k / 1) % 8]] + (k >= 8 ? 12 : 0)
+  blipAt(t, hz(n), { dur: CONE_STEP * 1.1, type: 'square', vol: 0.03, bus: musicBus, out: echo })
+  if (k === 0) padAt(t, tones.slice(0, 3), CONE_STEP * 16)
+  if (phrase === 1) {
+    for (const [lb, ls, midi, len] of CONE_LEAD) if (lb === bar && ls === k) blipAt(t, hz(midi), { dur: CONE_STEP * len, type: 'square', vol: 0.045, bus: musicBus, out: echo })
+  }
+}
+
+/** Start the Cone Zone theme (looping). */
+export function startConeMusic() {
+  startLoop(scheduleCone, CONE_STEP)
+}
+
+// ---------------------------------------------------------------- the Timber Yard theme
+
+/*
+ * 104 bpm in G mixolydian, woody: a log-drum pattern (pitched sine thumps that drop),
+ * a shaker, a plucked triangle bass, and a reedy square lead with a little vibrato-like
+ * grace note. 8 bars:  G – F – C – G | G – F – Am – D
+ */
+const TIMBER_STEP = 60 / 104 / 4
+const TIMBER_CHORDS = [
+  [43, [67, 71, 74]],
+  [41, [65, 69, 72]],
+  [48, [64, 67, 72]],
+  [43, [67, 71, 74]],
+  [43, [67, 71, 74]],
+  [41, [65, 69, 72]],
+  [45, [64, 69, 72]],
+  [50, [66, 69, 74]],
+]
+// log drums: [step, midi]
+const TIMBER_LOGS = [[0, 55], [3, 62], [6, 55], [8, 60], [10, 62], [11, 55], [14, 64]]
+const TIMBER_LEAD = [
+  [0, 0, 79, 3], [0, 3, 77, 1], [0, 4, 74, 4], [0, 8, 71, 4], [0, 12, 74, 4],
+  [1, 0, 72, 6], [1, 6, 74, 2], [1, 8, 77, 8],
+  [2, 0, 76, 4], [2, 4, 74, 4], [2, 8, 72, 4], [2, 12, 67, 4],
+  [3, 0, 71, 12], [3, 12, 74, 4],
+  [4, 0, 79, 3], [4, 3, 81, 1], [4, 4, 83, 4], [4, 8, 81, 4], [4, 12, 79, 4],
+  [5, 0, 77, 6], [5, 6, 76, 2], [5, 8, 74, 8],
+  [6, 0, 72, 4], [6, 4, 76, 4], [6, 8, 81, 8],
+  [7, 0, 78, 8], [7, 8, 74, 8],
+]
+
+function scheduleTimber(step, t, buf) {
+  const total = TIMBER_CHORDS.length * 16
+  const s = step % total
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  const [root, tones] = TIMBER_CHORDS[bar]
+  for (const [ls, m] of TIMBER_LOGS) if (ls === k) blipAt(t, hz(m), { dur: 0.18, type: 'sine', vol: 0.16, bus: musicBus, slide: 0.7 })
+  if (k % 2 === 1) hatAt(t, buf, 0.022)
+  if (k === 0 || k === 7 || k === 10) blipAt(t, hz(root - 12), { dur: TIMBER_STEP * 2.5, type: 'triangle', vol: 0.13, bus: musicBus })
+  if (k === 0) padAt(t, tones, TIMBER_STEP * 16)
+  for (const [lb, ls, midi, len] of TIMBER_LEAD)
+    if (lb === bar && ls === k) {
+      blipAt(t, hz(midi + 1), { dur: 0.035, type: 'square', vol: 0.03, bus: musicBus }) // a reedy grace note
+      blipAt(t + 0.03, hz(midi), { dur: TIMBER_STEP * len, type: 'square', vol: 0.04, bus: musicBus, out: echo })
+    }
+}
+
+/** Start the Timber Yard theme (looping). */
+export function startTimberMusic() {
+  startLoop(scheduleTimber, TIMBER_STEP)
+}
+
 // ---------------------------------------------------------------- Count Null's theme (boss music)
 
 /*
@@ -772,4 +987,174 @@ export function sfxTear() {
   const t = ctx.currentTime
   blipAt(t, 180, { dur: 0.35, type: 'sawtooth', vol: 0.07, slide: 2.2 })
   blipAt(t + 0.05, 90, { dur: 0.3, type: 'square', vol: 0.05, slide: 0.5 })
+}
+
+// ---------------------------------------------------------------- Skeleton Foundry
+
+/** A 0-cell forged: a ringing anvil strike. */
+export function sfxAnvil() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 120, { dur: 0.12, type: 'triangle', vol: 0.2, slide: 0.5 })
+  for (const [r, v] of [[1, 0.09], [2.76, 0.05], [5.4, 0.03], [8.9, 0.015]]) blipAt(t, 660 * r, { dur: 0.9, type: 'sine', vol: v, out: echo })
+}
+
+/** A 1-cell forged: a sizzle as the edge cools, and a two-note chime. */
+export function sfxForgeEdge() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  const f = ctx.createBiquadFilter()
+  f.type = 'highpass'
+  f.frequency.value = 3000
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0.18, t)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5)
+  noiseSource(t, 0.5).connect(f).connect(g).connect(sfxBus)
+  blipAt(t + 0.08, hz(76), { dur: 0.2, type: 'square', vol: 0.06 })
+  blipAt(t + 0.18, hz(83), { dur: 0.35, type: 'square', vol: 0.06 })
+}
+
+/** A letter added to the word being walked (pitched by edge, lower if walked backwards). */
+export function sfxLetter(edge, sign) {
+  if (!audio() || ctx.state !== 'running') return
+  const base = [72, 76, 79, 83][edge % 4] - (sign < 0 ? 5 : 0)
+  blipAt(ctx.currentTime, hz(base), { dur: 0.14, type: 'square', vol: 0.07 })
+}
+
+/** The disk press slams down. */
+export function sfxPress() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 70, { dur: 0.5, type: 'sine', vol: 0.35, slide: 0.4 })
+  blipAt(t, 140, { dur: 0.25, type: 'square', vol: 0.08, slide: 0.5 })
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0.3, t)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3)
+  noiseSource(t, 0.3).connect(g).connect(sfxBus)
+}
+
+/** The hologram folds: a rising shimmer. */
+export function sfxFold() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  ;[72, 76, 79, 84, 88, 91].forEach((m, i) => blipAt(t + i * 0.09, hz(m), { dur: 0.5, type: 'sine', vol: 0.06, out: echo }))
+}
+
+/** An Unglue rips an edge loose. */
+export function sfxRip() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  const f = ctx.createBiquadFilter()
+  f.type = 'bandpass'
+  f.frequency.setValueAtTime(2500, t)
+  f.frequency.exponentialRampToValueAtTime(500, t + 0.35)
+  const g = ctx.createGain()
+  g.gain.setValueAtTime(0.3, t)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4)
+  noiseSource(t, 0.4).connect(f).connect(g).connect(sfxBus)
+}
+
+// ---------------------------------------------------------------- Cone Zone
+
+/** Picking up a specimen space. */
+export function sfxPickup() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(72), { dur: 0.08, type: 'square', vol: 0.06 })
+  blipAt(t + 0.06, hz(79), { dur: 0.12, type: 'square', vol: 0.06 })
+}
+
+/** Feeding a space into a machine. */
+export function sfxFeed() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(79), { dur: 0.1, type: 'triangle', vol: 0.1, slide: 0.5 })
+}
+
+/** A machine runs its operation: a whirring rise, then a ding. */
+export function sfxMachine() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 110, { dur: 0.9, type: 'sawtooth', vol: 0.04, slide: 4 })
+  ;[84, 88, 91].forEach((m, i) => blipAt(t + 0.9 + i * 0.07, hz(m), { dur: 0.35, type: 'sine', vol: 0.07, out: echo }))
+}
+
+/** A Coner plugs a specimen. */
+export function sfxPlug() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 300, { dur: 0.4, type: 'sawtooth', vol: 0.07, slide: 0.3 })
+  blipAt(t + 0.1, 90, { dur: 0.3, type: 'square', vol: 0.06 })
+}
+
+// ---------------------------------------------------------------- Timber Yard
+
+/** Marking a walkway for the tree (a wooden knock), or unmarking it (lower). */
+export function sfxMark(on = true) {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(on ? 76 : 69), { dur: 0.09, type: 'triangle', vol: 0.1, slide: 0.6 })
+  if (on) blipAt(t + 0.05, hz(83), { dur: 0.08, type: 'sine', vol: 0.05 })
+}
+
+/** A walkway that can't be marked: a dull thunk. */
+export function sfxRefuse() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 150, { dur: 0.22, type: 'square', vol: 0.06, slide: 0.5 })
+  blipAt(t + 0.08, 110, { dur: 0.2, type: 'square', vol: 0.05, slide: 0.5 })
+}
+
+/** Felling a tree: a creak and a fall, then a big chord. */
+export function sfxFell() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, 220, { dur: 0.7, type: 'sawtooth', vol: 0.035, slide: 0.4 })
+  blipAt(t + 0.7, 70, { dur: 0.35, type: 'sine', vol: 0.25, slide: 0.4 })
+  ;[67, 71, 74, 79, 83].forEach((m, i) => blipAt(t + 0.95 + i * 0.03, hz(m), { dur: 1.3, type: i % 2 ? 'triangle' : 'square', vol: 0.045, out: echo }))
+}
+
+/** A Loop-biter chews through a petal. */
+export function sfxChew() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  for (let i = 0; i < 5; i++) blipAt(t + i * 0.06, 300 - i * 30, { dur: 0.05, type: 'square', vol: 0.05 })
+  blipAt(t + 0.32, 90, { dur: 0.3, type: 'sawtooth', vol: 0.06, slide: 0.3 })
+}
+
+/** The bridge forges, plank by plank. */
+export function sfxBridge() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  for (let i = 0; i < 8; i++) blipAt(t + i * 0.12, hz(60 + i * 2), { dur: 0.1, type: 'triangle', vol: 0.08 })
+  ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + 1.0 + i * 0.05, hz(m), { dur: 1.2, type: 'sine', vol: 0.07, out: echo }))
+}
+
+// ---------------------------------------------------------------- Cylinder Works
+
+/*
+ * A music box: the forge theme's melody, slow and sparse, in high sine and triangle
+ * tones with a soft echo — 72 bpm in C minor.
+ */
+const BOX_STEP = 60 / 72 / 2
+const BOX_NOTES = [84, 0, 87, 0, 91, 0, 89, 87, 86, 0, 84, 0, 82, 0, 79, 0, 80, 0, 84, 0, 87, 0, 86, 84, 83, 0, 0, 0, 79, 0, 0, 0]
+const BOX_BASS = [48, 44, 41, 43]
+
+function scheduleBox(step, t) {
+  const k = step % BOX_NOTES.length
+  const n = BOX_NOTES[k]
+  if (n) blipAt(t, hz(n), { dur: BOX_STEP * 1.8, type: k % 4 === 0 ? 'triangle' : 'sine', vol: 0.06, bus: musicBus, out: echo })
+  if (k % 8 === 0) blipAt(t, hz(BOX_BASS[Math.floor(k / 8)] + 12), { dur: BOX_STEP * 6, type: 'sine', vol: 0.05, bus: musicBus })
+}
+
+/** Start the Cylinder Works music box (looping). */
+export function startMusicBox() {
+  startLoop(scheduleBox, BOX_STEP)
+}
+
+/** A column fills with gold, rising. */
+export function sfxFill() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + i * 0.09, hz(m), { dur: 0.3, type: 'sine', vol: 0.06, out: echo }))
 }

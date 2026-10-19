@@ -29,6 +29,63 @@ const DEBUG_ENTRIES = [
       { label: '↳ The Mirror Gate', screen: 'level3', opts: { startAt: 'mirror_gate' } },
     ],
   },
+  {
+    group: 'World 0 · Level 4 — Skeleton Foundry',
+    items: [
+      { label: 'Intro movie', screen: 'movie04' },
+      { label: 'Lesson: Built from Cells', screen: 'lesson04' },
+      { label: 'Level 0-4 (from the start)', screen: 'level4' },
+      { label: '↳ The Sphere Press', screen: 'level4', opts: { startAt: 'sphere_press' } },
+      { label: '↳ Twin Loops', screen: 'level4', opts: { startAt: 'twin_loops' } },
+      { label: '↳ One Loop', screen: 'level4', opts: { startAt: 'one_loop' } },
+      { label: '↳ The Blueprint Wall', screen: 'level4', opts: { startAt: 'blueprint_wall' } },
+    ],
+  },
+  {
+    group: 'World 0 · Bonus — Cylinder Works',
+    items: [
+      { label: 'Intro movie', screen: 'movie0b' },
+      { label: 'Lesson: One Cell at a Time', screen: 'lesson0b' },
+      { label: 'Bonus 0-B (from the start)', screen: 'level0b' },
+      { label: '↳ Floor 3 · Wrong Order', screen: 'level0b', opts: { startAt: '2' } },
+      { label: '↳ Floor 4 · Full Cylinder', screen: 'level0b', opts: { startAt: '3' } },
+    ],
+  },
+  {
+    group: 'World 0 · Level 5 — Cone Zone',
+    items: [
+      { label: 'Intro movie', screen: 'movie05' },
+      { label: 'Lesson: New Spaces from Old', screen: 'lesson05' },
+      { label: 'Level 0-5 (from the start)', screen: 'level5' },
+      { label: '↳ The Cone Works', screen: 'level5', opts: { startAt: 'cone_works' } },
+      { label: '↳ The Suspension Works', screen: 'level5', opts: { startAt: 'suspension_works' } },
+      { label: '↳ Wedge & Product', screen: 'level5', opts: { startAt: 'wedge_product' } },
+      { label: '↳ The Recipe Board', screen: 'level5', opts: { startAt: 'recipe_board' } },
+    ],
+  },
+  {
+    group: 'World 0 · Level 6 — Timber Yard',
+    items: [
+      { label: 'Intro movie', screen: 'movie06' },
+      { label: 'Lesson: Felling Trees', screen: 'lesson06' },
+      { label: 'Level 0-6 (from the start)', screen: 'level6' },
+      { label: '↳ The Sapling Deck', screen: 'level6', opts: { startAt: 'one_edge' } },
+      { label: '↳ The Thicket', screen: 'level6', opts: { startAt: 'spanning_tree' } },
+      { label: '↳ The Wrong Cut', screen: 'level6', opts: { startAt: 'wrong_cut' } },
+      { label: '↳ The Census Deck', screen: 'level6', opts: { startAt: 'census' } },
+    ],
+  },
+  {
+    group: 'World 0 · Castle — The Hollow Throne',
+    items: [
+      { label: 'Intro movie', screen: 'moviec0' },
+      { label: 'Castle (from the start)', screen: 'castle0' },
+      { label: '↳ Trial 2 · Simplifications', screen: 'castle0', opts: { startAt: '1' } },
+      { label: '↳ Trial 3 · Same shape?', screen: 'castle0', opts: { startAt: '2' } },
+      { label: '↳ The ring (and the outro)', screen: 'castle0', opts: { startAt: '3' } },
+      { label: 'Outro movie', screen: 'outroc0' },
+    ],
+  },
 ]
 const SHOW_DEBUG = import.meta.env.DEV || new URLSearchParams(window.location.search).has('debug')
 
