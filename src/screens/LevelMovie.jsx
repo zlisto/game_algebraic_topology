@@ -183,7 +183,7 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
           </div>
         </div>
 
-        {Overlay && <Overlay t={t} />}
+        {Overlay && <Overlay t={t} tRef={tRef} />}
 
         {cap && (
           <div key={cap.t} className={`intro-caption ${cap.portrait ? 'has-portrait' : 'narrator'}`}>

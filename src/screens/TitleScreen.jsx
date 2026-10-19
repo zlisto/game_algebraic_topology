@@ -96,6 +96,27 @@ const DEBUG_ENTRIES = [
       { label: 'Outro movie', screen: 'outroc0' },
     ],
   },
+  // World 1 · Bouquet Bastion: one group per level (intro movie, lesson, from the start, then each section via startAt)
+  ...[
+    [1, 'Endpoint Gardens', 'Fixed Endpoints', [['Open Lawn', 'open_lawn'], ['Hedge Beds', 'hedges'], ['Pace Garden', 'faster'], ['Triple Gate', 'chained']]],
+    [2, 'Basepoint Beacon', 'Loop de Loop', [['Home Base', 'home_base'], ['There and Back', 'there_back'], ['Brackets Deck', 'brackets'], ['Beacon B', 'second_beacon']]],
+    [3, 'Winding Road', 'Winding Road', [['The Helix', 'the_helix'], ['Sliding', 'sliding'], ['Unwind', 'unwind'], ['Number Line', 'number_line']]],
+    [4, 'Brouwer’s Basin', 'No Way Out', [['The Retractor', 'retractor'], ['The Still Point', 'still_point'], ['Roots', 'roots'], ['Antipodes', 'antipodes']]],
+    [5, 'Torus Terraces', 'Push It Forward', [['The Projector', 'projector_deck'], ['Retract Check', 'retract_deck'], ['Two Roads', 'two_roads'], ['Shadows', 'shadows_deck']]],
+    [6, 'Free-Word Forge', 'Free Word Play', [['Laps Are Letters', 'laps_letters'], ['Cancel', 'cancel_deck'], ['Order Matters', 'order_deck'], ['The Patrol', 'patrol_yard']]],
+    [7, 'Glue Works', 'Glue Job', [['Glue a Disk', 'circle_press'], ['The Torus', 'torus_press'], ['Half Turn', 'half_turn'], ['Two Pieces', 'two_pieces']]],
+    [8, 'Sheetwater Viaduct', 'Under Cover', [['Two Floors', 'two_floors'], ['Build a Cover', 'build_cover'], ['Rescue', 'rescue'], ['Order, Proved', 'order_proved']]],
+    [9, 'Sheet Stacks', 'Sheet Music', [['To Order', 'to_order'], ['Moving the Start', 'moving_start'], ['The Endless Tree', 'endless_tree'], ['Plane over Torus', 'plane_torus']]],
+    [10, 'Deck Halls', 'Deck the Halls', [['Shift the Deck', 'shift_deck'], ['Lopsided', 'lopsided'], ['Divide by a Group', 'quotient'], ['Antipodal Hall', 'antipodal']]],
+  ].map(([k, place, title, sections]) => ({
+    group: `World 1 · Level ${k} — ${place}`,
+    items: [
+      { label: `Intro movie: ${title}`, screen: `movie1-${k}` },
+      { label: 'Lesson', screen: `lesson1-${k}` },
+      { label: `Level 1-${k} (from the start)`, screen: `level1-${k}` },
+      ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level1-${k}`, opts: { startAt } })),
+    ],
+  })),
 ]
 const SHOW_DEBUG = true // the level select is part of the game now, not just a dev tool
 

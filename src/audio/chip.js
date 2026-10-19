@@ -1213,3 +1213,250 @@ export function sfxExit() {
   blipAt(t + 0.15, 110, { dur: 1.1, type: 'sine', vol: 0.12, slide: 0.5 })
   ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + 1.15 + i * 0.07, hz(m), { dur: 0.9, type: 'triangle', vol: 0.05, out: echo }))
 }
+
+// ================================================================ World 1 · Bouquet Bastion
+// One theme per level (merged by the World 1 integrator from integration/1_1 … 1_10).
+// All use the same helpers as the World 0 themes: blipAt / padAt / hatAt / startLoop.
+
+// ---------------------------------------------------------------- 1-1 / 1-2 · Bastion march
+
+/*
+ * 104 bpm, G major: a stately march. Bass on the beats, a two-chord pad, a small square
+ * melody walking up and back down (a route there and back). 4 bars:  G – Em – D – G
+ */
+const BASTION_STEP = 60 / 104 / 4
+const BASTION_CHORDS = [
+  [43, [67, 71, 74, 79]],
+  [40, [64, 67, 71, 76]],
+  [38, [62, 66, 69, 74]],
+  [43, [67, 71, 74, 79]],
+]
+const BASTION_MEL = [67, 69, 71, 74, 71, 69, 67, 62]
+function scheduleBastion(step, t, buf) {
+  const s = step % 64
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  const [root, tones] = BASTION_CHORDS[bar]
+  if (k % 4 === 0) blipAt(t, hz(root - 12), { dur: BASTION_STEP * 3, type: 'triangle', vol: 0.11, bus: musicBus })
+  if (k === 0 || k === 8) padAt(t, tones.slice(0, 3), BASTION_STEP * 8)
+  if (k % 8 === 4) hatAt(t, buf, 0.03)
+  if (k % 2 === 1) blipAt(t, hz(BASTION_MEL[(Math.floor(k / 2) + bar * 3) % 8]), { dur: BASTION_STEP * 1.6, type: 'square', vol: 0.03, bus: musicBus, out: echo })
+}
+/** Bouquet Bastion's main theme: a stately march (1-1, 1-2). */
+export function startBastionMusic() {
+  startLoop(scheduleBastion, BASTION_STEP)
+}
+/** A route is stamped in the ledger. */
+export function sfxLedger() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(81), { dur: 0.08, type: 'square', vol: 0.07 })
+  blipAt(t + 0.08, hz(86), { dur: 0.12, type: 'square', vol: 0.06, out: echo })
+}
+/** A hedge takes root. */
+export function sfxRoot() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, 120, { dur: 0.25, type: 'sawtooth', vol: 0.06, slide: 0.6 })
+}
+/** A loop closes back at its basepoint: a two-note bell. */
+export function sfxLoopClose() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(76), { dur: 0.35, type: 'sine', vol: 0.12, out: echo })
+  blipAt(t + 0.08, hz(67), { dur: 0.5, type: 'triangle', vol: 0.08, out: echo })
+}
+
+// ---------------------------------------------------------------- 1-3 · Helix
+
+/* 104 bpm in E minor: a rising ostinato that steps up one note per lap; chime on each floor. */
+const HELIX_STEP = 60 / 104 / 4
+const HELIX_OSTINATO = [52, 59, 64, 71, 64, 59, 64, 67]
+function scheduleHelix(step, t, buf) {
+  const s = step % 128
+  const k = s % 16
+  const lap = Math.floor(s / 16) % 8
+  if (k === 0) blipAt(t, hz(40), { dur: HELIX_STEP * 6, type: 'triangle', vol: 0.12, bus: musicBus })
+  if (k % 4 === 0) hatAt(t, buf, 0.025)
+  if (k === 0) padAt(t, [52, 55, 59].map((n) => n + (lap > 3 ? 2 : 0)), HELIX_STEP * 16)
+  if (k % 2 === 0) blipAt(t, hz(HELIX_OSTINATO[(k / 2) % 8] + Math.floor(lap / 2) * 2), { dur: HELIX_STEP * 1.5, type: 'square', vol: 0.028, bus: musicBus, out: echo })
+  if (k === 12) blipAt(t, hz(88 + (lap % 4)), { dur: 0.3, type: 'sine', vol: 0.04, bus: musicBus, out: echo })
+}
+export function startHelixMusic() {
+  startLoop(scheduleHelix, HELIX_STEP)
+}
+/** One more floor up the helix. */
+export function sfxFloor() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(81), { dur: 0.2, type: 'sine', vol: 0.09, out: echo })
+}
+/** A gate opens. */
+export function sfxGate() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(69), { dur: 0.25, type: 'triangle', vol: 0.08, out: echo })
+}
+
+// ---------------------------------------------------------------- 1-4 · Basin
+
+/* 108 bpm: a low drone and a heavy march; the Retractor's tread. A minor. */
+const BASIN_STEP = 60 / 108 / 4
+function scheduleBasin(step, t, buf) {
+  const s = step % 64
+  const k = s % 16
+  const bar = Math.floor(s / 16)
+  if (k === 0) blipAt(t, hz(33), { dur: BASIN_STEP * 8, type: 'sine', vol: 0.16, bus: musicBus })
+  if (k === 8) blipAt(t, hz(40), { dur: BASIN_STEP * 4, type: 'triangle', vol: 0.09, bus: musicBus })
+  if (k % 4 === 2) hatAt(t, buf, 0.03)
+  if (s % 32 === 0) padAt(t, bar < 2 ? [57, 60, 64] : [55, 59, 62], BASIN_STEP * 32)
+  if (k === 6 || k === 10 || k === 14) blipAt(t, hz([69, 67, 64][(k - 6) / 4]), { dur: BASIN_STEP * 2, type: 'square', vol: 0.026, bus: musicBus, out: echo })
+}
+export function startBasinMusic() {
+  startLoop(scheduleBasin, BASIN_STEP)
+}
+/** The Retractor seizes a loop. */
+export function sfxSeize() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, 90, { dur: 0.4, type: 'sawtooth', vol: 0.08, slide: 0.4 })
+}
+
+// ---------------------------------------------------------------- 1-5 · Torus Terraces
+
+/* 108 bpm, 6/8 feel in D: two interlocking arpeggios, one around the tube and one through the hole. */
+const PUSH_STEP = 60 / 108 / 4
+function schedulePush(step, t, buf) {
+  const k = step % 12
+  const bar = Math.floor(step / 12) % 4
+  const root = [38, 43, 41, 38][bar]
+  if (k === 0 || k === 6) blipAt(t, hz(root - 12), { dur: PUSH_STEP * 4, type: 'triangle', vol: 0.11, bus: musicBus })
+  if (k % 3 === 0) hatAt(t, buf, 0.022)
+  if (k === 0) padAt(t, [root + 12, root + 16, root + 19], PUSH_STEP * 12)
+  if (k % 3 === 1) blipAt(t, hz(root + 24 + [0, 4, 7, 12][(k - 1) / 3]), { dur: PUSH_STEP * 2, type: 'triangle', vol: 0.03, bus: musicBus, out: echo }) // the tube
+  if (k % 3 === 2) blipAt(t, hz(root + 19 - [0, 3, 5, 7][(k - 2) / 3]), { dur: PUSH_STEP * 2, type: 'square', vol: 0.022, bus: musicBus }) // the hole
+}
+export function startPushMusic() {
+  startLoop(schedulePush, PUSH_STEP)
+}
+/** The projector fires: a map pushes a loop forward. */
+export function sfxProject() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(72), { dur: 0.1, type: 'sine', vol: 0.08 })
+  blipAt(t + 0.07, hz(79), { dur: 0.18, type: 'sine', vol: 0.07, out: echo })
+}
+
+// ---------------------------------------------------------------- 1-6 · Free-Word Forge
+
+/* 96 bpm in A minor: two voices in canon (red and violet) that never quite align. */
+const FREEWORD_STEP = 60 / 96 / 4
+const FREEWORD_RED = [
+  [0, 0, 64, 6], [0, 8, 67, 4], [1, 0, 69, 8],
+  [2, 0, 67, 4], [2, 6, 64, 6], [3, 0, 62, 8],
+]
+const FREEWORD_VIO = [
+  [0, 4, 71, 6], [1, 4, 69, 4], [2, 4, 67, 8],
+  [3, 4, 64, 4], [3, 10, 62, 6],
+]
+function scheduleFreeWord(step, t, buf) {
+  const s = step % 64
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  if (k % 4 === 0) blipAt(t, hz(36), { dur: FREEWORD_STEP * 3, type: 'triangle', vol: 0.11, bus: musicBus })
+  if (k % 2 === 1) hatAt(t, buf, 0.018)
+  for (const [b, ls, midi, len] of FREEWORD_RED) if (b === bar && ls === k) blipAt(t, hz(midi), { dur: FREEWORD_STEP * len, type: 'square', vol: 0.045, bus: musicBus, out: echo })
+  for (const [b, ls, midi, len] of FREEWORD_VIO) if (b === bar && ls === k) blipAt(t, hz(midi + 1), { dur: FREEWORD_STEP * len, type: 'triangle', vol: 0.038, bus: musicBus })
+}
+export function startFreeWordMusic() {
+  startLoop(scheduleFreeWord, FREEWORD_STEP)
+}
+/** Adjacent inverses cancel. */
+export function sfxCancel() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(84), { dur: 0.08, type: 'triangle', vol: 0.06 })
+}
+
+// ---------------------------------------------------------------- 1-7 · Glue Works
+
+/* 100 bpm in C minor: the Forge's anvil under the Bastion's march (relations being glued in). */
+const GLUE_STEP = 60 / 100 / 4
+const GLUE_MEL = [60, 63, 67, 63, 62, 65, 68, 65]
+function scheduleGlue(step, t, buf) {
+  const s = step % 64
+  const bar = Math.floor(s / 16)
+  const k = s % 16
+  const root = [36, 32, 34, 36][bar]
+  if (k % 4 === 0) blipAt(t, hz(root), { dur: GLUE_STEP * 3, type: 'triangle', vol: 0.12, bus: musicBus })
+  if (k === 4 || k === 12) anvilAt(t, 0.04)
+  if (k % 4 === 2) hatAt(t, buf, 0.022)
+  if (k === 0) padAt(t, [root + 24, root + 27, root + 31], GLUE_STEP * 16)
+  if (k % 2 === 0) blipAt(t, hz(GLUE_MEL[(k / 2 + bar * 2) % 8] + 12), { dur: GLUE_STEP * 1.6, type: 'square', vol: 0.028, bus: musicBus, out: echo })
+}
+export function startGlueWorksMusic() {
+  startLoop(scheduleGlue, GLUE_STEP)
+}
+
+// ---------------------------------------------------------------- 1-8 · Sheetwater Viaduct
+
+/* 92 bpm: three staggered glass pads (one per sheet) and harp arpeggios. C major. */
+const SHEETWATER_STEP = 60 / 92 / 4
+const SHEETWATER_HARP = [72, 76, 79, 84]
+function scheduleSheetwater(step, t, buf) {
+  const s = step % 64
+  const k = s % 16
+  const bar = Math.floor(s / 16)
+  if (k === 0) blipAt(t, hz(36 + [0, 5, 7, 0][bar]), { dur: SHEETWATER_STEP * 6, type: 'sine', vol: 0.13, bus: musicBus })
+  if (k % 4 === 2) hatAt(t, buf, 0.02)
+  ;[0, 5, 10].forEach((off, i) => {
+    if (k === off) padAt(t, [[60, 64, 67], [64, 67, 71], [67, 71, 74]][i], SHEETWATER_STEP * 10)
+  })
+  if (k % 4 === 0) blipAt(t, hz(SHEETWATER_HARP[(k / 4 + bar) % 4] + (bar === 3 ? 2 : 0)), { dur: SHEETWATER_STEP * 3, type: 'triangle', vol: 0.04, bus: musicBus, out: echo })
+}
+export function startSheetwaterMusic() {
+  startLoop(scheduleSheetwater, SHEETWATER_STEP)
+}
+
+// ---------------------------------------------------------------- 1-9 · Sheet Stacks
+
+/* 72 bpm: a canon in three octaves, one voice per sheet. A minor. */
+const SHEETCANON_STEP = 60 / 72 / 4
+function scheduleSheetCanon(step, t, buf) {
+  const voice = (shift, phase) => {
+    const u = (step + phase) % 64
+    const f = (m) => hz(m + shift)
+    if (u % 16 === 0) blipAt(t, f(45), { dur: SHEETCANON_STEP * 6, type: 'sine', vol: shift === -12 ? 0.1 : 0.05, bus: musicBus })
+    if (u % 16 === 4) padAt(t, [57 + shift, 60 + shift, 64 + shift], SHEETCANON_STEP * 8)
+    if (u % 16 === 12) blipAt(t, f(69), { dur: SHEETCANON_STEP * 3, type: 'triangle', vol: 0.03, bus: musicBus, out: echo })
+  }
+  voice(0, 0)
+  voice(12, 4)
+  voice(-12, 8)
+  if (step % 8 === 2) hatAt(t, buf, 0.018)
+}
+export function startSheetCanonMusic() {
+  startLoop(scheduleSheetCanon, SHEETCANON_STEP)
+}
+/** The Stack sentinel swaps the start vertex. */
+export function sfxStackSwap() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, 520, { dur: 0.12, type: 'square', vol: 0.07, slide: 1.4 })
+}
+
+// ---------------------------------------------------------------- 1-10 · Deck the Halls
+
+/* 96 bpm in A: a rotating round: three voices, each entering a beat later than the last. */
+const DECK_STEP = 60 / 96 / 4
+function scheduleDeckRound(step, t, buf) {
+  const k = step % 48
+  if (k % 12 === 0) blipAt(t, hz(45), { dur: DECK_STEP * 6, type: 'sine', vol: 0.12, bus: musicBus })
+  if (k % 6 === 3) hatAt(t, buf, 0.022)
+  if (k === 0) padAt(t, [57, 61, 64], DECK_STEP * 24)
+  if (k === 24) padAt(t, [59, 62, 66], DECK_STEP * 24)
+  const voice = Math.floor(k / 4) % 3
+  if (k % 4 === voice) blipAt(t, hz(69 + voice * 4 - (k >= 24 ? 2 : 0)), { dur: DECK_STEP * 2, type: 'triangle', vol: 0.034, bus: musicBus, out: echo })
+}
+export function startDeckRoundMusic() {
+  startLoop(scheduleDeckRound, DECK_STEP)
+}
+/** The deck rotates one shift. */
+export function sfxDeckShift() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(64), { dur: 0.08, type: 'sine', vol: 0.09, slide: 1.3 })
+}

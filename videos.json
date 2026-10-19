@@ -7165,6 +7165,1007 @@
         "t": 49,
         "end": 52
       }
+    },
+    {
+      "id": "level-1-8-lesson",
+      "title": "Covers and Lifts",
+      "plays": "Lesson for World 1 · Level 8 (replayable in level)",
+      "world": 1,
+      "level_id": "1-8",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 68,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Two-sheet circle cover; wiring the figure-eight; ab closes but ba does not; Cord and Compass controls demo.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Two floors",
+          "description": "One lap on a opens the lift; two laps close it."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 24,
+          "title": "Local rule",
+          "description": "Ports at the beacon; three connected sheets."
+        },
+        {
+          "id": "C",
+          "start": 24,
+          "end": 38,
+          "title": "Order",
+          "description": "ab closes upstairs; ba does not."
+        },
+        {
+          "id": "D",
+          "start": 38,
+          "end": 52,
+          "title": "Controls",
+          "description": "Gyroid walks loops with the Cord; Compass wires and tests."
+        },
+        {
+          "id": "E",
+          "start": 52,
+          "end": 68,
+          "title": "Summary",
+          "description": "Card: covers separate words."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A cover copies the space upstairs. Each lap downstairs moves your lift along the matching labeled edge."
+        },
+        {
+          "t": 12.4,
+          "end": 16.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "At every junction, exactly one incoming and one outgoing edge per label — click a port to rewire."
+        },
+        {
+          "t": 24.4,
+          "end": 29.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Find a cover where a then b closes and b then a does not. That proves the loops differ in the free group."
+        },
+        {
+          "t": 38.4,
+          "end": 43.2,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Cord to walk the loops. Compass to wire ports and test words at the beacon."
+        },
+        {
+          "t": 52.4,
+          "end": 57.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Covers are the geometric proof — what we suspected in Free Word Play, shown without gluing a torus."
+        }
+      ],
+      "title_card": {
+        "t": 62,
+        "end": 68
+      }
+    },
+    {
+      "id": "level-1-1-lesson",
+      "title": "Fixed Endpoints",
+      "plays": "Replay from Endpoint Gardens · ? How it works",
+      "world": 1,
+      "level_id": "1-1",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 68,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Path homotopy rel endpoints: routes between gatehouses, Tide Glass slide, ledger classes, hedge obstruction.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 18,
+          "title": "Routes",
+          "description": "Gold thread between two gatehouses; endpoints pinned."
+        },
+        {
+          "id": "B",
+          "start": 18,
+          "end": 38,
+          "title": "Homotopy",
+          "description": "Ghost copies slide one route onto another; posts fixed."
+        },
+        {
+          "id": "C",
+          "start": 38,
+          "end": 58,
+          "title": "Controls",
+          "description": "Gyroid with Spool and Tide Glass on the lawn."
+        },
+        {
+          "id": "D",
+          "start": 58,
+          "end": 68,
+          "title": "Summary",
+          "description": "Ledger bins and hedge left/right."
+        }
+      ],
+      "captions": [
+        {
+          "t": 1,
+          "end": 6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Fix two gates $A$ and $B$. A route is a path from $A$ to $B$."
+        },
+        {
+          "t": 18.5,
+          "end": 24,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Two routes are the same delivery if one slides into the other — a path homotopy rel the gates. At every moment the endpoints stay put: $F(a,t)=F(a,0)$ for $a\\in A$."
+        },
+        {
+          "t": 39,
+          "end": 44,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Spool (2) to walk a route. Tide Glass (3) scrubs the slide time $t$."
+        },
+        {
+          "t": 58.5,
+          "end": 64,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Left of the hedge and right of the hedge — different bins. Got it."
+        }
+      ],
+      "title_card": {
+        "t": 64,
+        "end": 68
+      }
+    },
+    {
+      "id": "level-1-2-lesson",
+      "title": "Loops at a Point",
+      "plays": "World 1 · Level 2 lesson",
+      "world": 1,
+      "level_id": "1-2",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 72,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Based loops",
+          "description": "Loop at basepoint x₀."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 28,
+          "title": "Group law",
+          "description": "Concatenate, identity, inverses."
+        },
+        {
+          "id": "C",
+          "start": 28,
+          "end": 44,
+          "title": "Change of base",
+          "description": "h γ h⁻¹."
+        },
+        {
+          "id": "D",
+          "start": 44,
+          "end": 52,
+          "title": "Loop Lash",
+          "description": "Tool intro."
+        },
+        {
+          "id": "E",
+          "start": 52,
+          "end": 66,
+          "title": "Demo",
+          "description": "Gyroid closes a loop on the ring."
+        },
+        {
+          "id": "F",
+          "start": 66,
+          "end": 72,
+          "title": "Summary",
+          "description": "Summary card."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Fix a basepoint. A based loop leaves it and returns — same point the whole time."
+        },
+        {
+          "t": 12.4,
+          "end": 16.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Run one loop, then another: that’s concatenation. The group law."
+        },
+        {
+          "t": 17,
+          "end": 21,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Standing still is the identity. Run a loop backwards — that’s the inverse."
+        },
+        {
+          "t": 28.4,
+          "end": 32.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Walk a path h to a new beacon. Every loop γ becomes h γ h⁻¹ — nothing lost."
+        },
+        {
+          "t": 44.4,
+          "end": 48,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Your Lash closes loops now. Leave the beacon, round a ring, come home."
+        },
+        {
+          "t": 52.4,
+          "end": 56,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Out… round… and home. The ledger got it."
+        },
+        {
+          "t": 66.4,
+          "end": 70,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "That’s π₁ at a point. Now go practice on the Bastion rings."
+        }
+      ],
+      "title_card": {
+        "t": 66,
+        "end": 72
+      }
+    },
+    {
+      "id": "level-1-3-lesson",
+      "title": "The Winding Number",
+      "plays": "Replay from Level 3 · ? How it works",
+      "world": 1,
+      "level_id": "1-3",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 68,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "The helix cover ℝ → S¹: path lifting, homotopy lifting, winding numbers in ℤ, and the in-game Cord and Tide Glass.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Cover",
+          "description": "Helix over the ring; one lap lifts one floor."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 28,
+          "title": "Winding",
+          "description": "Endpoint of the lift is the winding number n."
+        },
+        {
+          "id": "C",
+          "start": 28,
+          "end": 48,
+          "title": "Homotopy",
+          "description": "Deform the loop; the floor stays."
+        },
+        {
+          "id": "D",
+          "start": 48,
+          "end": 58,
+          "title": "Controls",
+          "description": "Gyroid runs the ring with the Winding Cord; Tide Glass slides."
+        },
+        {
+          "id": "E",
+          "start": 58,
+          "end": 68,
+          "title": "Summary",
+          "description": "Summary card and title."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The circle’s universal cover is a helix. Each lap downstairs is one turn upstairs."
+        },
+        {
+          "t": 12.4,
+          "end": 17,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Close a loop downstairs and the lift ends on a floor — that integer is the winding number."
+        },
+        {
+          "t": 28.4,
+          "end": 33,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Slide the loop with a homotopy. Homotopy lifting keeps the same floor."
+        },
+        {
+          "t": 48.4,
+          "end": 52.4,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Cord counts laps. Glass wiggles without changing the count."
+        },
+        {
+          "t": 58.4,
+          "end": 62,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Bank laps at the beacon — they add. Reverse a lap and the count negates."
+        }
+      ],
+      "title_card": {
+        "t": 64,
+        "end": 68
+      }
+    },
+    {
+      "id": "level-1-4-lesson",
+      "title": "No Way Out",
+      "plays": "Lesson · World 1 · Level 4",
+      "world": 1,
+      "level_id": "1-4",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 70,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Rim winding vs disk; no retraction; still points; roots; antipodes.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Rim",
+          "description": "Gyroid walks the rim; cord reads one."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 28,
+          "title": "Shrink",
+          "description": "Inner loop shrinks; Retractor would rewind 0 to 1."
+        },
+        {
+          "id": "C",
+          "start": 28,
+          "end": 44,
+          "title": "Still point",
+          "description": "Arrow field; boundary index 1."
+        },
+        {
+          "id": "D",
+          "start": 44,
+          "end": 56,
+          "title": "Roots",
+          "description": "Winding 3 on the pool rim."
+        },
+        {
+          "id": "E",
+          "start": 56,
+          "end": 64,
+          "title": "Controls",
+          "description": "Cord on loops; click stills and roots."
+        },
+        {
+          "id": "F",
+          "start": 64,
+          "end": 70,
+          "title": "Summary",
+          "description": "Summary card."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The rim loop winds once. Every loop in the filled basin shrinks to a point."
+        },
+        {
+          "t": 12.4,
+          "end": 17,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A retraction would carry that shrink onto the rim — turning winding zero back into one. Impossible."
+        },
+        {
+          "t": 28.4,
+          "end": 33,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Walk the rim of an arrow field. If the arrows spin once around you, a still tile waits inside."
+        },
+        {
+          "t": 44.4,
+          "end": 49,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Winding three on a big circle means three roots inside — like $z^3 - 1$."
+        },
+        {
+          "t": 56.4,
+          "end": 61,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Cord on the loop, click the still tile, lash the drones. Got it."
+        }
+      ],
+      "title_card": {
+        "t": 64,
+        "end": 70
+      }
+    },
+    {
+      "id": "level-1-5-lesson",
+      "title": "Push It Forward",
+      "plays": "Replay from Level 5 · ? How it works",
+      "world": 1,
+      "level_id": "1-5",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 66,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Induced homomorphisms on S¹, retractions and injectivity, π₁(T²) ≅ ℤ², grid lift, and in-game Cord / projector / Sling.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 18,
+          "title": "Induced map",
+          "description": "Projector doubles winding on the target circle."
+        },
+        {
+          "id": "B",
+          "start": 18,
+          "end": 40,
+          "title": "Grid lift",
+          "description": "Two belt roads; endpoint (m,n); commute."
+        },
+        {
+          "id": "C",
+          "start": 40,
+          "end": 58,
+          "title": "Controls",
+          "description": "Gyroid walks the source road with the Cord; clicks projector."
+        },
+        {
+          "id": "D",
+          "start": 58,
+          "end": 66,
+          "title": "Summary",
+          "description": "Summary card."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A map between spaces pushes loops forward. On the circle, winding numbers multiply."
+        },
+        {
+          "t": 18.4,
+          "end": 23.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The torus is two circles. A loop needs two integers — and the two roads commute."
+        },
+        {
+          "t": 40.4,
+          "end": 44.8,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Cord on the road, click the projector — Sling if I need the upper terrace."
+        },
+        {
+          "t": 58.4,
+          "end": 62,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Split a torus loop into its two shadows; rebuild from the factors."
+        }
+      ],
+      "title_card": {
+        "t": 62,
+        "end": 66
+      }
+    },
+    {
+      "id": "level-1-6-lesson",
+      "title": "Free Words",
+      "plays": "Replay in World 1 · Level 6",
+      "world": 1,
+      "level_id": "1-6",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 68,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Laps print letters; adjacent inverses cancel; ab ≠ ba; demo laps and the Clasp.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Free group",
+          "description": "Diagram: reduced words on a bouquet."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 28,
+          "title": "Cancel",
+          "description": "a next to a⁻¹ vanishes; aba⁻¹b⁻¹ does not."
+        },
+        {
+          "id": "C",
+          "start": 28,
+          "end": 44,
+          "title": "Order",
+          "description": "ab vs ba side by side."
+        },
+        {
+          "id": "D",
+          "start": 44,
+          "end": 52,
+          "title": "Patrol",
+          "description": "Ribbon guard and reverse lash order."
+        },
+        {
+          "id": "E",
+          "start": 52,
+          "end": 66,
+          "title": "Demo",
+          "description": "Gyroid walks laps; tape updates; Clasp at hub."
+        },
+        {
+          "id": "F",
+          "start": 66,
+          "end": 68,
+          "title": "Summary",
+          "description": "Summary card."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.6,
+          "end": 4.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "On a bouquet, every loop is a word in $a$ and $b$. Only adjacent inverses cancel."
+        },
+        {
+          "t": 12.4,
+          "end": 16.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Reduce by stripping $aa^{-1}$ pairs. The patrol word $aba^{-1}b^{-1}$ never shrinks."
+        },
+        {
+          "t": 28.4,
+          "end": 32.4,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "$a$ then $b$… and $b$ then $a$. Different tapes."
+        },
+        {
+          "t": 32.6,
+          "end": 36.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "In the free group, $ab \\neq ba$. We'll prove it with covers at the Viaduct."
+        },
+        {
+          "t": 44.4,
+          "end": 48.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Lash the patrol in reverse word order — one strike per letter."
+        },
+        {
+          "t": 52.4,
+          "end": 56.4,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Lap, lap — the tape fills. Clasp at the beacon."
+        },
+        {
+          "t": 64,
+          "end": 67.6,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Got it. Letters, cancel, order."
+        }
+      ],
+      "title_card": {
+        "t": 66,
+        "end": 68
+      }
+    },
+    {
+      "id": "level-1-7-lesson",
+      "title": "Glue and Van Kampen",
+      "plays": "Replay from Glue Job — ? How it works",
+      "world": 1,
+      "level_id": "1-7",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 72,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Relations",
+          "description": "Disk along a; a becomes trivial."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 34,
+          "title": "Torus",
+          "description": "Attach a b a⁻¹ b⁻¹; commutator dies."
+        },
+        {
+          "id": "C",
+          "start": 34,
+          "end": 50,
+          "title": "Half turn",
+          "description": "Attach a a; ℤ₂."
+        },
+        {
+          "id": "D",
+          "start": 50,
+          "end": 66,
+          "title": "Van Kampen",
+          "description": "Two pieces, overlap clasp."
+        },
+        {
+          "id": "E",
+          "start": 66,
+          "end": 72,
+          "title": "Demo",
+          "description": "Gyroid walks a, presses disk."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.6,
+          "end": 5,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Glue a disk along a loop, and that word becomes a relation."
+        },
+        {
+          "t": 12.4,
+          "end": 17,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Along a b a⁻¹ b⁻¹, the bouquet becomes a torus — and a b equals b a."
+        },
+        {
+          "t": 34.4,
+          "end": 39,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Along a a, twice slides away. The group is ℤ₂."
+        },
+        {
+          "t": 50.4,
+          "end": 55,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Two pieces overlap: identify their words on the shared loop — Van Kampen."
+        },
+        {
+          "t": 66.4,
+          "end": 70,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Walk the word, press the furnace. Got it."
+        }
+      ],
+      "title_card": {
+        "t": 68,
+        "end": 72
+      }
+    },
+    {
+      "id": "level-1-9-lesson",
+      "title": "Sheet Music",
+      "plays": "After the 1-9 intro; replayable from “How it works”",
+      "world": 1,
+      "level_id": "1-9",
+      "status": "scripted",
+      "kind": "lesson",
+      "story_start": 0,
+      "story_end": 66,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Connected covers ↔ subgroups; build a two-sheet order; conjugate by moving the start; walk the universal tree and the plane over a torus; then Clasp and Compass controls.",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 14,
+          "title": "To order",
+          "description": "Clasp cycles glues until a² closes, a does not, b closes — two sheets."
+        },
+        {
+          "id": "B",
+          "start": 14,
+          "end": 26,
+          "title": "Conjugate",
+          "description": "Moving the start vertex relabels the order; same cover."
+        },
+        {
+          "id": "C",
+          "start": 26,
+          "end": 40,
+          "title": "Tree",
+          "description": "Reduced words are vertices on the Cayley tree."
+        },
+        {
+          "id": "D",
+          "start": 40,
+          "end": 50,
+          "title": "Plane",
+          "description": "Torus loops lift to (m,n) on ℤ²."
+        },
+        {
+          "id": "E",
+          "start": 50,
+          "end": 58,
+          "title": "Controls",
+          "description": "Gyroid demos Clasp on ports and Compass on branches."
+        },
+        {
+          "id": "F",
+          "start": 58,
+          "end": 66,
+          "title": "Summary",
+          "description": "Summary card: orders, conjugacy, tree, plane."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5.2,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A connected cover is a subgroup: tell the Stacks which loops should close."
+        },
+        {
+          "t": 8.4,
+          "end": 12.8,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Twice $a$ closes, once doesn’t — two sheets."
+        },
+        {
+          "t": 15.2,
+          "end": 20,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Move the start vertex and the order conjugates — same glass, different words."
+        },
+        {
+          "t": 27.4,
+          "end": 32,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The universal cover is a tree: every reduced word is its own vertex."
+        },
+        {
+          "t": 41.2,
+          "end": 46,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Over a torus, the universal cover is a plane. $a$ and $b$ are grid steps."
+        },
+        {
+          "t": 51.2,
+          "end": 55.6,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Clasp (5) glues sheets. Compass (6) reads lifts."
+        },
+        {
+          "t": 59.2,
+          "end": 63.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Build to order, move the start, walk the tree and the grid — that’s sheet music."
+        }
+      ],
+      "title_card": {
+        "t": 63,
+        "end": 66
+      }
+    },
+    {
+      "id": "level-1-10-lesson",
+      "title": "Deck Shifts",
+      "plays": "Replay in World 1 · Level 10",
+      "world": 1,
+      "level_id": "1-10",
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 62,
+      "pace": [
+        [
+          0,
+          null,
+          0.85
+        ]
+      ],
+      "synopsis": "Deck transformations, normal covers, and the antipodal sphere over RP².",
+      "scenes": [
+        {
+          "id": "A",
+          "start": 0,
+          "end": 12,
+          "title": "Rotate",
+          "description": "Three sheets rotate; ports stay matched."
+        },
+        {
+          "id": "B",
+          "start": 12,
+          "end": 28,
+          "title": "Normal",
+          "description": "Transitive vs lopsided fibers."
+        },
+        {
+          "id": "C",
+          "start": 28,
+          "end": 44,
+          "title": "Antipode",
+          "description": "Half-loop lift between opposite doors."
+        },
+        {
+          "id": "D",
+          "start": 44,
+          "end": 58,
+          "title": "Controls",
+          "description": "Compass on the wheel; lash stacked guards."
+        },
+        {
+          "id": "E",
+          "start": 58,
+          "end": 62,
+          "title": "Summary",
+          "description": "Summary card."
+        }
+      ],
+      "captions": [
+        {
+          "t": 0.8,
+          "end": 5,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "A deck transformation rotates every sheet at once — but only if every port label still agrees."
+        },
+        {
+          "t": 12.4,
+          "end": 17,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Normal covers: the deck group can send any sheet to any other over a point."
+        },
+        {
+          "t": 28.4,
+          "end": 33,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Antipodal doors on the sphere: the same room downstairs in the projective plane."
+        },
+        {
+          "t": 44.4,
+          "end": 49,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Six — Compass on the wheel. One — Lash when every guard stacks."
+        },
+        {
+          "t": 58.2,
+          "end": 61,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Shift the deck. Line them up. One strike."
+        }
+      ],
+      "title_card": {
+        "t": 58,
+        "end": 62
+      }
     }
   ]
 }

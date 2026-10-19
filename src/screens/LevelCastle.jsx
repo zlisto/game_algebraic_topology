@@ -43,7 +43,7 @@ function Portrait({ id, name }) {
   )
 }
 
-export default function LevelCastle({ onBackToTitle, onGo, startAt }) {
+export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   const skipTo = Math.max(0, Math.min(3, Number(startAt) || 0)) // dev: trial to start at (3 = the ring)
   const [step, setStep] = useState('intro') // intro | trial | wave | ring | outro
   const [trial, setTrial] = useState(Math.min(2, skipTo))
@@ -393,7 +393,12 @@ export default function LevelCastle({ onBackToTitle, onGo, startAt }) {
             </p>
             <p className="next-up">Next: World 1 — the fundamental group, where loops get counted.</p>
             <div className="btn-row">
-              <button type="button" className="btn primary" onClick={onBackToTitle}>
+              {onNext && (
+                <button type="button" className="btn primary" onClick={onNext}>
+                  Continue ▸ World 1
+                </button>
+              )}
+              <button type="button" className={onNext ? 'btn ghost' : 'btn primary'} onClick={onBackToTitle}>
                 Back to title
               </button>
             </div>

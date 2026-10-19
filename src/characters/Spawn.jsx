@@ -678,3 +678,204 @@ export function ShardSpawn({ e }) {
     </group>
   )
 }
+
+// ---------------------------------------------------------------- World 1 · Bouquet Bastion
+
+/**
+ * Hedge-sprout (1-1): a thorny violet seed that roots into a patch of ground. It swells as
+ * `e.rooting` (0 → 1) climbs; lash it before it takes root. One lash.
+ */
+export function HedgeSpawn({ e }) {
+  const g = useRef()
+  const bud = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.3, 0.4, t, 0.8 + (e.rooting || 0) * 0.7)
+    bud.current.rotation.y = t * 2
+    bud.current.material.emissiveIntensity = 0.8 + (e.rooting || 0) * 1.6
+  })
+  return (
+    <group ref={g}>
+      <mesh ref={bud}>
+        <icosahedronGeometry args={[0.26, 0]} />
+        <meshStandardMaterial color="#17101f" emissive="#8060d0" emissiveIntensity={1} flatShading toneMapped={false} />
+      </mesh>
+      <mesh position={[0, -0.27, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.28, 0.5, 12]} />
+        {glow(VIOLET, { transparent: true, opacity: 0.35 })}
+      </mesh>
+    </group>
+  )
+}
+
+/** Retractor drone (1-4): a chained violet drone that tugs toward the rim. Two lashes. */
+export function RetractorSpawn({ e }) {
+  const g = useRef()
+  const ring = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.7 + Math.sin(t * 3) * 0.06, 0.5, t, 1.1)
+    ring.current.rotation.z = t * 2.4
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <octahedronGeometry args={[0.3, 0]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh ref={ring} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.46, 0.04, 6, 20]} />
+        {glow(VIOLET)}
+      </mesh>
+      <mesh position={[0, -0.34, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 0.5, 5]} />
+        {glow('#ffb347')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Whirl (1-4): a spinning top that scrambles arrow fields. One lash. */
+export function WhirlSpawn({ e }) {
+  const g = useRef()
+  const top = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55, 0.4, t, 1)
+    top.current.rotation.y = t * 9
+  })
+  return (
+    <group ref={g}>
+      <mesh ref={top} rotation={[Math.PI, 0, 0]}>
+        <coneGeometry args={[0.3, 0.6, 6]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 0.34, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.2, 0.34, 16]} />
+        {glow(LAVENDER, { transparent: true, opacity: 0.6 })}
+      </mesh>
+    </group>
+  )
+}
+
+/** Projector imp (1-5): hijacks a map projector until lashed. One lash. */
+export function ProjectorImpSpawn({ e }) {
+  const g = useRef()
+  const cone = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.75 + Math.sin(t * 4) * 0.08, 0.4, t, 1)
+    cone.current.rotation.y = t * 1.2
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <sphereGeometry args={[0.26, 10, 8]} />
+        {obsidian()}
+      </mesh>
+      <mesh ref={cone} position={[0, 0.26, 0]}>
+        <coneGeometry args={[0.12, 0.28, 6]} />
+        <meshStandardMaterial color="#6040a0" emissive="#b090ff" emissiveIntensity={1.4} toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+/**
+ * Ribbon patrol (1-6, 1-7, 1-8): a capsule guard with a torn word-ribbon hung from one
+ * shoulder. It shrinks as it takes hits (`e.hp` / `e.maxHp`: one per letter of its word).
+ */
+export function PatrolSpawn({ e }) {
+  const g = useRef()
+  const knot = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    const frac = e.maxHp ? Math.max(0.4, e.hp / e.maxHp) : 1
+    place(g.current, e, 0.55 + Math.sin(t * 2) * 0.04, 0.5, t, 0.8 + frac * 0.35)
+    knot.current.rotation.x = t * 2
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <capsuleGeometry args={[0.28, 0.6, 6, 12]} />
+        {obsidian()}
+      </mesh>
+      <mesh ref={knot} position={[0.38, 0.3, 0]} rotation={[0, 0, 0.4]}>
+        <torusGeometry args={[0.22, 0.05, 8, 20]} />
+        {glow('#ffb347')}
+      </mesh>
+      <mesh position={[0, 0.12, 0.27]} scale={[1, 0.18, 0.4]}>
+        <sphereGeometry args={[0.3, 8, 6]} />
+        {glow(VIOLET)}
+      </mesh>
+    </group>
+  )
+}
+
+/** Liftling (1-8, 1-9): a violet octahedron bound to one sheet of a cover. Two lashes. */
+export function LiftlingSpawn({ e }) {
+  const g = useRef()
+  const gem = useRef()
+  useFrame(({ clock }, dt) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55 + Math.sin(t * 4) * 0.08, 0.4, t, 1)
+    gem.current.rotation.y += dt * 2.2
+    gem.current.material.emissiveIntensity = e.refused > 0 ? 0.2 : 1.2
+  })
+  return (
+    <group ref={g}>
+      <mesh ref={gem}>
+        <octahedronGeometry args={[0.3, 0]} />
+        <meshStandardMaterial color="#17101f" emissive="#8a5aff" emissiveIntensity={1.2} flatShading toneMapped={false} />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
+        <ringGeometry args={[0.3, 0.42, 4]} />
+        {glow('#a8e0ff', { transparent: true, opacity: 0.5 })}
+      </mesh>
+    </group>
+  )
+}
+
+/** Stack sentinel (1-9): a tall obsidian post with a gold cap that guards the start vertex. Two lashes. */
+export function StackSentinelSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0, 0.5, t, 1)
+    g.current.rotation.y = t * 0.5
+  })
+  return (
+    <group ref={g}>
+      <mesh position={[0, 0.8, 0]}>
+        <cylinderGeometry args={[0.32, 0.42, 1.5, 8]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 1.7, 0]}>
+        <coneGeometry args={[0.25, 0.5, 8]} />
+        <meshStandardMaterial color="#ffb347" emissive="#ffb347" emissiveIntensity={1.2} toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+/** Deck guard (1-10): one copy of a guard per sheet; every copy dies when one is lashed (only once they stack). */
+export function DeckGuardSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.5, 0.5, t, 1)
+    g.current.rotation.y = t * 0.4
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <capsuleGeometry args={[0.22, 0.5, 4, 8]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0, 0.5, 0]}>
+        <octahedronGeometry args={[0.12, 0]} />
+        {glow('#ffb347')}
+      </mesh>
+    </group>
+  )
+}

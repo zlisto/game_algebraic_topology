@@ -47,6 +47,27 @@ export const TERMS = [
   'bouquet',
   'subcomplex',
   'invariant',
+  // World 1 · Bouquet Bastion
+  'path homotopy',
+  'homotopy rel',
+  'delivery class',
+  'concatenation',
+  'basepoint',
+  'associativity',
+  'winding number',
+  'homotopy lifting',
+  'universal cover',
+  'covering space',
+  'deck transformation',
+  'deck group',
+  'normal cover',
+  'antipodal',
+  'antipodes',
+  'still point',
+  'induced homomorphism',
+  'free group',
+  'reduced word',
+  'van Kampen',
 ]
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, (c) => '\\' + c)
