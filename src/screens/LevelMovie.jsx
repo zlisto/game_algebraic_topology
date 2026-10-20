@@ -23,9 +23,14 @@ const PORTRAIT_CROP = {
 const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)))
 
 /** Story clock inside the canvas (frame-driven, so dev frame-stepping works). */
-function MovieClock({ tRef, start, rate, onTick, paused, gate }) {
+function MovieClock({ tRef, start, rate, onTick, paused, gate, jumpRef }) {
   const wall = useRef(0)
   useFrame((_, dt) => {
+    // the player clicked through a finished line: jump the story clock ahead (never back)
+    if (jumpRef.current !== null) {
+      wall.current = Math.max(wall.current, (jumpRef.current - start) / rate)
+      jumpRef.current = null
+    }
     if (!paused) {
       const t0 = start + wall.current * rate
       const next = wall.current + Math.min(dt, 0.1)
@@ -133,15 +138,22 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
   const shown = cap ? cap.text.slice(0, typed) : ''
   const lineDone = !!cap && typed >= cap.text.length
 
-  // click / Space / Enter: finish the line, or (once it's held) move on
+  // click / Space / Enter: finish the line, then move on. Once a line is done there's no waiting
+  // for the scene to catch up — the clock jumps to the line's end; between lines, to the next one.
+  const jumpRef = useRef(null)
   const advance = () => {
-    if (!cap) return
-    if (!lineDone) return setTyped(cap.text.length)
-    if (held.current !== null) {
-      acked.current.add(held.current)
-      held.current = null
-      setIsHeld(false)
+    const now = tRef.current
+    if (!cap) {
+      const next = video.captions.find((c) => c.t > now)
+      if (next && next.t < video.story_end) jumpRef.current = next.t
+      return
     }
+    if (!lineDone) return setTyped(cap.text.length)
+    acked.current.add(cap.t)
+    held.current = null
+    setIsHeld(false)
+    const next = video.captions.find((c) => c.t >= cap.end - 1e-6)
+    jumpRef.current = next && next.t - cap.end < 1.5 ? next.t : cap.end
   }
   const advanceRef = useRef(advance)
   advanceRef.current = advance
@@ -155,7 +167,7 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
   return (
     <div className={`screen intro${embedded ? ' embedded' : ''}`} onPointerDown={(e) => isAdvanceEvent(e) && advance()}>
       <Canvas camera={{ position: [-20, 6, 18], fov: 40, near: 0.1, far: 220 }} dpr={[1, 1.75]}>
-        <MovieClock tRef={tRef} start={start} rate={rate} onTick={onTick} paused={paused} gate={gate} />
+        <MovieClock tRef={tRef} start={start} rate={rate} onTick={onTick} paused={paused} gate={gate} jumpRef={jumpRef} />
         {scene}
       </Canvas>
       <div className="letterbox top" />
@@ -205,7 +217,7 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
                 <MathText text={cap.text} shown={shown} />
               </p>
             </div>
-            {isHeld && lineDone && (
+            {lineDone && (
               <span className="caption-next" aria-label="Click to continue">
                 ▼
               </span>

@@ -17,6 +17,7 @@ import { MovieDeck, MovieTiles } from './TileMovieKit'
  *   C 15–24  the square folds into a torus; Emmy turns one blue arrow; it folds into a Klein bottle
  *   D 24–26  flipper spawn hop onto the deck
  *   E 26–30  title card
+ * (times on the scene's own clock; see WARP for the story times)
  */
 
 const SHOTS = [
@@ -51,7 +52,20 @@ function tiles(t) {
   return { arrows: flipped, kind: t < 20.4 ? null : 'klein', k: smooth(seg(t, 20.6, 23.6)) }
 }
 
-export default function TileYardMovie({ tRef }) {
+// The scene is authored on its original 30 s clock; WARP squeezes out its two quiet stretches
+// (a slow pan before Emmy's second line, and a pause after the glue) so the movie runs 25.8 s.
+const WARP = [[0, 0], [4.8, 4.8], [5.6, 7.2], [10.0, 11.6], [10.8, 15.0], [40, 44.2]]
+function warp(t) {
+  for (let i = 1; i < WARP.length; i++) {
+    const [a, A] = WARP[i - 1]
+    const [b, B] = WARP[i]
+    if (t <= b) return A + ((t - a) * (B - A)) / (b - a)
+  }
+  return t + 4.2
+}
+
+export default function TileYardMovie({ tRef: storyRef }) {
+  const tRef = useMemo(() => ({ get current() { return warp(storyRef.current) } }), [storyRef])
   const frogs = useMemo(() => [0, 1, 2].map((i) => ({ x: 0, z: 0, seed: i * 1.7, alive: true, dying: 0, face: 0, flash: 0 })), [])
   const fG = useRef()
   useFrame(() => {

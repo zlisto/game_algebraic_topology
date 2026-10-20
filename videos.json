@@ -3093,7 +3093,7 @@
       "level_id": "2-1",
       "status": "scripted",
       "story_start": 0,
-      "story_end": 30,
+      "story_end": 25.8,
       "pace": [
         [
           0,
@@ -3105,36 +3105,36 @@
       "scenes": [
         {
           "id": "A",
-          "start": 0,
-          "end": 7,
+          "start": 0.0,
+          "end": 5.53,
           "title": "The yard",
           "description": "Two triangles lie apart on a deck, arrows on their edges."
         },
         {
           "id": "B",
-          "start": 7,
-          "end": 15,
+          "start": 5.53,
+          "end": 10.8,
           "title": "Two make a square",
           "description": "One copy of the diagonal turns round so the arrows agree; the triangles slide together into a square."
         },
         {
           "id": "C",
-          "start": 15,
-          "end": 24,
+          "start": 10.8,
+          "end": 19.8,
           "title": "Fold",
           "description": "The square folds into a torus. One blue arrow turns; it folds into a Klein bottle."
         },
         {
           "id": "D",
-          "start": 24,
-          "end": 26,
+          "start": 19.8,
+          "end": 21.8,
           "title": "Flippers",
           "description": "Violet flipper spawn hop onto the deck."
         },
         {
           "id": "E",
-          "start": 26,
-          "end": 30,
+          "start": 21.8,
+          "end": 25.8,
           "title": "Title",
           "description": "Title card: World 2 · Level 1 · Tile and Error."
         }
@@ -3148,37 +3148,37 @@
           "text": "To count holes of every size, we need places built from pieces we can count."
         },
         {
-          "t": 7.4,
-          "end": 11.4,
+          "t": 5.8,
+          "end": 9.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
           "text": "Triangles, with arrows. Edges glue only when the arrows agree."
         },
         {
-          "t": 15.4,
-          "end": 19.6,
+          "t": 11.2,
+          "end": 15.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
           "text": "Two triangles… and it’s a torus."
         },
         {
-          "t": 19.8,
-          "end": 23.8,
+          "t": 15.6,
+          "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
           "text": "Flip one arrow and it's a Klein bottle. Same pieces, different gluing."
         },
         {
-          "t": 24.2,
-          "end": 25.8,
+          "t": 20.0,
+          "end": 21.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
           "text": "Keep those flippers off my arrows."
         }
       ],
       "title_card": {
-        "t": 26,
-        "end": 30
+        "t": 21.8,
+        "end": 25.8
       }
     },
     {

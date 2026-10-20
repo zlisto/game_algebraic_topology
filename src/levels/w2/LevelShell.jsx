@@ -300,18 +300,21 @@ export default function LevelShell({
     }
     dialogOpen()
     duckMusic(true)
-    let i = 0
-    const tickType = () => {
-      if (i >= line.text.length) return
-      if (shownNow.current >= line.text.length) return
-      i++
-      setShown(i)
-      textBlip(line.speaker)
-      setTimeout(tickType, 1000 / TYPE_CPS)
-    }
+    // A new line starts from nothing. Reset the ref now too: it still holds the last line's
+    // count until the next render, and a stale "already typed" would stop this line at 0 letters.
+    shownNow.current = 0
     setShown(0)
-    tickType()
-    return () => duckMusic(false)
+    let i = 0
+    const id = setInterval(() => {
+      if (i >= line.text.length || shownNow.current >= line.text.length) return clearInterval(id)
+      i++
+      setShown((n) => Math.max(n, i))
+      if (i % 2 === 0) textBlip(line.speaker)
+    }, 1000 / TYPE_CPS)
+    return () => {
+      clearInterval(id)
+      duckMusic(false)
+    }
   }, [line, lineIdx])
 
   const advance = () => {
