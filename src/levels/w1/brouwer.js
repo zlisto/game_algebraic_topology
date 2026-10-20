@@ -100,19 +100,40 @@ export function retractionImpossible(rimWinding, innerWinding) {
 /** Arrow field: angle (radians) at local (x,z). `kind: 'swirl' | 'poly'`. */
 export function fieldAngle(kind, x, z, params) {
   if (kind === 'swirl') {
+    // the arrow from a tile x to where the basin's current carries it, h(x) = f + 0.8·R(x − f):
+    // h(x) − x = (0.8·e^{iθ} − 1)(x − f), a fixed turn of the direction from the focus f
     const [fx, fz] = params.focus
-    const dx = fx - x
-    const dz = fz - z
-    return Math.atan2(dz, dx) + Math.PI / 2
+    return Math.atan2(z - fz, x - fx) + (params.turn ?? 2.29)
   }
   if (kind === 'poly') {
-    const { degree, scale = 1 } = params
-    const zc = [x * scale, z * scale]
-    const r2 = zc[0] ** 2 + zc[1] ** 2
-    if (r2 < 1e-8) return 0
-    return degree * Math.atan2(zc[1], zc[0])
+    // p(w) = wⁿ − aⁿ with w = scale·(x + i z): zeros at the n roots a·e^{2πik/n}
+    const { degree, scale = 1, rootRadius = 0 } = params
+    const wr = x * scale
+    const wi = z * scale
+    const r = Math.hypot(wr, wi)
+    const th = Math.atan2(wi, wr)
+    const a = rootRadius * scale
+    const pr = r ** degree * Math.cos(degree * th) - a ** degree
+    const pi = r ** degree * Math.sin(degree * th)
+    if (Math.hypot(pr, pi) < 1e-9) return 0
+    return Math.atan2(pi, pr)
   }
+  if (kind === 'radial') return Math.atan2(z, x) // the rim loop itself: the identity map S¹ → S¹
   return 0
+}
+
+/** How long the field's arrow is at a tile (0 at a zero), relative: for dimming still tiles. */
+export function fieldStrength(kind, x, z, params) {
+  if (kind === 'swirl') return Math.min(1, Math.hypot(x - params.focus[0], z - params.focus[1]) / 0.9)
+  if (kind === 'poly') {
+    const { degree, scale = 1, rootRadius = 0 } = params
+    const r = Math.hypot(x, z) * scale
+    const th = Math.atan2(z, x)
+    const a = rootRadius * scale
+    const m = Math.hypot(r ** degree * Math.cos(degree * th) - a ** degree, r ** degree * Math.sin(degree * th))
+    return Math.min(1, m / (0.6 * a ** degree || 1))
+  }
+  return 1
 }
 
 /** Winding index of $z^{\text{degree}}$ on a closed boundary (argument principle). */
@@ -178,11 +199,9 @@ export function antipode(x, z, r) {
   return [(-x / d) * r * u, (-z / d) * r * u]
 }
 
-/** Two stations match if their reading pairs are equal (order-insensitive). */
+/** Two stations match if their readings are equal, in order: f(x) = f(−x) in ℝ². */
 export function readingsMatch(a, b) {
-  const sa = [...a].sort().join(',')
-  const sb = [...b].sort().join(',')
-  return sa === sb
+  return a.length === b.length && a.every((v, i) => v === b[i])
 }
 
 /** Borsuk–Ulam check: some antipodal pair on `stations` has equal readings. */

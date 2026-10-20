@@ -47,7 +47,7 @@ const PORTRAIT_CROP = {
   commutator: ['500%', '53%', '19%'],
 }
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
-const TOOL_KEYS = { Digit1: 'lash', Digit5: 'clasp', KeyQ: 'cycle' }
+const TOOL_KEYS = { Digit1: 'lash' }
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id] || PORTRAIT_CROP.gyroid
@@ -165,7 +165,7 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
         setWaveSpawned(true)
       }
       if (g.type === 'reduce') setTape(parseTokens(g.from))
-      say(ls)
+      say(g.start ? [...ls, ...g.start] : ls)
     },
     [goalIdx, say],
   )
@@ -370,7 +370,8 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
         e.patrolU = (e.patrolU ?? 0) + dt / 4.2
         if (e.patrolU >= 1) {
           e.patrolU = 0
-          e.patrolIdx = (e.patrolIdx + 1) % letters.length
+          // once lashed, it marches its word backwards (running its inverse), so the next letter to strike comes straight up
+          e.patrolIdx = (e.patrolIdx + (e.lashStep ? -1 : 1) + letters.length) % letters.length
         }
         const L = letters[e.patrolIdx]
         const tr = TRACKS[e.site]?.[L.e]
@@ -447,10 +448,7 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
   useEffect(() => {
     const onKey = (e) => {
       if (e.code === 'KeyE' && nearEmmy && phase === 'play') talkToEmmy()
-      if (TOOL_KEYS[e.code]) {
-        if (e.code === 'KeyQ') setTool((t) => (t === 'lash' ? 'clasp' : 'lash'))
-        else setTool(TOOL_KEYS[e.code])
-      }
+      if (TOOL_KEYS[e.code]) setTool(TOOL_KEYS[e.code])
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -518,9 +516,9 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
 
   const stepText = (() => {
     if (!goal) return ''
-    if (goal.type === 'lap') return `Run a full lap on loop ${goal.track ? 'b (violet)' : 'a (red)'} ${goal.dir < 0 ? 'backward' : 'forward'} from the beacon`
-    if (goal.type === 'tape') return `Reduced tape should read: ${goal.tokens.replace(/-/g, '⁻¹ ')}`
-    if (goal.type === 'reduce') return `Cancel ${goal.from} down to ${goal.to || 'empty'}`
+    if (goal.type === 'lap') return `Run the ${goal.track ? 'blue petal $b$' : 'orange petal $a$'} ${goal.dir < 0 ? 'against' : 'along'} its arrows, beacon to beacon`
+    if (goal.type === 'tape') return `Spell $${goal.tokens.replace(/-/g, '⁻¹')}$ on the tape`
+    if (goal.type === 'reduce') return 'Cancel the tape down to nothing'
     if (goal.type === 'ask') return 'Answer Emmy'
     if (goal.type === 'clasp') return 'Van Kampen Clasp (5): click the beacon'
     if (goal.type === 'patrol') return `Lash patrol in reverse order (${patrolStep}/4)`
@@ -569,7 +567,7 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
               Tape: <b className="rule-math">{wordText(tape)}</b>
               {tape.length ? ` (${tape.length} letters, ${reduceFree(tape).length} reduced)` : ''}
             </p>
-            <p className="forgery-count">{stepText}</p>
+            <p className="forgery-count"><MathText text={stepText} /></p>
           </div>
         )}
 
@@ -593,19 +591,19 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
             <Portrait id="emmy-boundary" name="Emmy Boundary" />
             <div className="dialog-body">
               <span className="speaker">Emmy Boundary</span>
-              <p>{goal.question}</p>
+              <p><MathText text={goal.question} /></p>
             </div>
             <div className="btn-row">
               {goal.options.map((v) => (
                 <button key={v} type="button" className="btn small" onClick={() => answer(v)}>
-                  {v}
+                  <MathText text={v} />
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && <div className="toast"><MathText text={toast} /></div>}
         {canTalk && (
           <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
             💬 Talk to Emmy <kbd>E</kbd>
@@ -619,13 +617,10 @@ export default function Level1_6({ concept, onBackToTitle, onNext, startAt }) {
               <button type="button" className={`weapon ${tool === 'lash' ? 'active' : ''}`} onClick={() => setTool('lash')}>
                 ⚡ {WORLD_TOOLS.lash.label} <kbd>{WORLD_TOOLS.lash.key}</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'clasp' ? 'active' : ''}`} onClick={() => setTool('clasp')}>
-                ⧉ {WORLD_TOOLS.clasp.label} <kbd>{WORLD_TOOLS.clasp.key}</kbd>
-              </button>
             </div>
           </div>
         )}
-        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD · 1 Lash · 5 Van Kampen Clasp · Q cycle · lost? talk to Emmy (E)'}</div>}
+        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD · 1 Lash · lost? talk to Emmy (E)'}</div>}
       </div>
 
       {lesson && (

@@ -1,0 +1,237 @@
+{
+  "note": "World 2 · Level 2-9 Mod Squad — Mod Mill",
+  "bounds": {
+    "minX": -22,
+    "maxX": 22,
+    "minZ": -22,
+    "maxZ": 18
+  },
+  "causewayWidth": 1.5,
+  "start": [
+    0,
+    14
+  ],
+  "sites": [
+    {
+      "id": "landing",
+      "name": "Landing",
+      "kind": "start",
+      "pos": [
+        0,
+        14
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "id": "even",
+      "name": "Even or Odd",
+      "stage": "station",
+      "pos": [
+        -10,
+        4
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        -0.6,
+        4.7
+      ],
+      "enemies": [
+        [
+          "flipper",
+          -2.5,
+          -2.8
+        ]
+      ]
+    },
+    {
+      "id": "rp2",
+      "name": "The Projective Plane",
+      "stage": "station",
+      "pos": [
+        10,
+        4
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        -0.6,
+        4.7
+      ],
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          -2.5
+        ]
+      ]
+    },
+    {
+      "id": "frogs",
+      "name": "Flippers Lose",
+      "stage": "station",
+      "pos": [
+        -10,
+        -10
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        -0.6,
+        4.7
+      ],
+      "enemies": [
+        [
+          "flipper",
+          2.2,
+          -2
+        ],
+        [
+          "sphere",
+          -2.5,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "sort",
+      "name": "Sort the Surfaces",
+      "stage": "station",
+      "pos": [
+        10,
+        -10
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        -0.6,
+        4.7
+      ],
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          -2.5
+        ]
+      ]
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0,
+        12.4
+      ],
+      "b": [
+        -6.4,
+        6.6
+      ]
+    },
+    {
+      "a": [
+        0,
+        12.4
+      ],
+      "b": [
+        6.4,
+        6.6
+      ]
+    },
+    {
+      "a": [
+        -5.6,
+        1.6
+      ],
+      "b": [
+        5.6,
+        1.6
+      ]
+    },
+    {
+      "a": [
+        -10,
+        -0.8
+      ],
+      "b": [
+        -10,
+        -5.2
+      ]
+    },
+    {
+      "a": [
+        10,
+        -0.8
+      ],
+      "b": [
+        10,
+        -5.2
+      ]
+    },
+    {
+      "a": [
+        -5.6,
+        -12
+      ],
+      "b": [
+        5.6,
+        -12
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      0,
+      -16.5
+    ],
+    "a": [
+      0,
+      -12
+    ],
+    "b": [
+      0,
+      -18.6
+    ],
+    "to": "next"
+  }
+}

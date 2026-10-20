@@ -1,4 +1,5 @@
 import { Html } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
@@ -9,14 +10,15 @@ import { Clouds, Gear } from '../../world/Dressing'
 import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
 import ReefGame from '../w0/ReefGame'
 import { EmmyBubble } from '../w0/FoundryScene'
-import { fieldAngle, unitRoots } from './brouwer'
+import { fieldAngle, fieldStrength, unitRoots } from './brouwer'
+import { LiveLine } from '../w0/FlatsScenery'
 
 const S = 0.7
 const GOLD = '#ffb347'
 const STONE = '#4a4a52'
 const VIOLET = '#8060d0'
 
-function BasinSky() {
+export function BasinSky() {
   return (
     <>
       <color attach="background" args={['#120818']} />
@@ -38,8 +40,8 @@ function Deck({ site, current }) {
   const pulse = current ? 0.35 + Math.sin(performance.now() * 0.003) * 0.15 : 0.12
   return (
     <group position={[site.pos[0], 0, site.pos[1]]}>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <circleGeometry args={[r, 48]} />
+      <mesh position={[0, -0.28, 0]}>
+        <cylinderGeometry args={[r, r * 0.94, 0.6, 56]} />
         <meshStandardMaterial color={STONE} roughness={0.88} metalness={0.08} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
@@ -50,28 +52,89 @@ function Deck({ site, current }) {
   )
 }
 
-function RimRoad({ cx, cz, r }) {
-  const pts = useMemo(() => {
-    const out = []
-    for (let i = 0; i <= 64; i++) {
-      const a = (i / 64) * Math.PI * 2
-      out.push(cx + r * Math.cos(a), 0.12, cz + r * Math.sin(a))
-    }
-    return new Float32Array(out)
-  }, [cx, cz, r])
+export function RimRoad({ cx, cz, r, current }) {
   return (
-    <line>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={pts.length / 3} array={pts} itemSize={3} />
-      </bufferGeometry>
-      <lineBasicMaterial color="#ffcf6a" linewidth={1} />
-    </line>
+    <group position={[cx, 0, cz]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+        <ringGeometry args={[r - 0.55, r + 0.55, 72]} />
+        <meshStandardMaterial color="#3a3346" roughness={0.8} />
+      </mesh>
+      {[r - 0.55, r + 0.55].map((rr, i) => (
+        <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.06, 0]}>
+          <ringGeometry args={[rr - 0.04, rr + 0.04, 72]} />
+          <meshBasicMaterial color="#ffcf6a" transparent opacity={current ? 0.85 : 0.4} toneMapped={false} />
+        </mesh>
+      ))}
+    </group>
   )
 }
 
-function RetractorEngine({ cx, cz, seized }) {
+/**
+ * The arrow under Gyroid's feet on a field deck: the field's direction where he stands.
+ * Walking the rim, this is the loop the boundary index counts.
+ */
+function FieldCompass({ stateRef, site }) {
+  const g = useRef()
+  const arrow = useRef()
+  useFrame(() => {
+    const st = stateRef.current
+    const on = st && site && Math.hypot(st.x - site.pos[0], st.z - site.pos[1]) < site.def.add[0].r
+    g.current.visible = !!on
+    if (!on) return
+    const lx = st.x - site.pos[0]
+    const lz = st.z - site.pos[1]
+    const f = site.field || { kind: 'radial' }
+    const ang = fieldAngle(f.kind, lx, lz, f)
+    const m = fieldStrength(f.kind, lx, lz, f)
+    g.current.position.set(st.x, 1.75, st.z)
+    arrow.current.rotation.set(0, -ang, 0)
+    arrow.current.scale.setScalar(0.35 + 0.65 * m)
+  })
   return (
-    <group position={[cx, 0, cz]}>
+    <group ref={g}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.5, 0.56, 32]} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.6} toneMapped={false} />
+      </mesh>
+      <group ref={arrow}>
+        <mesh position={[0.2, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+          <cylinderGeometry args={[0.04, 0.04, 0.4, 6]} />
+          <meshBasicMaterial color="#ff8ad8" toneMapped={false} />
+        </mesh>
+        <mesh position={[0.46, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+          <coneGeometry args={[0.1, 0.18, 8]} />
+          <meshBasicMaterial color="#ff8ad8" toneMapped={false} />
+        </mesh>
+      </group>
+    </group>
+  )
+}
+
+/**
+ * The Retractor's proof, on its deck: the Tide Glass shrinks the rim loop to the centre (that
+ * shrink is fine in the disk). The engine would have to push each shrinking loop back out to
+ * the rim — every one of those images goes once round (pink). At the centre it has nowhere to
+ * send the point: it tears.
+ */
+export function ShrinkProof({ cx, cz, r, t }) {
+  const loop = () => (t == null ? null : Array.from({ length: 73 }, (_, i) => [cx + (1 - t) * r * Math.cos((i / 72) * Math.PI * 2), cz + (1 - t) * r * Math.sin((i / 72) * Math.PI * 2), 0.18]))
+  const image = () => (t == null || t > 0.97 ? null : Array.from({ length: 73 }, (_, i) => [cx + (r + 0.75) * Math.cos((i / 72) * Math.PI * 2), cz + (r + 0.75) * Math.sin((i / 72) * Math.PI * 2), 0.2]))
+  return (
+    <>
+      <LiveLine getPts={loop} color="#ffffff" width={5} />
+      <LiveLine getPts={image} color="#ff8ad8" width={4} dashed />
+    </>
+  )
+}
+
+export function RetractorEngine({ cx, cz, seized, strain = 0 }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const k = seized ? 0 : strain
+    g.current.position.x = cx + Math.sin(clock.elapsedTime * 60) * 0.06 * k
+  })
+  return (
+    <group ref={g} position={[cx, 0, cz]} scale={0.55}>
       <mesh position={[0, 1.2, 0]}>
         <boxGeometry args={[2.8, 2.4, 2.2]} />
         <meshStandardMaterial color="#1a1028" emissive={VIOLET} emissiveIntensity={seized ? 0.2 : 1.2} roughness={0.5} metalness={0.4} />
@@ -90,8 +153,8 @@ function RetractorEngine({ cx, cz, seized }) {
   )
 }
 
-function ArrowTile({ x, z, angle, dim = false, highlight = false }) {
-  const len = dim ? 0.15 : 0.42
+export function ArrowTile({ x, z, angle, dim = false, highlight = false, strength = 1 }) {
+  const len = dim ? 0.15 : 0.12 + 0.3 * strength
   const fx = Math.cos(angle) * len
   const fz = Math.sin(angle) * len
   return (
@@ -102,14 +165,16 @@ function ArrowTile({ x, z, angle, dim = false, highlight = false }) {
       </mesh>
       {!dim && (
         <>
-          <mesh position={[fx * 0.5, 0.02, fz * 0.5]} rotation={[0, -angle, 0]}>
-            <boxGeometry args={[len, 0.04, 0.06]} />
-            <meshStandardMaterial color={GOLD} emissive={GOLD} emissiveIntensity={1.6} toneMapped={false} />
-          </mesh>
-          <mesh position={[fx, 0.03, fz]} rotation={[0, -angle, 0]}>
-            <coneGeometry args={[0.08, 0.14, 6]} />
-            <meshStandardMaterial color="#ffe6a8" emissive={GOLD} emissiveIntensity={2} toneMapped={false} />
-          </mesh>
+          <group position={[-fx * 0.5, 0.03, -fz * 0.5]} rotation={[0, -angle, 0]}>
+            <mesh position={[len * 0.5, 0, 0]}>
+              <boxGeometry args={[len, 0.04, 0.07]} />
+              <meshStandardMaterial color={GOLD} emissive={GOLD} emissiveIntensity={1.6} toneMapped={false} />
+            </mesh>
+            <mesh position={[len + 0.08, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+              <coneGeometry args={[0.13, 0.22, 6]} />
+              <meshStandardMaterial color="#ffe6a8" emissive={GOLD} emissiveIntensity={2} toneMapped={false} />
+            </mesh>
+          </group>
         </>
       )}
     </group>
@@ -126,6 +191,7 @@ function FieldGrid({ site, field, foundRoots = [], stillFound = false }) {
     for (let z = -r; z <= r; z += step) {
       if (x * x + z * z > r * r) continue
       const ang = fieldAngle(field.kind, x, z, field)
+      const strength = fieldStrength(field.kind, x, z, field)
       const nearStill = field.still && Math.hypot(x - field.still[0], z - field.still[1]) < step * 0.55
       const rootIdx = roots.findIndex((rt) => Math.hypot(x - rt.x, z - rt.z) < 0.55)
       const found = rootIdx >= 0 && foundRoots.includes(rootIdx)
@@ -135,6 +201,7 @@ function FieldGrid({ site, field, foundRoots = [], stillFound = false }) {
           x={x}
           z={z}
           angle={ang}
+          strength={strength}
           dim={nearStill && stillFound}
           highlight={found || (nearStill && stillFound)}
         />,
@@ -144,31 +211,38 @@ function FieldGrid({ site, field, foundRoots = [], stillFound = false }) {
   return <group position={[site.pos[0], 0, site.pos[1]]}>{tiles}</group>
 }
 
-function SphereCap({ site, pickA, pickB }) {
-  const R = site.sphereRadius || 3.4
+/**
+ * The Antipodes: a globe resting in the deck, its weather stations round the equator — so a
+ * station's opposite (straight through the centre) really is its antipode on the sphere.
+ */
+export const SPHERE_Y = 1.0
+export function SphereCap({ site, pickA, pickB }) {
+  const ringR = Math.hypot(site.stations?.[0]?.x || 0, site.stations?.[0]?.z || 0) || 2.8
   return (
     <group position={[site.pos[0], 0, site.pos[1]]}>
-      <mesh position={[0, R * 0.35, 0]}>
-        <sphereGeometry args={[R, 32, 20, 0, Math.PI * 2, 0, Math.PI / 2.1]} />
-        <meshStandardMaterial color="#2a2838" roughness={0.75} metalness={0.15} side={THREE.DoubleSide} />
+      <mesh position={[0, SPHERE_Y, 0]}>
+        <sphereGeometry args={[ringR, 40, 28]} />
+        <meshStandardMaterial color="#2c3a5a" roughness={0.6} metalness={0.1} emissive="#1a2440" emissiveIntensity={0.4} />
       </mesh>
-      {site.stations?.map((st) => (
-        <group key={st.id} position={[st.x, R * 0.35 + Math.sqrt(Math.max(0, R * R - st.x * st.x - st.z * st.z)) * 0.15, st.z]}>
-          <mesh>
-            <cylinderGeometry args={[0.35, 0.35, 0.12, 12]} />
-            <meshStandardMaterial
-              color={pickA === st.id || pickB === st.id ? GOLD : '#5a5870'}
-              emissive={pickA === st.id || pickB === st.id ? GOLD : VIOLET}
-              emissiveIntensity={pickA === st.id || pickB === st.id ? 1.8 : 0.5}
-            />
-          </mesh>
-          <Html center distanceFactor={14} style={{ pointerEvents: 'none', userSelect: 'none' }}>
-            <div className="w1-14-station-label">
-              {st.readings.join(' · ')}
-            </div>
-          </Html>
-        </group>
-      ))}
+      <mesh position={[0, SPHERE_Y, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[ringR, 0.035, 8, 72]} />
+        <meshBasicMaterial color="#ffcf6a" toneMapped={false} />
+      </mesh>
+      {site.stations?.map((st) => {
+        const on = pickA === st.id || pickB === st.id
+        const d = Math.hypot(st.x, st.z) || 1
+        return (
+          <group key={st.id} position={[st.x, SPHERE_Y, st.z]}>
+            <mesh rotation={[0, Math.atan2(st.x, st.z), 0]}>
+              <cylinderGeometry args={[0.24, 0.24, 0.5, 14]} />
+              <meshStandardMaterial color={on ? GOLD : '#5a5870'} emissive={on ? GOLD : VIOLET} emissiveIntensity={on ? 1.8 : 0.7} toneMapped={false} />
+            </mesh>
+            <Html position={[(st.x / d) * 0.55, 0.55, (st.z / d) * 0.55]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none', userSelect: 'none' }}>
+              <div className={`w1-14-station-label floor-tag ${on ? 'free' : ''}`}>({st.readings.join(', ')})</div>
+            </Html>
+          </group>
+        )
+      })}
     </group>
   )
 }
@@ -206,6 +280,7 @@ export default function BasinScene({
   onTrackMove,
   onEnemies,
   onHearts,
+  shrinkT,
 }) {
   const emmyScript = useMemo(
     () => () => {
@@ -229,9 +304,12 @@ export default function BasinScene({
       {stations.map((s) => (
         <group key={s.id}>
           <Deck site={s} current={s.id === current} />
-          {s.rimRadius && <RimRoad cx={s.pos[0]} cz={s.pos[1]} r={s.rimRadius} />}
+          {s.rimRadius && <RimRoad cx={s.pos[0]} cz={s.pos[1]} r={s.rimRadius} current={s.id === current} />}
           {s.id === 'retractor' && (
-            <RetractorEngine cx={s.pos[0]} cz={s.pos[1]} seized={basinState.retractorSeized} />
+            <>
+              <RetractorEngine cx={s.pos[0]} cz={s.pos[1]} seized={basinState.retractorSeized} strain={shrinkT ?? 0} />
+              <ShrinkProof cx={s.pos[0]} cz={s.pos[1]} r={s.rimRadius} t={s.id === current ? shrinkT : null} />
+            </>
           )}
           {s.field && (
             <FieldGrid
@@ -247,6 +325,8 @@ export default function BasinScene({
         </group>
       ))}
       <ExitGate open={exitOpen} gate={layout.exit.gate} />
+      {exitOpen && <CausewaySlab a={layout.exit.a} b={layout.exit.b} width={layout.causewayWidth} />}
+      {current && sites.find((x) => x.id === current)?.rimRadius && <FieldCompass stateRef={stateRef} site={sites.find((x) => x.id === current)} />}
       <group scale={S}>
         <Emmy script={emmyScript} />
       </group>

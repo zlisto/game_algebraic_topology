@@ -8,7 +8,7 @@ import layout from '../../world/torus-terraces.json'
 import { buildSites, makeSiteWalkable } from '../../world/sites'
 import { DEFINITION, HINTS, OPENING, STATIONS, STATION_ORDER, emmyAdvice15 } from '../../levels/w1/stages1_5'
 import { eqPair, pushWinding, stillDistinct } from '../../levels/w1/inducedMaps'
-import { makeCircleTracker, makeTorusTracker } from '../../levels/w1/loopTrack'
+import { makeCircleTracker } from '../../levels/w1/loopTrack'
 import {
   dialogOpen,
   duckMusic,
@@ -59,7 +59,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
 
   const [done, setDone] = useState(() => Object.fromEntries(STATION_ORDER.slice(0, skipTo).map((id) => [id, true])))
   const [goalIdx, setGoalIdx] = useState({})
-  const [loops, setLoops] = useState({ source: 0, target: 0, pair: [0, 0], tube: 0, hole: 0, shadow: [0, 0], rim: 0, markers: { 1: false, 2: false } })
+  const [loops, setLoops] = useState({ source: 0, target: 0, pair: [0, 0], tube: 0, hole: 0, shadow: [0, 0], rim: 0, inner: 0 })
   const [hijacked, setHijacked] = useState({ projector_deck: false })
   const [swapDone, setSwapDone] = useState(false)
   const [gridReset, setGridReset] = useState(0)
@@ -74,6 +74,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
   const [knockouts, setKnockouts] = useState(0)
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1, SITE[STATION_ORDER[skipTo]].pos[1] + 2.8] : layout.start))
   const [enemies, setEnemies] = useState({})
+  const jammed = (enemies.projector_deck || 0) > 0 // spawn on the Projector terrace jam the projector
   const [tool, setTool] = useState('cord')
   const [waveOn, setWaveOn] = useState(false)
   const [waveSpawned, setWaveSpawned] = useState(false)
@@ -96,7 +97,11 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
   const emmyTalking = useRef(false)
   const [nearEmmy, setNearEmmy] = useState(false)
   const trackers = useRef({})
-  const pathOrder = useRef([])
+  // Two Roads: Gyroid's lift to the plane — which copy of the plaza (m, n) and where in it (u, v)
+  const liftRef = useRef({ m: 0, n: 0, u: 0, v: 0 })
+  const plazaPrev = useRef(null)
+  const crossings = useRef([])
+  const firstOrder = useRef(null)
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -245,10 +250,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
       trackers.current[`${st}:tgt`] = makeCircleTracker(p.target.cx + s.pos[0], p.target.cz + s.pos[1], p.target.r)
     }
     if (s.ring) trackers.current[`${st}:rim`] = makeCircleTracker(s.pos[0], s.pos[1], s.ring.r)
-    if (s.tube) trackers.current[`${st}:torus`] = makeTorusTracker(
-      { cx: s.pos[0], cz: s.pos[1], r: s.tube.r },
-      { cx: s.pos[0], cz: s.pos[1], r: s.hole.r },
-    )
+    if (s.inner) trackers.current[`${st}:inner`] = makeCircleTracker(s.pos[0], s.pos[1], s.inner.r)
     if (st === 'shadows_deck') {
       trackers.current[`${st}:tube`] = makeCircleTracker(s.pos[0] + s.tube.cx, s.pos[1] + s.tube.cz, s.tube.r)
       trackers.current[`${st}:hole`] = makeCircleTracker(s.pos[0] + s.hole.cx, s.pos[1] + s.hole.cz, s.hole.r)
@@ -269,25 +271,10 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
       if (tgt?.on) setLoops((m) => ({ ...m, target: tgt.laps }))
     }
     if (st === 'retract_deck') {
+      const inner = trackers.current['retract_deck:inner']?.tick(x, z)
+      if (inner?.on) setLoops((m) => (m.inner === inner.laps ? m : { ...m, inner: inner.laps }))
       const rim = trackers.current['retract_deck:rim']?.tick(x, z)
-      if (rim?.on) {
-        setLoops((m) => ({ ...m, rim: rim.laps }))
-        const s = SITE.retract_deck
-        s.markers.forEach((mk) => {
-          const wx = s.pos[0] + mk.at[0]
-          const wz = s.pos[1] + mk.at[1]
-          if (Math.hypot(x - wx, z - wz) < 1.1) {
-            setLoops((m) => ({ ...m, markers: { ...m.markers, [mk.w]: true } }))
-          }
-        })
-      }
-    }
-    if (st === 'two_roads') {
-      const t = trackers.current['two_roads:torus']?.tick(x, z)
-      if (t?.on) {
-        setLoops((m) => ({ ...m, pair: t.pair }))
-        if (t.road && pathOrder.current[pathOrder.current.length - 1] !== t.road) pathOrder.current.push(t.road)
-      }
+      if (rim?.on) setLoops((m) => (m.rim === rim.laps ? m : { ...m, rim: rim.laps }))
     }
     if (st === 'shadows_deck') {
       const tube = trackers.current['shadows_deck:tube']?.tick(x, z)
@@ -300,18 +287,67 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
 
   const checkGoals = () => {
     if (!goal || here.site !== current || phase !== 'play') return
-    if (goal.type === 'grid' && eqPair(loops.pair, goal.need)) {
-      sfxCorrect()
-      advanceGoal(current, goal.done)
-    }
-    if (goal.type === 'swap' && eqPair(loops.pair, goal.need) && pathOrder.current.includes('tube') && pathOrder.current.includes('hole')) {
-      const first = pathOrder.current.indexOf('tube') < pathOrder.current.indexOf('hole') ? 'tube' : 'hole'
-      if (swapDone || first === 'hole') {
+    if ((goal.type === 'grid' || goal.type === 'swap') && eqPair(loops.pair, goal.need)) {
+      const order = crossings.current.slice(0, 2).join('')
+      if (goal.type === 'grid') {
+        firstOrder.current = crossings.current[0]
         sfxCorrect()
         advanceGoal(current, goal.done)
-      } else setSwapDone(true)
+      } else if (crossings.current[0] && crossings.current[0] !== firstOrder.current) {
+        sfxCorrect()
+        advanceGoal(current, goal.done)
+      } else if (!swapDone) {
+        setSwapDone(true)
+        sfxRefuse()
+        flash(`Same order as last time (${order === 'ab' ? '$a$ then $b$' : '$b$ then $a$'}). Press “Back to the start” and go through the other gate first.`, 4600)
+      }
     }
   }
+
+  /** Two Roads: the plaza's opposite gates are glued. Leave by one and you come back in by its twin. */
+  const resetPlaza = () => {
+    const site = SITE.two_roads
+    const s = stateRef.current
+    liftRef.current = { m: 0, n: 0, u: 0, v: 0 }
+    crossings.current = []
+    plazaPrev.current = null
+    setSwapDone(false)
+    setLoops((m) => ({ ...m, pair: [0, 0] }))
+    if (s) (s.x = site.pos[0]), (s.z = site.pos[1] + 0.6)
+  }
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (current !== 'two_roads') return
+      const s = stateRef.current
+      if (!s) return
+      const site = SITE.two_roads
+      const { half: h, gate: g } = site.plaza
+      let lx = s.x - site.pos[0]
+      let lz = s.z - site.pos[1]
+      const L = liftRef.current
+      const was = plazaPrev.current
+      let crossed = null
+      if (was) {
+        if (lx > h && Math.abs(lz) < g) (s.x -= 2 * h - 0.35), (L.m += 1), (crossed = ['a', 1])
+        else if (lx < -h && Math.abs(lz) < g) (s.x += 2 * h - 0.35), (L.m -= 1), (crossed = ['a', -1])
+        else if (lz < -h && Math.abs(lx) < g) (s.z += 2 * h - 0.35), (L.n += 1), (crossed = ['b', 1])
+        else if (lz > h && Math.abs(lx) < g) (s.z -= 2 * h - 0.35), (L.n -= 1), (crossed = ['b', -1])
+      }
+      lx = s.x - site.pos[0]
+      lz = s.z - site.pos[1]
+      const inside = Math.abs(lx) <= h && Math.abs(lz) <= h
+      plazaPrev.current = inside
+      L.u = Math.max(-0.5, Math.min(0.5, lx / (2 * h)))
+      L.v = Math.max(-0.5, Math.min(0.5, -lz / (2 * h)))
+      if (crossed) {
+        sfxZoot()
+        crossings.current.push(crossed[0])
+        setLoops((m) => ({ ...m, pair: [L.m, L.n] }))
+        flash(`Through gate $${crossed[0]}$${crossed[1] < 0 ? ' backwards' : ''} — you came back in on the far side. The lift is at $(${L.m}, ${L.n})$.`)
+      }
+    }, 30)
+    return () => clearInterval(id)
+  }, [current])
 
   useEffect(() => {
     checkGoals()
@@ -339,7 +375,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
     const proj = W(s, s.projector.at)
     if (Math.hypot(cx - proj[0], cz - proj[1]) > 1.6) return flash('Click the brass projector')
     if (Math.hypot(gx - proj[0], gz - proj[1]) > REACH) return flash('Walk closer to the projector')
-    if (hijacked.projector_deck) return once('hijack', [HINTS.hijacked], HINTS.hijacked.text)
+    if (jammed) return once('hijack', [HINTS.hijacked], HINTS.hijacked.text)
     if (loops.source < goal.needSource) return once('push-src', [HINTS.wrongPush], HINTS.wrongPush.text)
     const deg = goal.degree
     const pushed = pushWinding(loops.source, deg)
@@ -378,12 +414,12 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
   }
 
   useEffect(() => {
-    if (goal?.type !== 'retract' || here.site !== 'retract_deck') return
-    if (loops.markers[1] && loops.markers[2] && stillDistinct(1, 2)) {
+    if (goal?.type !== 'retract' || here.site !== 'retract_deck' || phase !== 'play') return
+    if (Math.abs(loops.inner) >= goal.w2 && stillDistinct(goal.w1, loops.inner)) {
       sfxCorrect()
       advanceGoal('retract_deck', goal.done)
     }
-  }, [loops.markers, goal, here.site, advanceGoal])
+  }, [loops.inner, goal, here.site, advanceGoal, phase])
 
   useEffect(() => {
     const onKey = (e) => {
@@ -396,12 +432,12 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
       }
       if (t) setTool(t)
       if (e.code === 'KeyE' && nearEmmy && phase === 'play') {
-        say(emmyAdvice15({ current, here, goal, done, STATIONS, SITE, loops, hijacked, waveOn, waveSpawned, enemies, exitOpen }))
+        say(emmyAdvice15({ current, here, goal, done, STATIONS, SITE, loops, hijacked: jammed, waveOn, waveSpawned, enemies, exitOpen }))
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [nearEmmy, phase, say, current, here, goal, done, loops, hijacked, waveOn, waveSpawned, enemies, exitOpen])
+  }, [nearEmmy, phase, say, current, here, goal, done, loops, jammed, waveOn, waveSpawned, enemies, exitOpen])
 
   ribbonApi.current = {
     target: () => null,
@@ -458,16 +494,15 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
   }, [gameKey, done, waveOn, checkpoint])
 
-  const FRAME = { projector_deck: 8.6, retract_deck: 8.6, two_roads: 8.8, shadows_deck: 8.6 }
-  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + 1, SITE[current].pos[1] + 0.3], size: FRAME[current], follow: 0.12 } : null
+  const FRAME = { projector_deck: 11.4, retract_deck: 11.4, two_roads: 12.4, shadows_deck: 11.4 }
+  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + (current === 'two_roads' ? 2.6 : 1.2), SITE[current].pos[1] - 0.2], size: FRAME[current], follow: 0.1 } : null
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => {
     sfxExit()
     setLevelClear(true)
   })
 
   if (import.meta.env.DEV) {
-    window.__lvl1_5 = { here, done, goalIdx, loops, goal, phase, setTool, advanceGoal, hijacked, enemies, SITE }
-    window.__game = window.__game || {}
+    window.__lvl1_5 = { here, done, goalIdx, loops, goal, phase, lines, askOpen, setTool, advanceGoal, jammed, enemies, SITE, onAction: (x, z) => onAction(x, z, x, z), answer, rebuildShadows, resetPlaza, lift: liftRef.current }
   }
 
   const showGrid = current === 'two_roads' && met.two_roads
@@ -476,11 +511,11 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
 
   const stepText = (() => {
     if (!goal) return ''
-    if (goal.type === 'push') return hijacked.projector_deck ? 'Lash the imp (1), then project' : `Cord on source (${loops.source}/${goal.needSource}) · click projector → target ${goal.needTarget}`
-    if (goal.type === 'retract') return `Cord on rim · posts w=1 and w=2 (now ${loops.rim ?? 0})`
-    if (goal.type === 'grid') return `Cord: one tube + one hole lap → (${loops.pair[0]}, ${loops.pair[1]})`
-    if (goal.type === 'swap') return 'Reset, walk hole then tube; compare to (1,1)'
-    if (goal.type === 'shadows') return `Shadow roads → (${loops.shadow[0]}, ${loops.shadow[1]}) · Rebuild`
+    if (goal.type === 'push') return jammed ? 'Spawn are jamming the projector — Lash (1) them first' : loops.source < goal.needSource ? `Cord (4): one lap of the gold source circle (${loops.source}/${goal.needSource})` : 'Click the brass projector to push the loop forward'
+    if (goal.type === 'retract') return `Cord (4): laps of the pink inner road, round the pool (${loops.inner}/${goal.w2})`
+    if (goal.type === 'grid') return `Walk out through gate $a$ and gate $b$, once each — the lift is at $(${loops.pair[0]}, ${loops.pair[1]})$`
+    if (goal.type === 'swap') return `Now the other order: the other gate first — the lift is at $(${loops.pair[0]}, ${loops.pair[1]})$`
+    if (goal.type === 'shadows') return `Shadows $(${loops.shadow[0]}, ${loops.shadow[1]})$ — need $(${goal.need[0]}, ${goal.need[1]})$ · then Rebuild`
     if (goal.type === 'guard') return 'Lash projector imps (1)'
     return 'Cord (4) · Sling (5) · Lash (1)'
   })()
@@ -493,7 +528,8 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
           sites={SITES}
           current={current}
           loops={loops}
-          hijacked={hijacked}
+          hijacked={{ projector_deck: jammed }}
+          liftRef={liftRef}
           gridShadow={loops.pair}
           showGrid={showGrid}
           exitOpen={exitOpen}
@@ -543,31 +579,20 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
           <div className="rules-panel forge-panel works-panel lvl15-panel">
             <h3>{STATIONS[current].blueprint}</h3>
             <p className="carry-line">
-              {goal?.type === 'shadows' && (
-                <>
-                  Loop <b>({goal.given[0]}, {goal.given[1]})</b> · shadows ({loops.shadow[0]}, {loops.shadow[1]})
-                </>
-              )}
-              {goal?.type === 'grid' && (
-                <>
-                  Grid lift: <b>({loops.pair[0]}, {loops.pair[1]})</b>
-                </>
-              )}
-              {goal?.type === 'push' && (
-                <>
-                  Source w={loops.source} → target w={loops.target} (×{goal.degree})
-                </>
-              )}
+              {goal?.type === 'push' && <MathText text={`source $${loops.source}$ lap${loops.source === 1 ? '' : 's'} → target $${loops.target}$ · the map is $z ↦ z²$`} />}
+              {goal?.type === 'retract' && <MathText text={`inner road $${loops.inner}$ · pushed onto the rim: $${loops.inner}$`} />}
             </p>
-            <p className="forgery-count">{stepText}</p>
+            <p className="forgery-count">
+              <MathText text={stepText} />
+            </p>
             {goal?.type === 'shadows' && (
               <button type="button" className="btn" onClick={rebuildShadows}>
                 Rebuild loop
               </button>
             )}
             {goal?.type === 'swap' && (
-              <button type="button" className="btn ghost" onClick={() => (pathOrder.current = [], setSwapDone(false), setGridReset((k) => k + 1), trackers.current['two_roads:torus']?.reset(), setLoops((m) => ({ ...m, pair: [0, 0] })))}>
-                Reset grid test
+              <button type="button" className="btn ghost" onClick={(e) => (resetPlaza(), e.currentTarget.blur())}>
+                Back to the start
               </button>
             )}
           </div>
@@ -577,9 +602,13 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
           <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Torus Terraces" />
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && (
+          <div className="toast">
+            <MathText text={toast} />
+          </div>
+        )}
         {nearEmmy && phase === 'play' && !askOpen && !levelClear && (
-          <button type="button" className="btn talk-btn" onClick={() => say(emmyAdvice15({ current, here, goal, done, STATIONS, SITE, loops, hijacked, waveOn, waveSpawned, enemies, exitOpen }))}>
+          <button type="button" className="btn talk-btn" onClick={() => say(emmyAdvice15({ current, here, goal, done, STATIONS, SITE, loops, hijacked: jammed, waveOn, waveSpawned, enemies, exitOpen }))}>
             💬 Talk to Emmy <kbd>E</kbd>
           </button>
         )}
@@ -589,7 +618,6 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
               {[
                 ['lash', '⚡ Lash', '1'],
                 ['cord', '◎ Cord', '4'],
-                ['sling', '⤴ Sling', '5'],
               ].map(([id, label, key]) => (
                 <button key={id} type="button" className={`weapon ${tool === id ? 'active' : ''}`} onClick={(e) => (setTool(id), e.currentTarget.blur())}>
                   {label} <kbd>{key}</kbd>
@@ -598,7 +626,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
             </div>
           </div>
         )}
-        {playEnabled && !toast && <div className="hint">{current && here.site === current ? stepText : 'WASD to move · 1 Lash · 4 Cord · 5 Sling · E talk to Emmy'}</div>}
+        {playEnabled && !toast && <div className="hint">{current && here.site === current ? stepText : 'WASD to move · 1 Lash · 4 Cord · E talk to Emmy'}</div>}
 
         {askOpen && !line && goal?.type === 'ask' && (
           <div className="dialog verdict" style={{ cursor: 'default' }}>
@@ -610,7 +638,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
             <div className="btn-row" style={{ flexDirection: 'column' }}>
               {goal.options.map((opt, i) => (
                 <button key={i} type="button" className="btn small" onClick={() => answer(i)}>
-                  {opt}
+                  <MathText text={opt} />
                 </button>
               ))}
             </div>
@@ -641,8 +669,8 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
             name="Push It Forward"
             startMusic={startPushMusic}
             embedded
-            onDone={() => setLesson(false)}
-            onSkip={() => setLesson(false)}
+            onDone={() => (setLesson(false), startPushMusic())}
+            onSkip={() => (setLesson(false), startPushMusic())}
           />
         )}
 

@@ -1,30 +1,42 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef, useState } from 'react'
+import { Sparkles, Stars } from '@react-three/drei'
+import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Emmy from '../../characters/Emmy'
 import Gyroid from '../../characters/Gyroid'
+import { PatrolSpawn } from '../../characters/Spawn'
 import { DevAdvance } from '../../levels/w0/OverworldScene'
-import { Platform } from '../../levels/w0/FoundryScene'
-import layout from '../../world/freewordforge.json'
-import { buildSites } from '../../world/sites'
+import { Platform, Track } from '../../levels/w0/FoundryScene'
+import { makeTrack } from '../../levels/w0/cells'
+import Seascape from '../../world/Seascape'
 
-/** Intro: level-1-6-intro "Laps Are Letters" (design/world-1.json). */
+/**
+ * Intro movie for World 1 · Level 6, "Free Word Play" (videos.json level-1-6-intro):
+ *   A 0–8    the Free-Word Forge: a figure-eight of two petals round an amber beacon
+ *   B 8–16   Gyroid runs the orange petal (a), then runs it backwards (a⁻¹) — the two cancel
+ *   C 16–24  the Commutator's ribbon patrol marches a, b, a⁻¹, b⁻¹ — nothing cancels
+ *   D 24–28  the patrol turns on Gyroid; he readies the Lash
+ *   E 28–32  title card
+ */
+
 const S = 0.7
 const seg = (t, a, b) => Math.min(1, Math.max(0, (t - a) / (b - a)))
 const smooth = (x) => x * x * (3 - 2 * x)
-const mix3 = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]
+const mix = (a, b, k) => a + (b - a) * k
+const mix3 = (a, b, k) => [mix(a[0], b[0], k), mix(a[1], b[1], k), mix(a[2], b[2], k)]
 
-const HUB = buildSites(layout).find((s) => s.id === 'laps_letters')
-const [HX, HZ] = HUB.pos
+const TRACKS = [makeTrack({ angle: Math.PI, length: 4.2 }, [0, 0]), makeTrack({ angle: 0, length: 4.2 }, [0, 0])]
+const SITE = { pos: [0, 0], def: { add: [{ type: 'circle', cx: 0, cz: 0, r: 5.6 }] } }
+const NO_PROGRESS = { current: null }
 
 const SHOTS = [
-  [0, 8, [[HX + 2, 8, HZ + 10], [HX, 0, HZ]], [[HX - 1, 6.5, HZ + 7], [HX, 0, HZ]]],
-  [8, 16, [[HX + 3, 5, HZ + 6], [HX + 0.5, 0.5, HZ + 0.5]], [[HX + 2.2, 4.2, HZ + 5], [HX, 0, HZ]]],
-  [16, 24, [[HX - 3, 4, HZ - 2], [HX, 0, HZ - 3]], [[HX - 2, 3.5, HZ - 1], [HX, 0, HZ]]],
-  [24, 32, [[HX - 2.5, 5, HZ + 7], [HX, 0.5, HZ]], [[HX - 1.5, 6, HZ + 8], [HX, 0.5, HZ]]],
+  [0, 8, [[8, 12, 12], [0, 0, 0]], [[1.6, 9.6, 8.6], [0.6, 0, 0.2]]],
+  [8, 16, [[-1.6, 8.4, 7.4], [-1.6, 0, 0]], [[-1.4, 8.2, 7.2], [-1.4, 0, 0]]],
+  [16, 24, [[1.4, 10.4, 8.8], [0.8, 0, 0]], [[1.2, 10.6, 9.0], [0.8, 0, 0]]],
+  [24, 28, [[0.4, 3.6, 5.6], [0.4, 0.8, 0]], [[0.4, 3.4, 5.2], [0.4, 0.8, 0]]],
+  [28, 40, [[0, 11, 12], [0, 0, 0]], [[0, 13, 15], [0, 0, 0]]],
 ]
-
 function MovieCamera({ tRef }) {
   const { camera } = useThree()
   const look = useMemo(() => new THREE.Vector3(), [])
@@ -39,80 +51,77 @@ function MovieCamera({ tRef }) {
   return null
 }
 
-function BeadTape({ tRef }) {
-  const g = useRef()
-  useFrame(() => {
-    const t = tRef.current
-    const n = t < 12 ? 1 : t < 14 ? 2 : t < 16 ? 0 : 4
-    g.current.visible = n > 0
-    g.current.position.set(HX + 0.3, 2.1, HZ + 0.2)
-    g.current.children.forEach((c, i) => {
-      c.visible = i < n
-    })
-  })
-  return (
-    <group ref={g}>
-      {[0, 1, 2, 3].map((i) => (
-        <mesh key={i} position={[i * 0.22 - 0.33, 0, 0]}>
-          <sphereGeometry args={[0.07, 10, 10]} />
-          <meshBasicMaterial color={i % 2 ? '#8060d0' : '#e04040'} toneMapped={false} />
-        </mesh>
-      ))}
-    </group>
-  )
+/** Gyroid's lap at story time t: [track, u] or null. */
+function gyroLap(t) {
+  if (t >= 8.6 && t < 12) return [0, smooth(seg(t, 8.6, 11.8))]
+  if (t >= 12.2 && t < 15.6) return [0, 1 - smooth(seg(t, 12.2, 15.4))]
+  return null
 }
 
 export default function FreeWordMovie({ tRef }) {
-  const [snap, setSnap] = useState(false)
+  const patrol = useMemo(() => ({ x: 0, z: 0, seed: 0.4, alive: true, dying: 0, face: 0, flash: 0, hp: 4, maxHp: 4 }), [])
+  const patrolG = useRef()
   useFrame(() => {
     const t = tRef.current
-    if (t > 13.2 && t < 13.5 && !snap) setSnap(true)
-    if (t < 12) setSnap(false)
+    patrolG.current.visible = t >= 16
+    if (t < 16) return
+    if (t < 24) {
+      const letters = [[0, 1], [1, 1], [0, -1], [1, -1]]
+      const per = 2
+      const i = Math.min(3, Math.floor((t - 16) / per))
+      const u = seg(t - 16 - i * per, 0, per)
+      const [k, d] = letters[i]
+      const [x, z] = TRACKS[k].at(d > 0 ? u : 1 - u)
+      const [x2, z2] = TRACKS[k].at(Math.min(1, Math.max(0, d > 0 ? u + 0.02 : 1 - u - 0.02)))
+      patrol.x = x
+      patrol.z = z
+      patrol.face = Math.atan2(x2 - x, z2 - z)
+    } else {
+      patrol.x = mix(0, 1.2, smooth(seg(t, 24, 26)))
+      patrol.z = mix(0, -0.6, smooth(seg(t, 24, 26)))
+      patrol.face = Math.atan2(-1.6 - patrol.x, 2.2 - patrol.z)
+    }
   })
-  const gy = () => {
+  const gyro = () => {
     const t = tRef.current
-    return {
-      pos: [(HX + 0.8) / S, 0, (HZ + 1.2) / S],
-      rotY: -0.4,
-      walk: t > 8 && t < 15 ? 1 : 0,
-      gesture: t > 16 && t < 24 ? 0.8 : 0,
-      talk: 0,
-      bow: 0,
+    const L = gyroLap(t)
+    if (L) {
+      const [k, u] = L
+      const p = TRACKS[k].at(u)
+      const fwd = t < 12
+      const q = TRACKS[k].at(Math.min(1, Math.max(0, u + (fwd ? 0.03 : -0.03))))
+      return { pos: [p[0], 0, p[1]], rotY: Math.atan2(q[0] - p[0], q[1] - p[1]), run: 0.95, cast: 0, whip: 0, loop: 0, loopDrop: 0 }
     }
+    return { pos: [-1.6, 0, 2.2], rotY: t >= 24 ? Math.atan2(1.2 + 1.6, -0.6 - 2.2) : Math.PI, run: 0, cast: 0, whip: t > 26.6 && t < 27.6 ? seg(t, 26.6, 27.6) : 0, loop: 0, loopDrop: 0 }
   }
-  const em = () => {
+  const emmy = () => {
     const t = tRef.current
-    return {
-      pos: [(HX - 2.8) / S, 0, (HZ + 2.2) / S],
-      rotY: 0.5,
-      walk: 0,
-      gesture: t > 24 ? 0.9 : 0,
-      talk: t > 24 && t < 28 ? 1 : 0,
-      bow: 0,
-    }
+    return { pos: [-3.6, 0, 3.0], rotY: 0.7, walk: 0, bow: 0, gesture: t > 8.4 && t < 12.4 ? 0.8 : 0, talk: (t > 8.4 && t < 12.4) || (t > 20.6 && t < 24) || (t > 24.4 && t < 27.6) ? 1 : 0 }
   }
   return (
     <>
       <color attach="background" args={['#080a12']} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[-6, 12, 8]} intensity={0.9} color="#ffe2c4" />
-      <Platform site={HUB} lit current />
-      <BeadTape tRef={tRef} />
-      {snap && (
-        <mesh position={[HX + 0.5, 2.1, HZ + 0.5]}>
-          <ringGeometry args={[0.2, 0.35, 16]} />
-          <meshBasicMaterial color="#fff2c4" transparent opacity={0.7} toneMapped={false} />
-        </mesh>
-      )}
-      <group scale={S}>
-        <Gyroid script={gy} />
-        <Emmy script={em} />
+      <fog attach="fog" args={['#080a12', 24, 58]} />
+      <ambientLight intensity={0.4} />
+      <hemisphereLight args={['#a8b8ff', '#120818', 0.5]} />
+      <directionalLight position={[-8, 16, 6]} intensity={0.9} color="#ffe2c4" />
+      <Stars radius={80} depth={36} count={800} factor={2} fade speed={0.15} />
+      <Sparkles count={120} scale={[24, 5, 24]} position={[0, 2, -2]} size={2.2} speed={0.35} color="#b090ff" />
+      <Seascape y={-1.2} depth={2.2} area={[0, 0, 50, 50]} seed={66} lanterns={8} />
+      <Platform site={SITE} lit current />
+      {TRACKS.map((tr, i) => (
+        <Track key={i} track={tr} edge={{ letter: i, dir: 1, torn: false }} progressRef={NO_PROGRESS} trackIdx={i} pos={[0, 0]} />
+      ))}
+      <group ref={patrolG}>
+        <PatrolSpawn e={patrol} />
       </group>
+      <Emmy scale={S} script={emmy} />
+      <Gyroid scale={S} script={gyro} />
       <MovieCamera tRef={tRef} />
       <DevAdvance />
       <EffectComposer multisampling={0}>
-        <Bloom luminanceThreshold={0.4} intensity={0.5} />
-        <Vignette offset={0.25} darkness={0.55} />
+        <Bloom luminanceThreshold={0.45} intensity={0.75} mipmapBlur />
+        <Vignette eskil offset={0.15} darkness={0.5} />
       </EffectComposer>
     </>
   )

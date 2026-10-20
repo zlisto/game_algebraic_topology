@@ -1,6 +1,6 @@
 /**
  * World 1 · Level 7 "Glue Job" — Glue Works. Attach disks to add relations;
- * Van Kampen on overlapping pieces. Hatcher §1.2, Examples 1.5–1.7.
+ * van Kampen on overlapping pieces. Hatcher §1.2: Theorem 1.20 and Proposition 1.26.
  */
 
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
@@ -35,7 +35,7 @@ export const STATIONS = {
       { type: 'point', done: [] },
       { type: 'edges', n: 1, done: [E('Edge $a$. Now walk $a$ once — out, round, back — and click the furnace to press a disk along it.')] },
       { type: 'disk', word: 'a', expect: 'disk', done: [E('The disk filled the loop. In the group, $a$ is trivial now.'), G('So the word on the rim vanished.')] },
-      { type: 'trivial', word: 'a', done: [E('Walk $a$ again if you like — it slides to nothing. The fundamental group here is $1$.'), E('Southwest next: the torus word.')] },
+      { type: 'trivial', word: 'a', start: [E('Walk $a$ once more — out, round, back.')], done: [E('Walked again, $a$ slides across the disk to nothing. The fundamental group here is trivial.'), E('North-west next: the torus word.')] },
     ],
     early: [E('The first press is ahead — not yet.')],
   },
@@ -54,14 +54,14 @@ export const STATIONS = {
         expect: 'torus',
         done: [E('The bouquet folded into a torus. The relation is $a b a⁻¹ b⁻¹ = 1$ — equivalently, $a b = b a$.'), G('The patrol word just died.')],
       },
-      { type: 'commute', done: [E('Try the swap: $a b$ and $b a$ land in the same class now. That is $π₁(T²) ≅ ℤ × ℤ$.')] },
+      { type: 'trivial', word: 'a b a- b-', start: [E('Now walk $a b a⁻¹ b⁻¹$ again.')], done: [G('It slid to nothing!'), E('So $a b a⁻¹ b⁻¹ = 1$, which says $a b = b a$: the two loops commute. That’s the torus again, $π₁(T²) ≅ ℤ × ℤ$ — built this time from one point, two edges and one disk.'), E('North-east next: Half Turn.')] },
     ],
-    early: [E('The torus press is southwest of the gate.')],
+    early: [E('The torus press is north-west of the first press.')],
   },
   half_turn: {
     blueprint: 'ℤ₂',
     arrive: [
-      E('One loop again — but glue along $a a$, both times the same way. That is the projective plane’s trick.'),
+      E('One loop again — but this time glue the disk along $a a$: twice round, the same way. That builds the projective plane.'),
       N('Walk it twice and pretend it means nothing. Once still counts.'),
     ],
     goals: [
@@ -77,28 +77,28 @@ export const STATIONS = {
         type: 'order',
         answer: 'aa',
         wrong: [E('Not quite. $a$ is still visible once. $a a$ is the word that slides away.')],
-        right: [E('Right: $a$ survives; $a a$ does not. That is $⟨ a | a² ⟩$.'), E('North to the overlap deck — Van Kampen’s turn.')],
+        right: [E('Right: $a$ survives; $a a$ does not. The group is $⟨ a | a² ⟩ ≅ ℤ₂$.'), E('North-west to the overlap deck — van Kampen’s turn.')],
       },
     ],
-    early: [E('Half Turn is southeast — after the torus.')],
+    early: [E('Half Turn is north-east of the first press — after the torus.')],
   },
   two_pieces: {
     blueprint: 'Van Kampen',
     arrive: [
-      E('Two pieces overlap on a shared loop $c$. West calls it $a$; east calls it $b$. Same loop, two names.'),
-      E('Stand on the amber clasp in the middle with the Van Kampen Clasp (5) and click — identify the words.'),
+      E('Two pieces, west and east, overlap in the middle. The loop round the overlap is called $a$ in the west piece and $b$ in the east one — the same loop, two names.'),
+      E('Forge both loops. Then stand on the amber clasp in the middle with the Van Kampen Clasp (5) and click: it glues the two pieces’ groups together along the overlap.'),
     ],
     goals: [
       { type: 'point', done: [] },
       { type: 'edges', n: 2, side: 'both', done: [E('West track is $a$; east track is $b$. Both meet the overlap.')] },
-      { type: 'clasp', done: [E('Amalgamated: $a b⁻¹ = 1$, so $a = b$. One generator, $π₁ ≅ ℤ$.')] },
+      { type: 'clasp', done: [E('Glued: the overlap’s loop is $a$ on one side and $b$ on the other, so the relation is $a b⁻¹ = 1$, that is $a = b$. One generator left: $π₁ ≅ ℤ$.')] },
       {
         type: 'ask',
         question: 'After the clasp, is a b⁻¹ trivial?',
         choices: ['Yes — a and b are the same loop', 'No — order still matters'],
         answer: 0,
         wrong: [E('On the overlap, $c$ is both $a$ and $b$. The clasp adds $a b⁻¹$ as a relation.')],
-        right: [E('Van Kampen’s theorem: $π₁$ is the free product of the pieces, with overlap relations. Here, that collapses to $ℤ$.'), G('Sheetwater next — if the span holds.')],
+        right: [E('That’s van Kampen’s theorem: take the free product of the pieces’ groups, then add a relation for each loop in the overlap. Here it collapses to $ℤ$.'), G('Sheetwater next — through the north gate.')],
       },
     ],
     early: [E('The overlap deck is north — finish the torus and half-turn first.')],
@@ -115,8 +115,8 @@ export const HINTS17 = {
 }
 
 export const DEFINITION17 = {
-  text: 'Van Kampen: if $X = U ∪ V$ with $U ∩ V$ path-connected, then $π₁(X)$ is the amalgamated free product $π₁(U) *_{π₁(U∩V)} π₁(V)$. Attaching a 2-cell along a loop adds that word as a relation.',
-  cite: 'Hatcher, Algebraic Topology, §1.2 (van Kampen), Example 1.6.',
+  text: 'Van Kampen’s theorem: if X = U ∪ V with U, V and U ∩ V open and path-connected, then π₁(X) is the free product π₁(U) ∗ π₁(V) with the relations i(ω) = j(ω) for loops ω in U ∩ V. Attaching a disk along a loop adds that loop’s word as a relation: a disk on aba⁻¹b⁻¹ gives the torus, ℤ × ℤ; a disk on aa gives the projective plane, ℤ₂.',
+  cite: 'Hatcher, Algebraic Topology, §1.2: van Kampen’s theorem (Theorem 1.20) and attaching 2-cells (Proposition 1.26), pp. 43–50.',
   link: 'https://pi.math.cornell.edu/~hatcher/AT/ATch1.pdf',
   next: 'Sheetwater Viaduct (1-8)',
 }
@@ -130,8 +130,7 @@ export function emmyAdvice17(state) {
   if (goal.type === 'point') return [E('Stand on the furnace · Cell-Smith (2) · click to forge the point.')]
   if (goal.type === 'edges') return [E(`Walk each track out and back until ${goal.n} edge(s) are forged.`)]
   if (goal.type === 'disk') return [E(`Walked: ${wordWalk || '—'}. Match the blueprint, click the furnace.`)]
-  if (goal.type === 'trivial') return [E('The relation killed that word — try walking it; it should reduce to nothing.')]
-  if (goal.type === 'commute') return [E('Walk $a b$ and $b a$ — same class after the torus disk.')]
+  if (goal.type === 'trivial') return [E(`Walk ${goal.word === 'a' ? '$a$' : '$a b a⁻¹ b⁻¹$'} with the Cell-Smith (2) — out, round and back for each letter. The disk makes it slide to nothing.`)]
   if (goal.type === 'order') return [E('Which word is trivial now, $a$ or $a a$? Open the question panel.')]
   if (goal.type === 'clasp') return HINTS17.clasp
   if (goal.type === 'ask') return [E('Answer the clasp question on the panel.')]

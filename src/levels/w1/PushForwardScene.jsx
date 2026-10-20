@@ -17,7 +17,7 @@ const AMBER = '#ffb347'
 const GOLD = '#ffd27a'
 const VIOLET = '#b070ff'
 
-function TerraceSky() {
+export function TerraceSky() {
   return (
     <>
       <color attach="background" args={['#120818']} />
@@ -43,8 +43,8 @@ function Deck({ site, current }) {
   })
   return (
     <group position={[site.pos[0], 0, site.pos[1]]}>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <circleGeometry args={[sh.r, 32]} />
+      <mesh position={[0, -0.28, 0]}>
+        <cylinderGeometry args={[sh.r, sh.r * 0.94, 0.6, 48]} />
         <meshStandardMaterial color="#2a2420" roughness={0.85} metalness={0.15} />
       </mesh>
       <mesh ref={rim} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.12, 0]}>
@@ -58,24 +58,122 @@ function Deck({ site, current }) {
   )
 }
 
-function BeltRing({ cx, cz, r, color = GOLD, tube = 0.08 }) {
-  const pts = useMemo(() => {
-    const out = []
-    for (let i = 0; i <= 64; i++) {
-      const a = (i / 64) * Math.PI * 2
-      out.push(new THREE.Vector3(cx + Math.cos(a) * r, 0.14, cz + Math.sin(a) * r))
-    }
-    return out
-  }, [cx, cz, r])
-  const geo = useMemo(() => new THREE.BufferGeometry().setFromPoints(pts), [pts])
+export function BeltRing({ cx, cz, r, color = GOLD, label, lit = false }) {
   return (
-    <line geometry={geo}>
-      <lineBasicMaterial color={color} linewidth={1} />
-    </line>
+    <group position={[cx, 0, cz]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, 0]}>
+        <ringGeometry args={[r - 0.45, r + 0.45, 64]} />
+        <meshStandardMaterial color="#3a3346" roughness={0.8} />
+      </mesh>
+      {[r - 0.45, r + 0.45].map((rr, i) => (
+        <mesh key={i} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.07, 0]}>
+          <ringGeometry args={[rr - 0.04, rr + 0.04, 64]} />
+          <meshBasicMaterial color={color} transparent opacity={lit ? 1 : 0.55} toneMapped={false} />
+        </mesh>
+      ))}
+      {label && (
+        <Html position={[0, 0.5, r + 0.9]} center zIndexRange={[3, 0]} style={{ pointerEvents: 'none' }}>
+          <div className="floor-tag">{label}</div>
+        </Html>
+      )}
+    </group>
   )
 }
 
-function Projector({ at, pos, active, hijacked, readout }) {
+/** Retract Check: an annulus — a ring of stone round a sunken pool. Pushing straight out from the pool's centre retracts it onto the rim. */
+export function Pool({ r }) {
+  const w = useRef()
+  useFrame(({ clock }) => (w.current.material.opacity = 0.75 + Math.sin(clock.elapsedTime * 1.5) * 0.08))
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.03, 0]}>
+        <circleGeometry args={[r, 40]} />
+        <meshStandardMaterial color="#04060c" roughness={1} />
+      </mesh>
+      <mesh ref={w} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+        <circleGeometry args={[r * 0.92, 40]} />
+        <meshStandardMaterial color="#123a6a" emissive="#1a4a8a" emissiveIntensity={0.5} transparent opacity={0.8} />
+      </mesh>
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = (i / 12) * Math.PI * 2
+        return (
+          <mesh key={i} position={[Math.cos(a) * (r + 0.6), 0.1, Math.sin(a) * (r + 0.6)]} rotation={[-Math.PI / 2, 0, -a]}>
+            <coneGeometry args={[0.1, 0.32, 3]} />
+            <meshBasicMaterial color="#ff8ad8" transparent opacity={0.6} toneMapped={false} />
+          </mesh>
+        )
+      })}
+    </group>
+  )
+}
+
+/**
+ * Two Roads: the torus as a square plaza with its opposite gates glued — walk out the east gate
+ * and you come in at the west; out the north and you come in at the south. Low hedges close the
+ * rest of the edge.
+ */
+export function TorusPlaza({ half, gate }) {
+  const walls = []
+  const seg = (x0, z0, x1, z1, k) => {
+    const len = Math.hypot(x1 - x0, z1 - z0)
+    walls.push(
+      <mesh key={k} position={[(x0 + x1) / 2, 0.3, (z0 + z1) / 2]} rotation={[0, Math.atan2(-(z1 - z0), x1 - x0), 0]}>
+        <boxGeometry args={[len, 0.6, 0.3]} />
+        <meshStandardMaterial color="#2f5a3a" roughness={0.9} flatShading />
+      </mesh>,
+    )
+  }
+  const g = gate
+  const h = half
+  ;[
+    [-h, -h, -g, -h],
+    [g, -h, h, -h],
+    [-h, h, -g, h],
+    [g, h, h, h],
+    [-h, -h, -h, -g],
+    [-h, g, -h, h],
+    [h, -h, h, -g],
+    [h, g, h, h],
+  ].forEach(([a, b, c, d], i) => seg(a, b, c, d, i))
+  const gates = [
+    { p: [h, 0], rot: Math.PI / 2, col: '#ffb347', label: 'a →' },
+    { p: [-h, 0], rot: Math.PI / 2, col: '#ffb347', label: '→ a' },
+    { p: [0, -h], rot: 0, col: '#7fe8dc', label: 'b ↑' },
+    { p: [0, h], rot: 0, col: '#7fe8dc', label: '↑ b' },
+  ]
+  return (
+    <group>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+        <planeGeometry args={[2 * h, 2 * h]} />
+        <meshStandardMaterial color="#3a3346" roughness={0.85} />
+      </mesh>
+      {walls}
+      {gates.map((q, i) => (
+        <group key={i} position={[q.p[0], 0, q.p[1]]} rotation={[0, q.rot, 0]}>
+          {[-g, g].map((o) => (
+            <mesh key={o} position={[o, 0.9, 0]}>
+              <cylinderGeometry args={[0.1, 0.12, 1.8, 8]} />
+              <meshStandardMaterial color={q.col} emissive={q.col} emissiveIntensity={1.2} toneMapped={false} />
+            </mesh>
+          ))}
+          <mesh position={[0, 1.8, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.07, 0.07, 2 * g, 8]} />
+            <meshStandardMaterial color={q.col} emissive={q.col} emissiveIntensity={1.2} toneMapped={false} />
+          </mesh>
+          <mesh position={[0, 0.9, 0]}>
+            <planeGeometry args={[2 * g, 1.7]} />
+            <meshBasicMaterial color={q.col} transparent opacity={0.18} side={THREE.DoubleSide} toneMapped={false} />
+          </mesh>
+          <Html position={[0, 2.25, 0]} center zIndexRange={[3, 0]} style={{ pointerEvents: 'none' }}>
+            <div className="floor-tag">{q.label}</div>
+          </Html>
+        </group>
+      ))}
+    </group>
+  )
+}
+
+export function Projector({ at, pos, active, hijacked, readout }) {
   const beam = useRef()
   useFrame(({ clock }) => {
     const u = 0.55 + Math.sin(clock.elapsedTime * 3) * 0.15
@@ -104,7 +202,13 @@ function Projector({ at, pos, active, hijacked, readout }) {
   )
 }
 
-function GridLift({ origin, shadow, visible }) {
+function GridLift({ origin, shadow, visible, liftRef }) {
+  const dot = useRef()
+  useFrame(() => {
+    const L = liftRef?.current
+    if (!dot.current || !L) return
+    dot.current.position.set((L.m + L.u) * 0.9, 0.08, -(L.n + L.v) * 0.9)
+  })
   const g = useRef()
   useFrame(() => {
     if (g.current) g.current.visible = visible
@@ -119,14 +223,17 @@ function GridLift({ origin, shadow, visible }) {
   }
   const [mx, mz] = shadow || [0, 0]
   return (
-    <group ref={g} position={[ox, 5.2, oz]}>
+    <group ref={g} position={[ox, 1.4, oz]} rotation={[0.5, 0, 0]}>
+      <Html position={[0, 0.3, -2.7]} center zIndexRange={[3, 0]} style={{ pointerEvents: 'none' }}>
+        <div className="floor-tag">the lift in ℝ²: ({mx}, {mz})</div>
+      </Html>
       {cells.map(([i, j]) => (
-        <mesh key={`${i}-${j}`} position={[i * 0.9, 0, j * 0.9]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh key={`${i}-${j}`} position={[i * 0.9, 0, -j * 0.9]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.82, 0.82]} />
           <meshStandardMaterial color="#304060" emissive="#6080c0" emissiveIntensity={i === mx && j === mz ? 1.2 : 0.15} transparent opacity={0.45} toneMapped={false} />
         </mesh>
       ))}
-      <mesh position={[mx * 0.9, 0.08, mz * 0.9]} scale={0.35}>
+      <mesh ref={dot} position={[mx * 0.9, 0.08, -mz * 0.9]} scale={0.22}>
         <sphereGeometry args={[1, 12, 10]} />
         <meshStandardMaterial color="#88e0ff" emissive="#a8f0ff" emissiveIntensity={2} transparent opacity={0.85} toneMapped={false} />
       </mesh>
@@ -173,6 +280,7 @@ export default function PushForwardScene({
   emmyAt,
   emmyTalking,
   emmyNear,
+  liftRef,
 }) {
   const emmyScript = useMemo(
     () => () => {
@@ -203,24 +311,39 @@ export default function PushForwardScene({
           />
         ))}
       {sites
+        .filter((s) => s.projector)
+        .map((s) => (
+          <group key={s.id + ':roads'} position={[s.pos[0], 0, s.pos[1]]}>
+            <BeltRing {...s.projector.source} color={GOLD} label="source circle" lit={current === s.id} />
+            <BeltRing {...s.projector.target} color="#7fe8dc" label="target circle" lit={current === s.id} />
+          </group>
+        ))}
+      {sites
         .filter((s) => s.ring)
         .map((s) => (
           <group key={s.id} position={[s.pos[0], 0, s.pos[1]]}>
-            <BeltRing {...s.ring} />
-            {s.markers?.map((m, i) => (
-              <Marker key={i} at={m.at} pos={[0, 0]} label={`w=${m.w}`} />
-            ))}
+            <BeltRing {...s.ring} label="the rim" lit={current === s.id} />
+            {s.inner && <BeltRing {...s.inner} color="#ff8ad8" label="inner road" lit={current === s.id} />}
+            {s.pool && <Pool r={s.pool} />}
+          </group>
+        ))}
+      {sites
+        .filter((s) => s.plaza)
+        .map((s) => (
+          <group key={s.id} position={[s.pos[0], 0, s.pos[1]]}>
+            <TorusPlaza {...s.plaza} />
           </group>
         ))}
       {sites
         .filter((s) => s.tube)
         .map((s) => (
           <group key={s.id} position={[s.pos[0], 0, s.pos[1]]}>
-            <BeltRing {...s.tube} r={s.tube.r} color={GOLD} />
-            {s.hole && <BeltRing {...s.hole} color="#ffcf6a" />}
+            <BeltRing {...s.tube} r={s.tube.r} color={GOLD} label="first factor" lit={current === s.id} />
+            {s.hole && <BeltRing {...s.hole} color="#7fe8dc" label="second factor" lit={current === s.id} />}
           </group>
         ))}
-      <GridLift origin={sites.find((s) => s.id === 'two_roads')?.gridOrigin || [12, -9.5]} shadow={gridShadow} visible={showGrid} />
+      <GridLift origin={sites.find((s) => s.id === 'two_roads')?.gridOrigin || [12, -9.5]} shadow={gridShadow} visible={showGrid} liftRef={liftRef} />
+      {exitOpen && <CausewaySlab a={layout.exit.a} b={layout.exit.b} width={layout.causewayWidth} />}
       {exitOpen && (
         <mesh position={[layout.exit.gate[0], 0.5, layout.exit.gate[1]]}>
           <torusGeometry args={[1.1, 0.08, 8, 32, Math.PI]} />

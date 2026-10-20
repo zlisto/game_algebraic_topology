@@ -1,7 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
@@ -10,6 +10,92 @@ import ReefGame from '../w0/ReefGame'
 import { EmmyBubble } from '../w0/FoundryScene'
 import { LiveLine, Post } from '../w0/FlatsScenery'
 import { linearHomotopy } from './routes'
+import Seascape from '../../world/Seascape'
+
+/** How each route is named on the deck (the ledger's ids are terse). */
+export const ROUTE_LABEL = {
+  straight: 'straight',
+  wavy: 'wavy',
+  bow: 'bow',
+  slow: 'slow',
+  fast: 'fast',
+  AC_left: 'A→C upper',
+  AC_right: 'A→C lower',
+  'AB_left·BC_left': 'A→B→C upper',
+  'AB_right·BC_right': 'A→B→C lower',
+}
+export const BIN_COLORS = ['#ffb347', '#c58bff', '#7fe8dc']
+
+/** A route drawn smooth: the ledger stores a few control points; draw the curve through them. */
+export function smoothRoute(pts, n = 64) {
+  if (!pts || pts.length < 3) return pts || []
+  const curve = new THREE.CatmullRomCurve3(pts.map(([x, z]) => new THREE.Vector3(x, 0, z)), false, 'centripetal')
+  return curve.getPoints(n).map((v) => [v.x, v.z])
+}
+
+/** The point of a route farthest from the line between its gates: where its label sits. */
+function labelSpot(pts) {
+  const a = pts[0]
+  const b = pts[pts.length - 1]
+  let best = pts[Math.floor(pts.length / 2)]
+  let bd = -1
+  const dx = b[0] - a[0]
+  const dz = b[1] - a[1]
+  const l = Math.hypot(dx, dz) || 1
+  for (const p of pts) {
+    const d = Math.abs((p[0] - a[0]) * dz - (p[1] - a[1]) * dx) / l
+    if (d > bd) (bd = d), (best = p)
+  }
+  return best
+}
+
+/** Garden dressing round a deck's rim: clipped topiary and lamp posts, kept clear of the routes (which run near the gate axis). */
+function GardenDressing({ r, rect }) {
+  const spots = useMemo(() => {
+    const out = []
+    if (rect) {
+      for (const x of [-5, -2.5, 0, 2.5, 5]) for (const z of [-4, 4]) out.push([x, z, (x + z) % 2 === 0])
+      return out
+    }
+    for (const a of [1.15, 1.6, 2.0, 4.3, 4.75, 5.15]) out.push([Math.cos(a) * (r - 0.55), Math.sin(a) * (r - 0.55), a > 3 ? a < 4.6 : a < 1.4])
+    return out
+  }, [r, rect])
+  return (
+    <>
+      {spots.map(([x, z, lamp], i) =>
+        lamp ? (
+          <group key={i} position={[x, 0, z]}>
+            <mesh position={[0, 0.7, 0]}>
+              <cylinderGeometry args={[0.05, 0.07, 1.4, 8]} />
+              <meshStandardMaterial color="#3a3a44" metalness={0.6} roughness={0.4} />
+            </mesh>
+            <mesh position={[0, 1.5, 0]}>
+              <sphereGeometry args={[0.15, 12, 10]} />
+              <meshStandardMaterial color="#ffe6b0" emissive="#ffc070" emissiveIntensity={1.8} toneMapped={false} />
+            </mesh>
+          </group>
+        ) : (
+          <group key={i} position={[x, 0, z]}>
+            <mesh position={[0, 0.18, 0]}>
+              <cylinderGeometry args={[0.28, 0.32, 0.36, 10]} />
+              <meshStandardMaterial color="#5a4a3a" roughness={0.9} />
+            </mesh>
+            <mesh position={[0, 0.62, 0]}>
+              <sphereGeometry args={[0.42, 14, 10]} />
+              <meshStandardMaterial color="#2f5a3a" roughness={0.9} flatShading />
+            </mesh>
+            {[0, 1, 2].map((k) => (
+              <mesh key={k} position={[Math.cos(k * 2.1) * 0.3, 0.85, Math.sin(k * 2.1) * 0.3]}>
+                <sphereGeometry args={[0.07, 8, 6]} />
+                <meshStandardMaterial color={['#ff8ab0', '#ffe08a', '#c58bff'][k]} emissive={['#ff8ab0', '#ffe08a', '#c58bff'][k]} emissiveIntensity={0.6} />
+              </mesh>
+            ))}
+          </group>
+        ),
+      )}
+    </>
+  )
+}
 
 const S = 0.7
 const STONE = '#5a6678'
@@ -71,20 +157,37 @@ export function HedgeBed({ c, r }) {
   )
 }
 
+const TIDE = '#3ecfbf' // Gyroid teal — contrast against gold route threads
+
 // route points are deck-local [x, z]; the deck's group is already at the site's position
-function RouteThread({ pts, color = GOLD, opacity = 1, dashed = false }) {
-  const linePts = useMemo(() => pts.map(([x, z]) => [x, 0.22, z]), [pts])
+function RouteThread({ pts, color = GOLD, opacity = 1, dashed = false, y = 0.22, width = 2.4, smooth = true }) {
+  const linePts = useMemo(() => (smooth ? smoothRoute(pts) : pts).map(([x, z]) => [x, y, z]), [pts, y, smooth])
   return (
-    <Line points={linePts} color={color} lineWidth={dashed ? 1.2 : 2.4} transparent opacity={opacity} dashed={dashed} dashSize={0.35} gapSize={0.22} />
+    <Line points={linePts} color={color} lineWidth={dashed ? width * 0.55 : width} transparent opacity={opacity} dashed={dashed} dashSize={0.35} gapSize={0.22} />
   )
 }
 
+/** Tide Glass ghost: thick teal tube sitting above the flat gold paths so scrubbing is obvious. */
 function GhostHomotopy({ a, b, t }) {
   const pts = useMemo(() => linearHomotopy(a, b, t), [a, b, t])
-  return <RouteThread pts={pts} color="#ffe6a8" opacity={0.45} />
+  const geom = useMemo(() => {
+    if (!pts?.length) return null
+    const curve = new THREE.CatmullRomCurve3(pts.map(([x, z]) => new THREE.Vector3(x, 0.48, z)))
+    return new THREE.TubeGeometry(curve, Math.max(24, pts.length * 8), 0.09, 10, false)
+  }, [pts])
+  useEffect(() => () => geom?.dispose(), [geom])
+  if (!geom) return null
+  return (
+    <group>
+      <mesh geometry={geom}>
+        <meshStandardMaterial color={TIDE} emissive={TIDE} emissiveIntensity={1.6} roughness={0.35} metalness={0.15} toneMapped={false} />
+      </mesh>
+      <RouteThread pts={pts} color="#b8fff4" opacity={0.95} y={0.58} width={4.2} />
+    </group>
+  )
 }
 
-function GardenDeck({ site, current, ledger, glassT, slidePair, routes }) {
+function GardenDeck({ site, current, ledger, glassT, slidePair, routes, selected, labels }) {
   const [px, pz] = site.pos
   const gates = site.gates
   const showRoutes = routes || site.routes || {}
@@ -93,16 +196,17 @@ function GardenDeck({ site, current, ledger, glassT, slidePair, routes }) {
   return (
     <group position={[px, 0, pz]}>
       {sh.type === 'rect' ? (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[(sh.x0 + sh.x1) / 2, 0.02, (sh.z0 + sh.z1) / 2]}>
-          <planeGeometry args={[sh.x1 - sh.x0, sh.z1 - sh.z0]} />
+        <mesh position={[(sh.x0 + sh.x1) / 2, -0.28, (sh.z0 + sh.z1) / 2]}>
+          <boxGeometry args={[sh.x1 - sh.x0, 0.6, sh.z1 - sh.z0]} />
           <meshStandardMaterial color="#4a5568" roughness={0.88} />
         </mesh>
       ) : (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-          <circleGeometry args={[deckR, 48]} />
+        <mesh position={[0, -0.28, 0]}>
+          <cylinderGeometry args={[deckR, deckR * 0.94, 0.6, 48]} />
           <meshStandardMaterial color="#4a5568" roughness={0.88} />
         </mesh>
       )}
+      <GardenDressing r={deckR} rect={sh.type === 'rect'} />
       {sh.type !== 'rect' && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
           <ringGeometry args={[deckR - 0.15, deckR, 64]} />
@@ -121,11 +225,31 @@ function GardenDeck({ site, current, ledger, glassT, slidePair, routes }) {
         </>
       )}
       {gates?.c && <Gatehouse pos={gates.c} rot={0} />}
-      {Object.entries(showRoutes).map(([id, pts]) => {
+      {Object.entries(showRoutes).map(([id, pts], ri) => {
         const cls = ledger?.[id]
-        const col = cls === 0 ? '#ffb347' : cls === 1 ? '#b090ff' : cls === 2 ? '#7fe8dc' : GOLD
-        const sel = slidePair?.includes(id)
-        return <RouteThread key={id} pts={pts} color={col} opacity={sel ? 1 : 0.75} dashed={id.includes('fast')} />
+        // unsorted routes are pale; sorted ones take their bin's colour; the picked one glows white
+        const picked = selected === id
+        const col = picked ? '#ffffff' : cls != null ? BIN_COLORS[cls] : '#b89a62'
+        const inPair = slidePair?.includes(id)
+        // While scrubbing, dim the paths so the teal tide tube reads clearly
+        const opacity = slidePair ? (inPair ? 0.55 : 0.22) : picked ? 1 : 0.85
+        // stagger the tags along each route so routes that peak together don't stack their names
+        const sm = smoothRoute(pts)
+        const spot = Object.keys(showRoutes).length > 2 ? sm[Math.round((sm.length - 1) * [0.3, 0.5, 0.7][ri % 3])] : labelSpot(sm)
+        return (
+          <group key={id}>
+            <RouteThread pts={pts} color={col} opacity={opacity} dashed={id.includes('fast')} width={picked ? 5 : 2.8} />
+            {picked && <RouteThread pts={pts} color="#ffffff" opacity={0.25} width={12} />}
+            {(labels || inPair) && (
+              <Html position={[spot[0], 0.5, spot[1]]} center zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
+                <div className={`route-tag${picked ? ' picked' : ''}`} style={{ borderColor: col, color: picked ? '#1a1206' : col, background: picked ? '#ffffff' : 'rgba(12,16,26,0.85)' }}>
+                  {ROUTE_LABEL[id] || id}
+                  {cls != null ? ` · ${cls === 0 ? 'I' : cls === 1 ? 'II' : 'III'}` : ''}
+                </div>
+              </Html>
+            )}
+          </group>
+        )
       })}
       {slidePair?.length === 2 && showRoutes[slidePair[0]] && showRoutes[slidePair[1]] && (
         <GhostHomotopy a={showRoutes[slidePair[0]]} b={showRoutes[slidePair[1]]} t={glassT} />
@@ -182,17 +306,22 @@ export default function EndpointGardensScene({
   glassT,
   slidePair,
   routeOverrides,
+  selectedRoute,
+  showLabels,
+  onSpoolClick,
 }) {
   const emmyRef = useRef()
   const game = useMemo(() => ({ mode: 'overworld', bySite: true, start: checkpoint, enemies }), [checkpoint, enemies])
   useFrame(() => {
     const e = emmyAt.current
-    emmyRef.current?.position.set(e.x, 0, e.z)
-    emmyRef.current.rotation.y = e.rotY
+    if (!emmyRef.current || !e) return
+    emmyRef.current.position.set(e.x, 0, e.z)
+    emmyRef.current.rotation.y = e.rotY ?? 0
   })
   return (
     <>
       <GardensSky />
+      <Seascape y={-0.9} depth={2.2} area={[0, -2, 64, 64]} seed={101} palette={{ water: '#123a52', sand: '#3a5a52', weed: '#22503a' }} lanterns={10} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} tint="#6a7588" />
       ))}
@@ -206,6 +335,8 @@ export default function EndpointGardensScene({
             glassT={glassT}
             slidePair={s.id === current ? slidePair : null}
             routes={routeOverrides?.[s.id]}
+            selected={s.id === current ? selectedRoute : null}
+            labels={s.id === current && showLabels}
           />
         ) : (
           <LandingPad key={s.id} site={s} />
@@ -217,7 +348,7 @@ export default function EndpointGardensScene({
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
-        spoolEnabled={false}
+        spoolEnabled
         tool={tool}
         sim={null}
         tRef={ZERO_T}
@@ -225,7 +356,7 @@ export default function EndpointGardensScene({
         spawnRef={spawnRef}
         ribbonApi={ribbonApi}
         onAction={onAction}
-        onStrokeStart={() => false}
+        onStrokeStart={(x, z, cx, cz) => (onSpoolClick?.(cx, cz), false)}
         onStrokeMove={() => {}}
         onStrokeEnd={() => {}}
         onEnemies={onEnemies}
@@ -234,8 +365,9 @@ export default function EndpointGardensScene({
       />
       <group ref={emmyRef}>
         <Emmy scale={S} script={() => ({ pos: [0, 0, 0], rotY: 0, walk: emmyAt.current.walk, gesture: emmyTalking.current ? 0.8 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 })} />
-        {nearEmmy && playEnabled && <EmmyBubble />}
       </group>
+      {/* Always mounted (like World 0) — mounting only when near used to crash (missing emmyAt). */}
+      <EmmyBubble emmyAt={emmyAt} show={nearEmmy && playEnabled} />
       <DevAdvance />
       <EffectComposer multisampling={0}>
         <Bloom luminanceThreshold={0.35} intensity={0.85} mipmapBlur />

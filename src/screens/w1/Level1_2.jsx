@@ -21,7 +21,7 @@ import {
   sfxRefuse,
   sfxWrong,
   sfxZoot,
-  startBastionMusic,
+  startBeaconMusic,
   stopMusic,
   textBlip,
   unlockAudio,
@@ -39,6 +39,26 @@ const PORTRAIT_CROP = {
   'emmy-boundary': ['400%', '54%', '5%'],
   commutator: ['500%', '53%', '19%'],
 }
+/** 1-2's Backtrack spawn: rides the nearest petal of its deck against the arrows, lap after lap. */
+function backtrackAI(e, dt) {
+  if (e.type !== 'backtrack') return
+  const tracks = TRACKS[e.site] || []
+  if (!tracks.length) return
+  if (e.trk == null) {
+    e.trk = e.seed ? Math.round(e.seed / 1.7) % tracks.length : 0
+    e.u = 0.6
+  }
+  const tr = tracks[e.trk]
+  const prev = tr.at(e.u)
+  e.u -= dt * 0.085
+  if (e.u < 0) e.u += 1
+  const [x, z] = tr.at(e.u)
+  e.x = x
+  e.z = z
+  e.tx = x
+  e.tz = z
+  e.face = Math.atan2(x - prev[0], z - prev[1])
+}
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id] || PORTRAIT_CROP.gyroid
@@ -49,6 +69,31 @@ function Portrait({ id, name }) {
       aria-label={name}
       style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/characters/${id}.png)`, backgroundSize: size, backgroundPosition: `${x} ${y}` }}
     />
+  )
+}
+
+/** Associativity, shown as timing: (α β) γ spends half the loop on γ; α (β γ) spends half on α. */
+const BRACKETS = [
+  { label: '$(α β) γ$', widths: [25, 25, 50] },
+  { label: '$α (β γ)$', widths: [50, 25, 25] },
+]
+function BracketBar({ run, lap }) {
+  const b = BRACKETS[Math.min(run, 1)]
+  const cols = ['#ffcf6a', '#88ccff', '#ff8ad8']
+  return (
+    <div className="bracket-bar">
+      <div className="bracket-label">
+        Run {Math.min(run, 1) + 1} of 2 · bracketed <MathText text={b.label} />
+      </div>
+      <div className="bracket-track">
+        {b.widths.map((w, i) => (
+          <span key={i} style={{ width: `${w}%`, background: cols[i], opacity: i < lap ? 1 : 0.35 }}>
+            {['α', 'β', 'γ'][i]}
+          </span>
+        ))}
+      </div>
+      <div className="bracket-note">time each lap gets in the loop’s one unit of time</div>
+    </div>
   )
 }
 
@@ -116,7 +161,7 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
 
   useEffect(() => {
     unlockAudio()
-    startBastionMusic()
+    startBeaconMusic()
     const unlock = () => unlockAudio()
     window.addEventListener('pointerdown', unlock)
     window.addEventListener('keydown', unlock)
@@ -161,13 +206,14 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
   )
 
   const onLapDone = useCallback(
-    (station, track, dir) => {
+    (station, trackIn, dir) => {
+      const track = station === 'second_beacon' ? 3 : trackIn
       const lap = letter(track, dir)
       const need = goal?.seq?.[lapIdx]
       if (goal?.type === 'loop' || goal?.type === 'reduce') {
         if (need && (need.track !== track || need.dir !== dir)) {
           sfxRefuse()
-          return flash(`That lap was ${wordText([lap])} — next need ${wordText([letter(need.track, need.dir)])}`)
+          return flash(`That lap was $${wordText([lap])}$ — the ledger needs $${wordText([letter(need.track, need.dir)])}$ next. ${need.dir < 0 ? 'Run it against the arrows.' : 'Run it along the arrows.'}`)
         }
       }
       beaconPulseRef.current = 1
@@ -195,7 +241,7 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
           setRunCount((r) => r + 1)
           setLapIdx(0)
           setBag([])
-          flash('Same three laps again — compare the ledger.')
+          flash('Same three laps again, bracketed the other way — compare the ledger.')
           return say(goal.mid || [])
         }
         sfxCorrect()
@@ -354,7 +400,7 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
       if (!s.enemies || done[s.id]) continue
       for (const [type, x, z] of s.enemies) list.push({ type, x: x + s.pos[0], z: z + s.pos[1], site: s.id })
     }
-    return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
+    return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list, enemyAI: backtrackAI }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey, checkpoint, done])
 
@@ -372,16 +418,21 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
     if (!goal) return ''
     if (goal.type === 'loop' || goal.type === 'reduce') {
       const need = goal.seq?.[lapIdx]
-      return need ? `Lash lap ${lapIdx + 1}/${goal.seq.length}: ${wordText([letter(need.track, need.dir)])}` : 'Close loops at the beacon'
+      return need ? `Lap ${lapIdx + 1}/${goal.seq.length}: $${wordText([letter(need.track, need.dir)])}$ — ${need.dir < 0 ? 'against' : 'along'} the arrows, pad to pad` : 'Close loops at the beacon'
     }
     if (goal.type === 'arrive_b') return 'Walk the causeway to Beacon B'
-    if (goal.type === 'carry') return 'Close one loop at Beacon B — the same ledger, new basepoint.'
+    if (goal.type === 'carry') return 'Run the loop $δ$ at $x₁$, pad to pad'
     if (goal.type === 'ask') return 'Answer Emmy’s question'
     return ''
   })()
 
   if (import.meta.env.DEV)
     window.__lvl1_2 = {
+      answerAsk: (v) => answerAsk(v),
+      killSite: (id) => window.__game?.killSite?.(id),
+      phase,
+      met,
+      lines,
       here,
       done,
       goal,
@@ -459,9 +510,12 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
           <div className="rules-panel forge-panel works-panel level-1-2-panel">
             <h3>{STATIONS[current].blueprint}</h3>
             <p className="forgery-count">
-              Loop ledger: <b className="rule-math">${wordText(bag)}$</b>
+              Loop ledger: <MathText text={`$${wordText(bag)}$`} />
             </p>
-            <p className="forgery-count">{stepText}</p>
+            {current === 'brackets' && goal?.type === 'loop' && <BracketBar run={runCount} lap={lapIdx} />}
+            <p className="forgery-count">
+              <MathText text={stepText} />
+            </p>
           </div>
         )}
 
@@ -485,7 +539,9 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
             <Portrait id="emmy-boundary" name="Emmy Boundary" />
             <div className="dialog-body">
               <span className="speaker">Emmy Boundary</span>
-              <p>{goal.question}</p>
+              <p>
+                <MathText text={goal.question} />
+              </p>
             </div>
             <div className="btn-row">
               {goal.options.map((v) => (
@@ -497,7 +553,11 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && (
+          <div className="toast">
+            <MathText text={toast} />
+          </div>
+        )}
         {nearEmmy && phase === 'play' && !levelClear && (
           <button type="button" className="btn talk-btn" onClick={() => talkToEmmy()}>
             💬 Talk to Emmy <kbd>E</kbd>
@@ -524,9 +584,9 @@ export default function Level1_2({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 1 · Level 2 · Lesson"
           name="Loops at a Point"
           embedded
-          startMusic={startBastionMusic}
-          onDone={() => (setLesson(false), startBastionMusic())}
-          onSkip={() => (setLesson(false), startBastionMusic())}
+          startMusic={startBeaconMusic}
+          onDone={() => (setLesson(false), startBeaconMusic())}
+          onSkip={() => (setLesson(false), startBeaconMusic())}
         />
       )}
 

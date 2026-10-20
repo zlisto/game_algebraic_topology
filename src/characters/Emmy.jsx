@@ -59,7 +59,7 @@ function usePatchwork() {
   }, [])
 }
 
-export default function Emmy({ script }) {
+export default function Emmy({ script, scale = 1 }) {
   const root = useRef()
   const hips = useRef()
   const torso = useRef()
@@ -134,7 +134,8 @@ export default function Emmy({ script }) {
 
   const coatMat = <meshStandardMaterial map={patch} roughness={0.75} side={THREE.DoubleSide} />
   return (
-    <group ref={root}>
+    // scale sizes her like Gyroid's prop does; her script's pos stays in the parent's units
+    <group ref={root} scale={scale}>
       <group ref={hips} position={[0, 0.82, 0]}>
         {/* legs: dark teal trousers into brown boots */}
         {[

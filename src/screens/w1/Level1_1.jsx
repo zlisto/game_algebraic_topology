@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import EndpointGardensScene from '../../levels/w1/EndpointGardensScene'
+import EndpointGardensScene, { BIN_COLORS, ROUTE_LABEL, smoothRoute } from '../../levels/w1/EndpointGardensScene'
 import LevelMovie from '../LevelMovie'
 import LevelMap from '../LevelMap'
 import { useExitTrigger } from '../exitTrigger'
@@ -168,7 +168,7 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
   }
 
   const say = useCallback((raw, next = 'play') => {
-    const ls = Array.isArray(raw) ? raw : raw ? [raw] : [] // a single line object is fine too
+    const ls = (Array.isArray(raw) ? raw : raw ? [raw] : []).filter((l) => l?.text)
     setLines(ls)
     setLineIdx(0)
     setPhase(ls.length ? 'talk:' + next : next)
@@ -236,7 +236,7 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     frameRef.current = { center: [site.pos[0] + 1, site.pos[1] + 0.3], size: w > 10 ? 12.6 : r > 5.2 ? 8.8 : 8, follow: 0.12 }
   }, [site, phase])
 
-  // arrival
+  // arrival: mark the station and queue Emmy's briefing — play keeps running until E
   useEffect(() => {
     if (!current || phase !== 'play') return
     const st = here.site
@@ -245,13 +245,18 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
       say(STATIONS[current].arrive)
     } else if (st && st !== current && !done[st] && STATIONS[st]?.early && !seen[`early-${st}`]) {
       setSeen((s) => ({ ...s, [`early-${st}`]: true }))
-      say(STATIONS[st].early)
+      // short redirect tip — toast, not a freeze
+      const tip = STATIONS[st].early?.[0]?.text
+      if (tip) flash(tip, 3800)
     }
-  }, [here.site, current, met, done, phase, say, seen])
+  }, [here.site, current, met, done, phase, seen])
 
-  // slide goal check
+  // slide goal check (once per goal — glassT updates must not re-fire advanceGoal)
+  const slideDoneRef = useRef(null)
   useEffect(() => {
     if (!goal || goal.type !== 'slide' || !site || tool !== 'glass' || phase !== 'play') return
+    const key = `${current}:${gi}`
+    if (slideDoneRef.current === key) return
     const [a, b] = goal.pair
     const ra = site.routes[a]
     const rb = site.routes[b]
@@ -263,6 +268,7 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     const n = Math.min(ghost.length, ref.length)
     for (let i = 0; i < n; i++) maxD = Math.max(maxD, Math.hypot(ghost[i][0] - ref[i][0], ghost[i][1] - ref[i][1]))
     if (maxD < SLIDE_MATCH && glassT > 0.85) {
+      slideDoneRef.current = key
       sfxCorrect()
       advanceGoal(current, STATIONS[current].goals[gi].done)
     }
@@ -297,6 +303,33 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     advanceGoal(current, goal.done)
   }
 
+  /** The Spool: click a route on the deck to pick it up (for the ledger). */
+  const onSpoolClick = (cx, cz) => {
+    if (!site || here.site !== current || phase !== 'play') return
+    if (goal?.type !== 'ledger') return flash(goal?.type === 'slide' ? 'Hold the Tide Glass (3) and scrub t with Z / X' : 'Nothing to pick up here right now')
+    const routes = ledgerRoutesFor(site)
+    const lx = cx - site.pos[0]
+    const lz = cz - site.pos[1]
+    let best = null
+    for (const [id, pts] of Object.entries(routes)) {
+      const sm = smoothRoute(pts)
+      for (let i = 0; i < sm.length - 1; i++) {
+        const [ax, az] = sm[i]
+        const [bx, bz] = sm[i + 1]
+        const dx = bx - ax
+        const dz = bz - az
+        const l2 = dx * dx + dz * dz || 1
+        const u = Math.max(0, Math.min(1, ((lx - ax) * dx + (lz - az) * dz) / l2))
+        const d = Math.hypot(lx - ax - u * dx, lz - az - u * dz)
+        if (d < 0.7 && (!best || d < best.d)) best = { id, d }
+      }
+    }
+    if (!best) return flash('Click right on a route to pick it up')
+    setSelectedRoute(best.id)
+    sfxLedger()
+    flash(`Picked “${ROUTE_LABEL[best.id] || best.id}” — now choose Bin I or Bin II in the ledger`, 3000)
+  }
+
   const once = (key, ls, fallback) => {
     if (!seen[key]) {
       setSeen((m) => ({ ...m, [key]: true }))
@@ -304,9 +337,15 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     } else flash(fallback, 3400)
   }
 
-  const confirmPace = () => {
+  const confirmPace = (same = true) => {
     if (!site || goal?.type !== 'pace') return
     const env = envFor(site)
+    if (!same) {
+      sfxWrong()
+      return once('pace-wrong', [
+        { speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text: 'Look again: the dashed route walks the very same curve — just in more, shorter steps. A path is a map from $[0, 1]$; changing its pace is a homotopy rel the gates.' },
+      ], 'Same curve, different pace — that’s the same class.')
+    }
     if (homotopicRelEndpoints(site.routes.slow, site.routes.fast, env)) {
       setPaceConfirmed(true)
       sfxCorrect()
@@ -339,24 +378,28 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     }
   }
 
+  const waveSeen = useRef(false)
   const guardClear = useCallback(() => {
-    if (goal?.type === 'guard' && current && !enemies[current]) advanceGoal(current, goal.done)
-  }, [goal, current, enemies, advanceGoal])
+    if (goal?.type !== 'guard' || !current || phase !== 'play') return
+    if (!waveSeen.current) {
+      if ((enemies[current] || 0) > 0) waveSeen.current = true
+      return
+    }
+    if (!enemies[current]) advanceGoal(current, goal.done)
+  }, [goal, current, enemies, advanceGoal, phase])
 
   useEffect(() => {
     guardClear()
   }, [guardClear, enemies])
 
   const advance = () => {
-    const line = lines[lineIdx]
-    if (shown < line.text.length) {
-      setShown(line.text.length)
+    const full = lines[lineIdx]?.text?.length ?? 0
+    if (shown < full) {
+      setShown(full)
       return
     }
     if (lineIdx + 1 < lines.length) {
       setLineIdx(lineIdx + 1)
-      setShown(0)
-      dialogOpen()
       return
     }
     const next = phase.split(':')[1] || 'play'
@@ -368,35 +411,54 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     }
   }
 
+  // Type like Level 01: reset shown on each line, clearInterval on cleanup.
+  // (Old setTimeout typer compared against the PREVIOUS line's shown count and
+  // skipped typing entirely — empty Gyroid boxes with ▶▶ still active.)
   useEffect(() => {
-    if (!lines.length) return
-    emmyTalking.current = lines[lineIdx]?.speaker === 'Emmy Boundary'
-    duckMusic(true)
-    dialogOpen()
+    const talkingNow = phase.startsWith('talk')
+    duckMusic(talkingNow)
+    if (talkingNow) dialogOpen()
+  }, [phase])
+
+  useEffect(() => {
     setShown(0)
+    if (!lines.length) return undefined
+    const line = lines[lineIdx]
+    if (!line?.text) return undefined
+    emmyTalking.current = line.speaker === 'Emmy Boundary'
     let i = 0
-    const tick = () => {
-      if (i >= lines[lineIdx].text.length) return
-      if (shownNow.current >= lines[lineIdx].text.length) return
+    const id = setInterval(() => {
       i++
-      setShown(i)
-      textBlip(lines[lineIdx].speaker)
-      setTimeout(tick, 1000 / TYPE_CPS)
-    }
-    tick()
-    return () => duckMusic(false)
+      setShown((n) => {
+        if (n >= line.text.length) {
+          clearInterval(id)
+          return n
+        }
+        return Math.max(n, i)
+      })
+      if (shownNow.current >= line.text.length) {
+        clearInterval(id)
+        return
+      }
+      const ch = line.text[i - 1]
+      if (ch && ch !== ' ' && i % 2 === 0) textBlip(line.speaker)
+      if (i >= line.text.length) clearInterval(id)
+    }, 1000 / TYPE_CPS)
+    return () => clearInterval(id)
   }, [lines, lineIdx])
 
   const gameKey = knockouts
+  // after a knockout the deck's spawn come back — and an unfinished wave with them
   const gameEnemies = useMemo(() => {
     const list = []
     for (const s of SITES) {
-      for (const [type, dx, dz] of s.enemies || []) {
-        list.push({ type, x: s.pos[0] + dx, z: s.pos[1] + dz, site: s.id })
-      }
+      if (done[s.id]) continue
+      for (const [type, dx, dz] of s.enemies || []) list.push({ type, x: s.pos[0] + dx, z: s.pos[1] + dz, site: s.id })
+      if (waveSpawned.current && s.id === current && goal?.type === 'guard') for (const [type, dx, dz] of s.wave || []) list.push({ type, x: s.pos[0] + dx, z: s.pos[1] + dz, site: s.id })
     }
     return list
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameKey])
 
   useExitTrigger(exitOpen && !levelClear, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
@@ -421,15 +483,25 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     )
   }
 
+  // Tide Glass scrub: hold Z/X like Level 02 (raf applies dt). Discrete keydown bumps never felt like scrubbing.
+  const scrubKeys = useRef({})
   useEffect(() => {
     const onKey = (e) => {
       if (talking) return
       if (e.code === 'KeyE' && canTalk) talkToEmmy()
       if (TOOL_KEYS[e.code]) setTool(TOOL_KEYS[e.code])
       if (e.code === 'KeyQ') setTool((w) => TOOLS[(TOOLS.indexOf(w) + 1) % TOOLS.length])
+      if (e.code === 'KeyZ' || e.code === 'KeyX') scrubKeys.current[e.code] = true
+    }
+    const onUp = (e) => {
+      if (e.code === 'KeyZ' || e.code === 'KeyX') scrubKeys.current[e.code] = false
     }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('keyup', onUp)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('keyup', onUp)
+    }
   })
 
   const glassActive = tool === 'glass' && playEnabled && goal?.type === 'slide'
@@ -437,22 +509,20 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
     if (!glassActive) return
     let raf
     let last = performance.now()
-    const step = (now) => {
-      const dt = (now - last) / 1000
+    const tick = () => {
+      const now = performance.now()
+      const dt = Math.min(0.05, (now - last) / 1000)
       last = now
-      raf = requestAnimationFrame(step)
+      const k = scrubKeys.current
+      const dir = (k.KeyX ? 1 : 0) - (k.KeyZ ? 1 : 0)
+      if (dir) setGlassT(glassTRef.current + dir * SCRUB_PER_SEC * dt)
+      raf = requestAnimationFrame(tick)
     }
-    raf = requestAnimationFrame(step)
-    const down = (e) => {
-      if (e.code === 'KeyZ') setGlassT((t) => t - SCRUB_PER_SEC * 0.05)
-      if (e.code === 'KeyX') setGlassT((t) => t + SCRUB_PER_SEC * 0.05)
-    }
-    const wheel = (e) => setGlassT((t) => t + Math.sign(e.deltaY) * 0.012)
-    window.addEventListener('keydown', down)
+    raf = requestAnimationFrame(tick)
+    const wheel = (e) => setGlassT(glassTRef.current + Math.sign(e.deltaY) * 0.012)
     window.addEventListener('wheel', wheel, { passive: true })
     return () => {
       cancelAnimationFrame(raf)
-      window.removeEventListener('keydown', down)
       window.removeEventListener('wheel', wheel)
     }
   }, [glassActive, setGlassT])
@@ -468,8 +538,9 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
         const [ex, ez] = em.toWorld(em.emmy[0], em.emmy[1])
         emmyAt.current.x = ex
         emmyAt.current.z = ez
-        setNearEmmy(Math.hypot(s.x - ex, s.z - ez) < 2.4)
-      } else setNearEmmy(false)
+        const near = Math.hypot(s.x - ex, s.z - ez) < 2.4
+        setNearEmmy((was) => (was === near ? was : near))
+      } else setNearEmmy((was) => (was ? false : was))
     }
     const id = setInterval(tick, 120)
     return () => clearInterval(id)
@@ -477,6 +548,10 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
 
   if (import.meta.env.DEV)
     window.__lvl1_1 = {
+      onSpoolClick,
+      setSelectedRoute,
+      confirmPace,
+      SITE,
       here,
       done,
       goalIdx,
@@ -502,8 +577,8 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
   const stepText = (() => {
     if (!goal) return ''
     if (goal.type === 'slide') return 'Tide Glass (3): scrub t with Z / X until routes match'
-    if (goal.type === 'ledger') return selectedRoute ? 'Pick a ledger bin (I or II)' : 'Click a route, then a bin · Confirm when sorted'
-    if (goal.type === 'pace') return 'Confirm the fast route is the same class'
+    if (goal.type === 'ledger') return selectedRoute ? `Picked ${ROUTE_LABEL[selectedRoute] || selectedRoute} — choose Bin I or Bin II` : 'Spool (2): click a route on the deck (or its name) · then its bin · Stamp when all are sorted'
+    if (goal.type === 'pace') return 'Is the dashed fast route the same class as the slow one?'
     if (goal.type === 'chain') return chainSwap ? 'Confirm swap keeps the chain class' : 'Chain routes · toggle swap · confirm'
     if (goal.type === 'guard') return 'Lash hedge spawn (1) before they root'
     return `${WORLD_TOOLS.spool.label} (2) · ${WORLD_TOOLS.glass.label} (3)`
@@ -545,6 +620,9 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
           glassT={glassT}
           slidePair={slidePair}
           routeOverrides={routeOverrides}
+          selectedRoute={selectedRoute}
+          showLabels={goal?.type === 'ledger' || goal?.type === 'pace' || goal?.type === 'chain'}
+          onSpoolClick={onSpoolClick}
         />
       </Canvas>
 
@@ -583,16 +661,22 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
             {goal.type === 'ledger' && (
               <div className="w1-1-route-picks">
                 {routeIds.map((id) => (
-                  <button key={id} type="button" className={`btn small ${selectedRoute === id ? 'primary' : ''}`} onClick={() => setSelectedRoute(id)}>
-                    {id}
-                    {ledger[current][id] != null ? ` · class ${ledger[current][id] + 1}` : ''}
+                  <button
+                    key={id}
+                    type="button"
+                    className={`btn small ${selectedRoute === id ? 'primary' : ''}`}
+                    style={ledger[current][id] != null && selectedRoute !== id ? { borderColor: BIN_COLORS[ledger[current][id]], color: BIN_COLORS[ledger[current][id]] } : undefined}
+                    onClick={() => setSelectedRoute(id)}
+                  >
+                    {ROUTE_LABEL[id] || id}
+                    {ledger[current][id] != null ? ` · ${ledger[current][id] === 0 ? 'I' : 'II'}` : ''}
                   </button>
                 ))}
                 <div className="btn-row">
-                  <button type="button" className="btn small" onClick={() => assignBin(0)}>
+                  <button type="button" className="btn small" style={{ borderColor: BIN_COLORS[0], color: BIN_COLORS[0] }} onClick={() => assignBin(0)}>
                     Bin I
                   </button>
-                  <button type="button" className="btn small" onClick={() => assignBin(1)}>
+                  <button type="button" className="btn small" style={{ borderColor: BIN_COLORS[1], color: BIN_COLORS[1] }} onClick={() => assignBin(1)}>
                     Bin II
                   </button>
                   <button type="button" className="btn primary small" onClick={checkLedger}>
@@ -602,9 +686,14 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
               </div>
             )}
             {goal.type === 'pace' && (
-              <button type="button" className="btn primary small" onClick={confirmPace}>
-                Same class
-              </button>
+              <div className="btn-row">
+                <button type="button" className="btn primary small" onClick={() => confirmPace(true)}>
+                  Same class
+                </button>
+                <button type="button" className="btn small" onClick={() => confirmPace(false)}>
+                  Different class
+                </button>
+              </div>
             )}
             {goal.type === 'chain' && (
               <div className="btn-row">
@@ -626,11 +715,11 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
             <div className="dialog-body">
               <span className="speaker">{line.speaker}</span>
               <p>
-                <MathText text={line.text} shown={shown} />
+                <MathText text={line.text || '…'} shown={shown} />
               </p>
             </div>
             <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
-              {shown < line.text.length ? '▶▶' : lineIdx + 1 < lines.length ? 'Next ▾' : 'OK'}
+              {shown < (line.text?.length ?? 0) ? '▶▶' : lineIdx + 1 < lines.length ? 'Next ▾' : 'OK'}
             </button>
           </div>
         )}

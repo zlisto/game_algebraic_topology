@@ -7,9 +7,10 @@ import { useExitTrigger } from '../exitTrigger'
 import {
   BUILD_PRESETS,
   ORDER_TWO_SHEET_AA,
-  conjugateOrder,
+  coverThreeSheetConj,
   coverTwoSheetAA,
   letterText,
+  liftWord,
   nearestPort,
   orderMatches,
   parseWord,
@@ -103,13 +104,13 @@ export default function Level1_9({ concept, onBackToTitle, onNext, startAt }) {
   const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
   const emmyTalking = useRef(false)
   const [nearEmmy, setNearEmmy] = useState(false)
+  const current = STATION_ORDER.find((id) => !done[id]) || null
 
   const cover = useMemo(() => {
-    const c = BUILD_PRESETS[presetIdx] || coverTwoSheetAA()
+    const c = current === 'moving_start' ? coverThreeSheetConj() : BUILD_PRESETS[presetIdx] || coverTwoSheetAA()
     return { n: c.n, adj: c.adj.map((row) => ({ ...row })) }
-  }, [presetIdx])
-
-  const current = STATION_ORDER.find((id) => !done[id]) || null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetIdx, current])
   const goals = current ? STATIONS[current].goals : []
   const gi = current ? goalIdx[current] || 0 : 0
   const goal = goals[gi] || null
@@ -355,12 +356,11 @@ export default function Level1_9({ concept, onBackToTitle, onNext, startAt }) {
       sfxRefuse()
       return flash('The sentinel only swaps the start on its own deck — Moving the Start.')
     }
-    const next = baseRef.current === 0 ? 1 : 0
+    // walk the start along the cover: sheet 1 → 2 → 3 → 1
+    const next = (baseRef.current + 1) % 3
     setBase(next)
-    const conj = conjugateOrder(ORDER_TWO_SHEET_AA, next === 1 ? 'a' : 'A')
-    setOrderLabel(conj.label)
     sfxStackSwap()
-    flash(next === 1 ? 'Start vertex on sheet 2 — order conjugated.' : 'Start back on sheet 1.')
+    flash(`The start is now sheet ${next + 1}.`)
   }
   const swapRef = useRef(swapStart)
   swapRef.current = swapStart
@@ -482,7 +482,16 @@ export default function Level1_9({ concept, onBackToTitle, onNext, startAt }) {
         {current && here.site === current && met[current] && (
           <div className="rules-panel forge-panel works-panel level-1-9-panel">
             <h3>{STATIONS[current].blueprint}</h3>
-            <p className="forgery-count">{stepText}</p>
+            {(current === 'moving_start' || current === 'to_order') && (
+              <p className="carry-line">
+                <MathText
+                  text={`From sheet ${base + 1}: $a$ ${liftWord(cover, base, ['a']).closed ? 'closes' : 'opens'} · ${current === 'to_order' ? `$a²$ ${liftWord(cover, base, ['a', 'a']).closed ? 'closes' : 'opens'} · ` : ''}$b$ ${liftWord(cover, base, ['b']).closed ? 'closes' : 'opens'}`}
+                />
+              </p>
+            )}
+            <p className="forgery-count">
+              <MathText text={stepText} />
+            </p>
           </div>
         )}
 
@@ -490,7 +499,11 @@ export default function Level1_9({ concept, onBackToTitle, onNext, startAt }) {
           <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Sheet Stacks" />
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && (
+          <div className="toast">
+            <MathText text={toast} />
+          </div>
+        )}
         {nearEmmy && phase === 'play' && !torusAsk && !levelClear && (
           <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
             💬 Talk to Emmy <kbd>E</kbd>

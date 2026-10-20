@@ -68,6 +68,7 @@ export default function Level1_10({ concept, onBackToTitle, onNext, startAt }) {
   const [guardsAligned, setGuardsAligned] = useState(false)
   const [walkLoop, setWalkLoop] = useState(null)
   const [walkProgress, setWalkProgress] = useState(0)
+  const rimRun = useRef({ last: null, total: 0 })
   const [met, setMet] = useState({})
   const [lines, setLines] = useState([])
   const [lineIdx, setLineIdx] = useState(0)
@@ -327,15 +328,31 @@ export default function Level1_10({ concept, onBackToTitle, onNext, startAt }) {
   const [askOpen, setAskOpen] = useState(false)
 
   useEffect(() => {
-    if (goal?.type === 'ask' && phase === 'play' && !lines.length) setAskOpen(true)
+    // only once you're on that hall and have heard about its cover
+    if (goal?.type === 'ask' && phase === 'play' && !lines.length && here.site === current && met[current]) setAskOpen(true)
     else setAskOpen(false)
-  }, [goal, phase, lines.length])
+  }, [goal, phase, lines.length, here.site, current, met])
 
   useEffect(() => {
     if (current === 'antipodal' && goal?.type === 'walk' && here.site === 'antipodal') {
       setWalkLoop(goal.loopId)
-      const d = Math.hypot(here.pos[0] - SITE.antipodal.pos[0], here.pos[1] - SITE.antipodal.pos[1])
-      if (d > 4 && d < 5.2) setWalkProgress((p) => Math.min(1, p + 0.04))
+      // count how far round the rim Gyroid has gone, unwrapped: half a turn (π) is door to opposite door
+      const dx = here.pos[0] - SITE.antipodal.pos[0]
+      const dz = here.pos[1] - SITE.antipodal.pos[1]
+      const d = Math.hypot(dx, dz)
+      const R = rimRun.current
+      if (d > 3.9 && d < 5.4) {
+        const a = Math.atan2(dz, dx)
+        if (R.last == null) (R.last = a), (R.total = 0)
+        else {
+          let da = a - R.last
+          while (da > Math.PI) da -= 2 * Math.PI
+          while (da < -Math.PI) da += 2 * Math.PI
+          R.total += da
+          R.last = a
+        }
+        setWalkProgress(Math.min(1, Math.abs(R.total) / Math.PI))
+      } else R.last = null
     }
   }, [here, current, goal])
 

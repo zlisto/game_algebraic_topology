@@ -15,6 +15,7 @@ import { wordText } from './freeWords'
 import { LETTER_COLORS } from '../w0/Hologram'
 
 const S = 0.7
+const NO_PROGRESS = { current: null }
 const TRACK_COL = { red: '#e04040', violet: '#8060d0' }
 
 function LanternRing({ r, color }) {
@@ -45,20 +46,23 @@ function DistrictPlatform({ site, lit, current, tracks }) {
   const r = site.def.add[0].r ?? 5.4
   const isRect = site.def.add[0].type === 'rect'
   return (
-    <group position={[site.pos[0], 0, site.pos[1]]}>
-      {isRect ? (
-        <mesh position={[0, -0.28, 0]}>
-          <boxGeometry args={[site.def.add[0].x1 - site.def.add[0].x0, 0.55, site.def.add[0].z1 - site.def.add[0].z0]} />
-          <meshStandardMaterial color="#2a2c36" roughness={0.65} />
-        </mesh>
-      ) : (
-        <Platform site={site} lit={lit} current={current} />
-      )}
-      {!isRect && <LanternRing r={r} color={lit ? '#ffb347' : '#554466'} />}
+    <>
+      {/* Platform places itself at site.pos; everything else here is deck-local */}
+      {!isRect && <Platform site={site} lit={lit} current={current} />}
+      <group position={[site.pos[0], 0, site.pos[1]]}>
+        {isRect && (
+          <mesh position={[(site.def.add[0].x0 + site.def.add[0].x1) / 2, -0.28, (site.def.add[0].z0 + site.def.add[0].z1) / 2]}>
+            <boxGeometry args={[site.def.add[0].x1 - site.def.add[0].x0, 0.55, site.def.add[0].z1 - site.def.add[0].z0]} />
+            <meshStandardMaterial color="#2a2c36" roughness={0.65} />
+          </mesh>
+        )}
+        {!isRect && <LanternRing r={r} color={lit ? '#ffb347' : '#554466'} />}
+      </group>
+      {/* Track places itself at pos too */}
       {tracks.map((t, i) => (
-        <Track key={i} track={t.track} edge={{ letter: i, dir: 1, torn: false }} progressRef={t.progressRef} trackIdx={i} pos={site.pos} />
+        <Track key={i} track={t.track} edge={{ letter: i, dir: 1, torn: false }} progressRef={current ? t.progressRef : NO_PROGRESS} trackIdx={i} pos={site.pos} />
       ))}
-    </group>
+    </>
   )
 }
 

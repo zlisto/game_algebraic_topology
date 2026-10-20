@@ -222,7 +222,8 @@ export function Track({ track, edge, progressRef, trackIdx, pos }) {
 export function EmmyBubble({ emmyAt, show }) {
   const g = useRef()
   useFrame(({ clock }) => {
-    const at = emmyAt.current
+    const at = emmyAt?.current
+    if (!at || !g.current) return
     g.current.position.set(at.x, 2.15 + Math.sin(clock.elapsedTime * 3) * 0.06, at.z)
   })
   return (

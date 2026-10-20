@@ -5,18 +5,18 @@ import * as THREE from 'three'
 /**
  * Count Null's spawn, modeled on the concept sheets in assets/characters/enemies/:
  *
- *   SphereSpawn  — an obsidian orb split by a jagged violet mouth of crystal teeth that
+ *   SphereSpawn  â€” an obsidian orb split by a jagged violet mouth of crystal teeth that
  *                  gnashes open, four slit eyes, a floating halo, violet smoke and
  *                  orbiting shards. One lash collapses it to a point.
- *   TorusSpawn   — an armored, spiked ring standing on edge like a wheel, violet
+ *   TorusSpawn   â€” an armored, spiked ring standing on edge like a wheel, violet
  *                  joints between its plates, one slit eye glaring from the hole, two
  *                  energy loops (around the tube, through the hole) that turn gold as
  *                  each lash catches one. Two lashes.
- *   SnapperSpawn — a cracked obsidian crab with oversized snipping claws, six jointed
+ *   SnapperSpawn â€” a cracked obsidian crab with oversized snipping claws, six jointed
  *                  legs that scuttle, eyes on wobbling stalks, gold thread caught in its
  *                  pincers. One lash.
  *
- * Each reads the live enemy record `e` (position, facing, flash, stun, dying, hp…).
+ * Each reads the live enemy record `e` (position, facing, flash, stun, dying, hpâ€¦).
  */
 
 const VIOLET = '#b070ff'
@@ -390,7 +390,7 @@ function MirrorBody({ e, ghost, axis }) {
         <icosahedronGeometry args={[0.32, 0]} />
         <meshBasicMaterial color={VIOLET} wireframe transparent opacity={ghost ? 0.35 : 0.85} toneMapped={false} />
       </mesh>
-      {/* one wide eye — lavender on the real one, hollow on its reflection */}
+      {/* one wide eye â€” lavender on the real one, hollow on its reflection */}
       <group ref={eye} position={[0, 0.04, 0.27]}>
         <mesh scale={[0.12, 0.07, 0.04]}>
           <sphereGeometry args={[1, 14, 10]} />
@@ -414,7 +414,7 @@ function MirrorBody({ e, ghost, axis }) {
 /**
  * Mirror spawn: a faceted mirror-crystal creature with one wide eye, always shadowed by
  * its reflection across its reef's mirror line (`e.axis`). Only the real one can be
- * lashed — the reflection flickers, its eye is hollow, and a lash passes through it.
+ * lashed â€” the reflection flickers, its eye is hollow, and a lash passes through it.
  */
 export function MirrorSpawn({ e }) {
   const axis = e.axis ?? e.hx
@@ -429,7 +429,7 @@ export function MirrorSpawn({ e }) {
 // ---------------------------------------------------------------- unglue (0-4)
 
 /**
- * Unglue: a violet seam-ripper sprite from the Skeleton Foundry — a hooked needle head
+ * Unglue: a violet seam-ripper sprite from the Skeleton Foundry â€” a hooked needle head
  * with one glaring eye and a whipping tail of torn thread. It goes for forged edges and
  * pulls them loose (a torn edge must be re-forged). One lash.
  */
@@ -484,7 +484,7 @@ export function UnglueSpawn({ e }) {
 // ---------------------------------------------------------------- coner (0-5)
 
 /**
- * Coner: a violet engineer drone — a faceted body under a spinning rotor ring, with a
+ * Coner: a violet engineer drone â€” a faceted body under a spinning rotor ring, with a
  * projector that throws a cone of violet light down onto a space to plug its hole.
  * While it beams (e.beam > 0) the cone of light grows; lash it before the beam finishes.
  * Two lashes.
@@ -542,7 +542,7 @@ export function ConerSpawn({ e }) {
 // ---------------------------------------------------------------- loop-biter (0-6)
 
 /**
- * Loop-biter: a violet beetle — an obsidian shell split down the middle, six legs that
+ * Loop-biter: a violet beetle â€” an obsidian shell split down the middle, six legs that
  * scuttle, and big crystal mandibles. It perches on a petal loop and chews it (e.beam > 0:
  * the mandibles work and gold splinters fly); lash it before it finishes. Two lashes.
  */
@@ -628,7 +628,7 @@ export function LoopBiterSpawn({ e }) {
 /**
  * A judgment beacon: a tall violet crystal on a black-glass stand above one of Null's
  * demonstrations. Lash it to call that demonstration a forgery. It flares gold when hit.
- * (Level code reads e.label for nothing — the beacon is the same everywhere.)
+ * (Level code reads e.label for nothing â€” the beacon is the same everywhere.)
  */
 export function BeaconSpawn({ e }) {
   const g = useRef()
@@ -679,11 +679,11 @@ export function ShardSpawn({ e }) {
   )
 }
 
-// ---------------------------------------------------------------- World 1 · Bouquet Bastion
+// ---------------------------------------------------------------- World 1 Â· Bouquet Bastion
 
 /**
  * Hedge-sprout (1-1): a thorny violet seed that roots into a patch of ground. It swells as
- * `e.rooting` (0 → 1) climbs; lash it before it takes root. One lash.
+ * `e.rooting` (0 â†’ 1) climbs; lash it before it takes root. One lash.
  */
 export function HedgeSpawn({ e }) {
   const g = useRef()
@@ -875,6 +875,394 @@ export function DeckGuardSpawn({ e }) {
       <mesh position={[0, 0.5, 0]}>
         <octahedronGeometry args={[0.12, 0]} />
         {glow('#ffb347')}
+      </mesh>
+    </group>
+  )
+}
+
+/**
+ * Backtrack (1-2): a hooded wisp that runs the beacon's loop tracks the wrong way round —
+ * a living α⁻¹. Its tail of chevrons points back the way it came. One lash.
+ */
+export function BacktrackSpawn({ e }) {
+  const g = useRef()
+  const body = useRef()
+  const tail = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55 + Math.sin(t * 5) * 0.05, 0.4, t, 1)
+    body.current.rotation.y = -t * 3
+    tail.current.children.forEach((c, i) => (c.material.opacity = 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(t * 8 - i * 1.3))))
+  })
+  return (
+    <group ref={g}>
+      <mesh ref={body}>
+        <coneGeometry args={[0.28, 0.62, 7]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 0.12, 0.2]}>
+        <sphereGeometry args={[0.06, 8, 6]} />
+        {glow('#ff8ad8')}
+      </mesh>
+      <group ref={tail}>
+        {[0, 1, 2].map((i) => (
+          <mesh key={i} position={[0, -0.05, -0.34 - i * 0.24]} rotation={[-Math.PI / 2, 0, Math.PI]}>
+            <coneGeometry args={[0.16 - i * 0.03, 0.18, 3]} />
+            {glow('#ffb347', { transparent: true, opacity: 0.6 })}
+          </mesh>
+        ))}
+      </group>
+      <mesh position={[0, -0.5, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.22, 0.4, 14]} />
+        {glow(VIOLET, { transparent: true, opacity: 0.35 })}
+      </mesh>
+    </group>
+  )
+}
+
+/**
+ * Winder (1-3): a spindle wound in stolen turns — one violet coil per turn it holds
+ * (`e.turns`, set by the level). The Lash slides off while it holds any; run laps the other
+ * way until the coils are gone, and it glows gold and goes down to one lash.
+ */
+export function WinderSpawn({ e }) {
+  const g = useRef()
+  const coils = useRef()
+  const core = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.75 + Math.sin(t * 2) * 0.06, 0.5, t, 1)
+    const n = Math.min(4, Math.abs(e.turns ?? 0))
+    coils.current.rotation.y = t * (e.turns >= 0 ? 2.4 : -2.4)
+    coils.current.children.forEach((c, i) => (c.visible = i < n))
+    core.current.material.color.set(n ? '#9060ff' : '#ffcf6a')
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <octahedronGeometry args={[0.24, 0]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh ref={core} position={[0, 0.36, 0]}>
+        <sphereGeometry args={[0.09, 10, 8]} />
+        <meshBasicMaterial color="#9060ff" toneMapped={false} />
+      </mesh>
+      <group ref={coils}>
+        {[0, 1, 2, 3].map((i) => (
+          <mesh key={i} position={[0, -0.24 + i * 0.16, 0]} rotation={[Math.PI / 2 + 0.25, 0.4 * i, 0]}>
+            <torusGeometry args={[0.36 - i * 0.03, 0.035, 6, 20]} />
+            {glow(VIOLET)}
+          </mesh>
+        ))}
+      </group>
+    </group>
+  )
+}
+
+/** Echo (3-1): violet reflection — mirrored Gyroid silhouette. */
+export function EchoSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55, 0.55, t, 1)
+    g.current.rotation.y = t * 0.6
+  })
+  return (
+    <group ref={g}>
+      <mesh scale={[-1, 1, 1]}>
+        <capsuleGeometry args={[0.2, 0.45, 4, 8]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0, 0.55, 0.08]}>
+        <sphereGeometry args={[0.12, 8, 6]} />
+        {glow('#c090ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Vine choker (3-2): pulls torsion vines down. */
+export function VineChokerSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.4, 0.7, t, 1)
+    g.current.rotation.y = Math.sin(t) * 0.4
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <torusGeometry args={[0.35, 0.08, 6, 16]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0, 0.5, 0]} rotation={[0.3, 0, 0.2]}>
+        <cylinderGeometry args={[0.04, 0.06, 1.1, 6]} />
+        {glow('#a060ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Moth swarm (3-3): snuffs lanterns — one lash. */
+export function MothSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.9 + Math.sin(t * 4) * 0.15, 0.4, t, 0.85)
+  })
+  return (
+    <group ref={g}>
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 0.18, 0, 0]} rotation={[0, 0, s * 0.4]}>
+          <sphereGeometry args={[0.14, 6, 4]} />
+          {obsidian({ flatShading: true })}
+        </mesh>
+      ))}
+      <mesh>
+        <sphereGeometry args={[0.1, 8, 6]} />
+        {glow('#d0a0ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Seam wraith (3-8): tears the seam — three lashes. */
+export function SeamWraithSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.7, 0.9, t, 1.1)
+    g.current.rotation.y = t * 0.35
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <coneGeometry args={[0.35, 1.4, 5]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 0.5, 0.1]}>
+        <sphereGeometry args={[0.15, 8, 6]} />
+        {glow('#ff70d0')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Flipper (2-1 / 3-7): flips orientations / compasses. */
+export function FlipperSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.35, 0.5, t, 1)
+    g.current.rotation.z = Math.sin(t * 3) * 0.5
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <boxGeometry args={[0.45, 0.25, 0.55]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 0.25, 0]}>
+        <octahedronGeometry args={[0.18, 0]} />
+        {glow('#b070ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Bog spawn (2-2): violet blob that fills missing tiles; two lashes. */
+export function BogSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.28 + Math.sin(t * 2) * 0.05, 0.7, t, 1.15)
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <sphereGeometry args={[0.42, 10, 8]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0, 0.25, 0.15]} scale={[1.2, 0.6, 0.8]}>
+        <sphereGeometry args={[0.2, 8, 6]} />
+        {glow('#9060ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Crumpler (2-3): violet wad that stamps degenerate triangles; one lash. */
+export function CrumplerSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.4, 0.45, t, 0.95)
+    g.current.rotation.x = Math.sin(t * 2.5) * 0.3
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <dodecahedronGeometry args={[0.28, 0]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0.1, 0.15, 0]}>
+        <octahedronGeometry args={[0.1, 0]} />
+        {glow('#c080ff')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Leak sprite (2-4 / 2-8): punctures locks; one lash after seal. */
+export function LeakSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.75 + Math.sin(t * 5) * 0.1, 0.4, t, 0.85)
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <sphereGeometry args={[0.16, 8, 6]} />
+        {glow('#b070ff')}
+      </mesh>
+      <mesh position={[0, -0.2, 0]}>
+        <coneGeometry args={[0.08, 0.3, 6]} />
+        {obsidian()}
+      </mesh>
+    </group>
+  )
+}
+
+/** Quarry golem (2-5): welds excised pieces; three lashes. */
+export function QuarryGolemSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55, 1.0, t, 1.2)
+    g.current.rotation.y = Math.sin(t * 0.8) * 0.2
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <boxGeometry args={[0.55, 0.7, 0.45]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh position={[0, 0.55, 0]}>
+        <boxGeometry args={[0.4, 0.35, 0.35]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0, 0.7, 0.15]}>
+        <sphereGeometry args={[0.1, 8, 6]} />
+        {glow('#ff70d0')}
+      </mesh>
+    </group>
+  )
+}
+
+/** Gale spawn (2-6): violet wisps that blow wind; one lash. */
+export function GaleSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.85 + Math.sin(t * 3.5) * 0.2, 0.35, t, 0.8)
+    g.current.rotation.y = t * 2
+  })
+  return (
+    <group ref={g}>
+      {[0, 1, 2].map((i) => (
+        <mesh key={i} position={[Math.cos(i * 2.1) * 0.15, Math.sin(i) * 0.1, Math.sin(i * 2.1) * 0.15]}>
+          <sphereGeometry args={[0.1, 6, 4]} />
+          {glow('#d0a0ff')}
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+// ---------------------------------------------------------------- World 4 · Postnikov Spire
+
+/** Cube sentry (4-1): violet cube that pins Gyroid's boundary — lash faces. */
+export function CubeSentrySpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.55 + Math.sin(t * 2) * 0.05, 0.5, t, 1)
+    g.current.rotation.x = t * 0.4
+    g.current.rotation.y = t * 0.55
+  })
+  return (
+    <group ref={g}>
+      <mesh>
+        <boxGeometry args={[0.55, 0.55, 0.55]} />
+        {obsidian({ flatShading: true })}
+      </mesh>
+      <mesh>
+        <boxGeometry args={[0.58, 0.58, 0.58]} />
+        {glow('#a060ff', { transparent: true, opacity: 0.35, wireframe: true })}
+      </mesh>
+    </group>
+  )
+}
+
+/** Glitch (4-2 / 4-8): violet static that knocks maps off the grid. */
+export function GlitchSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.7 + Math.sin(t * 9) * 0.12, 0.35, t, 1.2)
+  })
+  return (
+    <group ref={g}>
+      {[0, 1, 2].map((i) => (
+        <mesh key={i} position={[(i - 1) * 0.18, Math.sin(i) * 0.1, 0]}>
+          <boxGeometry args={[0.12, 0.28, 0.08]} />
+          {glow(i % 2 ? '#c090ff' : '#8060d0')}
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+/** Fiber wraith (4-7 / 4-10): slips between fibers — lash on its circle. */
+export function FiberWraithSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.85, 0.8, t, 1)
+    g.current.rotation.y = t * 1.2
+  })
+  return (
+    <group ref={g}>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.4, 0.05, 6, 24]} />
+        {glow('#88ccff')}
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[0.16, 8, 6]} />
+        {obsidian()}
+      </mesh>
+    </group>
+  )
+}
+
+/** Twist thief (4-11 / 4-12): violet hand stealing k-invariant brackets. */
+export function TwistThiefSpawn({ e }) {
+  const g = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    place(g.current, e, 0.5, 0.55, t, 1)
+    g.current.rotation.z = Math.sin(t * 3) * 0.35
+  })
+  return (
+    <group ref={g}>
+      <mesh position={[0, 0.15, 0]}>
+        <sphereGeometry args={[0.2, 8, 6]} />
+        {obsidian()}
+      </mesh>
+      <mesh position={[0.28, 0.05, 0]} rotation={[0, 0, -0.6]}>
+        <boxGeometry args={[0.35, 0.12, 0.18]} />
+        {glow('#e0aaff')}
       </mesh>
     </group>
   )

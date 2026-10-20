@@ -1,0 +1,170 @@
+{
+  "note": "World 4 · Level 10 Fibration Station — Fibration Station. Spire side-view: floors stacked south.",
+  "bounds": {
+    "minX": -16,
+    "maxX": 16,
+    "minZ": -36.2,
+    "maxZ": 16
+  },
+  "causewayWidth": 1.4,
+  "start": [
+    0,
+    11
+  ],
+  "sites": [
+    {
+      "id": "landing",
+      "name": "Fibration Station Landing",
+      "kind": "start",
+      "pos": [
+        0,
+        11
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "id": "lift",
+      "name": "Lift",
+      "stage": "station",
+      "pos": [
+        0,
+        2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.2,
+        -3.2
+      ],
+      "enemies": [],
+      "beacon": "main"
+    },
+    {
+      "id": "fibre",
+      "name": "Make It Fibre",
+      "stage": "station",
+      "pos": [
+        9,
+        -9
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.2,
+        -3.2
+      ],
+      "enemies": [
+        [
+          "fiber_wraith",
+          2.4,
+          -2.2
+        ]
+      ],
+      "beacon": null
+    },
+    {
+      "id": "loops",
+      "name": "The Loop Space",
+      "stage": "station",
+      "pos": [
+        0,
+        -20
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.2,
+        -3.2
+      ],
+      "enemies": [
+        [
+          "fiber_wraith",
+          2.4,
+          -2.2
+        ]
+      ],
+      "beacon": null
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0.0,
+        9.8
+      ],
+      "b": [
+        0.0,
+        6.6
+      ]
+    },
+    {
+      "a": [
+        2.91,
+        -1.56
+      ],
+      "b": [
+        6.09,
+        -5.44
+      ]
+    },
+    {
+      "a": [
+        6.09,
+        -12.56
+      ],
+      "b": [
+        2.91,
+        -16.44
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      0,
+      -29.7
+    ],
+    "a": [
+      0,
+      -24.599999999999998
+    ],
+    "b": [
+      0,
+      -32.2
+    ],
+    "to": "next"
+  },
+  "accent": "#c8b6ff"
+}

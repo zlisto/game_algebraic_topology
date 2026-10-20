@@ -207,14 +207,11 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
       setLiftSheet(end)
       if (goal?.type === 'lap') {
         lapCount.current += 1
+        // the lift stays where the laps carried it: one lap leaves it on sheet two, and two more bring it back there
         if (lapCount.current === goal.count) {
           sfxCorrect()
           advanceGoal(current, STATIONS[current].goals[gi].done)
           lapCount.current = 0
-          setLiftSheet(0)
-        } else if (goal.count === 2 && lapCount.current === 1 && end !== 1) {
-          once('lap1', HINTS18.wrongLap, 'One lap should land on sheet two.')
-          sfxWrong()
         }
       }
       if (goal?.type === 'rescue' && end === (goal.targetSheet ?? 2) - 1) {
@@ -453,7 +450,7 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
         {atStation && (
           <div className="rules-panel forge-panel works-panel">
             <h3>{STATIONS[current].blueprint}</h3>
-            <p className="forgery-count">{stepText}</p>
+            <p className="forgery-count"><MathText text={stepText} /></p>
             {(goal?.type === 'wire' || goal?.type === 'prove') && (
               <div className="w18-wiring">
                 {cover.adj.map((row, v) => (
@@ -484,7 +481,7 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
             </button>
           </div>
         )}
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && <div className="toast"><MathText text={toast} /></div>}
         {nearEmmy && phase === 'play' && (
           <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
             💬 Talk to Emmy <kbd>E</kbd>

@@ -101,7 +101,7 @@ export function dialogOpen() {
   blipAt(t + 0.06, hz(83), { dur: 0.12, type: 'square', vol: 0.08 })
 }
 
-/** One text blip — call every couple of characters as the line types out. */
+/** One text blip â€” call every couple of characters as the line types out. */
 export function textBlip(speaker) {
   if (!audio() || ctx.state !== 'running') return
   const v = VOICES[speaker] || VOICES.Narrator
@@ -130,8 +130,8 @@ export function duckMusic(on) {
 // ---------------------------------------------------------------- the Retract Reef theme
 
 /*
- * 92 bpm, 16th-note grid, two 8-bar phrases (A, A′) in D dorian:
- *   Dm9 – G13 – Fmaj7 – C/E  |  B♭maj7 – C6 – Dm9 – A7sus4
+ * 92 bpm, 16th-note grid, two 8-bar phrases (A, Aâ€²) in D dorian:
+ *   Dm9 â€“ G13 â€“ Fmaj7 â€“ C/E  |  Bâ™­maj7 â€“ C6 â€“ Dm9 â€“ A7sus4
  * Pad (triangle pair), pulse arpeggio through the echo, triangle bass, a sine lead
  * that enters in the second phrase, and soft noise hats.
  */
@@ -150,7 +150,7 @@ const CHORDS = [
 ]
 const ARP = [0, 2, 4, 3, 1, 3, 4, 2] // index into chord tones, per 8th note
 const LEAD = [
-  // [bar, 16th, midi, length in 16ths] — second phrase only
+  // [bar, 16th, midi, length in 16ths] â€” second phrase only
   [0, 0, 74, 6], [0, 6, 76, 2], [0, 8, 77, 8],
   [1, 0, 76, 4], [1, 4, 74, 4], [1, 8, 71, 8],
   [2, 0, 72, 6], [2, 6, 74, 2], [2, 8, 76, 6], [2, 14, 77, 2],
@@ -271,7 +271,7 @@ function startLoop(schedule, stepSec) {
   tick()
 }
 
-/** Start the Retract Reef theme (looping) — safe to call more than once. */
+/** Start the Retract Reef theme (looping) â€” safe to call more than once. */
 export function startReefMusic() {
   startLoop(scheduleStep, STEP)
 }
@@ -294,7 +294,7 @@ export const stopMusic = stopReefMusic
 
 /*
  * The reef theme's slower cousin: 80 bpm in A minor, 8 bars
- *   Am9 – Fmaj7 – G6 – Em7  |  Dm9 – Fmaj7/C – Gsus4 – E7sus4
+ *   Am9 â€“ Fmaj7 â€“ G6 â€“ Em7  |  Dm9 â€“ Fmaj7/C â€“ Gsus4 â€“ E7sus4
  * Pads swell in and out like the tide (two-bar swells) over a wash of surf, a
  * sparse plucked arpeggio through the echo, a low triangle bass on beats 1 and 3,
  * and a slow sine lead in the second phrase. While the Tide Glass is out, a
@@ -329,7 +329,7 @@ export function setGlassTick(on) {
 }
 
 function swellAt(t, notes, dur) {
-  // a pad that breathes: slow rise, slow fall — the tide coming in and going out
+  // a pad that breathes: slow rise, slow fall â€” the tide coming in and going out
   const f = ctx.createBiquadFilter()
   f.type = 'lowpass'
   f.frequency.setValueAtTime(500, t)
@@ -402,11 +402,11 @@ export function startTideMusic() {
 
 /*
  * 72 bpm in E lydian, glassy and still. Every two-bar motif is answered by its mirror
- * image — the same intervals turned upside down around the motif's first note — the
+ * image â€” the same intervals turned upside down around the motif's first note â€” the
  * way the reefs answer each other across the channel. Celesta bells (sine + bright
  * partials, through the echo), a slow breathing pad, a soft low bass, and a faint
  * shimmer on the offbeats. 8 bars:
- *   Emaj7 – F♯/E – C♯m9 – Amaj7♯11 | Emaj7 – B6 – Amaj7 – B(sus4)
+ *   Emaj7 â€“ Fâ™¯/E â€“ Câ™¯m9 â€“ Amaj7â™¯11 | Emaj7 â€“ B6 â€“ Amaj7 â€“ B(sus4)
  */
 const MIRROR_STEP = 60 / 72 / 4
 const MIRROR_CHORDS = [
@@ -474,7 +474,7 @@ export function startMirrorMusic() {
  * 100 bpm in C minor: the reef's melody brought into the forge. Anvil strikes on the
  * off-beats, a pumping square bass, square-wave brass stabs, a bellows swell every two
  * bars, and the lead in the second phrase. 8 bars:
- *   Cm – A♭ – E♭ – B♭ | Cm – Fm – G7 – Cm
+ *   Cm â€“ Aâ™­ â€“ Eâ™­ â€“ Bâ™­ | Cm â€“ Fm â€“ G7 â€“ Cm
  */
 const FORGE_STEP = 60 / 100 / 4
 const FORGE_CHORDS = [
@@ -582,7 +582,7 @@ export function startForgeMusic() {
  * 116 bpm in F major, bright and mechanical: four-on-the-floor kick, arpeggios that
  * climb to a tip and fold back down (cone up, cone down), a pulsing octave bass, and a
  * square lead in the second phrase. 8 bars:
- *   F – C/E – Dm – B♭ | F – Am – B♭ – C
+ *   F â€“ C/E â€“ Dm â€“ Bâ™­ | F â€“ Am â€“ Bâ™­ â€“ C
  */
 const CONE_STEP = 60 / 116 / 4
 const CONE_CHORDS = [
@@ -635,7 +635,7 @@ export function startConeMusic() {
 /*
  * 104 bpm in G mixolydian, woody: a log-drum pattern (pitched sine thumps that drop),
  * a shaker, a plucked triangle bass, and a reedy square lead with a little vibrato-like
- * grace note. 8 bars:  G – F – C – G | G – F – Am – D
+ * grace note. 8 bars:  G â€“ F â€“ C â€“ G | G â€“ F â€“ Am â€“ D
  */
 const TIMBER_STEP = 60 / 104 / 4
 const TIMBER_CHORDS = [
@@ -687,9 +687,9 @@ export function startTimberMusic() {
 
 /*
  * 132 bpm in C phrygian, built on the tritone. 8 bars, two phrases:
- *   Cm – D♭ – Cm – G♭(♭5) | A♭ – D♭ – Cm – G7♭9
+ *   Cm â€“ Dâ™­ â€“ Cm â€“ Gâ™­(â™­5) | Aâ™­ â€“ Dâ™­ â€“ Cm â€“ G7â™­9
  * Driving sawtooth bass in 8ths (octave jumps), staccato organ stabs, a low
- * menacing lead (C E♭ F♯ G … the tritone is Null's interval), a church-bell toll at
+ * menacing lead (C Eâ™­ Fâ™¯ G â€¦ the tritone is Null's interval), a church-bell toll at
  * the top of each phrase, kick / snare / hats. The second phrase doubles the lead an
  * octave up through the echo.
  */
@@ -1134,7 +1134,7 @@ export function sfxBridge() {
 
 /*
  * A music box: the forge theme's melody, slow and sparse, in high sine and triangle
- * tones with a soft echo — 72 bpm in C minor.
+ * tones with a soft echo â€” 72 bpm in C minor.
  */
 const BOX_STEP = 60 / 72 / 2
 const BOX_NOTES = [84, 0, 87, 0, 91, 0, 89, 87, 86, 0, 84, 0, 82, 0, 79, 0, 80, 0, 84, 0, 87, 0, 86, 84, 83, 0, 0, 0, 79, 0, 0, 0]
@@ -1171,7 +1171,7 @@ export function sfxHammer() {
 // ---------------------------------------------------------------- ways out
 
 let longNoise = null
-/** A filtered noise sweep (for the exit whoosh): `from` → `to` Hz over `dur` seconds. */
+/** A filtered noise sweep (for the exit whoosh): `from` â†’ `to` Hz over `dur` seconds. */
 function sweptNoise(t, dur, from, to, vol) {
   if (!longNoise) {
     longNoise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
@@ -1194,7 +1194,7 @@ function sweptNoise(t, dur, from, to, vol) {
   s.stop(t + dur + 0.05)
 }
 
-/** A walkway materialising: "zzzooot" — a buzzy rising zap that lands on a bright note. */
+/** A walkway materialising: "zzzooot" â€” a buzzy rising zap that lands on a bright note. */
 export function sfxZoot() {
   if (!audio() || ctx.state !== 'running') return
   const t = ctx.currentTime
@@ -1204,7 +1204,7 @@ export function sfxZoot() {
   ;[84, 91].forEach((m, i) => blipAt(t + 0.5 + i * 0.06, hz(m), { dur: 0.5, type: 'sine', vol: 0.08, out: echo }))
 }
 
-/** Leaving a level: "zzzooosh" — a long falling rush of air with a low swell under it. */
+/** Leaving a level: "zzzooosh" â€” a long falling rush of air with a low swell under it. */
 export function sfxExit() {
   if (!audio() || ctx.state !== 'running') return
   const t = ctx.currentTime
@@ -1214,15 +1214,15 @@ export function sfxExit() {
   ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + 1.15 + i * 0.07, hz(m), { dur: 0.9, type: 'triangle', vol: 0.05, out: echo }))
 }
 
-// ================================================================ World 1 · Bouquet Bastion
-// One theme per level (merged by the World 1 integrator from integration/1_1 … 1_10).
+// ================================================================ World 1 Â· Bouquet Bastion
+// One theme per level (merged by the World 1 integrator from integration/1_1 â€¦ 1_10).
 // All use the same helpers as the World 0 themes: blipAt / padAt / hatAt / startLoop.
 
-// ---------------------------------------------------------------- 1-1 / 1-2 · Bastion march
+// ---------------------------------------------------------------- 1-1 / 1-2 Â· Bastion march
 
 /*
  * 104 bpm, G major: a stately march. Bass on the beats, a two-chord pad, a small square
- * melody walking up and back down (a route there and back). 4 bars:  G – Em – D – G
+ * melody walking up and back down (a route there and back). 4 bars:  G â€“ Em â€“ D â€“ G
  */
 const BASTION_STEP = 60 / 104 / 4
 const BASTION_CHORDS = [
@@ -1258,6 +1258,40 @@ export function sfxRoot() {
   if (!audio() || ctx.state !== 'running') return
   blipAt(ctx.currentTime, 120, { dur: 0.25, type: 'sawtooth', vol: 0.06, slide: 0.6 })
 }
+/*
+ * 1-2 · Basepoint Beacon: a 3/4 waltz at 132 bpm in D. Every four-bar phrase leaves the
+ * tonic, wanders, and comes home to it (a loop at a basepoint); a beacon bell rings on the
+ * downbeat of each return. The second phrase runs the first one backwards (its inverse).
+ */
+const BEACON_STEP = 60 / 132 / 2 // eighth notes, 6 per bar
+const BEACON_BASS = [38, 45, 43, 38, 38, 43, 45, 38]
+const BEACON_PAD = [
+  [62, 66, 69],
+  [61, 64, 69],
+  [59, 62, 67],
+  [62, 66, 69],
+  [62, 66, 69],
+  [59, 62, 67],
+  [61, 64, 69],
+  [62, 66, 69],
+]
+const BEACON_OUT = [74, 76, 78, 81, 79, 78, 76, 73, 71, 74, 76, 74]
+const BEACON_MEL = [...BEACON_OUT, ...[...BEACON_OUT].reverse()]
+function scheduleBeacon(step, t, buf) {
+  const s = step % 48 // 8 bars × 6 eighths
+  const bar = Math.floor(s / 6)
+  const k = s % 6
+  if (k === 0) blipAt(t, hz(BEACON_BASS[bar] - 12), { dur: BEACON_STEP * 2.5, type: 'triangle', vol: 0.12, bus: musicBus })
+  if (k === 2 || k === 4) blipAt(t, hz(BEACON_BASS[bar]), { dur: BEACON_STEP * 0.8, type: 'triangle', vol: 0.05, bus: musicBus })
+  if (k === 0) padAt(t, BEACON_PAD[bar], BEACON_STEP * 6)
+  if (k === 3) hatAt(t, buf, 0.02)
+  if (k % 2 === 0) blipAt(t, hz(BEACON_MEL[(bar * 3 + k / 2) % 24]), { dur: BEACON_STEP * 1.7, type: 'square', vol: 0.028, bus: musicBus, out: echo })
+  if (k === 0 && (bar === 3 || bar === 7)) blipAt(t, hz(86), { dur: 0.6, type: 'sine', vol: 0.05, bus: musicBus, out: echo })
+}
+/** 1-2's theme: the beacon waltz. */
+export function startBeaconMusic() {
+  startLoop(scheduleBeacon, BEACON_STEP)
+}
 /** A loop closes back at its basepoint: a two-note bell. */
 export function sfxLoopClose() {
   if (!audio() || ctx.state !== 'running') return
@@ -1266,7 +1300,7 @@ export function sfxLoopClose() {
   blipAt(t + 0.08, hz(67), { dur: 0.5, type: 'triangle', vol: 0.08, out: echo })
 }
 
-// ---------------------------------------------------------------- 1-3 · Helix
+// ---------------------------------------------------------------- 1-3 Â· Helix
 
 /* 104 bpm in E minor: a rising ostinato that steps up one note per lap; chime on each floor. */
 const HELIX_STEP = 60 / 104 / 4
@@ -1295,7 +1329,7 @@ export function sfxGate() {
   blipAt(ctx.currentTime, hz(69), { dur: 0.25, type: 'triangle', vol: 0.08, out: echo })
 }
 
-// ---------------------------------------------------------------- 1-4 · Basin
+// ---------------------------------------------------------------- 1-4 Â· Basin
 
 /* 108 bpm: a low drone and a heavy march; the Retractor's tread. A minor. */
 const BASIN_STEP = 60 / 108 / 4
@@ -1318,7 +1352,7 @@ export function sfxSeize() {
   blipAt(ctx.currentTime, 90, { dur: 0.4, type: 'sawtooth', vol: 0.08, slide: 0.4 })
 }
 
-// ---------------------------------------------------------------- 1-5 · Torus Terraces
+// ---------------------------------------------------------------- 1-5 Â· Torus Terraces
 
 /* 108 bpm, 6/8 feel in D: two interlocking arpeggios, one around the tube and one through the hole. */
 const PUSH_STEP = 60 / 108 / 4
@@ -1343,7 +1377,7 @@ export function sfxProject() {
   blipAt(t + 0.07, hz(79), { dur: 0.18, type: 'sine', vol: 0.07, out: echo })
 }
 
-// ---------------------------------------------------------------- 1-6 · Free-Word Forge
+// ---------------------------------------------------------------- 1-6 Â· Free-Word Forge
 
 /* 96 bpm in A minor: two voices in canon (red and violet) that never quite align. */
 const FREEWORD_STEP = 60 / 96 / 4
@@ -1373,7 +1407,7 @@ export function sfxCancel() {
   blipAt(ctx.currentTime, hz(84), { dur: 0.08, type: 'triangle', vol: 0.06 })
 }
 
-// ---------------------------------------------------------------- 1-7 · Glue Works
+// ---------------------------------------------------------------- 1-7 Â· Glue Works
 
 /* 100 bpm in C minor: the Forge's anvil under the Bastion's march (relations being glued in). */
 const GLUE_STEP = 60 / 100 / 4
@@ -1393,7 +1427,7 @@ export function startGlueWorksMusic() {
   startLoop(scheduleGlue, GLUE_STEP)
 }
 
-// ---------------------------------------------------------------- 1-8 · Sheetwater Viaduct
+// ---------------------------------------------------------------- 1-8 Â· Sheetwater Viaduct
 
 /* 92 bpm: three staggered glass pads (one per sheet) and harp arpeggios. C major. */
 const SHEETWATER_STEP = 60 / 92 / 4
@@ -1413,7 +1447,7 @@ export function startSheetwaterMusic() {
   startLoop(scheduleSheetwater, SHEETWATER_STEP)
 }
 
-// ---------------------------------------------------------------- 1-9 · Sheet Stacks
+// ---------------------------------------------------------------- 1-9 Â· Sheet Stacks
 
 /* 72 bpm: a canon in three octaves, one voice per sheet. A minor. */
 const SHEETCANON_STEP = 60 / 72 / 4
@@ -1439,7 +1473,7 @@ export function sfxStackSwap() {
   blipAt(ctx.currentTime, 520, { dur: 0.12, type: 'square', vol: 0.07, slide: 1.4 })
 }
 
-// ---------------------------------------------------------------- 1-10 · Deck the Halls
+// ---------------------------------------------------------------- 1-10 Â· Deck the Halls
 
 /* 96 bpm in A: a rotating round: three voices, each entering a beat later than the last. */
 const DECK_STEP = 60 / 96 / 4
@@ -1459,4 +1493,188 @@ export function startDeckRoundMusic() {
 export function sfxDeckShift() {
   if (!audio() || ctx.state !== 'running') return
   blipAt(ctx.currentTime, hz(64), { dur: 0.08, type: 'sine', vol: 0.09, slide: 1.3 })
+}
+
+// ---------------------------------------------------------------- World 3 · Cup Product Gardens
+const GARDENS_STEP = 60 / 76 / 4
+function scheduleGardens(step, t, buf) {
+  const k = step % 48
+  const bar = Math.floor(step / 48) % 4
+  if (k % 12 === 0) blipAt(t, hz(41), { dur: GARDENS_STEP * 5, type: 'sine', vol: 0.1, bus: musicBus })
+  if (k % 6 === 3) hatAt(t, buf, 0.018)
+  if (k === 0) padAt(t, [53, 57, 60], GARDENS_STEP * 24)
+  if (k === 24) padAt(t, bar % 2 ? [55, 58, 62] : [53, 57, 60].reverse(), GARDENS_STEP * 24)
+  if (k % 4 === 0) blipAt(t, hz(72 + (k / 4) % 5), { dur: GARDENS_STEP * 2.2, type: 'triangle', vol: 0.028, bus: musicBus, out: echo })
+}
+export function startGardensMusic() { startLoop(scheduleGardens, GARDENS_STEP) }
+export function startTerraceMusic() { startLoop(scheduleGardens, GARDENS_STEP * 0.92) }
+export function startLanternMusic() { startLoop(scheduleGardens, GARDENS_STEP) }
+export function startParterreMusic() { startLoop(scheduleGardens, GARDENS_STEP * 1.05) }
+export function startPolyMusic() { startLoop(scheduleGardens, GARDENS_STEP * 0.88) }
+const REACH_STEP = 60 / 88 / 4
+function scheduleReach(step, t, buf) {
+  const k = step % 32
+  if (k % 8 === 0) blipAt(t, hz(38), { dur: REACH_STEP * 6, type: 'sine', vol: 0.11, bus: musicBus })
+  if (k % 4 === 2) hatAt(t, buf, 0.02)
+  if (k === 0) padAt(t, [50, 54, 57], REACH_STEP * 16)
+  if (k % 8 === 4) blipAt(t, hz(69), { dur: REACH_STEP * 3, type: 'triangle', vol: 0.032, bus: musicBus, out: echo })
+}
+export function startReachMusic() { startLoop(scheduleReach, REACH_STEP) }
+export function startSeamMusic() { startLoop(scheduleReach, REACH_STEP) }
+export function startPierMusic() { startLoop(scheduleReach, REACH_STEP * 0.95) }
+export function sfxCup() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(76), { dur: 0.2, type: 'sine', vol: 0.1, out: echo })
+  blipAt(ctx.currentTime + 0.08, hz(83), { dur: 0.25, type: 'triangle', vol: 0.07, out: echo })
+}
+export function sfxRead() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(69), { dur: 0.12, type: 'square', vol: 0.06, out: echo })
+}
+
+// ================================================================ World 2 · Chain Delta
+
+const DELTA_STEP = 60 / 84 / 4
+const DELTA_MEL = [64, 67, 71, 74, 71, 67, 64, 59]
+function scheduleDelta(step, t, buf) {
+  const s = step % 64
+  const k = s % 16
+  const bar = Math.floor(s / 16)
+  if (k === 0) blipAt(t, hz(40), { dur: DELTA_STEP * 8, type: 'sine', vol: 0.1, bus: musicBus })
+  if (k === 0 || k === 8) padAt(t, bar % 2 ? [64, 67, 71] : [59, 64, 67], DELTA_STEP * 8)
+  if (k % 8 === 4) hatAt(t, buf, 0.02)
+  if (k % 2 === 0) blipAt(t, hz(DELTA_MEL[(k / 2 + bar) % 8]), { dur: DELTA_STEP * 1.4, type: 'triangle', vol: 0.028, bus: musicBus, out: echo })
+  if (k === 11) blipAt(t, 880, { dur: 0.04, type: 'sine', vol: 0.015, bus: musicBus })
+}
+export function startDeltaMusic() {
+  startLoop(scheduleDelta, DELTA_STEP)
+}
+
+const FOG_STEP = 60 / 72 / 4
+function scheduleFog(step, t, buf) {
+  const k = step % 32
+  if (k === 0) padAt(t, [52, 55, 59], FOG_STEP * 16)
+  if (k === 16) padAt(t, [50, 55, 57], FOG_STEP * 16)
+  if (k % 8 === 0) blipAt(t, hz(40), { dur: FOG_STEP * 6, type: 'sine', vol: 0.08, bus: musicBus })
+  if (k % 4 === 2) hatAt(t, buf, 0.015)
+}
+export function startFogMusic() {
+  startLoop(scheduleFog, FOG_STEP)
+}
+
+const CANAL_STEP = 60 / 96 / 4
+function scheduleCanal(step, t, buf) {
+  const k = step % 48
+  if (k % 8 === 0) blipAt(t, hz(36 + (Math.floor(k / 8) % 3) * 2), { dur: CANAL_STEP * 5, type: 'triangle', vol: 0.1, bus: musicBus })
+  if (k % 4 === 0) hatAt(t, buf, 0.025)
+  if (k % 6 === 0) blipAt(t, hz(60 + (k % 12)), { dur: CANAL_STEP * 2, type: 'square', vol: 0.025, bus: musicBus, out: echo })
+}
+export function startCanalMusic() {
+  startLoop(scheduleCanal, CANAL_STEP)
+}
+
+const QUARRY_STEP = 60 / 92 / 4
+function scheduleQuarry(step, t, buf) {
+  const k = step % 32
+  if (k === 0 || k === 12) blipAt(t, hz(33), { dur: QUARRY_STEP * 4, type: 'sine', vol: 0.14, bus: musicBus })
+  if (k % 8 === 4) hatAt(t, buf, 0.04)
+  if (k === 8) blipAt(t, hz(48), { dur: 0.08, type: 'triangle', vol: 0.06, bus: musicBus })
+  if (k % 16 === 0) padAt(t, [55, 59, 62], QUARRY_STEP * 16)
+}
+export function startQuarryMusic() {
+  startLoop(scheduleQuarry, QUARRY_STEP)
+}
+
+const DYNAMO_STEP = 60 / 110 / 4
+function scheduleDynamo(step, t, buf) {
+  const k = step % 64
+  if (k % 4 === 0) blipAt(t, hz(33), { dur: DYNAMO_STEP * 2.5, type: 'sawtooth', vol: 0.07, bus: musicBus })
+  if (k % 8 === 0) hatAt(t, buf, 0.03)
+  if (k === 0) padAt(t, [57, 60, 64], DYNAMO_STEP * 16)
+  if (k === 32) padAt(t, [55, 59, 62], DYNAMO_STEP * 16)
+  if (k % 16 === 12) blipAt(t, hz(81), { dur: 0.2, type: 'square', vol: 0.04, bus: musicBus, out: echo })
+}
+export function startDynamoMusic() {
+  startLoop(scheduleDynamo, DYNAMO_STEP)
+}
+
+const REEL_STEP = 60 / 108 / 4
+function scheduleReel(step, t, buf) {
+  const mel = [67, 69, 71, 74, 76, 74, 71, 69]
+  const k = step % 32
+  if (k % 4 === 0) blipAt(t, hz(43), { dur: REEL_STEP * 3, type: 'triangle', vol: 0.09, bus: musicBus })
+  if (k % 2 === 0) blipAt(t, hz(mel[(k / 2) % 8]), { dur: REEL_STEP * 1.5, type: 'square', vol: 0.03, bus: musicBus, out: echo })
+  if (k % 8 === 4) hatAt(t, buf, 0.02)
+}
+export function startReelMusic() {
+  startLoop(scheduleReel, REEL_STEP)
+}
+
+const MOD_STEP = 60 / 90 / 4
+function scheduleMod(step, t, buf) {
+  const k = step % 24
+  if (k % 6 === 0) blipAt(t, hz(k % 12 === 0 ? 52 : 55), { dur: MOD_STEP * 4, type: 'triangle', vol: 0.1, bus: musicBus })
+  if (k % 3 === 0) hatAt(t, buf, 0.02)
+  if (k === 0) padAt(t, [57, 60], MOD_STEP * 12)
+}
+export function startModMusic() {
+  startLoop(scheduleMod, MOD_STEP)
+}
+
+const FORD_STEP = 60 / 100 / 4
+function scheduleFord(step, t, buf) {
+  const k = step % 48
+  if (k % 8 === 0) blipAt(t, hz(38), { dur: FORD_STEP * 5, type: 'sine', vol: 0.11, bus: musicBus })
+  if (k === 0) padAt(t, [59, 62, 66], FORD_STEP * 16)
+  if (k === 24) padAt(t, [57, 60, 64], FORD_STEP * 16)
+  if (k % 4 === 2) hatAt(t, buf, 0.022)
+  if (k % 6 === 0) blipAt(t, hz(71 - (k % 12)), { dur: FORD_STEP * 1.8, type: 'triangle', vol: 0.03, bus: musicBus, out: echo })
+}
+export function startFordMusic() {
+  startLoop(scheduleFord, FORD_STEP)
+}
+
+export function sfxCancelEdge() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime
+  blipAt(t, hz(76), { dur: 0.12, type: 'sine', vol: 0.08, out: echo })
+  blipAt(t + 0.06, hz(64), { dur: 0.18, type: 'triangle', vol: 0.06 })
+}
+export function sfxDegreeTick() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(84), { dur: 0.1, type: 'square', vol: 0.06, out: echo })
+}
+
+// ---------------------------------------------------------------- World 4 · Postnikov Spire
+/* Solemn 72 bpm in C minor — organ chords climbing a floor at a time. */
+const SPIRE_STEP = 60 / 72 / 4
+function scheduleSpire(step, t, buf, shift = 0) {
+  const k = step % 64
+  const floor = Math.floor(step / 64) % 5
+  if (k % 16 === 0) blipAt(t, hz(36 + shift), { dur: SPIRE_STEP * 8, type: 'sine', vol: 0.11, bus: musicBus })
+  if (k % 8 === 4) hatAt(t, buf, 0.016)
+  if (k === 0) padAt(t, [48 + shift, 51 + shift, 55 + shift], SPIRE_STEP * 32)
+  if (k === 32) padAt(t, [50 + shift, 53 + shift, 58 + shift], SPIRE_STEP * 32)
+  if (k % 4 === 0) blipAt(t, hz(67 + shift + (floor % 3)), { dur: SPIRE_STEP * 2, type: 'triangle', vol: 0.026, bus: musicBus, out: echo })
+}
+export function startCubeHallMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 0), SPIRE_STEP) }
+export function startGridGalleryMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 2), SPIRE_STEP) }
+export function startWeakSpotMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 1), SPIRE_STEP * 1.05) }
+export function startSlingLandingMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 3), SPIRE_STEP * 0.95) }
+export function startOneGroupMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 0), SPIRE_STEP) }
+export function startHurewiczMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 2), SPIRE_STEP) }
+export function startHopfRingMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 4), SPIRE_STEP * 0.9) }
+export function startStableGroundMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 0), SPIRE_STEP * 1.1) }
+export function startClassingMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 1), SPIRE_STEP) }
+export function startFibrationMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 2), SPIRE_STEP) }
+export function startTwistMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 5), SPIRE_STEP * 0.92) }
+export function startObstructionMusic() { startLoop((s, t, b) => scheduleSpire(s, t, b, 3), SPIRE_STEP * 0.88) }
+export function sfxSlidePast() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(72), { dur: 0.15, type: 'sine', vol: 0.09, out: echo })
+  blipAt(ctx.currentTime + 0.1, hz(79), { dur: 0.2, type: 'triangle', vol: 0.06, out: echo })
+}
+export function sfxSnapCell() {
+  if (!audio() || ctx.state !== 'running') return
+  blipAt(ctx.currentTime, hz(64), { dur: 0.08, type: 'square', vol: 0.07, slide: 1.4 })
 }

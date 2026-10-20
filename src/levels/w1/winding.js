@@ -12,6 +12,7 @@ const TAU = Math.PI * 2
 export function angleAt(x, z, center = [0, 0]) {
   return Math.atan2(z - center[1], x - center[0])
 }
+const angleAtXZ = angleAt
 
 /** Shortest signed angle from a to b. */
 export function angleDelta(a, b) {
@@ -49,6 +50,9 @@ export function sameWinding(radA, radB) {
  */
 export function makeRingTracker(center, rInner, rOuter, opts = {}) {
   const minLap = opts.minLap ?? 0.82 * TAU
+  // opts.screen: measure angles counter-clockwise as seen from above with −z up the screen
+  // (the game's camera), so a +1 lap runs counter-clockwise on screen
+  const angleAt = opts.screen ? (x, z, c) => Math.atan2(-(z - c[1]), x - c[0]) : angleAtXZ
   let on = false
   let last = null
   let total = 0

@@ -12,15 +12,7 @@ import {
   STATION_ORDER,
   emmyAdvice14,
 } from '../../levels/w1/stages1_4'
-import {
-  antipode,
-  fieldAngle,
-  hasAntipodalMatch,
-  makeRimTracker,
-  readingsMatch,
-  retractionImpossible,
-  unitRoots,
-} from '../../levels/w1/brouwer'
+import { antipode, fieldAngle, hasAntipodalMatch, makeRimTracker, readingsMatch, unitRoots } from '../../levels/w1/brouwer'
 import layout from '../../world/basin.json'
 import { buildSites, makeSiteWalkable } from '../../world/sites'
 import {
@@ -48,7 +40,9 @@ const PORTRAIT_CROP = {
   'count-null': ['600%', '50%', '26%'],
   'emmy-boundary': ['400%', '54%', '5%'],
 }
-const TOOL_KEYS = { Digit1: 'lash', Digit4: 'cord' }
+const TOOL_KEYS = { Digit1: 'lash', Digit3: 'glass', Digit4: 'cord' }
+const RIM_BAND = 0.75
+const fmt = (v) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1)
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
 
 function Portrait({ id, name }) {
@@ -98,6 +92,10 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     rimWinding: {},
   })
   const [waveOn, setWaveOn] = useState(false)
+  const [shrinkT, setShrinkT] = useState(0)
+  // the arrow under Gyroid while he walks a rim: how far it has turned, and how far he has gone round
+  const fieldRun = useRef({ prev: null, acc: 0 })
+  const [rimLive, setRimLive] = useState({ pos: 0, field: 0 })
   const [waveSeen, setWaveSeen] = useState(0)
 
   const stateRef = useRef(null)
@@ -262,15 +260,35 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
       if (!site?.rimRadius) return
       if (!site.containsWorld(x, z)) return
       const tr = rimTrackers.current[current]
-      const ev = tr.update(x, z, goal.winding)
+      const lx = x - site.pos[0]
+      const lz = z - site.pos[1]
+      const fr = fieldRun.current
+      if (Math.abs(Math.hypot(lx, lz) - site.rimRadius) > RIM_BAND) fr.prev = null
+      else {
+        const f = site.field || { kind: 'radial' }
+        const a = fieldAngle(f.kind, lx, lz, f)
+        if (fr.prev != null) {
+          let da = a - fr.prev
+          while (da > Math.PI) da -= 2 * Math.PI
+          while (da < -Math.PI) da += 2 * Math.PI
+          fr.acc += da / (2 * Math.PI)
+        }
+        fr.prev = a
+      }
+      const ev = tr.update(x, z, 1)
+      setRimLive((r) => (Math.abs(r.pos - tr.turns()) > 0.04 || Math.abs(r.field - fr.acc) > 0.04 ? { pos: tr.turns(), field: fr.acc } : r))
       if (ev?.event === 'done') {
-        if (ev.winding === goal.winding) {
+        // count the arrow's turns the way Gyroid walked, so either direction reads the same
+        const turns = Math.round(fr.acc * Math.sign(ev.winding || 1))
+        fieldRun.current = { prev: null, acc: 0 }
+        setRimLive({ pos: 0, field: 0 })
+        if (turns === goal.winding) {
           sfxCorrect()
-          setBasinState((b) => ({ ...b, rimWinding: { ...b.rimWinding, [current]: ev.winding } }))
+          setBasinState((b) => ({ ...b, rimWinding: { ...b.rimWinding, [current]: turns } }))
           advanceGoal(current, goal.done)
         } else {
           sfxWrong()
-          once(`rim-wrong-${current}`, [HINTS.wrongRim(goal.winding)], `Need ${goal.winding} turn(s) on this rim.`)
+          flash(`One lap — but the arrow turned ${turns} time${Math.abs(turns) === 1 ? '' : 's'}. Walk the whole rim road, staying on it.`, 3600)
           tr.reset()
         }
       }
@@ -287,17 +305,8 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
       const lz = cz - site.pos[1]
 
       if (goal.type === 'shrink' && current === 'retractor') {
-        const d = Math.hypot(lx, lz)
-        if (d > site.rimRadius - 1.2) {
-          flash('Click the basin floor inside the rim road.')
-          sfxRefuse()
-          return
-        }
-        if (retractionImpossible(1, 0)) {
-          sfxCorrect()
-          setBasinState((b) => ({ ...b, retractorSeized: true }))
-          advanceGoal(current, goal.done)
-        }
+        flash('Hold the Tide Glass (3) and press X to shrink the rim loop into the disk.')
+        sfxRefuse()
         return
       }
 
@@ -413,9 +422,21 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [line, lineIdx])
 
+  // the Tide Glass shrinks the rim loop through the disk; at the centre the Retractor tears
+  useEffect(() => {
+    if (goal?.type !== 'shrink' || current !== 'retractor' || shrinkT < 1 || phase !== 'play') return
+    sfxCorrect()
+    setBasinState((b) => ({ ...b, retractorSeized: true }))
+    advanceGoal(current, goal.done)
+  }, [shrinkT, goal, current, phase, advanceGoal])
+
   useEffect(() => {
     const onKey = (e) => {
       if (TOOL_KEYS[e.code]) setTool(TOOL_KEYS[e.code])
+      if (tool === 'glass' && goal?.type === 'shrink' && phase === 'play' && here.site === current) {
+        if (e.code === 'KeyX') setShrinkT((t) => Math.min(1, +(t + 0.1).toFixed(2)))
+        if (e.code === 'KeyZ') setShrinkT((t) => Math.max(0, +(t - 0.1).toFixed(2)))
+      }
       if (e.code === 'KeyE' && nearEmmy && phase === 'play') {
         emmyTalking.current = true
         say(emmyAdvice14({
@@ -440,7 +461,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [basinState, current, enemies, goal, here.site, nearEmmy, phase, say, talking])
+  }, [basinState, current, enemies, goal, here.site, nearEmmy, phase, say, talking, tool])
 
   const playEnabled = phase === 'play' && !lesson && !levelClear
   const gameKey = `basin:${knockouts}`
@@ -451,13 +472,16 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
       if (!s.enemies || done[s.id]) continue
       for (const [type, x, z] of s.enemies) list.push({ type, x: x + s.pos[0], z: z + s.pos[1], site: s.id })
     }
+    // a knockout mid-wave brings the wave back too
+    if (waveOn && current && SITE[current].wave) for (const [type, x, z] of SITE[current].wave) list.push({ type, x: x + SITE[current].pos[0], z: z + SITE[current].pos[1], site: current })
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkpoint, done, gameKey])
 
-  const FRAME = { retractor: 8.8, still_point: 8.6, roots: 8.6, antipodes: 8.4 }
+  const FRAME = { retractor: 12, still_point: 11.6, roots: 11.6, antipodes: 11.4 }
   frameRef.current =
     current && here.site === current && met[current]
-      ? { center: [SITE[current].pos[0] + 1.0, SITE[current].pos[1] + 0.3], size: FRAME[current], follow: 0.12 }
+      ? { center: [SITE[current].pos[0] + 1.2, SITE[current].pos[1] - 0.2], size: FRAME[current], follow: 0.1 }
       : null
 
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
@@ -470,7 +494,13 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
       goal,
       basinState,
       phase,
+      lines,
+      tool,
+      shrinkT,
+      rimLive,
       setTool,
+      setShrinkT,
+      onAction: (x, z) => onAction(x, z, x, z),
       advanceGoal,
       SITE,
       hasMatch: () => hasAntipodalMatch(SITE.antipodes.stations, SITE.antipodes.sphereRadius),
@@ -486,9 +516,9 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
   const atStation = current && here.site === current && met[current]
   const stepText = (() => {
     if (!goal) return ''
-    if (goal.type === 'rim') return `Winding Cord (4): walk the rim — need ${goal.winding} turn${goal.winding === 1 ? '' : 's'}`
-    if (goal.type === 'shrink') return 'Click the basin floor inside the rim to shrink a loop'
-    if (goal.type === 'still') return 'Click the still tile (arrow fades)'
+    if (goal.type === 'rim') return `Winding Cord (4): walk the rim road once round and watch the pink arrow over you`
+    if (goal.type === 'shrink') return 'Tide Glass (3): press X to shrink the rim loop into the disk'
+    if (goal.type === 'still') return 'Click the still tile — the one whose arrow shrinks to nothing'
     if (goal.type === 'roots') return `Click each root whirlpool (${(basinState.foundRoots[current] || []).length}/${goal.count})`
     if (goal.type === 'pair') return 'Click a station, then its opposite with matching numbers'
     if (goal.type === 'guard') return 'Lash retractor drones (1) until the wave is clear'
@@ -520,6 +550,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           onTrackMove={onTrackMove}
           onEnemies={setEnemies}
           onHearts={setHearts}
+          shrinkT={goal?.type === 'shrink' ? shrinkT : null}
         />
       </Canvas>
 
@@ -572,10 +603,17 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
             <h3>{STATIONS[current].blueprint}</h3>
             {goal?.type === 'rim' && (
               <p className="cells-line">
-                Cord progress: <b>{Math.round((rimTrackers.current[current]?.progress?.(goal.winding) || 0) * 100)}%</b>
+                You: <MathText text={`$${fmt(rimLive.pos)}$`} /> laps · the arrow above you: <MathText text={`$${fmt(rimLive.field)}$`} /> turns
               </p>
             )}
-            <p className="forgery-count">{stepText}</p>
+            {goal?.type === 'shrink' && (
+              <p className="cells-line">
+                Shrink: <MathText text={`$t = ${shrinkT.toFixed(1)}$`} /> · the Retractor’s image still winds <MathText text={shrinkT < 1 ? '$+1$' : '$?$'} />
+              </p>
+            )}
+            <p className="forgery-count">
+              <MathText text={stepText} />
+            </p>
           </div>
         )}
 
@@ -594,7 +632,11 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && (
+          <div className="toast">
+            <MathText text={toast} />
+          </div>
+        )}
 
         {nearEmmy && phase === 'play' && !levelClear && (
           <button type="button" className="btn talk-btn" onClick={() => say(emmyAdvice14({ current, goal, stationId: here.site, siteName: (id) => SITE[id]?.name, enemies: enemies[here.site] || 0, progress: { rim: basinState.rimWinding[current], roots: (basinState.foundRoots[current] || []).length } }))}>
@@ -610,7 +652,10 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
               <button type="button" className={`weapon ${tool === 'lash' ? 'active' : ''}`} onClick={() => setTool('lash')}>
                 ⚡ Lash <kbd>1</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'cord' ? 'active' : ''}`} onClick={() => setTool('cord')}>
+              <button type="button" className={`weapon ${tool === 'glass' ? 'active' : ''}`} onClick={(e) => (setTool('glass'), e.currentTarget.blur())}>
+                ◑ Tide Glass <kbd>3</kbd>
+              </button>
+              <button type="button" className={`weapon ${tool === 'cord' ? 'active' : ''}`} onClick={(e) => (setTool('cord'), e.currentTarget.blur())}>
                 ◎ Winding Cord <kbd>4</kbd>
               </button>
             </div>
@@ -627,6 +672,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 1 · Level 4 · Lesson"
           name="No Way Out"
           embedded
+          startMusic={startBasinMusic}
           onDone={() => (setLesson(false), startBasinMusic())}
           onSkip={() => (setLesson(false), startBasinMusic())}
         />

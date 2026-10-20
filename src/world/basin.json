@@ -1,77 +1,318 @@
 {
   "note": "World 1 · Level 4 — Brouwer's Basin (x east, z south).",
-  "bounds": { "minX": -22, "maxX": 22, "minZ": -18, "maxZ": 22 },
+  "bounds": {
+    "minX": -22,
+    "maxX": 22,
+    "minZ": -18,
+    "maxZ": 22
+  },
   "causewayWidth": 1.5,
-  "start": [0, 18],
-  "exit": { "gate": [0, -14.5], "a": [0, -12], "b": [0, -17] },
+  "start": [
+    0,
+    18
+  ],
+  "exit": {
+    "gate": [
+      0,
+      -15.2
+    ],
+    "a": [
+      0,
+      -13.2
+    ],
+    "b": [
+      0,
+      -17.5
+    ]
+  },
   "causeways": [
-    { "a": [0, 18], "b": [0, 10] },
-    { "a": [0, 10], "b": [-13, 2] },
-    { "a": [0, 10], "b": [13, 2] },
-    { "a": [-13, 2], "b": [0, -8] },
-    { "a": [13, 2], "b": [0, -8] },
-    { "a": [0, -8], "b": [0, -14] }
+    {
+      "a": [
+        0,
+        16.2
+      ],
+      "b": [
+        0,
+        15.6
+      ]
+    },
+    {
+      "a": [
+        -4.77,
+        7.07
+      ],
+      "b": [
+        -8.4,
+        4.83
+      ]
+    },
+    {
+      "a": [
+        4.77,
+        7.07
+      ],
+      "b": [
+        8.4,
+        4.83
+      ]
+    },
+    {
+      "a": [
+        -8.72,
+        -1.29
+      ],
+      "b": [
+        -4.12,
+        -4.83
+      ]
+    },
+    {
+      "a": [
+        8.72,
+        -1.29
+      ],
+      "b": [
+        4.12,
+        -4.83
+      ]
+    }
   ],
   "sites": [
     {
       "id": "basin_landing",
       "name": "Basin Gate",
       "kind": "start",
-      "pos": [0, 18],
-      "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 1.8 }] }
+      "pos": [
+        0,
+        18
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 1.8
+          }
+        ]
+      }
     },
     {
       "id": "retractor",
       "name": "The Retractor",
       "stage": "station",
-      "pos": [0, 10],
-      "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.6 }] },
-      "emmy": [-4.2, 3.8],
-      "enemies": [["sphere", 3.2, -3.5]],
+      "pos": [
+        0,
+        10
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.6
+          }
+        ]
+      },
+      "emmy": [
+        -2.4,
+        2.4
+      ],
+      "enemies": [
+        [
+          "sphere",
+          3.2,
+          -3.5
+        ]
+      ],
       "rimRadius": 4.35,
       "field": null,
-      "wave": [["retractor", -3.8, 4.2], ["retractor", 4.1, -2.8]]
+      "wave": [
+        [
+          "retractor",
+          -3.8,
+          4.2
+        ],
+        [
+          "retractor",
+          4.1,
+          -2.8
+        ]
+      ]
     },
     {
       "id": "still_point",
       "name": "The Still Point",
       "stage": "station",
-      "pos": [-13, 2],
-      "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.4 }] },
-      "emmy": [-3.6, 3.2],
-      "enemies": [["whirl", -2.2, -2.4]],
+      "pos": [
+        -13,
+        2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        -2.2,
+        2.4
+      ],
+      "enemies": [
+        [
+          "whirl",
+          -2.2,
+          -2.4
+        ]
+      ],
       "rimRadius": 4.1,
-      "field": { "kind": "swirl", "focus": [0.35, -0.25], "still": [0.35, -0.25] },
+      "field": {
+        "kind": "swirl",
+        "focus": [
+          0.3,
+          -0.2
+        ],
+        "still": [
+          0.3,
+          -0.2
+        ],
+        "turn": 2.29
+      },
       "gridStep": 1.05
     },
     {
       "id": "roots",
       "name": "Roots",
       "stage": "station",
-      "pos": [13, 2],
-      "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.4 }] },
-      "emmy": [3.5, 3.0],
-      "enemies": [["whirl", 2.4, -2.6], ["sphere", -3.0, 1.8]],
+      "pos": [
+        13,
+        2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.4
+          }
+        ]
+      },
+      "emmy": [
+        2.4,
+        2.6
+      ],
+      "enemies": [
+        [
+          "whirl",
+          2.4,
+          -2.6
+        ],
+        [
+          "sphere",
+          -3.0,
+          1.8
+        ]
+      ],
       "rimRadius": 4.15,
-      "field": { "kind": "poly", "degree": 3, "scale": 0.42 },
+      "field": {
+        "kind": "poly",
+        "degree": 3,
+        "scale": 0.42,
+        "rootRadius": 2.15
+      },
       "gridStep": 1.0
     },
     {
       "id": "antipodes",
       "name": "Antipodes",
       "stage": "station",
-      "pos": [0, -8],
-      "shape": { "add": [{ "type": "circle", "cx": 0, "cz": 0, "r": 5.2 }] },
-      "emmy": [-3.8, 2.8],
-      "enemies": [["retractor", 2.6, 2.4]],
+      "pos": [
+        0,
+        -8
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -3.2,
+        2.6
+      ],
+      "enemies": [
+        [
+          "retractor",
+          2.6,
+          2.4
+        ]
+      ],
       "sphereRadius": 3.6,
       "stations": [
-        { "id": "n", "x": 0, "z": 2.8, "readings": [2, 7] },
-        { "id": "s", "x": 0, "z": -2.8, "readings": [2, 7] },
-        { "id": "e", "x": 2.8, "z": 0, "readings": [5, 1] },
-        { "id": "w", "x": -2.8, "z": 0, "readings": [9, 3] },
-        { "id": "ne", "x": 2.0, "z": 2.0, "readings": [4, 4] },
-        { "id": "sw", "x": -2.0, "z": -2.0, "readings": [4, 4] }
+        {
+          "id": "n",
+          "x": 0,
+          "z": 2.8,
+          "readings": [
+            2,
+            7
+          ]
+        },
+        {
+          "id": "s",
+          "x": 0,
+          "z": -2.8,
+          "readings": [
+            2,
+            7
+          ]
+        },
+        {
+          "id": "e",
+          "x": 2.8,
+          "z": 0,
+          "readings": [
+            5,
+            1
+          ]
+        },
+        {
+          "id": "w",
+          "x": -2.8,
+          "z": 0,
+          "readings": [
+            9,
+            3
+          ]
+        },
+        {
+          "id": "ne",
+          "x": 2.0,
+          "z": 2.0,
+          "readings": [
+            4,
+            4
+          ]
+        },
+        {
+          "id": "sw",
+          "x": -2.0,
+          "z": -2.0,
+          "readings": [
+            4,
+            6
+          ]
+        }
       ]
     }
   ]

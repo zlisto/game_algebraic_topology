@@ -217,8 +217,8 @@ export default function SheetMusicScene({
       )}
       <group ref={emmy} scale={S}>
         <Emmy script={() => ({ pos: [0, 0, 0], rotY: 0, walk: emmyAt.current.walk, gesture: emmyTalking.current ? 0.8 : 0, talk: emmyTalking.current, bow: 0 })} />
-        {emmyNear && <EmmyBubble />}
       </group>
+      <EmmyBubble emmyAt={emmyAt} show={!!emmyNear && playEnabled} />
       <ReefGame
         key={gameKey}
         stage={game}

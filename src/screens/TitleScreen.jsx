@@ -117,6 +117,81 @@ const DEBUG_ENTRIES = [
       ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level1-${k}`, opts: { startAt } })),
     ],
   })),
+  // World 2 · Chain Delta
+  ...[
+    [1, 'Tile Yard', 'Tile and Error', [['Two Triangles', 'two_tri'], ['The Torus', 'torus_glue'], ['Flip an Arrow', 'flip_arrow'], ['Wrong Order', 'wrong_order']]],
+    [2, 'Cancel Marsh', 'Boundary Issues', [['First Cut', 'first_cut'], ['Shared Edges', 'shared'], ['Nothing Left', 'nothing'], ['The Missing Tile', 'missing']]],
+    [3, 'Singular Shallows', 'Any Simplex Will Do', [['Any Triangle', 'any_tri'], ['Pieces', 'pieces'], ["Bend, Don't Change", 'bend'], ['Same Shape', 'same']]],
+    [4, 'Chase Channels', 'Chase Scene', [['Exact Locks', 'exact'], ['The Chase', 'chase'], ['A Place and a Part', 'pair'], ['Five Locks', 'five']]],
+    [5, 'Excision Cut', 'Cut and Paste', [['Cut Deep', 'cut_deep'], ['Collapse', 'collapse'], ['The Ladder', 'ladder'], ['Too Close', 'edge']]],
+    [6, 'Dynamo Gate', 'The Third Degree', [['The Hollow', 'hollow'], ['Wrap Count', 'wrap'], ['Antipode', 'antipode'], ['Hairy Ball', 'hairy']]],
+    [7, 'Cell Block', 'Cell Block', [['Crates', 'crates'], ['The Torus', 'torus'], ['Doubled Edge', 'doubled'], ['Census', 'census']]],
+    [8, 'Patchwork Fields', 'Patchwork', [['Two Hemispheres', 'hemi'], ['Two Annuli', 'annuli'], ['Twisted Patch', 'twist'], ['Patch It Yourself', 'own']]],
+    [9, 'Mod Mill', 'Mod Squad', [['Even or Odd', 'even'], ['Projective Plane', 'rp2'], ['Flippers Lose', 'frogs'], ['Sort Surfaces', 'sort']]],
+    [10, 'Abelian Ford', 'Forget the Order', [['Totals', 'totals'], ['Dissolve', 'dissolve'], ['Not Everything Dies', 'survive'], ['Hold the Ford', 'hold']]],
+  ].map(([k, place, title, sections]) => ({
+    group: `World 2 · Level ${k} — ${place}`,
+    items: [
+      { label: `Intro movie: ${title}`, screen: `movie2-${k}` },
+      { label: 'Lesson', screen: `lesson2-${k}` },
+      { label: `Level 2-${k} (from the start)`, screen: `level2-${k}` },
+      ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level2-${k}`, opts: { startAt } })),
+    ],
+  })),
+  // World 3 · Cup Product Gardens
+  ...[
+    [1, 'Mirror Pools', 'Reverse Engineering', [['Read an Edge', 'read_edge'], ['Balanced Readings', 'balanced'], ['Readings from Points', 'from_points'], ['Around the Hole', 'around_hole']]],
+    [2, 'Torsion Terrace', 'Torsion Shift', [['Free Floors', 'free_floors'], ['The Climbing Vine', 'climbing_vine'], ['Change the Soil', 'change_soil'], ['Plan the Terrace', 'plan_terrace']]],
+    [3, 'Lantern Rows', 'Front Face, Back Face', [['Front and Back', 'front_back'], ['Products of Cocycles', 'cocycle_products'], ['Swap', 'swap'], ['Light the Row', 'light_row']]],
+    [4, 'Twin Islands', 'A Cup of Counterexample', [['Same Holes', 'same_holes'], ['Cast on the Torus', 'cast_torus'], ['Cast on the Bouquet', 'cast_bouquet'], ["Null's Answer", 'nulls_answer']]],
+    [5, 'Product Parterre', 'Product Placement', [['Row Times Column', 'row_col'], ['Sphere Times Sphere', 'sphere_sphere'], ['Torsion in the Soil', 'torsion_soil'], ['Design a Parterre', 'design_parterre']]],
+    [6, 'Polynomial Garden', 'Polynomial Garden', [['Square It', 'square_it'], ['Climb the Powers', 'climb_powers'], ['Stops at the Top', 'stops_top'], ['Antipodes', 'antipodes']]],
+    [7, 'Compass Cliffs', 'Which Way Is Up', [['Set the Compasses', 'set_compasses'], ['The Flip', 'the_flip'], ['Two Sheets', 'two_sheets'], ['Survey', 'survey']]],
+    [8, 'The Seam', 'Both Sides of the Story', [['Twin Towers', 'twin_towers'], ['Dual Cells', 'dual_cells'], ['Broken Mirror', 'broken_mirror'], ['Across the Seam', 'across_seam']]],
+    [9, 'Pairing Pier', 'Perfect Pairing', [['Partners', 'partners'], ['The Middle Lantern', 'middle_lantern'], ['Square on CP²', 'cp2_square'], ['Wedge Stays Dark', 'wedge_dark']]],
+  ].map(([k, place, title, sections]) => ({
+    group: `World 3 · Level ${k} — ${place}`,
+    items: [
+      { label: `Intro movie: ${title}`, screen: `movie3-${k}` },
+      { label: 'Lesson', screen: `lesson3-${k}` },
+      { label: `Level 3-${k} (from the start)`, screen: `level3-${k}` },
+      ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level3-${k}`, opts: { startAt } })),
+    ],
+  })),
+  {
+    group: 'World 3 · Castle — The Counterfeit Station',
+    items: [
+      { label: 'Intro movie', screen: 'moviec3' },
+      { label: 'Castle (from the start)', screen: 'castle3' },
+      { label: '↳ The Façade', screen: 'castle3', opts: { startAt: 'facade' } },
+      { label: '↳ False Powers', screen: 'castle3', opts: { startAt: 'false_powers' } },
+      { label: '↳ No Twin', screen: 'castle3', opts: { startAt: 'no_twin' } },
+      { label: 'Outro movie', screen: 'outroc3' },
+    ],
+  },
+  // World 4 · Postnikov Spire
+  ...[
+    [1, 'Cube Hall', 'Cube Root', [['Pinned Cubes', 'pinned'], ['Stack', 'stack'], ['Pass Each Other', 'pass'], ['One Dimension Down', 'dim1']]],
+    [2, 'Grid Gallery', 'Snap to Grid', [['Snap', 'snap'], ['Slip Off', 'slip'], ['Too Small to Wrap', 'small'], ['Approximate', 'approx']]],
+    [3, 'The Weak Spot', 'Weak Spot', [['A Map That Matches', 'match'], ['Weakly Equal', 'weak'], ['No Map', 'nomap'], ['Spot the Weakness', 'sort']]],
+    [4, 'Sling Landing', 'Suspension of Disbelief', [['Up One', 'upone'], ['Degree Is All', 'degree'], ['The Stable Range', 'stable'], ['Climb the Shaft', 'climb']]],
+    [5, 'One-Group Floors', 'One Group Per Floor', [['Recall', 'recall'], ['Kill Above', 'kill']]],
+    [6, 'Hurewicz Hall', 'Hurewicz Hurrah', [['Two Meters', 'meters'], ['First Nonzero', 'first'], ['Dimension One', 'dim1'], ['Beyond the First', 'beyond']]],
+    [7, 'The Hopf Ring', 'Hop Off', [['A Circle per Point', 'circle'], ['Linked', 'linked'], ['The Sequence', 'seq'], ["Null's Answer", 'nulls_answer']]],
+    [8, 'Stable Ground', 'Stable Ground', [['Settle', 'settle'], ['The Table', 'table']]],
+    [9, 'The Classing Room', 'Maps Are Classes', [['Pull Back', 'pull'], ['Readings Are Maps', 'read']]],
+    [10, 'Fibration Station', 'Fibration Station', [['Lift', 'lift'], ['Make It Fibre', 'fibre'], ['The Loop Space', 'loops']]],
+    [11, 'The Twist', 'A Twist in the Tower', [['Stack the Floors', 'stack'], ['The Twist', 'twist'], ['Untwisted', 'untwist'], ['Rebuild', 'rebuild']]],
+    [12, 'Obstruction Course', 'Obstruction Course', [['Cell by Cell', 'cell'], ['Blocked', 'blocked'], ['Reroute', 'reroute'], ['The Summit', 'summit']]],
+  ].map(([k, place, title, sections]) => ({
+    group: `World 4 · Level ${k} — ${place}`,
+    items: [
+      { label: `Intro movie: ${title}`, screen: `movie4-${k}` },
+      { label: 'Lesson', screen: `lesson4-${k}` },
+      { label: `Level 4-${k} (from the start)`, screen: `level4-${k}` },
+      ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level4-${k}`, opts: { startAt } })),
+    ],
+  })),
 ]
 const SHOW_DEBUG = true // the level select is part of the game now, not just a dev tool
 

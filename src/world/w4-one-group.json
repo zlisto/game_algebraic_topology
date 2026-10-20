@@ -1,0 +1,129 @@
+{
+  "note": "World 4 · Level 5 One Group Per Floor — One-Group Floors. Spire side-view: floors stacked south.",
+  "bounds": {
+    "minX": -16,
+    "maxX": 16,
+    "minZ": -25.2,
+    "maxZ": 16
+  },
+  "causewayWidth": 1.4,
+  "start": [
+    0,
+    11
+  ],
+  "sites": [
+    {
+      "id": "landing",
+      "name": "One-Group Floors Landing",
+      "kind": "start",
+      "pos": [
+        0,
+        11
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "id": "recall",
+      "name": "Recall",
+      "stage": "station",
+      "pos": [
+        0,
+        2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.4,
+        -2.0
+      ],
+      "enemies": [],
+      "beacon": "main"
+    },
+    {
+      "id": "kill",
+      "name": "Kill Above",
+      "stage": "station",
+      "pos": [
+        9,
+        -9
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.4,
+        -2.0
+      ],
+      "enemies": [
+        [
+          "cube_sentry",
+          2.4,
+          -2.2
+        ]
+      ],
+      "beacon": null
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0.0,
+        9.8
+      ],
+      "b": [
+        0.0,
+        6.6
+      ]
+    },
+    {
+      "a": [
+        2.91,
+        -1.56
+      ],
+      "b": [
+        6.09,
+        -5.44
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      9,
+      -18.7
+    ],
+    "a": [
+      9,
+      -13.6
+    ],
+    "b": [
+      9,
+      -21.2
+    ],
+    "to": "next"
+  },
+  "accent": "#b8ff9a"
+}

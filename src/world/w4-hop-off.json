@@ -1,0 +1,205 @@
+{
+  "note": "World 4 · Level 7 Hop Off — The Hopf Ring. Spire side-view: floors stacked south.",
+  "bounds": {
+    "minX": -16,
+    "maxX": 16,
+    "minZ": -47.2,
+    "maxZ": 16
+  },
+  "causewayWidth": 1.4,
+  "start": [
+    0,
+    11
+  ],
+  "sites": [
+    {
+      "id": "landing",
+      "name": "The Hopf Ring Landing",
+      "kind": "start",
+      "pos": [
+        0,
+        11
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "id": "circle",
+      "name": "A Circle per Point",
+      "stage": "station",
+      "pos": [
+        0,
+        2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        2.6,
+        4.2
+      ],
+      "enemies": [],
+      "beacon": "main"
+    },
+    {
+      "id": "linked",
+      "name": "Linked",
+      "stage": "station",
+      "pos": [
+        9,
+        -9
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        2.6,
+        4.2
+      ],
+      "enemies": [
+        [
+          "fiber_wraith",
+          2.4,
+          -2.2
+        ]
+      ],
+      "beacon": null
+    },
+    {
+      "id": "seq",
+      "name": "The Sequence",
+      "stage": "station",
+      "pos": [
+        0,
+        -20
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        2.6,
+        4.2
+      ],
+      "enemies": [],
+      "beacon": null
+    },
+    {
+      "id": "nulls_answer",
+      "name": "Null's Answer",
+      "stage": "station",
+      "pos": [
+        -9,
+        -31
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        2.6,
+        4.2
+      ],
+      "enemies": [
+        [
+          "fiber_wraith",
+          2.4,
+          -2.2
+        ]
+      ],
+      "beacon": null
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0.0,
+        9.8
+      ],
+      "b": [
+        0.0,
+        6.6
+      ]
+    },
+    {
+      "a": [
+        2.91,
+        -1.56
+      ],
+      "b": [
+        6.09,
+        -5.44
+      ]
+    },
+    {
+      "a": [
+        6.09,
+        -12.56
+      ],
+      "b": [
+        2.91,
+        -16.44
+      ]
+    },
+    {
+      "a": [
+        -2.91,
+        -23.56
+      ],
+      "b": [
+        -6.09,
+        -27.44
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      -9,
+      -40.7
+    ],
+    "a": [
+      -9,
+      -35.6
+    ],
+    "b": [
+      -9,
+      -43.2
+    ],
+    "to": "next"
+  },
+  "accent": "#88ccff"
+}

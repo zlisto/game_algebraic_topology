@@ -5186,7 +5186,7 @@
               {
                 "name": "Kill Above",
                 "beat": "master",
-                "description": "Build K(ℤ, 2) by killing higher groups of S²: an endless climb (CP^∞)."
+                "description": "Build K(ℤ, 2) by killing higher groups of S²: an endless climb (CP∞)."
               }
             ],
             "enemies": [

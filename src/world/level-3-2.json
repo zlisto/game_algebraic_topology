@@ -1,0 +1,200 @@
+{
+  "note": "Torsion Terrace (World 3 · Level 3-2).",
+  "bounds": {
+    "minX": -22,
+    "maxX": 22,
+    "minZ": -47,
+    "maxZ": 20
+  },
+  "causewayWidth": 1.5,
+  "start": [
+    0,
+    14
+  ],
+  "sites": [
+    {
+      "id": "gate",
+      "name": "Gate",
+      "kind": "start",
+      "pos": [
+        0,
+        14
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "free_floors",
+      "name": "Free Floors",
+      "stage": "station",
+      "pos": [
+        0,
+        6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -0.4,
+        4.6
+      ],
+      "enemies": []
+    },
+    {
+      "id": "climbing_vine",
+      "name": "The Climbing Vine",
+      "stage": "station",
+      "pos": [
+        12,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -0.4,
+        4.6
+      ],
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          -2
+        ]
+      ]
+    },
+    {
+      "id": "change_soil",
+      "name": "Change the Soil",
+      "stage": "station",
+      "pos": [
+        0,
+        -18
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -0.4,
+        4.6
+      ],
+      "enemies": [
+        [
+          "vine_choker",
+          2,
+          -1.5
+        ]
+      ]
+    },
+    {
+      "id": "plan_terrace",
+      "name": "Plan the Terrace",
+      "stage": "station",
+      "pos": [
+        -12,
+        -30
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -0.4,
+        4.6
+      ],
+      "enemies": []
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0.0,
+        12.6
+      ],
+      "b": [
+        0.0,
+        10.6
+      ]
+    },
+    {
+      "a": [
+        3.25,
+        2.75
+      ],
+      "b": [
+        8.75,
+        -2.75
+      ]
+    },
+    {
+      "a": [
+        8.75,
+        -9.25
+      ],
+      "b": [
+        3.25,
+        -14.75
+      ]
+    },
+    {
+      "a": [
+        -3.25,
+        -21.25
+      ],
+      "b": [
+        -8.75,
+        -26.75
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      -12,
+      -40.5
+    ],
+    "a": [
+      -12,
+      -34.6
+    ],
+    "b": [
+      -12,
+      -43
+    ],
+    "to": "next"
+  }
+}

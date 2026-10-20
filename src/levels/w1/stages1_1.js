@@ -11,8 +11,8 @@ export const STATION_ORDER = ['open_lawn', 'hedges', 'faster', 'chained']
 
 export const OPENING = [
   E('Endpoint Gardens. Couriers log routes between gatehouses — not parcels, but which delivery class a path belongs to.'),
-  E('Two routes count as the same if one slides into the other while both ends stay pinned at their gates. That is path homotopy rel endpoints.'),
-  G('Ledger open. Spool to walk a route, Tide Glass to slide between routes. I’ll sort them into classes.'),
+  E('Two routes count as the same if one slides into the other while both ends stay pinned at their gates. That is a path homotopy rel the endpoints.'),
+  G('Ledger open. Tide Glass to watch a slide, Spool to pick routes up and sort them. Lost? I’ll ask Emmy — E.'),
 ]
 
 /**
@@ -28,7 +28,7 @@ export const STATIONS = {
     blueprint: 'Open lawn · one class',
     arrive: [
       E('No hedges here — any two routes between these gates slide straight into each other.'),
-      E('Pick the wavy gold route, then hold the Tide Glass (3) and scrub until it sits on the straight one. Same delivery class.'),
+      E('Hold the Tide Glass (3) and scrub $t$ with Z and X: the teal ghost slides the wavy route onto the straight one, gates pinned the whole time.'),
     ],
     goals: [
       {
@@ -39,7 +39,7 @@ export const STATIONS = {
       {
         type: 'ledger',
         expectClasses: 1,
-        done: [E('Ledger stamped: class I. Every gardener agrees. North-east: the hedge beds.')],
+        done: [E('Ledger stamped: one class. On an open lawn every route between the same gates is the same delivery. North: the hedge bed.')],
       },
     ],
     early: [E('The open lawn is just ahead — start at the near gatehouses.')],
@@ -48,7 +48,7 @@ export const STATIONS = {
     blueprint: 'Hedge bed · sort routes',
     arrive: [
       E('A hedge bed is a hole in the lawn. Routes around the left and right don’t slide together — different classes.'),
-      E('Click a route in the ledger panel, then click its bin. Match homotopy, not shape.'),
+      E('Hold the Spool (2) and click a route on the deck to pick it up — or click its name in the ledger. Then put it in Bin I or Bin II. Sort by which side of the hedge it passes, not by its shape.'),
     ],
     goals: [
       {
@@ -56,31 +56,31 @@ export const STATIONS = {
         expectClasses: 2,
         wave: true,
         done: [
-          E('Two classes — left of the hedge and right of the hedge. The ledger is consistent: same class iff a slide rel the gates exists.'),
+          E('Two classes — left of the hedge and right of the hedge. Two routes share a class exactly when one slides into the other with the gates pinned.'),
           G('Hedge spawn tried to sprout a new bed mid-route. Lash them before they root.'),
         ],
       },
-      { type: 'guard', done: [E('Clear ledger. On to the pace garden — south along the path.')] },
+      { type: 'guard', done: [E('Clear ledger. On to the pace garden — north-west along the causeway.')] },
     ],
     early: [E('Finish the open lawn first.')],
   },
   faster: {
     blueprint: 'Same route, new pace',
     arrive: [
-      E('Walk the gold route with the Spool (2). Then try the dashed “fast” copy — more steps, same image.'),
-      E('Reparametrizing a path is a homotopy rel endpoints. Same class, different speed.'),
+      E('Two routes on one curve: the solid one walks it slowly, the dashed copy hurries — more, shorter steps, the very same trail.'),
+      E('Is the fast copy the same delivery class as the slow one? Answer in the ledger.'),
     ],
     goals: [
       {
         type: 'pace',
         route: 'slow',
         fast: 'fast',
-        done: [G('Fast or slow — same class.'), E('Null loves to confuse pace with path. Don’t let him.')],
+        done: [G('Fast or slow — same class.'), E('Changing a path’s pace is a homotopy rel the gates: slide the timing, not the trail. Null loves to confuse pace with path. Don’t let him.'), E('Now watch it as a slide: hold the Tide Glass (3) and scrub $t$.')],
       },
       {
         type: 'slide',
         pair: ['slow', 'fast'],
-        done: [E('The Tide Glass shows the slide. Gates fixed the whole time. East: three gatehouses for chaining.')],
+        done: [E('Gates fixed the whole time. East along the causeway: three gatehouses for chaining.')],
       },
     ],
     early: [E('The hedge ledger comes before pace tricks.')],
@@ -88,8 +88,8 @@ export const STATIONS = {
   chained: {
     blueprint: 'Chained deliveries',
     arrive: [
-      E('Three gatehouses: A, B, C. A route A→B followed by B→C is a route A→C.'),
-      E('Chain the pieces in the ledger. Then swap the middle leg for another route in its class — the chain’s class should not change.'),
+      E('Three gatehouses: $A$, $B$, $C$. A route $A → B$ followed by a route $B → C$ is a route $A → C$ — that’s concatenation.'),
+      E('Swap the second leg for another route in its own class — toggle it in the ledger — and check whether the whole journey’s class changes.'),
     ],
     goals: [
       {
@@ -102,7 +102,7 @@ export const STATIONS = {
       {
         type: 'ledger',
         expectClasses: 2,
-        done: [E('Master ledger signed. Walk out north — the causeway to Loop de Loop opens.')],
+        done: [E('Master ledger signed. The north causeway is open — walk out to Loop de Loop.')],
       },
     ],
     early: [E('Chaining waits until you’ve seen pace and hedges.')],
@@ -110,7 +110,7 @@ export const STATIONS = {
 }
 
 export const HINTS = {
-  knockout: [E('Hearts back. Routes and ledger progress stay — re-tie any clipped thread with the Spool.')],
+  knockout: [E('Hearts back. Your ledger is safe — and any spawn you hadn’t cleared are back too.')],
   refuse: {
     ledger: [E('That route doesn’t belong in that bin — try sliding it mentally around the hedge.')],
     slide: [E('Scrub t until the ghost route matches — endpoints stay on the gate posts.')],

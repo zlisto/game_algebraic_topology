@@ -30,10 +30,22 @@ function ViaductSky() {
   )
 }
 
-function GlassSheets({ site, sheets, liftSheet, current }) {
+/**
+ * The cover, stacked over the deck: one glass copy of the deck per sheet. The white bead is the
+ * lift of Gyroid — straight above him, on the sheet his path has carried him to.
+ */
+function GlassSheets({ site, sheets, liftSheet, current, stateRef }) {
+  const bead = useRef()
+  const y0 = 2.6
+  const step = 1.1
+  useFrame(() => {
+    const st = stateRef?.current
+    if (!bead.current) return
+    const on = current && st
+    bead.current.visible = !!on
+    if (on) bead.current.position.set(st.x - site.pos[0], y0 + (liftSheet - 1) * step + 0.12, st.z - site.pos[1])
+  })
   if (!sheets || sheets < 2) return null
-  const y0 = 3.2
-  const step = 1.35
   const sh = site.def.add[0]
   const r = sh.r || 5
   return (
@@ -41,10 +53,10 @@ function GlassSheets({ site, sheets, liftSheet, current }) {
       {Array.from({ length: sheets }, (_, i) => (
         <mesh key={i} position={[0, y0 + i * step, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <ringGeometry args={[r * 0.55, r * 0.92, 48]} />
-          <meshStandardMaterial color={GLASS} transparent opacity={0.22 + i * 0.04} emissive="#66aaff" emissiveIntensity={current ? 0.35 : 0.15} toneMapped={false} side={THREE.DoubleSide} />
+          <meshStandardMaterial color={i === liftSheet - 1 && current ? '#ffe6a8' : GLASS} transparent opacity={i === liftSheet - 1 && current ? 0.2 : 0.1} depthWrite={false} emissive="#66aaff" emissiveIntensity={current ? 0.3 : 0.12} toneMapped={false} side={THREE.DoubleSide} />
         </mesh>
       ))}
-      <mesh position={[0, y0 + (liftSheet - 1) * step + 0.08, 0]}>
+      <mesh ref={bead}>
         <sphereGeometry args={[0.22, 12, 10]} />
         <meshBasicMaterial color="#fff2c4" toneMapped={false} />
       </mesh>
@@ -73,8 +85,8 @@ export function Deck({ site, current }) {
 }
 
 function TrackLoop({ track, origin, label, current }) {
-  const pts = track.pts.map(([x, z]) => [origin[0] + x, 0.18, origin[1] + z])
-  const col = label === 'a' ? '#e04040' : '#8060d0'
+  const pts = track.pts.map(([x, z]) => [x, 0.18, z])
+  const col = label === 'a' ? '#ff9a5a' : '#7fd6ff'
   return (
     <>
       <Line points={pts} color={col} lineWidth={current ? 4 : 2.5} toneMapped={false} />
@@ -95,7 +107,7 @@ function PortMarkers({ site, onPortClick, show }) {
       onClick={(e) => (e.stopPropagation(), onPortClick?.(label))}
     >
       <octahedronGeometry args={[0.35, 0]} />
-      <meshStandardMaterial color={label === 'a' ? '#e04040' : '#8060d0'} emissive="#fff2c4" emissiveIntensity={1.6} toneMapped={false} />
+      <meshStandardMaterial color={label === 'a' ? '#ff9a5a' : '#7fd6ff'} emissive="#fff2c4" emissiveIntensity={1.6} toneMapped={false} />
     </mesh>
   ))
 }
@@ -145,7 +157,7 @@ export default function UnderCoverScene({
       {stations.map((s) => (
         <group key={s.id}>
           <Deck site={s} current={s.id === current} />
-          <GlassSheets site={s} sheets={s.sheets} liftSheet={s.id === current ? liftSheet + 1 : 1} current={s.id === current} />
+          <GlassSheets site={s} sheets={s.sheets} liftSheet={s.id === current ? liftSheet + 1 : 1} current={s.id === current} stateRef={stateRef} />
           {(tracksBySite[s.id] || []).map((tr, i) => (
             <TrackLoop key={i} track={tr} origin={s.pos} label={s.tracks[i]?.label || (i ? 'b' : 'a')} current={s.id === current} />
           ))}

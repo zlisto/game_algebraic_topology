@@ -96,9 +96,10 @@ export const BUILD_PRESETS = [
     { a: 0, A: 0, b: 0, B: 0 },
     { a: 1, A: 1, b: 1, B: 1 },
   ]),
+  // b swaps the sheets, a doesn't: wrong way round
   makeCover(2, [
-    { a: 1, A: 1, b: 0, B: 0 },
     { a: 0, A: 0, b: 1, B: 1 },
+    { a: 1, A: 1, b: 0, B: 0 },
   ]),
   coverTwoSheetAA(),
 ]
@@ -152,6 +153,19 @@ export function torusLift(start, word) {
   let p = start
   for (const L of word) p = torusStep(p, L)
   return p
+}
+
+/**
+ * A 3-sheeted cover whose subgroup is not normal (1-9, Moving the Start): a swaps sheets 1, 2 and
+ * fixes 3; b swaps sheets 2, 3 and fixes 1. From sheet 1, b closes and a doesn't; from sheet 3,
+ * a closes and b doesn't. Same cover, different start: conjugate subgroups.
+ */
+export function coverThreeSheetConj() {
+  return makeCover(3, [
+    { a: 1, A: 1, b: 0, B: 0 },
+    { a: 0, A: 0, b: 2, B: 2 },
+    { a: 2, A: 2, b: 1, B: 1 },
+  ])
 }
 
 /** Index-2 cover of a single a-loop: one a opens, aa closes (Level 1-8 circle deck). */

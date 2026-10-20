@@ -1,0 +1,172 @@
+{
+  "note": "The Counterfeit Station (World 3 · Castle).",
+  "bounds": {
+    "minX": -22,
+    "maxX": 22,
+    "minZ": -35,
+    "maxZ": 20
+  },
+  "causewayWidth": 1.5,
+  "start": [
+    0,
+    14
+  ],
+  "sites": [
+    {
+      "id": "gate",
+      "name": "Gate",
+      "kind": "start",
+      "pos": [
+        0,
+        14
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "facade",
+      "name": "The Façade",
+      "stage": "station",
+      "pos": [
+        0,
+        6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.3,
+        -3.6
+      ],
+      "enemies": [
+        [
+          "echo",
+          2.4,
+          -2.2
+        ]
+      ]
+    },
+    {
+      "id": "false_powers",
+      "name": "False Powers",
+      "stage": "station",
+      "pos": [
+        12,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.3,
+        -3.6
+      ],
+      "enemies": [
+        [
+          "moth",
+          2.4,
+          -2.2
+        ]
+      ]
+    },
+    {
+      "id": "no_twin",
+      "name": "No Twin",
+      "stage": "station",
+      "pos": [
+        0,
+        -18
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.2
+          }
+        ]
+      },
+      "emmy": [
+        -4.3,
+        -3.6
+      ],
+      "enemies": [
+        [
+          "seam_wraith",
+          2.4,
+          -2.2
+        ]
+      ]
+    }
+  ],
+  "causeways": [
+    {
+      "a": [
+        0.0,
+        12.6
+      ],
+      "b": [
+        0.0,
+        10.6
+      ]
+    },
+    {
+      "a": [
+        3.25,
+        2.75
+      ],
+      "b": [
+        8.75,
+        -2.75
+      ]
+    },
+    {
+      "a": [
+        8.75,
+        -9.25
+      ],
+      "b": [
+        3.25,
+        -14.75
+      ]
+    }
+  ],
+  "exit": {
+    "gate": [
+      0,
+      -28.5
+    ],
+    "a": [
+      0,
+      -22.6
+    ],
+    "b": [
+      0,
+      -31
+    ],
+    "to": "next"
+  }
+}

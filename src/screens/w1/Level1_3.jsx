@@ -5,8 +5,8 @@ import LevelMovie from '../LevelMovie'
 import LevelMap from '../LevelMap'
 import { useExitTrigger } from '../exitTrigger'
 import { WORLD_TOOLS } from '../../levels/w0/worldTools'
-import { addWindings, makeRingTracker, sameWinding } from '../../levels/w1/winding'
-import { DEFINITION13, HINTS13, OPENING, STATIONS, STATION_ORDER, WRONG, emmyAdvice13 } from '../../levels/w1/stages1_3'
+import { addWindings, angleDelta, makeRingTracker } from '../../levels/w1/winding'
+import { DEFINITION13, HINTS13, OPENING, SLIDE_ASK, STATIONS, STATION_ORDER, emmyAdvice13 } from '../../levels/w1/stages1_3'
 import layout from '../../world/windingRoad.json'
 import { buildSites, makeSiteWalkable } from '../../world/sites'
 import {
@@ -17,9 +17,9 @@ import {
   sfxCorrect,
   sfxWrong,
   sfxZoot,
-  sfxExit,
   sfxFloor,
   sfxGate,
+  sfxLoopClose,
   startHelixMusic,
   stopMusic,
   textBlip,
@@ -37,12 +37,14 @@ const PORTRAIT_CROP = {
   'count-null': ['600%', '50%', '26%'],
   'emmy-boundary': ['400%', '54%', '5%'],
 }
-const TOOL_KEYS = { Digit1: 'lash', Digit2: 'spool', Digit3: 'glass', Digit4: 'cord' }
+const TOOL_KEYS = { Digit1: 'lash', Digit3: 'glass', Digit4: 'cord' }
 const BEACON_R = 0.85
-const S = 0.7
+const TAU = Math.PI * 2
+const signed = (n) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0')
 
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
 const ringCenter = (site) => [site.pos[0] + site.ring.cx, site.pos[1] + site.ring.cz]
+const screenAngle = (x, z, c) => Math.atan2(-(z - c[1]), x - c[0])
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id] || PORTRAIT_CROP.gyroid
@@ -60,11 +62,12 @@ function freshWinders() {
   const out = []
   for (const site of SITES) {
     ;(site.winders || []).forEach(([w, dx, dz], i) => {
-      out.push({ id: `${site.id}-${i}`, site: site.id, winding: w, x: site.pos[0] + dx, z: site.pos[1] + dz, net: 0, unwound: false, killed: false })
+      out.push({ id: `${site.id}-${i}`, site: site.id, winding: w, x: site.pos[0] + dx, z: site.pos[1] + dz, net: 0, killed: false })
     })
   }
   return out
 }
+const held = (w) => w.winding + w.net
 
 export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const levelMeta = concept?.worlds?.[1]?.levels?.find((l) => l.id === '1-3')
@@ -76,8 +79,9 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const [bank, setBank] = useState(0)
   const [pendingLap, setPendingLap] = useState(null)
   const [lastLap, setLastLap] = useState(null)
-  const [homotopyT, setHomotopyT] = useState(0.5)
-  const [slideBase, setSlideBase] = useState(null)
+  const [homotopyT, setHomotopyT] = useState(0)
+  const [slideMax, setSlideMax] = useState(0)
+  const [askOpen, setAskOpen] = useState(false)
   const [winders, setWinders] = useState(freshWinders)
   const [gatesOpen, setGatesOpen] = useState({})
   const [lines, setLines] = useState([])
@@ -97,7 +101,6 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const [muted, setMuted] = useState(readMuted)
   const [toast, setToast] = useState(null)
   const [here, setHere] = useState({ site: null, pos: checkpoint })
-  const [seen, setSeen] = useState({})
   const stateRef = useRef(null)
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
@@ -105,9 +108,12 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
   const emmyTalking = useRef(false)
+  const liftRef = useRef({ U: null, U0: null })
+  const windersRef = useRef(winders)
+  windersRef.current = winders
   const [nearEmmy, setNearEmmy] = useState(false)
 
-  const trackers = useRef(Object.fromEntries(STATION_ORDER.map((id) => [id, makeRingTracker(ringCenter(SITE[id]), SITE[id].ring.inner, SITE[id].ring.outer)])))
+  const trackers = useRef(Object.fromEntries(STATION_ORDER.map((id) => [id, makeRingTracker(ringCenter(SITE[id]), SITE[id].ring.inner, SITE[id].ring.outer, { screen: true })])))
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -124,14 +130,18 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
     setLineIdx(0)
     setPhase(ls.length ? 'talk:' + next : next)
   }, [])
+  /** Start the lifted shadow afresh (a new deck, or the cord read back to zero). */
+  const resetLift = () => (liftRef.current = { U: null, U0: null })
 
   const advanceGoal = useCallback(
     (station, ls = []) => {
       const list = STATIONS[station].goals
       const next = (goalIdx[station] || 0) + 1
+      resetLift()
       if (next >= list.length) {
         setDone((d) => ({ ...d, [station]: true }))
         setBank(0) // each deck starts the cord at zero, so the Number Line gates read exactly what you bank there
+        setPendingLap(null)
         setCheckpoint([SITE[station].pos[0], SITE[station].pos[1] + 3])
         if (STATION_ORDER.every((id) => id === station || done[id])) {
           afterTalk.current = () => {
@@ -142,6 +152,11 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
         return say(ls, ls.length ? 'after' : 'play')
       }
       setGoalIdx((m) => ({ ...m, [station]: next }))
+      const ng = list[next]
+      if (ng.type === 'slide') {
+        setHomotopyT(0)
+        setSlideMax(0)
+      }
       return say(ls)
     },
     [done, goalIdx, say],
@@ -206,7 +221,7 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
       setShown((n) => Math.max(n, i))
       if (i <= line.text.length) textBlip(line.speaker)
     }, 1000 / TYPE_CPS)
-    return () => clearInterval(iv)
+    return () => (clearInterval(iv), duckMusic(false))
   }, [lines, lineIdx, phase])
 
   useEffect(() => {
@@ -219,11 +234,12 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
     }
     if (st !== current || met[st]) return
     setMet((m) => ({ ...m, [st]: true }))
+    resetLift()
     say(STATIONS[st].arrive)
   }, [here.site, phase, current, met, done, say])
 
-  const playEnabled = phase === 'play' && !lines.length
   const talking = phase.startsWith('talk:')
+  const playEnabled = phase === 'play' && !lines.length && !askOpen
   const line = talking ? lines[lineIdx] : null
   useDialogKeys(!!line, advance)
 
@@ -234,55 +250,88 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
       setPendingLap(null)
       setLastLap(w)
       setBank((b) => addWindings(b, w))
+      sfxLoopClose()
       if (goal?.type === 'lap' && goal.n === w) {
-        setSlideBase(w) // the banked lap is the loop the Tide Glass will deform next
         sfxFloor()
         advanceGoal(current, goal.done)
       } else if (goal?.type === 'lap') {
         sfxWrong()
-        flash(HINTS13.wrongWinding.text)
-      }
-      if (goal?.type === 'slide' && slideBase == null) setSlideBase(w)
+        flash(HINTS13.wrongWinding.text, 4200)
+      } else flash(`Banked ${signed(w)}. The cord reads ${signed(bank + w)}.`)
     },
-    [advanceGoal, current, goal, slideBase],
+    [advanceGoal, current, goal, bank],
   )
 
+  // laps on the ring (the Winding Cord), the lifted shadow, banking at the beacon
   useEffect(() => {
     const id = setInterval(() => {
       const s = stateRef.current
-      if (!s || !working || tool !== 'cord') return
+      if (!s || !current) return
       const site = SITE[current]
+      const c = ringCenter(site)
       const tr = trackers.current[current]
+      // the lift: Gyroid's angle round the ring, unwrapped, while he is on the road
+      if (here.site === current && tr.onRing(s.x, s.z)) {
+        const th = screenAngle(s.x, s.z, c)
+        const L = liftRef.current
+        if (L.U == null) liftRef.current = { U: th, U0: th, th }
+        else {
+          L.U += angleDelta(L.th, th)
+          L.th = th
+        }
+      }
+      if (!working || tool !== 'cord') return
       const ev = tr.update(s.x, s.z)
       if (ev?.event === 'lap') {
         if (goal?.type === 'unwind') {
-          setWinders((ws) =>
-            ws.map((w) => {
-              if (w.site !== current || w.unwound || w.killed || w.winding !== goal.winder) return w
-              const net = w.net + ev.winding
-              return { ...w, net, unwound: net === -w.winding }
-            }),
-          )
+          const target = windersRef.current.find((w) => w.site === current && !w.killed && w.winding === goal.winder)
+          if (target) {
+            const left = held(target) + ev.winding
+            setWinders((ws) => ws.map((w) => (w.id === target.id ? { ...w, net: w.net + ev.winding } : w)))
+            sfxLoopClose()
+            if (left === 0) flash(`Lap ${signed(ev.winding)}: ${signed(target.winding)} + (${signed(-target.winding)}) = 0. The coils are off — lash it (1)!`, 4200)
+            else if (Math.abs(left) > Math.abs(held(target))) (sfxWrong(), flash(`Lap ${signed(ev.winding)} wound it tighter: it holds ${signed(left)} now. Run the other way.`, 4200))
+            else flash(`Lap ${signed(ev.winding)}: the Winder holds ${signed(left)} now.`)
+          }
+          return
         }
-        setPendingLap(ev.winding)
-        flash(`Lap closed: winding ${ev.winding > 0 ? '+' : ''}${ev.winding}. Touch the beacon to bank.`)
+        setPendingLap((p) => (p ?? 0) + ev.winding)
+        flash(`Lap closed: ${signed(ev.winding)}. Step onto the beacon in the middle to bank it.`)
       }
-      if (pendingLap != null && Math.hypot(s.x - site.pos[0], s.z - site.pos[1]) < BEACON_R) {
-        bankLap(pendingLap)
-      }
+      if (pendingLap != null && Math.hypot(s.x - c[0], s.z - c[1]) < BEACON_R) bankLap(pendingLap)
     }, 40)
     return () => clearInterval(id)
-  }, [working, tool, current, goal, pendingLap, bankLap])
+  }, [working, tool, current, goal, pendingLap, bankLap, here.site])
 
+  // the Tide Glass: scrub the deformation of the banked lap
+  useEffect(() => {
+    if (goal?.type === 'slide') setSlideMax((m) => Math.max(m, homotopyT))
+  }, [homotopyT, goal])
   const confirmSlide = () => {
-    if (goal?.type !== 'slide' || !working || slideBase == null) {
-      if (goal?.type === 'slide' && working) flash('Bank a lap first — touch the beacon.')
-      return
+    if (goal?.type !== 'slide' || !working) return
+    if (slideMax < 0.9) return flash('Hold the Tide Glass (3) and press X until the loop is fully wiggled — watch where its lift ends.')
+    setAskOpen(true)
+  }
+  const answerSlide = (v) => {
+    if (v !== SLIDE_ASK.answer) {
+      sfxWrong()
+      setAskOpen(false)
+      afterTalk.current = () => setAskOpen(true)
+      return say(SLIDE_ASK.wrong, 'after')
     }
-    if (Math.abs(homotopyT - 0.5) < 0.12) return flash('Scrub the Tide Glass (Z/X) to deform the loop first.')
-    if (!sameWinding(slideBase * Math.PI * 2, slideBase * Math.PI * 2)) return say([WRONG.slideChanged])
     sfxCorrect()
+    setAskOpen(false)
+    setHomotopyT(0)
     advanceGoal(current, goal.done)
+  }
+
+  // the Winders: immune while they hold turns; one lash once the laps cancel them
+  const winderDown = useRef(null)
+  winderDown.current = (id) => {
+    const w = windersRef.current.find((x) => x.id === id)
+    if (!w || w.killed) return
+    setWinders((ws) => ws.map((x) => (x.id === id ? { ...x, killed: true } : x)))
+    if (goal?.type === 'unwind' && goal.winder === w.winding) advanceGoal(current, goal.done)
   }
 
   useEffect(() => {
@@ -291,20 +340,13 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
-    }, 150)
+      if (current) {
+        const [ex, ez] = SITE[current].emmy
+        setNearEmmy(Math.hypot(s.x - SITE[current].pos[0] - ex, s.z - SITE[current].pos[1] - ez) < 2.4)
+      }
+    }, 120)
     return () => clearInterval(id)
-  }, [])
-
-  useEffect(() => {
-    if (goal?.type !== 'unwind') return
-    const target = winders.find((w) => w.site === current && !w.killed && goal.winder === w.winding)
-    if (target?.unwound && !target.killed) {
-      spawnRef.current?.([{ type: 'sphere', x: target.x, z: target.z, site: current }])
-      setWinders((ws) => ws.map((w) => (w.id === target.id ? { ...w, killed: true } : w)))
-      // each unwind goal frees one Winder; the next goal (or the end of the deck) follows
-      advanceGoal(current, goal.done)
-    }
-  }, [winders, goal, current, advanceGoal])
+  }, [current])
 
   useEffect(() => {
     if (goal?.type !== 'gate' || !working) return
@@ -316,185 +358,230 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [bank, goal, working, gatesOpen, advanceGoal, current])
 
-  useEffect(() => {
-    const s = stateRef.current
-    if (!s || !current) return
-    const site = SITE[current]
-    frameRef.current = { center: [site.pos[0] + 1, site.pos[1] + 0.3], size: 8.8, follow: 0.12 }
-  }, [current, here])
+  if (current && here.site === current && met[current]) frameRef.current = { center: [SITE[current].pos[0] + 1.4, SITE[current].pos[1] - 0.6], size: 12.5, follow: 0.1 }
+  else frameRef.current = null
 
   useExitTrigger(exitOpen && !levelClear, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
+  const talkToEmmy = () => say(emmyAdvice13({ current, done, goal, here: here.site, bank, pendingLap, winders, gateOpen: gatesOpen, enemies, met, slideMax }))
   useEffect(() => {
     const down = (e) => {
       if (TOOL_KEYS[e.code]) setTool(TOOL_KEYS[e.code])
-      if (e.code === 'KeyE' && nearEmmy && playEnabled) {
-        say(emmyAdvice13({ current, done, goal, here: here.site, bank, lastLap, winders, gateOpen: gatesOpen, enemies, met }))
-      }
-      if (tool === 'glass' && playEnabled) {
-        if (e.code === 'KeyZ') setHomotopyT((t) => Math.max(0, t - 0.08))
-        if (e.code === 'KeyX') setHomotopyT((t) => Math.min(1, t + 0.08))
+      if (e.code === 'KeyE' && nearEmmy && playEnabled) talkToEmmy()
+      if (tool === 'glass' && playEnabled && goal?.type === 'slide') {
+        if (e.code === 'KeyZ') setHomotopyT((t) => Math.max(0, +(t - 0.1).toFixed(2)))
+        if (e.code === 'KeyX') setHomotopyT((t) => Math.min(1, +(t + 0.1).toFixed(2)))
       }
     }
     window.addEventListener('keydown', down)
     return () => window.removeEventListener('keydown', down)
-  }, [nearEmmy, playEnabled, say, current, done, goal, here.site, bank, lastLap, winders, gatesOpen, enemies, met, tool])
+  })
 
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, exitOpen ? [[layout.exit.a, layout.exit.b]] : []), [exitOpen])
+  const flashRef = useRef(flash)
+  flashRef.current = flash
   const stage = useMemo(
     () => ({
       start: checkpoint,
-      enemies: SITES.flatMap((s) => (s.enemies || []).map(([type, dx, dz]) => [type, s.pos[0] + dx, s.pos[1] + dz, s.id])),
+      enemies: [
+        ...SITES.flatMap((s) => (done[s.id] ? [] : (s.enemies || []).map(([type, dx, dz]) => [type, s.pos[0] + dx, s.pos[1] + dz, s.id]))),
+        ...windersRef.current.filter((w) => !w.killed).map((w) => ({ type: 'winder', x: w.x, z: w.z, site: w.site, word: w.id })),
+      ],
       bySite: true,
+      canHit: (e) => {
+        if (e.type !== 'winder') return true
+        const w = windersRef.current.find((x) => x.id === e.word)
+        return !w || held(w) === 0
+      },
+      onRefused: (e) => {
+        const w = windersRef.current.find((x) => x.id === e.word)
+        if (w) flashRef.current(`The Lash slides off: this Winder holds ${signed(held(w))}. Run ${Math.abs(held(w))} lap${Math.abs(held(w)) > 1 ? 's' : ''} ${held(w) > 0 ? 'clockwise (−1 each)' : 'counter-clockwise (+1 each)'} with the Cord (4).`, 4200)
+      },
+      onEnemyHit: (e) => {
+        if (e.type === 'winder' && e.hp <= 0) winderDown.current?.(e.word)
+      },
+      enemyAI: (e) => {
+        if (e.type !== 'winder') return
+        const w = windersRef.current.find((x) => x.id === e.word)
+        e.turns = w ? held(w) : 0
+      },
     }),
-    [checkpoint],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [checkpoint, knockouts],
   )
 
-  const emmyScript = (site) => () => {
-    const [ex, ez] = site.emmy
-    return { pos: [ex / S, 0, ez / S], rotY: 0.5, walk: 0, talk: emmyTalking.current ? 1 : 0, gesture: 0, bow: 0 }
-  }
-
-  useEffect(() => {
-    const s = stateRef.current
-    if (!s || !current) return
+  const emmyScript = useMemo(() => {
+    if (!current) return null
     const site = SITE[current]
-    const [ex, ez] = site.emmy
-    const wx = site.pos[0] + ex
-    const wz = site.pos[1] + ez
-    setNearEmmy(Math.hypot(s.x - wx, s.z - wz) < 2.4)
-  })
+    const p = [site.pos[0] + site.emmy[0], site.pos[1] + site.emmy[1]]
+    return () => {
+      const s = stateRef.current
+      return { pos: [p[0], 0, p[1]], rotY: s ? Math.atan2(s.x - p[0], s.z - p[1]) : 0, walk: 0, talk: emmyTalking.current ? 1 : 0, gesture: emmyTalking.current ? 0.6 : 0, bow: 0 }
+    }
+  }, [current])
+  emmyTalking.current = !!line && line.speaker === 'Emmy Boundary'
 
   if (import.meta.env.DEV) {
-    window.__lvl13 = { here, done, goalIdx, goal, bank, pendingLap, winders, phase, tool, trackers: trackers.current, setTool, advanceGoal }
+    window.__lvl13 = { here, done, goalIdx, goal, bank, pendingLap, winders, phase, tool, lines, askOpen, homotopyT, slideMax, lift: liftRef.current, trackers: trackers.current, setTool, setHomotopyT, confirmSlide, answerSlide, advanceGoal }
   }
 
   const stepText =
     goal?.type === 'lap'
-      ? `Next: lap with winding ${goal.n > 0 ? '+' : ''}${goal.n} · cord ${bank}`
+      ? `Run one lap ${goal.n > 0 ? 'counter-clockwise (+1)' : 'clockwise (−1)'} on the ring, then step onto the beacon`
       : goal?.type === 'slide'
-        ? `Tide Glass — floor stays at ${slideBase ?? lastLap ?? 1}`
+        ? `Tide Glass (3), X / Z: deform the loop — t = ${homotopyT.toFixed(1)}`
         : goal?.type === 'unwind'
-          ? `Unwind Winder ${goal.winder > 0 ? '+' : ''}${goal.winder}`
+          ? (() => {
+              const w = winders.find((x) => x.site === current && !x.killed && x.winding === goal.winder)
+              return w ? (held(w) ? `The Winder holds $${signed(held(w))}$ — run laps to cancel it` : 'Unwound: lash it (1)!') : ''
+            })()
           : goal?.type === 'gate'
-            ? `Gate wants ${goal.n > 0 ? '+' : ''}${goal.n} · cord ${bank}`
+            ? `Gate $${signed(goal.n)}$: bank laps until the cord reads $${signed(goal.n)}$`
             : 'Explore the Winding Road'
 
   return (
     <div className="screen level w13-level">
-      <Canvas shadows camera={{ position: [0, 14, 18], fov: 42 }} style={{ touchAction: 'none' }}>
+      <Canvas shadows camera={{ position: [0, 14, 18], fov: 42 }} style={{ touchAction: 'none' }} frameloop={lesson ? 'never' : 'always'}>
         <WindingRoadScene
           layout={layout}
           sites={SITES}
           walkable={walkable}
           current={current}
-          done={done}
           exitOpen={exitOpen}
-          bank={bank}
           homotopyT={goal?.type === 'slide' ? homotopyT : null}
           winders={winders}
           gatesOpen={gatesOpen}
+          gateGoal={goal?.type === 'gate' ? goal.n : null}
           frameRef={frameRef}
           gameKey={knockouts}
           stage={stage}
           tool={tool}
           tRef={tRef}
-          sim={tool === 'glass' && goal?.type === 'slide' ? { endpointAt: () => null } : null}
+          sim={null}
           stateRef={stateRef}
           spawnRef={spawnRef}
           onTrackMove={() => {}}
           onEnemies={setEnemies}
           onHearts={setHearts}
           emmyScript={emmyScript}
+          liftRef={liftRef}
           playEnabled={playEnabled}
         />
       </Canvas>
 
       <div className="ui-overlay">
-      <div className="lvl-top">
-        <div className="btn-row" style={{ justifyContent: 'flex-start' }}>
-          <button type="button" className="btn ghost" onClick={onBackToTitle}>
-            ◂ Title
-          </button>
-          <button type="button" className="btn ghost" aria-pressed={muted} onClick={(e) => (setMuted(!muted), setAudioMuted(!muted), e.currentTarget.blur())}>
-            {muted ? '♪ off' : '♪ on'}
-          </button>
-          <button type="button" className="btn ghost" onClick={(e) => (setLesson(true), e.currentTarget.blur())}>
-            ? How it works
-          </button>
-        </div>
-        <div className="lvl-title">
-          <span className="lvl-kicker">World 1 · Level 3 · Winding Road</span>
-          <h2>{levelMeta?.title || 'The Winding Road'}</h2>
-          <div className="hud">
-            <span className="hearts">
-              {[0, 1, 2].map((i) => (
-                <span key={i} className={i < hearts ? 'heart' : 'heart lost'}>
-                  ♥
-                </span>
-              ))}
-            </span>
-            <span className="objective">{current ? STATIONS[current].blueprint : 'Complete'}</span>
+        <div className="lvl-top">
+          <div className="btn-row" style={{ justifyContent: 'flex-start' }}>
+            <button type="button" className="btn ghost" onClick={onBackToTitle}>
+              ◂ Title
+            </button>
+            <button type="button" className="btn ghost" aria-pressed={muted} onClick={(e) => (setMuted(!muted), setAudioMuted(!muted), e.currentTarget.blur())}>
+              {muted ? '♪ off' : '♪ on'}
+            </button>
+            <button type="button" className="btn ghost" onClick={(e) => (setLesson(true), e.currentTarget.blur())}>
+              ? How it works
+            </button>
           </div>
-          {here.site && (
-            <div className="here">
-              <strong>{SITE[here.site]?.name}</strong>
-              {done[here.site] ? ' · finished' : enemies[here.site] ? ` · spawn: ${enemies[here.site]}` : ' · clear'}
+          <div className="lvl-title">
+            <span className="lvl-kicker">World 1 · Level 3 · Winding Road</span>
+            <h2>{levelMeta?.title || 'The Winding Road'}</h2>
+            <div className="hud">
+              <span className="hearts">
+                {[0, 1, 2].map((i) => (
+                  <span key={i} className={i < hearts ? 'heart' : 'heart lost'}>
+                    ♥
+                  </span>
+                ))}
+              </span>
+              <span className="objective">{exitOpen ? 'Walk north through the exit ring' : current ? `Decks ${STATION_ORDER.filter((id) => done[id]).length}/4 · next: ${STATIONS[current].blueprint}` : ''}</span>
             </div>
-          )}
-        </div>
-      </div>
-
-      {working && (
-        <div className="rules-panel forge-panel works-panel w13-panel">
-          <h3>{STATIONS[current].blueprint}</h3>
-          <p className="forgery-count">Winding bank: {bank > 0 ? '+' : ''}{bank}</p>
-          <p className="forgery-count">{stepText}</p>
-        </div>
-      )}
-
-      {line && (
-        <div className="dialog" onClick={advance}>
-          <Portrait id={line.portrait} name={line.speaker} />
-          <div className="dialog-body">
-            <span className="speaker">{line.speaker}</span>
-            <p>
-              <MathText text={line.text} shown={shown} />
-            </p>
-          </div>
-          <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
-            {shown < line.text.length ? '▶▶' : lineIdx + 1 < lines.length ? 'Next ▾' : 'OK'}
-          </button>
-        </div>
-      )}
-
-      {toast && !line && <div className="toast">{toast}</div>}
-      {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Winding Road" />}
-      {nearEmmy && !line && playEnabled && (
-        <button type="button" className="btn talk-btn" onClick={() => say(emmyAdvice13({ current, done, goal, here: here.site, bank, lastLap, winders, gateOpen: gatesOpen, enemies, met }))}>
-          💬 Talk to Emmy <kbd>E</kbd>
-        </button>
-      )}
-
-      {!talking && !levelClear && (
-        <div className="controls">
-          <div className="weapons">
-            {['lash', 'glass', 'cord'].map((id) => (
-              <button key={id} type="button" className={`weapon ${tool === id ? 'active' : ''}`} onClick={() => setTool(id)}>
-                {WORLD_TOOLS[id].label} <kbd>{WORLD_TOOLS[id].key}</kbd>
-              </button>
-            ))}
-          </div>
-          <div className="hint">
-            WASD · {tool === 'cord' ? 'run laps on the gold ring' : tool === 'glass' ? 'Z/X scrub homotopy' : 'lash spawn'} · bank at beacon
-            {goal?.type === 'slide' && slideBase != null && (
-              <button type="button" className="btn small primary" style={{ marginLeft: 8 }} onClick={confirmSlide}>
-                Floor held — continue
-              </button>
+            {here.site && (
+              <div className="here">
+                <strong>{SITE[here.site]?.name}</strong>
+                {done[here.site] ? ' · finished' : enemies[here.site] ? ` · spawn: ${enemies[here.site]}` : ' · clear'}
+              </div>
             )}
           </div>
         </div>
-      )}
+
+        {working && (
+          <div className="rules-panel forge-panel works-panel w13-panel">
+            <h3>{STATIONS[current].blueprint}</h3>
+            <p className="forgery-count">
+              Winding cord: <MathText text={`$${signed(bank)}$`} />
+              {pendingLap != null && <span> · lap <MathText text={`$${signed(pendingLap)}$`} /> waiting at the beacon</span>}
+            </p>
+            <p className="forgery-count">
+              <MathText text={stepText} />
+            </p>
+            {goal?.type === 'slide' && (
+              <button type="button" className="btn small primary" onClick={confirmSlide}>
+                Where did the lift end? ▸
+              </button>
+            )}
+          </div>
+        )}
+
+        {line && (
+          <div className="dialog" onClick={advance}>
+            <Portrait id={line.portrait} name={line.speaker} />
+            <div className="dialog-body">
+              <span className="speaker">{line.speaker}</span>
+              <p>
+                <MathText text={line.text} shown={shown} />
+              </p>
+            </div>
+            <button type="button" className="btn primary small" onClick={(e) => (e.stopPropagation(), advance())}>
+              {shown < line.text.length ? '▶▶' : lineIdx + 1 < lines.length ? 'Next ▾' : 'OK'}
+            </button>
+          </div>
+        )}
+
+        {askOpen && !line && (
+          <div className="dialog verdict">
+            <Portrait id="emmy-boundary" name="Emmy Boundary" />
+            <div className="dialog-body">
+              <span className="speaker">Emmy Boundary</span>
+              <p>
+                <MathText text={SLIDE_ASK.question} />
+              </p>
+            </div>
+            <div className="btn-row">
+              {SLIDE_ASK.options.map((v) => (
+                <button key={v} type="button" className="btn small" onClick={() => answerSlide(v)}>
+                  <MathText text={v} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {toast && !line && (
+          <div className="toast">
+            <MathText text={toast} />
+          </div>
+        )}
+        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Winding Road" />}
+        {nearEmmy && !line && playEnabled && !levelClear && (
+          <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
+            💬 Talk to Emmy <kbd>E</kbd>
+          </button>
+        )}
+
+        {!talking && !levelClear && !askOpen && (
+          <div className="controls">
+            <div className="weapons">
+              {['lash', 'glass', 'cord'].map((id) => (
+                <button key={id} type="button" className={`weapon ${tool === id ? 'active' : ''}`} onClick={(e) => (setTool(id), e.currentTarget.blur())}>
+                  {WORLD_TOOLS[id].label} <kbd>{WORLD_TOOLS[id].key}</kbd>
+                </button>
+              ))}
+            </div>
+            <div className="hint">
+              WASD · {tool === 'cord' ? 'Cord: run laps on the ring road, bank them at the beacon' : tool === 'glass' ? 'Tide Glass: X / Z deform the loop' : 'Lash: strike spawn'} · lost? Talk to Emmy (E)
+            </div>
+          </div>
+        )}
       </div>
 
       {lesson && (
@@ -505,8 +592,9 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 1 · Level 3 · Lesson"
           name="The Winding Number"
           embedded
-          onDone={() => setLesson(false)}
-          onSkip={() => setLesson(false)}
+          startMusic={startHelixMusic}
+          onDone={() => (setLesson(false), startHelixMusic())}
+          onSkip={() => (setLesson(false), startHelixMusic())}
         />
       )}
 

@@ -9,6 +9,7 @@ import { Hall, Platform, Press } from '../../levels/w0/FoundryScene'
 import Hologram from '../../levels/w0/Hologram'
 import { DevAdvance } from '../../levels/w0/OverworldScene'
 import { makeTrack } from '../../levels/w0/cells'
+import { UnglueSpawn } from '../../characters/Spawn'
 
 /** Intro: level-1-7-intro "Glue Job" */
 
@@ -21,11 +22,11 @@ const mix3 = (a, b, k) => [mix(a[0], b[0], k), mix(a[1], b[1], k), mix(a[2], b[2
 const HUB = [0, 6]
 const TRACK = makeTrack({ angle: 1.5708, length: 3.8 }, HUB)
 const SHOTS = [
-  [0, 7, [[2.5, 3.2, 12], [0, 1.2, 6]], [[1.8, 2.8, 9], [0, 1.2, 6]]],
-  [7, 15, [[2.2, 2.4, 9.5], [0, 1.0, 6]], [[1.4, 2.2, 8.2], [0, 1.0, 6]]],
-  [15, 24, [[-1.2, 2.6, 8.8], [-0.2, 1.2, 6]], [[-0.6, 2.5, 7.8], [-0.2, 1.2, 6]]],
-  [24, 26, [[1.8, 2.0, 8], [0.8, 0.9, 6.2]], [[1.8, 2.0, 8], [0.8, 0.9, 6.2]]],
-  [26, 34, [[0.5, 4.2, 11], [0, 0.8, 6]], [[0, 5.5, 13], [0, 0.6, 6]]],
+  [0, 7, [[4, 7.5, 15], [0, 1.6, 6]], [[2.6, 6.0, 13.4], [0, 1.8, 6]]],
+  [7, 15, [[2.4, 5.0, 12.6], [0, 2.4, 5.6]], [[2.0, 5.2, 12.2], [0, 2.6, 5.6]]],
+  [15, 24, [[-1.8, 5.6, 11.8], [0, 3.4, 5.2]], [[-1.4, 5.8, 11.4], [0, 3.6, 5.2]]],
+  [24, 26, [[3.6, 3.4, 9.8], [1.8, 0.8, 4.6]], [[3.4, 3.2, 9.4], [1.8, 0.8, 4.6]]],
+  [26, 34, [[0.5, 6, 14], [0, 2.2, 6]], [[0, 7, 16], [0, 2.2, 6]]],
 ]
 
 function MovieCamera({ tRef }) {
@@ -63,6 +64,8 @@ function keyed(keys, t) {
   const k = seg(t, a[0], b[0])
   return { x: mix(a[1], b[1], k), z: mix(a[2], b[2], k), rotY: mix(a[3], b[3], Math.min(1, k * 2)), moving: k > 0 && k < 1 }
 }
+
+const UNGLUE = { x: HUB[0] + 2.2, z: HUB[1] - 1.8, seed: 0.5, alive: true, dying: 0, face: -2.4, flash: 0, snipping: 0 }
 
 export default function GlueJobMovie({ tRef }) {
   const slam = useRef(0)
@@ -102,11 +105,8 @@ export default function GlueJobMovie({ tRef }) {
       <group ref={holo} position={[HUB[0], 4.2, HUB[1] - 1]}>
         <Hologram kind="torus" word={[{ e: 0, s: 1 }, { e: 1, s: 1 }, { e: 0, s: -1 }, { e: 1, s: -1 }]} kRef={fold} />
       </group>
-      <group ref={unglue} position={[HUB[0] + 2.2, 0.5, HUB[1] - 1.8]}>
-        <mesh>
-          <sphereGeometry args={[0.22, 10, 8]} />
-          <meshStandardMaterial color="#8060d0" emissive="#b090ff" emissiveIntensity={2} toneMapped={false} />
-        </mesh>
+      <group ref={unglue}>
+        <UnglueSpawn e={UNGLUE} />
       </group>
       <group scale={S}>
         <Gyroid script={gyroScript} />

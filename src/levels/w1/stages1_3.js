@@ -1,6 +1,10 @@
 /**
- * World 1 · Level 3 "Winding Road" — Bouquet Bastion. Hatcher Ch. 1: π₁(S¹) ≅ ℤ via
- * the helix cover, homotopy lifting, winding number.
+ * World 1 · Level 3 "Winding Road" — Bouquet Bastion. Hatcher §1.1, Theorem 1.7: π₁(S¹) ≅ ℤ,
+ * via the covering ℝ → S¹ (the helix), path lifting and homotopy lifting.
+ *
+ * Each deck's ring road is the circle S¹; the helix over it is ℝ. As Gyroid runs the ring, his
+ * teal shadow climbs the helix at the same angle — the lift of his path. A closed lap's lift
+ * ends a whole number of floors up: its winding number. +1 is counter-clockwise on screen.
  */
 
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
@@ -11,98 +15,100 @@ export const STATION_ORDER = ['the_helix', 'sliding', 'unwind', 'number_line']
 
 export const OPENING = [
   N('Every loop on a circle is just a number. I wonder if anyone here can read it.'),
-  E('The Winding Road. Each lap around the ring below is one turn up the helix. Take the Winding Cord (4) and run one clean lap.'),
+  E('The Winding Road. Each ring road is a circle, and over each one stands a helix — the circle unrolled into a line.'),
+  E('The Helix deck is straight ahead.'),
 ]
 
 /**
  * Goal types:
- *   lap n           — close a loop with winding exactly n on the ring
- *   slide           — scrub Tide Glass on a saved loop; winding must stay the same
- *   unwind winder   — run loops until banked winding cancels a Winder, then lash it
- *   gate n          — bank loops until total winding equals n, then touch the gate
+ *   lap n           — run laps, bank them at the beacon; the banked lap must have winding n
+ *   slide           — Tide Glass deforms the banked loop; then say where its lift ends
+ *   unwind winder   — run laps until they cancel the turns a Winder holds, then lash it
+ *   gate n          — bank laps until the cord reads n
  */
 export const STATIONS = {
   the_helix: {
     blueprint: 'One lap, one floor',
     arrive: [
-      E('See the helix? Your shadow climbs it as you run the ring. One lap down here is one floor up there.'),
-      E('Equip the Winding Cord (4). Stay on the gold ring road and come back to where you started.'),
+      E('Watch the helix while you run. Your teal shadow climbs it at the same angle as you — that’s the lift of your path.'),
+      E('Hold the Winding Cord (4) and run the ring road once round counter-clockwise, with the arrows. Then step onto the beacon in the middle to bank the lap.'),
     ],
     goals: [
       {
         type: 'lap',
         n: 1,
         done: [
-          G('One lap — and my shadow ended on the first floor!'),
-          E('That floor is the winding number: an integer. $π_1(S^1) ≅ \\mathbb{Z}$ — we will make that precise in the lesson.'),
-          E('Sliding next — east along the causeway.'),
+          G('One lap down here — one floor up there!'),
+          E('The floor where the lift ends is the winding number, an integer. That’s the heart of $π₁(S¹) ≅ ℤ$.'),
+          E('Next: Sliding Doesn’t Count, east along the causeway.'),
         ],
       },
     ],
     early: [E('The Helix deck first — the round island just ahead.')],
   },
   sliding: {
-    blueprint: 'Sliding does not change the count',
+    blueprint: 'Sliding doesn’t change the count',
     arrive: [
-      E('Run another lap, then switch to the Tide Glass (3). Wiggle the loop all you like — the floor must not move.'),
-      E('Homotopy lifting: deforming the path in the circle never changes the endpoint of the lift.'),
+      E('Bank one more counter-clockwise lap here. Then take the Tide Glass (3) and press X to deform it — wiggle it as hard as you like.'),
+      E('Keep an eye on the helix: the deformed loop has a lift too. Watch where it ends.'),
     ],
     goals: [
       {
         type: 'lap',
         n: 1,
-        done: [E('Good — bank that lap. Now deform it with the glass.')],
+        done: [E('Banked. Now the Tide Glass (3): X deforms the loop, Z eases it back. Then tell me where the lift ended.')],
       },
       {
         type: 'slide',
         done: [
-          G('Wild wiggles — same floor as before.'),
-          E('The winding number is unchanged by homotopy. Null cannot slide a 1 into a 0.'),
-          E('Unwind is next — where the Winders wait.'),
+          G('Wild wiggles — and the lift still ends on floor +1.'),
+          E('That’s homotopy lifting: sliding a loop slides its lift, and the lift’s end can’t jump between floors. The winding number doesn’t change.'),
+          E('Null can’t slide a $+1$ into a $0$. Unwind is next — west, past the Helix.'),
         ],
       },
     ],
-    early: [E("Sliding Doesn't Count is east of the Helix.")],
+    early: [E('Sliding Doesn’t Count is the deck to the east — after the Helix.')],
   },
   unwind: {
     blueprint: 'Cancel, then lash',
     arrive: [
-      E('Winders wrap the pillars with stolen turns. Bank +2 laps, then run −2 — the coil unwinds.'),
-      E('Only then will the Lash bite.'),
+      E('Winders. Each one has stolen turns of the road — the violet coils — and the Lash slides right off them.'),
+      E('This one holds $+2$. Run laps the other way, clockwise, $−1$ each: $2 + (−1) + (−1) = 0$. With no turns left, one lash finishes it.'),
     ],
     goals: [
       {
         type: 'unwind',
         winder: 2,
         done: [
-          G('2 + (−2) = 0 on the cord — the coil fell off!'),
-          E('Concatenation of loops adds winding numbers; reversing a loop negates it.'),
-          E('Master deck ahead: build exact integers for the gates.'),
+          G('$+2$, then two clockwise laps — zero. It went down to one lash!'),
+          E('Running loops one after another adds their winding numbers; running a loop backwards negates it.'),
+          E('The other Winder holds $−3$. Which way, and how many laps?'),
         ],
       },
       {
         type: 'unwind',
         winder: -3,
-        done: [E('Three turns the other way. The last Winder is clear.')],
+        done: [E('Three counter-clockwise laps cancel $−3$. Both Winders are down.'), E('The Number Line is last — north.')],
       },
     ],
-    early: [E('Unwind deck — not yet.')],
+    early: [E('The Unwind deck is west. Finish Sliding first.')],
   },
   number_line: {
     blueprint: 'Every integer, nothing else',
     arrive: [
-      E('Each gate opens for one winding number. Bank laps on the cord — they add. Reversed laps subtract.'),
-      E('Reach +2, then −1, then +3. Every integer is reachable; no sliding trick gives you the wrong one.'),
+      E('Each gate opens for one winding number. Bank laps on the cord — they add; clockwise laps subtract.'),
+      E('Make the cord read $+2$, then $−1$, then $+3$. The cord starts at $0$ for each gate.'),
     ],
     goals: [
-      { type: 'gate', n: 2, done: [G('Gate read +2. The cord agrees.')] },
-      { type: 'gate', n: -1, done: [G('−1 — one lap backwards from the beacon.')] },
+      { type: 'gate', n: 2, done: [G('$+2$. The first gate opens.')] },
+      { type: 'gate', n: -1, done: [G('$−1$. Clockwise laps count down, past zero and below.')] },
       {
         type: 'gate',
         n: 3,
         done: [
-          E('You built every gate integer from laps alone. That is the group $\\mathbb{Z}$.'),
+          E('Every gate opened for its integer, and laps added like integers do. Loops on the circle up to sliding are exactly the integers: $π₁(S¹) ≅ ℤ$.'),
           G('The road keeps climbing. I can read the floors now.'),
+          E('The exit ring is open to the north.'),
         ],
       },
     ],
@@ -110,42 +116,48 @@ export const STATIONS = {
   },
 }
 
-export const HINTS13 = {
-  knockout: E('Hearts back — your winding bank and progress stay. Try the lap again.'),
-  offRing: E('Stay on the gold ring road — the cord only counts laps there.'),
-  wrongWinding: E('That lap closed with the wrong winding. Check direction: counter-clockwise is +1.'),
-  winderImmune: E('The Winder still holds those turns. Bank the opposite winding on the cord first.'),
-  needBank: E('Touch the beacon in the middle to bank your last lap onto the cord total.'),
-  gateWrong: E("The gate's coil shows a different number. Bank laps until the cord matches."),
+export const SLIDE_ASK = {
+  question: 'While you deformed the loop, where did its lift end?',
+  options: ['It moved with the wiggles', 'On floor $+1$, every time'],
+  answer: 'On floor $+1$, every time',
+  wrong: [E('Look at the helix again: the wiggly teal lift sways, but its end — the white bead — never leaves floor $+1$. Deforming a loop deforms its lift with the end pinned to one floor.')],
 }
 
-export const WRONG = {
-  slideChanged: E('If the floor moved, that was not a homotopy of the same loop — only sliding along the circle counts.'),
+export const HINTS13 = {
+  knockout: E('Hearts back. Your cord and finished decks are safe; the spawn on this deck are back.'),
+  wrongWinding: E('That banked lap had the wrong winding. Counter-clockwise, with the arrows, is $+1$; clockwise is $−1$.'),
 }
 
 export const DEFINITION13 = {
-  text: 'The fundamental group of the circle is infinite cyclic: loops around S¹ are classified up to homotopy by an integer winding number, via the helix cover ℝ → S¹ and path/homotopy lifting.',
-  cite: 'Hatcher, Algebraic Topology, Ch. 1, pp. 29–35 (covering spaces, π₁(S¹) ≅ ℤ).',
+  text: 'The fundamental group of the circle is infinite cyclic: π₁(S¹) ≅ ℤ. A loop’s class is its winding number — where its lift to the helix ℝ → S¹ ends. Homotopy lifting keeps that endpoint fixed, and running loops one after another adds their winding numbers.',
+  cite: 'Hatcher, Algebraic Topology, §1.1, Theorem 1.7 and its proof, pp. 29–31.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATch1.pdf',
 }
 
 export function emmyAdvice13(state) {
-  const { current, done, goal, here, bank, lastLap, winders, gateOpen, enemies, met } = state
-  if (!current) return [E('Walk out through the exit — you have every floor.')]
-  if (here !== current) return [E(`You're on ${here || 'the path'}. Head to ${STATIONS[current].blueprint} (${current.replace(/_/g, ' ')}).`)]
-  if (enemies?.[current] > 0) return [E('Lash the sphere spawn — save your laps for the puzzle.')]
+  const { current, goal, here, bank, pendingLap, winders, gateOpen, enemies, met, slideMax } = state
+  if (!current) return [E('Every deck is done. The exit ring is north.')]
+  if (here !== current) return [E(`Head for ${STATIONS[current].blueprint} — follow the NEXT marker on the map.`)]
+  if (enemies?.[current] > 0 && goal?.type !== 'unwind') return [E('Lash the spawn on this deck first (1), then run your laps with the Cord (4).')]
   if (!met?.[current]) return STATIONS[current].arrive.slice(-1)
-  if (!goal) return [E('Keep exploring — or finish the exit.')]
-  if (goal.type === 'lap') return [E(`Run one lap on the ring with winding ${goal.n > 0 ? '+' : ''}${goal.n}. Cord (4), stay on gold.`)]
-  if (goal.type === 'slide') return [E('Tide Glass (3): scrub the loop. The helix floor must stay at ' + (lastLap ?? 1) + '.')]
+  if (!goal) return [E('Walk on — the next deck is waiting.')]
+  if (pendingLap != null) return [E(`You have a lap of $${pendingLap > 0 ? '+' : '−'}${Math.abs(pendingLap)}$ waiting. Step onto the beacon in the middle to bank it.`)]
+  if (goal.type === 'lap') return [E('Winding Cord (4). Run the ring road all the way round counter-clockwise, with the arrows, then step onto the beacon in the middle.')]
+  if (goal.type === 'slide')
+    return slideMax < 0.9
+      ? [E('Tide Glass (3): press X to deform the loop — all the way. Watch the white bead at the end of its lift on the helix.')]
+      : [E('Now press “Where did the lift end?” in the panel and tell me.')]
   if (goal.type === 'unwind') {
-    const w = winders?.find((x) => x.winding !== 0)
-    if (w) return [E(`Winder holds ${w.winding > 0 ? '+' : ''}${w.winding}. Bank ${-w.winding} on the cord, then lash.`)]
-    return [E('Lash the unwound Winder.')]
+    const w = winders?.find((x) => x.site === current && !x.killed && x.winding === goal.winder)
+    if (!w) return [E('Lash the unwound Winder.')]
+    const h = w.winding + w.net
+    if (!h) return [E('It holds nothing now. Lash (1) it!')]
+    return [E(`It holds $${h > 0 ? '+' : '−'}${Math.abs(h)}$. Cord (4): run ${Math.abs(h)} lap${Math.abs(h) > 1 ? 's' : ''} ${h > 0 ? 'clockwise ($−1$ each)' : 'counter-clockwise ($+1$ each)'} — no banking needed. Then lash it.`)]
   }
   if (goal.type === 'gate') {
-    if (gateOpen?.[goal.n]) return [E('Gate is open — walk through.')]
-    return [E(`Bank laps until the cord reads ${goal.n > 0 ? '+' : ''}${goal.n}. Beacon in the center banks your last lap.`)]
+    if (gateOpen?.[goal.n]) return [E('That gate is open.')]
+    const need = goal.n - bank
+    return [E(`The cord reads $${bank}$; the gate wants $${goal.n}$. Bank ${Math.abs(need)} more lap${Math.abs(need) === 1 ? '' : 's'} ${need > 0 ? 'counter-clockwise' : 'clockwise'}.`)]
   }
-  return [E('WASD to move. 4 = Winding Cord, 3 = Tide Glass, 1 = Lash.')]
+  return [E('Cord (4) runs laps, Tide Glass (3) deforms them, Lash (1) strikes.')]
 }

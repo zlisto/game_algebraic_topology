@@ -9,6 +9,46 @@ import { Clouds, FloatingRocks } from '../../world/Dressing'
 import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
 import ReefGame from '../w0/ReefGame'
 import { EmmyBubble } from '../w0/FoundryScene'
+import CoverGraph from '../../movies/w1/CoverGraph'
+
+/**
+ * The cover each hall is built on, drawn as Hatcher draws covers of a wedge of circles: one dot
+ * per sheet, a-edges orange and b-edges blue. A deck transformation permutes the sheets and
+ * must carry the graph onto itself.
+ *   cyclic3  — a = b = (1 2 3): turning by a third lands it on itself (normal)
+ *   lopsided — a = (1 2), b = (2 3): no turn lands it on itself (not normal)
+ *   quotient — the circle's double cover z ↦ z²: a half-turn swaps the two sheets
+ */
+export const HALL_COVERS = {
+  cyclic3: { a: [1, 2, 0], b: [1, 2, 0] },
+  lopsided: { a: [1, 0, 2], b: [0, 2, 1] },
+  quotient: { a: [1, 0] },
+}
+function CoverSpin({ site, shift }) {
+  const g = useRef()
+  const cover = HALL_COVERS[site.cover]
+  const n = cover.a.length
+  const verts = useMemo(
+    () =>
+      Array.from({ length: n }, (_, i) => {
+        const th = -Math.PI / 2 + (2 * Math.PI * i) / n
+        return [2.4 * Math.cos(th), 2.6, 2.4 * Math.sin(th)]
+      }),
+    [n],
+  )
+  useFrame(() => {
+    if (!g.current) return
+    const target = (-shift * 2 * Math.PI) / n
+    g.current.rotation.y += (target - g.current.rotation.y) * 0.08
+  })
+  return (
+    <group position={[site.pos[0], 0, site.pos[1]]}>
+      <group ref={g}>
+        <CoverGraph cover={cover} verts={verts} />
+      </group>
+    </group>
+  )
+}
 
 const S = 0.7
 
@@ -38,8 +78,8 @@ function GlassDeck({ site, current, shift, sheets = 3 }) {
   return (
     <group position={[x, 0, z]}>
       {layers.map((i) => {
-        const Ïƒ = Array.from({ length: sheets }, (_, j) => (j + shift) % sheets)
-        const layer = Ïƒ.indexOf(i)
+        const perm = Array.from({ length: sheets }, (_, j) => (j + shift) % sheets)
+        const layer = perm.indexOf(i)
         return (
           <mesh key={i} position={[0, 0.12 + layer * 0.14, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <circleGeometry args={[site.def.add[0].r || 5, 48]} />
@@ -112,7 +152,8 @@ function LoopTrack({ site, loopId, active }) {
   const rot = loopId === 'meridian' ? Math.PI / 2 : 0
   return (
     <mesh rotation={[-Math.PI / 2, rot, 0]} position={[x, 0.08, z]} scale={scale}>
-      <ringGeometry args={[loopId === 'half' ? 4.2 : 4.5, loopId === 'half' ? 4.9 : 4.85, loopId === 'half' ? 32 : 64, 1, loopId === 'half' ? 0 : Math.PI * 2]} />
+      {/* the half rim runs from the south door, round the east side, to the north door */}
+      <ringGeometry args={[loopId === 'half' ? 4.2 : 4.5, loopId === 'half' ? 4.9 : 4.85, loopId === 'half' ? 32 : 64, 1, loopId === 'half' ? -Math.PI / 2 : 0, loopId === 'half' ? Math.PI : Math.PI * 2]} />
       <meshStandardMaterial color={col} emissive={col} emissiveIntensity={active ? 1.6 : 0.35} toneMapped={false} transparent opacity={active ? 0.95 : 0.35} />
     </mesh>
   )
@@ -183,6 +224,7 @@ export default function DeckHallsScene({
           <group key={site.id}>
             <GlassDeck site={site} current={current === site.id} shift={current === site.id ? shift : 0} sheets={sheets} />
             {site.wheel && current === site.id && <DeckWheel site={site} active onClick={onWheelClick} />}
+            {current === site.id && HALL_COVERS[site.cover] && <CoverSpin site={site} shift={shift} />}
           </group>
         )
       })}

@@ -5,7 +5,9 @@ import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
 import { sfxCrack, sfxHammer, sfxHit, sfxHurt, sfxPop, sfxRefuse, sfxRoot, sfxWhoosh } from '../../audio/chip'
 import {
+  BacktrackSpawn,
   BeaconSpawn,
+  WinderSpawn,
   ConerSpawn,
   DeckGuardSpawn,
   HedgeSpawn,
@@ -22,6 +24,20 @@ import {
   TorusSpawn,
   UnglueSpawn,
   WhirlSpawn,
+  EchoSpawn,
+  VineChokerSpawn,
+  MothSpawn,
+  SeamWraithSpawn,
+  FlipperSpawn,
+  BogSpawn,
+  CrumplerSpawn,
+  LeakSpawn,
+  QuarryGolemSpawn,
+  GaleSpawn,
+  CubeSentrySpawn,
+  GlitchSpawn,
+  FiberWraithSpawn,
+  TwistThiefSpawn,
 } from '../../characters/Spawn'
 import {
   ACTION_TOOLS,
@@ -84,18 +100,40 @@ const ENEMY = {
   liftling: { hp: 2, speed: 1.05, radius: 0.34 }, // 1-8, 1-9 (1-8: only hittable on its own sheet, via stage.canHit)
   stack_sentinel: { hp: 2, speed: 0, radius: 0.55, harmless: true }, // 1-9: stands at the tower; lashing it swaps the start vertex (stage.onEnemyHit keeps it standing)
   deck_guard: { hp: 1, speed: 0.85, radius: 0.38 }, // 1-10: one lash clears every linked copy, once stacked (stage.canHit)
+  backtrack: { hp: 1, speed: 0, radius: 0.36 }, // 1-2: runs a loop track backwards (the level steers it via stage.enemyAI)
+  winder: { hp: 1, speed: 0.55, radius: 0.42 }, // 1-3: immune (stage.canHit) until laps cancel the turns it holds
+  // --- World 3 · Cup Product Gardens
+  echo: { hp: 1, speed: 1.1, radius: 0.36 },
+  vine_choker: { hp: 2, speed: 0.7, radius: 0.42 },
+  moth: { hp: 1, speed: 1.4, radius: 0.3 },
+  seam_wraith: { hp: 3, speed: 0.85, radius: 0.44 },
+  flipper: { hp: 1, speed: 1.15, radius: 0.36 },
+  // --- World 2 · Chain Delta
+  bog: { hp: 2, speed: 0.55, radius: 0.48 },
+  crumpler: { hp: 1, speed: 1.2, radius: 0.34 },
+  leak: { hp: 1, speed: 1.35, radius: 0.32 },
+  quarry_golem: { hp: 3, speed: 0.45, radius: 0.55 },
+  gale: { hp: 1, speed: 1.5, radius: 0.3 },
+  // --- World 4 · Postnikov Spire
+  cube_sentry: { hp: 2, speed: 0.55, radius: 0.48 },
+  glitch: { hp: 1, speed: 1.35, radius: 0.34 },
+  fiber_wraith: { hp: 2, speed: 1.05, radius: 0.4 },
+  twist_thief: { hp: 2, speed: 0.9, radius: 0.38 },
 }
 
 /** Starting hit points: a definition may set `hp`; a 1-6 patrol gets one per letter of its word. */
 function enemyHp(type, def) {
   if (def?.hp) return def.hp
   if (type === 'patrol' && def?.word) return Math.max(1, def.word.trim().split(/\s+/).filter(Boolean).length)
-  return ENEMY[type].hp
+  const row = ENEMY[type] || ENEMY.sphere
+  return row.hp
 }
 
 /** Models for the World 1 spawn (Worlds 2–4 append here too). */
 const SPAWN_VIEW = {
   hedge: HedgeSpawn,
+  backtrack: BacktrackSpawn,
+  winder: WinderSpawn,
   retractor: RetractorSpawn,
   whirl: WhirlSpawn,
   projector_imp: ProjectorImpSpawn,
@@ -103,6 +141,20 @@ const SPAWN_VIEW = {
   liftling: LiftlingSpawn,
   stack_sentinel: StackSentinelSpawn,
   deck_guard: DeckGuardSpawn,
+  echo: EchoSpawn,
+  vine_choker: VineChokerSpawn,
+  moth: MothSpawn,
+  seam_wraith: SeamWraithSpawn,
+  flipper: FlipperSpawn,
+  bog: BogSpawn,
+  crumpler: CrumplerSpawn,
+  leak: LeakSpawn,
+  quarry_golem: QuarryGolemSpawn,
+  gale: GaleSpawn,
+  cube_sentry: CubeSentrySpawn,
+  glitch: GlitchSpawn,
+  fiber_wraith: FiberWraithSpawn,
+  twist_thief: TwistThiefSpawn,
 }
 
 /** The Fundamental Lash: an amber cord cracked from Gyroid's hand. */
@@ -322,6 +374,7 @@ export default function ReefGame({
   spawnRef,
   ribbonApi,
   onAction,
+  actionTools = ACTION_TOOLS, // tools whose clicks go to onAction (a level may add its own)
   onStrokeStart,
   onStrokeMove,
   onStrokeEnd,
@@ -510,7 +563,7 @@ export default function ReefGame({
           onSpooling?.(false)
           onStrokeEnd?.(cx, cz)
         }
-      } else if (ACTION_TOOLS.has(tool)) {
+      } else if (actionTools.has(tool)) {
         s.face = Math.atan2(cx - s.x, cz - s.z)
         if (SWING_TOOLS.has(tool)) {
           s.swing = 0.0001

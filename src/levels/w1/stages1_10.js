@@ -12,7 +12,7 @@ export const STATION_ORDER = ['shift_deck', 'lopsided', 'quotient', 'antipodal']
 
 export const OPENING = [
   N('Shift every floor at once. If the ports still line up, nothing changed — and I still win.'),
-  E('Deck Halls ahead. The Sheet Compass (6) rotates whole covers when the labels still match.'),
+  E('The Deck Halls. The Sheet Compass (6) turns a whole cover at once, when the cover lands on itself.'),
   E('Lash (1) clears Null’s spawn when a deck shift stacks every copy on one spot.'),
 ]
 
@@ -20,8 +20,8 @@ export const STATIONS = {
   shift_deck: {
     blueprint: 'Shift the deck',
     arrive: [
-      E('Three glass floors, one triangle on each. Every port carries the same edge labels.'),
-      E('Click the great wheel with the Sheet Compass (6) to rotate all sheets together. When the labels still match, the shift is allowed.'),
+      E('Over this hall hangs a three-sheeted cover: $a$ and $b$ both carry sheet 1 to 2, 2 to 3, and 3 back to 1.'),
+      E('A deck transformation shuffles the sheets so the whole graph lands on itself — every edge onto an edge with the same letter. Click the wheel with the Sheet Compass (6) to turn the cover a third of the way round.'),
     ],
     goals: [
       {
@@ -30,28 +30,28 @@ export const STATIONS = {
         needShift: 1,
         guards: true,
         done: [
-          E('One turn, and every port still agrees. That rotation is a deck transformation — a symmetry of the cover.'),
-          E('When every sheet can reach every other by such shifts, the cover is normal. This one is.'),
+          E('A third of a turn, and every edge lands on an edge with the same letter. That turn is a deck transformation — a symmetry of the cover.'),
+          E('Here a deck transformation can carry any sheet to any other. That makes the cover normal.'),
           G('The guards stacked. One lash.'),
         ],
       },
     ],
-    early: [E('The carousel hall is just south.')],
+    early: [E('The carousel hall is just north of the landing.')],
   },
   lopsided: {
     blueprint: 'Lopsided cover',
     arrive: [
-      E('Two floors talk to each other at the gate. The third floor has its own label — alone.'),
-      N('Rotate all you like. That lonely sheet never visits the others.'),
+      E('Another three-sheeted cover: $a$ swaps sheets 1 and 2, $b$ swaps sheets 2 and 3. Look at the loops: sheet 1 has a $b$-loop, sheet 3 an $a$-loop, sheet 2 neither.'),
+      N('Turn it all you like. It never lands on itself.'),
     ],
     goals: [
       {
         type: 'ask',
-        question: 'Can a deck shift carry sheet 2 onto sheet 0?',
-        options: ['Yes — it’s normal', 'No — sheet 2 is isolated'],
-        answer: 'No — sheet 2 is isolated',
-        right: [E('Right. A normal cover’s deck group acts transitively on every fiber. Here sheet 2 never meets the pair — not normal.')],
-        wrong: [E('Try the Compass: only sheets 0 and 1 share a port. Sheet 2 never joins them.')],
+        question: 'Can a deck transformation carry sheet 1 onto sheet 2?',
+        options: ['Yes — the cover is normal', 'No — sheet 1 has a b-loop and sheet 2 doesn’t'],
+        answer: 'No — sheet 1 has a b-loop and sheet 2 doesn’t',
+        right: [E('Right. A deck transformation carries loops to loops, so it can’t move sheet 1 to sheet 2. The only one here is “do nothing” — so the cover is not normal.')],
+        wrong: [E('A deck transformation must carry the $b$-loop at sheet 1 to a $b$-loop. Sheet 2 has none.')],
       },
     ],
     early: [E('Finish the carousel first.')],
@@ -59,8 +59,8 @@ export const STATIONS = {
   quotient: {
     blueprint: 'Divide by a group',
     arrive: [
-      E('Build a cover from an action: flip a segment end-for-end. Two sheets, one midpoint port — labels swap sides.'),
-      E('Apply the swap shift with the Compass. That is the quotient by $ℤ/2$ acting freely.'),
+      E('Covers from symmetry: turn a circle half way round. No point stays put — $ℤ/2$ acts freely. Divide it out, and you get a circle again, covered twice: the map $z ↦ z²$ from Push It Forward.'),
+      E('Click the wheel with the Sheet Compass (6): the half-turn swaps the two sheets.'),
     ],
     goals: [
       {
@@ -68,7 +68,7 @@ export const STATIONS = {
         cover: 'quotient',
         needShift: 1,
         done: [
-          E('The two sheets trade places and the port still matches. A free action on a space, divided out, gives a covering space.'),
+          E('The two sheets trade places and the cover lands on itself. A group acting freely (and nicely) on a space gives a covering space, and the group is its deck group.'),
           G('Folded once, covered twice.'),
         ],
       },
@@ -78,26 +78,26 @@ export const STATIONS = {
   antipodal: {
     blueprint: 'Antipodal hall',
     arrive: [
-      E('A sphere hall: golden doors in pairs, exactly opposite. Downstairs, the same room is the projective plane — each point two points up here.'),
-      E('Walk the equatorial loops. One of them lifts to a path from a door to its opposite — not a closed lift.'),
+      E('A sphere hall, with golden doors exactly opposite each other. Glue every point to its opposite and you get the projective plane $ℝP²$ — so the sphere covers $ℝP²$ twice.'),
+      E('A loop down in $ℝP²$ lifts to a path up here. Some lifts close; one kind runs from a door to its opposite.'),
     ],
     goals: [
       {
         type: 'ask',
-        question: 'Which equatorial loop lifts to a path between opposite doors?',
-        options: ['The full rim (once around)', 'A meridian (pole to pole)', 'A half-rim (180° arc)'],
-        answer: 'A half-rim (180° arc)',
+        question: 'Which loop down in ℝP² lifts to a path from a door to the opposite door?',
+        options: ['The image of the whole rim', 'The image of half the rim (180°)', 'A tiny loop round one door'],
+        answer: 'The image of half the rim (180°)',
         right: [
-          E('Yes. A loop that goes halfway around meets its antipode on the other sheet — the lift runs door to door.'),
-          E('That is $S²$ covering $ℝP²$. Null’s sphere trick fails once you can see the double sheet.'),
+          E('Yes. Half the rim ends at the point opposite where it started — and downstairs those are the same point, so it’s a loop. Its lift doesn’t close.'),
+          E('So that loop can’t be shrunk in $ℝP²$, while going round it twice can: $π₁(ℝP²) ≅ ℤ₂$.'),
           G('Opposite doors, one room — got it.'),
         ],
-        wrong: [E('A full rim or meridian closes upstairs too. Only a half turn reaches the antipodal door.')],
+        wrong: [E('The whole rim already closes up here, and a tiny loop does too. Only half the rim ends at the opposite door.')],
       },
       {
         type: 'walk',
         loopId: 'half',
-        done: [E('You walked the half-rim. Its lift opened the antipodal door. The castle’s ribbon storm won’t hide behind separate floors anymore.')],
+        done: [E('You walked half the rim: door to opposite door. The north gate is open.')],
       },
     ],
     early: [E('The sphere hall is north — after the quotient forge.')],
@@ -106,15 +106,15 @@ export const STATIONS = {
 
 export const HINTS = {
   knockout: [E('Hearts back. Your deck shifts and port counts are saved — try the Compass again.')],
-  refuse_shift: [E('That rotation would mismatch a port label. Only shifts that preserve every label are deck transformations.')],
+  refuse_shift: [E('That turn would put an edge on an edge with a different letter. Only shuffles that carry the cover onto itself are deck transformations.')],
   guards: [E('Rotate the deck until every Deck guard copy sits on the same spot, then Lash once.')],
-  compass: [E('Sheet Compass (6): click the wheel at the deck center.')],
-  walk: [E('Stand on the glowing half-arc and walk it with WASD.')],
+  compass: [E('Sheet Compass (6): click the wheel in the middle of the hall.')],
+  walk: [E('Walk the glowing half of the rim, from one golden door to the other.')],
 }
 
 export const DEFINITION = {
-  text: 'Deck transformations of a covering space are the homeomorphisms of the total space that preserve projection. They form a group, the deck group. A cover is normal when that group acts transitively on each fiber. The sphere double-covers the projective plane by identifying antipodal points.',
-  cite: 'Hatcher, Algebraic Topology, Ch. 1 — deck transformations, normal covers, Example 1.14 (S² → RP²).',
+  text: 'A deck transformation of a covering space is a symmetry of it that lies over the identity: it permutes the sheets and carries the cover onto itself. They form the deck group. A cover is normal when the deck group can carry any sheet to any other. A group acting freely on a space gives a cover with that deck group — so S² double-covers ℝP², and π₁(ℝP²) ≅ ℤ₂.',
+  cite: 'Hatcher, Algebraic Topology, §1.3: deck transformations and group actions, pp. 70–74.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATch1.pdf',
 }
 

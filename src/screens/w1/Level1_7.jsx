@@ -173,7 +173,8 @@ export default function Level1_7({ concept, onBackToTitle, onNext, startAt }) {
     (station, lines = []) => {
       const list = STATIONS[station].goals
       const g = list[goalIdx[station] || 0]
-      if (g?.wave || STATIONS[station].wave) {
+      // a goal's own wave, or the deck's wave once (when its first goal is done) — not on every step
+      if (g?.wave || (STATIONS[station].wave && !(goalIdx[station] || 0))) {
         const wave = SITE[station].wave
         if (wave) {
           setWaveOn(true)
@@ -203,7 +204,8 @@ export default function Level1_7({ concept, onBackToTitle, onNext, startAt }) {
         afterTalk.current = () => setOrderOpen(true)
         return say(lines, 'after')
       }
-      say(lines)
+      if (ng.type === 'trivial') setWalkDemo(null) // walk the word afresh for this check
+      say(ng.start ? [...lines, ...ng.start] : lines)
     },
     [goalIdx, say],
   )
@@ -564,7 +566,7 @@ export default function Level1_7({ concept, onBackToTitle, onNext, startAt }) {
     if (goal.type === 'point') return 'Cell-Smith (2): stand on the furnace and click to forge the point'
     if (goal.type === 'edges') return `Walk each track out and back to the furnace (${cx.edges.length}/${goal.n} edges)`
     if (goal.type === 'disk') return `Walked: ${word.length ? wordText(word) : '—'} · target ${goal.word ? wordText(parseCellWord(goal.word)) : 'the rim'} · click the furnace to press`
-    if (goal.type === 'trivial') return 'Walk the glued loop again — it slides to nothing'
+    if (goal.type === 'trivial') return `Walk $${goal.word === 'a' ? 'a' : 'a b a⁻¹ b⁻¹'}$ again — it slides to nothing`
     if (goal.type === 'commute') return 'Walk a b and b a — same class now'
     if (goal.type === 'order') return 'Answer Emmy'
     if (goal.type === 'clasp') return 'Clasp (5): click the amber clasp in the middle'
@@ -612,7 +614,7 @@ export default function Level1_7({ concept, onBackToTitle, onNext, startAt }) {
           <aside className="rules-panel forge-panel glue-panel">
             <h3>{STATIONS[current].blueprint}</h3>
             {presentation && <p className="rule-math">π₁: {presentationLabel(presentation)}</p>}
-            <p className="forge-step">{stepText}</p>
+            <p className="forge-step"><MathText text={stepText} /></p>
           </aside>
         )}
 
@@ -620,7 +622,7 @@ export default function Level1_7({ concept, onBackToTitle, onNext, startAt }) {
           <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Glue Works" />
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && <div className="toast"><MathText text={toast} /></div>}
         {nearEmmy && phase === 'play' && !askOpen && !orderOpen && !levelClear && (
           <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
             💬 Talk to Emmy <kbd>E</kbd>
