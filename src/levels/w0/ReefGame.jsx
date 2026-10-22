@@ -574,7 +574,8 @@ export default function ReefGame({
           let side = null
           let sd = Infinity
           for (const e of enemies.current) {
-            if (!e.alive || e.dying) continue
+            // never auto-aim at a judgment beacon (lashing one is a verdict, not a fight)
+            if (!e.alive || e.dying || e.type === 'beacon' || ENEMY[e.type]?.speed === 0) continue
             const d = Math.hypot(e.x - s.x, e.z - s.z)
             if (d > WHIP_RANGE + (ENEMY[e.type]?.radius || 0.4)) continue
             let da = Math.atan2(e.x - s.x, e.z - s.z) - s.face

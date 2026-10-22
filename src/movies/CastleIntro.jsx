@@ -8,7 +8,7 @@ import Gyroid from '../characters/Gyroid'
 import { ShardSpawn } from '../characters/Spawn'
 import { DevAdvance } from '../levels/w0/OverworldScene'
 import { NULL_AT, PANELS } from '../levels/w0/stagesCastle'
-import CastleSet, { TOP, stairAt } from './CastleSet'
+import CastleSet, { LANDING_R, TOP, stairAt } from './CastleSet'
 
 /**
  * Intro movie for World 0 · Castle, "The Hollow Throne" (videos.json castle-0-intro):
@@ -28,7 +28,9 @@ const mix3 = (a, b, k) => [mix(a[0], b[0], k), mix(a[1], b[1], k), mix(a[2], b[2
 const SHOTS = [
   [0, 7, [[3.5, 2.2, 30], [0, 1.2, 22]], [[2.5, 3.5, 14], [0, 6, -2]]],
   [7, 13, null, null], // B: orbits with Gyroid up the stair (below)
-  [13, 22, [[0, TOP + 3.2, 10], [NULL_AT[0], TOP + 1.6, NULL_AT[1]]], [[1.5, TOP + 2.6, 2.5], [NULL_AT[0], TOP + 1.8, NULL_AT[1]]]],
+  // behind the landing: Gyroid steps off the stair and in through the doorway
+  [13, 16.5, [[1.4, TOP + 4.6, 17], [0, TOP - 0.6, 10.2]], [[0.9, TOP + 4.4, 12.8], [0, TOP - 0.2, 3.6]]], // looks down at him so he rides above the caption
+  [16.5, 22, [[0, TOP + 3.2, 10], [NULL_AT[0], TOP + 1.6, NULL_AT[1]]], [[1.5, TOP + 2.6, 2.5], [NULL_AT[0], TOP + 1.8, NULL_AT[1]]]],
   [22, 30, [[0, TOP + 11, 11], [0, TOP, -1]], [[0, TOP + 12.5, 12], [0, TOP, -1.5]]],
   [30, 40, [[0, TOP + 8, 15], [0, TOP + 1, -3]], [[0, TOP + 10, 18], [0, TOP + 1, -3]]],
 ]
@@ -42,7 +44,8 @@ function MovieCamera({ tRef }) {
     if (!sh[2]) {
       const y = climbY(t)
       const [x, , z, a] = stairAt(Math.max(0.3, y))
-      camera.position.set(Math.cos(a - 0.5) * 11, y + 3.5, Math.sin(a - 0.5) * 11)
+      const R = Math.hypot(x, z) + 5.5
+      camera.position.set(Math.cos(a - 0.5) * R, y + 3.5, Math.sin(a - 0.5) * R)
       look.set(x, y + 0.8, z)
     } else {
       const k = smooth(seg(t, sh[0], sh[1]))
@@ -83,10 +86,12 @@ export default function CastleIntro({ tRef }) {
     if (t < 13) {
       const y = climbY(t)
       const [x, , z, a] = stairAt(Math.max(0.3, y))
-      return { pos: [x / S, y / S, z / S], rotY: -a + Math.PI, run: 1, cast: 0, whip: 0, loop: 0, loopDrop: 0 }
+      // the stair winds counter-clockwise: he faces along it, up the steps
+      return { pos: [x / S, y / S, z / S], rotY: -a, run: 1, cast: 0, whip: 0, loop: 0, loopDrop: 0 }
     }
-    const k = smooth(seg(t, 13, 16))
-    return { pos: [0, TOP / S, mix(7.6, 4.2, k) / S], rotY: Math.PI, run: k > 0 && k < 1 ? 0.7 : 0, cast: t > 26.4 ? 0.7 : 0, whip: 0, loop: 0, loopDrop: 0 }
+    // off the landing, through the doorway, into the throne room
+    const k = smooth(seg(t, 13, 16.5))
+    return { pos: [0, TOP / S, mix(LANDING_R, 4.2, k) / S], rotY: Math.PI, run: k > 0 && k < 1 ? 0.7 : 0, cast: t > 26.4 ? 0.7 : 0, whip: 0, loop: 0, loopDrop: 0 }
   }
   const emmyScript = () => ({ pos: [0.9 / S, 0, 26.2 / S], rotY: Math.PI, walk: 0, bow: 0, gesture: tRef.current < 5 ? 0.8 : 0, talk: tRef.current > 0.6 && tRef.current < 4.6 ? 1 : 0 })
   const nullScript = () => {

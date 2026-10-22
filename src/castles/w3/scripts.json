@@ -1,0 +1,73 @@
+{
+  "videos": [
+    {
+      "id": "castle-3-intro-v2",
+      "title": "The Counterfeit Station",
+      "plays": "Before castle-3, after 3-9",
+      "world": 3,
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 34,
+      "pace": [[0, null, 0.85]],
+      "synopsis": "Gyroid and Emmy run the viaduct into the Counterfeit Station, where every board reads like a torus. A cloaked station master throws off his cloak: the Commutator. Null's Crown blazes over the dais: three trials, and the Cup Product Gardens are the stake.",
+      "scenes": [
+        { "id": "A", "start": 0, "end": 7, "title": "The viaduct", "description": "Night. Gyroid and Emmy sprint along a viaduct over a violet sea toward a station where four lines meet; a colossal stone torus arch with a clock rises behind it." },
+        { "id": "B", "start": 7, "end": 13, "title": "The boards", "description": "Departure boards flicker: H⁰ ℤ · H¹ ℤ² · H² ℤ. Every board reads like a torus." },
+        { "id": "C", "start": 13, "end": 21, "title": "The station master", "description": "A cloaked figure waits on the dais. He throws off the cloak: the Commutator, his four loop pauldrons blazing." },
+        { "id": "D", "start": 21, "end": 30, "title": "The Crown", "description": "The Crown above the dais blazes and Null speaks through it. Three sigils light on the concourse; Crown shards orbit the dais." },
+        { "id": "E", "start": 30, "end": 34, "title": "Title", "description": "Title card: World 3 · Castle — The Counterfeit Station." }
+      ],
+      "captions": [
+        { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "The Counterfeit Station: where every line in Winding World meets. Tonight, every train runs to one platform." },
+        { "t": 7.2, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Look at the boards. ℤ, ℤ², ℤ. Every one reads like a torus. Same groups, Gyroid. That proves nothing yet." },
+        { "t": 13.4, "end": 17.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Welcome to my station, courier. A torus, a ℂP², a closed manifold. I am whatever your counts say I am." },
+        { "t": 18.6, "end": 21, "speaker": "Gyroid", "portrait": "gyroid", "text": "a b a⁻¹ b⁻¹. The Commutator. I’d know that word anywhere." },
+        { "t": 21.4, "end": 25.4, "speaker": "Count Null", "portrait": "count-null", "text": "Gyroid. Emmy. My marshal keeps this station now. Three trials. Fail one, and I fold the Cup Product Gardens. Every lantern. Every path." },
+        { "t": 25.6, "end": 27.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "We don’t just count any more. We multiply." },
+        { "t": 27.8, "end": 29.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then let’s see what he’s really wearing." }
+      ],
+      "title_card": { "t": 30, "end": 34 }
+    },
+    {
+      "id": "castle-3-outro-v2",
+      "title": "Null’s Last Lesson",
+      "plays": "After castle-3's final phase — the end of World 3",
+      "world": 3,
+      "status": "scripted",
+      "story_start": 0,
+      "story_end": 61,
+      "pace": [[0, null, 0.85]],
+      "synopsis": "Unmasked, the Commutator begs for one more chance. Null descends and shows a map S³ → S² that every cohomology class reads as zero, and calls it trivial. Then he discards his marshal: the Crown folds the Façade to a point and reaches for the Commutator; Gyroid drags him clear as his loops go dark. Null rises up the Postnikov Spire with a threat: every map S³ → S² is trivial; prove one isn't, or the sky is next. At dawn, resolve: homotopy groups.",
+      "scenes": [
+        { "id": "A", "start": 0, "end": 6, "title": "Unmasked", "description": "Smoke on the concourse. The Commutator kneels on the dais, his mask cracked." },
+        { "id": "B", "start": 6, "end": 13, "title": "Null descends", "description": "Null comes down out of the Crown's light onto the dais beside his kneeling marshal." },
+        { "id": "C", "start": 13, "end": 22, "title": "The claim", "description": "Null holds out S³ and S² and a map between them. Gyroid's cup reads only zeros: H²(S³) = 0." },
+        { "id": "H1", "start": 22, "end": 26, "title": "Discarded", "description": "Null turns from his marshal. The Crown's beam strikes the Façade; the Commutator's four loop pauldrons begin to fade." },
+        { "id": "H2", "start": 26, "end": 33, "title": "The Façade folds", "description": "The great stone torus closes into a ball, shrinks to a hanging point, flashes. The dais sinks; Gyroid sprints in and drags the Commutator clear." },
+        { "id": "H3", "start": 33, "end": 41, "title": "Reactions", "description": "The Commutator stares at his dark loops. Gyroid, quiet and hard. Emmy, stricken: these were her presses." },
+        { "id": "C2", "start": 41, "end": 47, "title": "Null rises", "description": "Null rises on a violet ribbon toward the Postnikov Spire on the horizon, the Crown glowing at its top." },
+        { "id": "D", "start": 47, "end": 55, "title": "Resolve", "description": "Dawn over the broken station. They look at the Spire." },
+        { "id": "E", "start": 55, "end": 61, "title": "World 3 complete", "description": "Card: World 3 complete — Cup Product Gardens restored." }
+      ],
+      "captions": [
+        { "t": 0.6, "end": 3.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Three trials. Three rings. Your station was never any of the things it claimed." },
+        { "t": 3.6, "end": 6.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Master. One more chance. I can still be anything you need." },
+        { "t": 7.6, "end": 12.6, "speaker": "Count Null", "portrait": "count-null", "text": "Hush, marshal. You did your best. It was not enough. Courier, one last lesson before I go." },
+        { "t": 13.4, "end": 16.6, "speaker": "Count Null", "portrait": "count-null", "text": "Take any map from S³ to S². Read it with your rings. Every one of them." },
+        { "t": 16.8, "end": 19.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "It pulls H²(S²) back into H²(S³)… and that’s zero. Every class reads zero." },
+        { "t": 19.6, "end": 22.4, "speaker": "Count Null", "portrait": "count-null", "text": "Then it is nothing. Every map S³ → S² is trivial. A point in a sphere’s clothing. Like him." },
+        { "t": 22.6, "end": 25.8, "speaker": "Count Null", "portrait": "count-null", "text": "I have no use for a marshal who loses." },
+        { "t": 26.2, "end": 29.6, "speaker": "Narrator", "hold": false, "text": "The Crown took the Façade first. Its hole closed. The ring became a ball. The ball became a point." },
+        { "t": 29.8, "end": 32.8, "speaker": "Narrator", "hold": false, "text": "Then it reached for the marshal who had served it." },
+        { "t": 33.2, "end": 35.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Got you. He’d have folded you with the floor." },
+        { "t": 35.6, "end": 38, "speaker": "The Commutator", "portrait": "commutator", "text": "My loops… all four. He never once said my name." },
+        { "t": 38.2, "end": 41, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "That’s what my presses do now. To anyone who stops being useful to him." },
+        { "t": 41.4, "end": 44.6, "speaker": "Count Null", "portrait": "count-null", "text": "Climb my Spire, courier. Up there, every map S³ → S² is trivial. Prove one isn’t, or the sky is next." },
+        { "t": 44.8, "end": 47, "speaker": "Narrator", "hold": false, "text": "And Count Null rose on a ribbon of violet, up the Postnikov Spire." },
+        { "t": 47.6, "end": 51.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "f* sends every class to zero: pulling back can’t see that map. So we stop reading the spaces and count the maps themselves: homotopy groups." },
+        { "t": 51.6, "end": 55, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we climb. Bend it, don’t break it, and prove it. All the way to the top." }
+      ],
+      "title_card": { "t": 55, "end": 61 }
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import Level05 from './screens/Level05'
 import Level06 from './screens/Level06'
 import Level0B from './screens/Level0B'
 import LevelCastle from './screens/LevelCastle'
+import { CASTLE_NEXT, CASTLE_SCREENS } from './castles'
 import CastleIntro from './movies/CastleIntro'
 import CastleOutro from './movies/CastleOutro'
 import CylinderMovie from './movies/CylinderMovie'
@@ -705,7 +706,7 @@ export default function App() {
     setScreen(next)
   }, [])
 
-  const Screen = SCREENS[screen] || TitleScreen
+  const Screen = CASTLE_SCREENS[screen] || SCREENS[screen] || TitleScreen // castles override older screens of the same id
 
   return (
     <div className="screen">
@@ -719,7 +720,7 @@ export default function App() {
         onIntroDone={() => go('level1')}
         onBackToTitle={() => go('title')}
         onReplayIntro={() => go('intro')}
-        onNext={() => go(NEXT[screen] || 'title')}
+        onNext={() => go(CASTLE_NEXT[screen] || NEXT[screen] || 'title')}
       />
     </div>
   )

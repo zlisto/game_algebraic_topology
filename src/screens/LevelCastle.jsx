@@ -68,7 +68,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   const [toast, setToast] = useState(null)
   const [complete, setComplete] = useState(false)
   const stateRef = useRef(null)
-  const frameRef = useRef({ center: [0, -0.6], size: 15.5 })
+  const frameRef = useRef({ center: [0, -0.6], size: 15.5 }) // the overhead view; set per step below
   const spawnRef = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
@@ -257,6 +257,14 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
 
   // ---------- game layer (rebuilt after a knockout with what should be on the floor)
   const [paused, setPaused] = usePause(step === 'outro' || complete)
+  // the trials (spot the forgeries) are read from above; the spawn waves are fought with the chase camera
+  frameRef.current = step === 'wave' ? null : { center: [0, -0.6], size: 15.5 }
+  // back from a fight: the top view faces the throne again (not wherever the chase camera ended up)
+  const lastStep = useRef(step)
+  if (lastStep.current !== step) {
+    if (lastStep.current === 'wave') camYawRef.current = Math.atan2(START[0] - NULL_AT[0], START[1] - NULL_AT[1])
+    lastStep.current = step
+  }
   const playEnabled = phase === 'play' && !rules && step !== 'outro' && !complete && !paused
   const gameKey = `castle:${knockouts}`
   const game = useMemo(() => {
@@ -266,7 +274,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   }, [gameKey])
   const nullScript = () => ({ gesture: nullTalking.current ? 1 : 0.2, crown: step === 'ring' ? 1 : 0.6, crownY: 0 })
 
-  if (import.meta.env.DEV) window.__castle = { step, trial, roundIdx, epoch, panelStates, phase, enemies, round, complete: () => setComplete(true) } // dev
+  if (import.meta.env.DEV) window.__castle = { step, trial, roundIdx, epoch, panelStates, phase, enemies, round, complete: () => setComplete(true), spawn: (defs) => spawnRef.current?.(defs), frameRef } // dev
 
   const T = TRIALS[trial]
   const objective =

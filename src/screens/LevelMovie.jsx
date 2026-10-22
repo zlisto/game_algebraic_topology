@@ -43,8 +43,9 @@ function MovieClock({ tRef, start, rate, onTick, paused, gate, jumpRef }) {
   return null
 }
 
-export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, startMusic, musicCues = [], onDone, onSkip, embedded = false }) {
-  const video = useMemo(() => videos.videos.find((v) => v.id === videoId), [videoId])
+export default function LevelMovie({ videoId, video: videoProp, Scene, Overlay, kicker, name, startMusic, musicCues = [], onDone, onSkip, embedded = false }) {
+  // a movie's script comes from videos.json by id, or is passed in directly (`video`, same shape)
+  const video = useMemo(() => videoProp || videos.videos.find((v) => v.id === videoId), [videoId, videoProp])
   const q = new URLSearchParams(embedded ? '' : window.location.search) // dev: ?t=…&pause
   const start = q.has('t') ? Number(q.get('t')) : video.story_start
   const paused = q.has('pause')

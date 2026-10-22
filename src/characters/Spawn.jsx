@@ -611,26 +611,132 @@ export function BeaconSpawn({ e }) {
   )
 }
 
-/** A crown shard: a spinning violet splinter of the Null Crown that dives at Gyroid. One lash. */
+/**
+ * A Crown Shard, after its concept card (assets/characters/enemies/bestiary-shard.png): a long jagged
+ * spike of black obsidian torn from the Null Crown, flying point-first like a hornet. Its body is split
+ * down the middle over a white-hot violet core, a cold magenta eye staring out of the crack; a ring of
+ * razor flakes whirls round it, and the air pinches to a bright point at its tip. One lash.
+ */
+const SHARD_PLATES = [
+  // [x, y, z, sx, sy, sz, tilt] — jagged obsidian plates along the spike (local +z is the tip)
+  [0.0, 0.05, 0.05, 0.13, 0.13, 0.62, 0],
+  [-0.09, 0.07, -0.08, 0.09, 0.12, 0.44, 0.35],
+  [0.1, 0.06, -0.06, 0.08, 0.11, 0.4, -0.4],
+  [0.0, 0.15, -0.18, 0.07, 0.1, 0.32, 0.1],
+  [0.0, -0.06, -0.12, 0.09, 0.07, 0.36, 0],
+]
+// black volcanic glass, barely lit from within (the concept's obsidian, not the crown's glow)
+const SHARD_GLASS = <meshStandardMaterial color="#0b0712" roughness={0.12} metalness={0.75} emissive="#2a0c4a" emissiveIntensity={0.3} flatShading />
+const SHARD_FLAKES = Array.from({ length: 12 }, (_, i) => ({ a: (i / 12) * Math.PI * 2, s: 0.035 + (i % 3) * 0.018, wob: (i * 1.7) % 1 }))
 export function ShardSpawn({ e }) {
   const g = useRef()
-  const m = useRef()
-  useFrame(({ clock }, dt) => {
-    const t = clock.elapsedTime + e.seed
-    place(g.current, e, 0.9 + Math.sin(t * 5) * 0.15, 0.4, t, 1.2)
-    m.current.rotation.x += dt * 6
-    m.current.rotation.z += dt * 4
+  const body = useRef()
+  const ring = useRef()
+  const core = useRef()
+  const eye = useRef()
+  const tip = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + (e.seed || 0) // (movie shards may have no seed; NaN would blank the frame)
+    place(g.current, e, 1.0 + Math.sin(t * 5) * 0.12, 0.4, t, 2.0)
+    // it shivers and rolls on its long axis as it flies, nose dipped toward its prey
+    body.current.rotation.set(0.18 + Math.sin(t * 9) * 0.04, 0, Math.sin(t * 2.3) * 0.5)
+    ring.current.rotation.set(1.1, t * 3.2, 0.3)
+    ring.current.children.forEach((f, j) => {
+      const i = j - 1 // child 0 is the flakes' wake
+      const d = SHARD_FLAKES[i]
+      if (!d) return
+      f.position.set(Math.cos(d.a) * 0.42, Math.sin(t * 3 + d.wob * 6) * 0.05, Math.sin(d.a) * 0.42)
+      f.rotation.set(t * 6 + i, t * 4, 0)
+    })
+    core.current.material.opacity = 0.75 + Math.sin(t * 13) * 0.2
+    eye.current.scale.y = Math.sin(t * 0.7) > 0.97 ? 0.15 : 1 // a slow, cold blink
+    tip.current.scale.setScalar(0.028 + Math.sin(t * 17) * 0.009)
   })
   return (
     <group ref={g}>
-      <mesh ref={m} scale={[0.14, 0.38, 0.14]}>
-        <tetrahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#d8b8ff" emissive="#a259ff" emissiveIntensity={1.4} flatShading toneMapped={false} />
-      </mesh>
-      <mesh scale={0.35}>
-        <sphereGeometry args={[1, 10, 8]} />
-        {glow(VIOLET, { transparent: true, opacity: 0.18 })}
-      </mesh>
+      <group ref={body}>
+        {/* the obsidian spike: plates around a long point */}
+        {SHARD_PLATES.map(([x, y, z, sx, sy, sz, tilt], i) => (
+          <group key={i} position={[x, y, z]} rotation={[Math.PI / 2, tilt, 0]}>
+            <mesh scale={[sx, sz, sy]}>
+              <octahedronGeometry args={[1, 0]} />
+              {SHARD_GLASS}
+            </mesh>
+            {/* a glowing violet rim round each plate, so the spike's shape reads against a dark floor */}
+            <mesh scale={[sx * 1.12, sz * 1.04, sy * 1.12]}>
+              <octahedronGeometry args={[1, 0]} />
+              <meshBasicMaterial color="#9a4cff" side={THREE.BackSide} toneMapped={false} />
+            </mesh>
+          </group>
+        ))}
+        {/* glowing cracks running down the glass */}
+        {[[-0.06, 0.13, -0.05, 0.5, 0.2], [0.07, 0.12, 0.08, 0.38, -0.3], [0.02, 0.14, -0.22, 0.26, 0.6]].map(([x, y, z, len, rz], i) => (
+          <mesh key={`c${i}`} position={[x, y, z]} rotation={[0, rz, 0]}>
+            <boxGeometry args={[0.012, 0.012, len]} />
+            <meshBasicMaterial color="#d38cff" toneMapped={false} />
+          </mesh>
+        ))}
+        {/* the cutting point */}
+        <mesh position={[0, 0.03, 0.58]} rotation={[Math.PI / 2, 0, 0]}>
+          <coneGeometry args={[0.07, 0.42, 5]} />
+          {SHARD_GLASS}
+        </mesh>
+        {/* the split down its middle: a white-hot violet core */}
+        <mesh ref={core} position={[0, 0.06, 0.02]} rotation={[Math.PI / 2, 0, 0]} scale={[0.05, 0.42, 0.13]}>
+          <sphereGeometry args={[1, 10, 8]} />
+          <meshBasicMaterial color="#f3dcff" transparent opacity={0.85} toneMapped={false} />
+        </mesh>
+        <mesh position={[0, 0.06, 0.02]} rotation={[Math.PI / 2, 0, 0]} scale={[0.07, 0.46, 0.15]}>
+          <sphereGeometry args={[1, 10, 8]} />
+          {glow('#b04cff', { transparent: true, opacity: 0.16, depthWrite: false })}
+        </mesh>
+        {/* the eye in the crack */}
+        {/* it looks up — at the camera, at you */}
+        <group position={[0, 0.17, 0.06]} ref={eye}>
+          <mesh>
+            <sphereGeometry args={[0.07, 14, 10]} />
+            <meshBasicMaterial color="#ff4adf" toneMapped={false} />
+          </mesh>
+          <mesh position={[0, 0.062, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[0.028, 0.045, 18]} />
+            <meshBasicMaterial color="#f6e6ff" toneMapped={false} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[0, 0.07, 0]} scale={[0.01, 0.004, 0.034]}>
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshBasicMaterial color="#14020f" />
+          </mesh>
+        </group>
+        {/* the air pinches to a point at its tip */}
+        <mesh ref={tip} position={[0, 0.03, 0.82]}>
+          <sphereGeometry args={[1, 10, 8]} />
+          <meshBasicMaterial color="#ffffff" toneMapped={false} />
+        </mesh>
+        <mesh position={[0, 0.03, 0.82]} scale={0.12}>
+          <sphereGeometry args={[1, 10, 8]} />
+          {glow(VIOLET, { transparent: true, opacity: 0.22, depthWrite: false })}
+        </mesh>
+        {/* void smoke trailing behind */}
+        {[0.42, 0.62, 0.84].map((z, i) => (
+          <mesh key={i} position={[0, 0.08, -z]} scale={0.11 + i * 0.05}>
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshBasicMaterial color="#0a0610" transparent opacity={0.5 - i * 0.13} depthWrite={false} />
+          </mesh>
+        ))}
+      </group>
+      {/* the whirling ring of razor flakes */}
+      <group ref={ring}>
+        {/* the flakes' faint wake */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.4, 0.44, 40]} />
+          <meshBasicMaterial color="#8a3cff" transparent opacity={0.25} toneMapped={false} side={THREE.DoubleSide} depthWrite={false} />
+        </mesh>
+        {SHARD_FLAKES.map((d, i) => (
+          <mesh key={i} scale={[d.s, d.s * 2.2, d.s * 0.6]}>
+            <tetrahedronGeometry args={[1, 0]} />
+            <meshStandardMaterial color="#0b0712" metalness={0.7} roughness={0.15} emissive="#7a2cff" emissiveIntensity={0.45} flatShading />
+          </mesh>
+        ))}
+      </group>
     </group>
   )
 }

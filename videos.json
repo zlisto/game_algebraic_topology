@@ -1206,34 +1206,34 @@
           "t": 0.4,
           "end": 4.2,
           "speaker": "Narrator",
-          "text": "The Commutator’s ribbons went slack. Bouquet Bastion kept its roads — and its proof went on the Chart."
+          "text": "Where the Delta Sphere had stood, a violet whirl turned slowly on the water. Bouquet Bastion kept its roads — but the sphere was gone."
         },
         {
           "t": 4.4,
           "end": 6.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Null ran. Toward the sphere. And the grey went with him."
+          "text": "He went down into the Delta. And the grey went with him."
         },
         {
           "t": 7.2,
           "end": 10.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Draw any loop you like on my sphere, courier. Watch it shrink. Your number reads zero. There is nothing here to save."
+          "text": "Your number read zero, courier. Down here, it always will. There is nothing left to save."
         },
         {
           "t": 10.8,
           "end": 13.8,
           "speaker": "Narrator",
-          "text": "Loops had been their sharpest weapon. On a sphere, every one goes blind — and the Crown began to fold the Delta."
+          "text": "Loops had been their sharpest weapon. On the sphere every one went blind — and the Crown had folded it."
         },
         {
           "t": 14.2,
           "end": 18.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then we stop counting paths and start counting what they enclose. Down into the delta. Fast."
+          "text": "Then we stop counting paths and start counting what they enclose. Homology. Down into the Delta — and we bring the sphere back."
         },
         {
           "t": 18.6,
@@ -1346,7 +1346,7 @@
           "t": 0.6,
           "end": 4.8,
           "speaker": "Narrator",
-          "text": "Beyond the delta lay gardens where no one walked the paths — they read them. And at their heart stood two islands Null called twins."
+          "text": "Null carried the twins north, into gardens where no one walked the paths — they read them. The torus hung beside its double, folded nearly shut, one window still lit."
         },
         {
           "t": 8.4,
@@ -1360,7 +1360,7 @@
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then he folds the torus and swears nothing changed. Emmy — there are people on that torus."
+          "text": "He stopped the fold to make us watch. Emmy — there are people on that torus. That light is still on."
         },
         {
           "t": 20.8,
@@ -1706,7 +1706,7 @@
       "world": 0,
       "status": "scripted",
       "story_start": 0,
-      "story_end": 38,
+      "story_end": 51,
       "pace": [
         [
           0,
@@ -1714,7 +1714,7 @@
           0.85
         ]
       ],
-      "synopsis": "Gyroid has exposed every forgery. Null holds up a ring and calls it a point; Gyroid can't prove otherwise. Null escapes along the severed Winding Way toward Bouquet Bastion. Emmy names what they need: an invariant.",
+      "synopsis": "Gyroid has exposed every forgery. Null holds up a ring and calls Haven Ring a point; Gyroid can't prove otherwise. The Crown fires across the sea and Haven folds to a point before their eyes. Gyroid and Emmy are shattered; Null escapes up the broken Winding Way. At dawn grief turns to resolve: find an invariant, prove Haven had a hole, bring it back.",
       "scenes": [
         {
           "id": "A",
@@ -1728,28 +1728,56 @@
           "start": 8,
           "end": 16,
           "title": "No proof",
-          "description": "Gyroid tries to slide the ring to a point on the arena floor; every slide stops short of the hole. He can't make it shrink — but he can't show it never could."
+          "description": "Gyroid tries to slide the ring to a point on the arena floor; every slide stops short of the hole. He can't make it shrink, but he can't show it never could."
+        },
+        {
+          "id": "H1",
+          "start": 16,
+          "end": 19,
+          "title": "The Crown takes aim",
+          "description": "Over Null's shoulder: he turns to the sea, raises his hand, and the Crown's violet beam lances out to Haven Ring on the horizon."
+        },
+        {
+          "id": "H2",
+          "start": 19,
+          "end": 26.4,
+          "title": "Haven folds",
+          "description": "Close on Haven Ring on the water: its lit windows go out one by one as the violet takes them; the ring is torn up out of the sea, its hole closes into a ball, the ball shrinks to a single white point that hangs, then a flash. A violet whirl on empty water."
+        },
+        {
+          "id": "H3",
+          "start": 26.4,
+          "end": 28.5,
+          "title": "Horror",
+          "description": "Gyroid runs to the rim of the spire and stops dead, staring at the empty sea. The camera shakes."
+        },
+        {
+          "id": "H4",
+          "start": 28.5,
+          "end": 31,
+          "title": "Emmy",
+          "description": "Far below at the bridgehead, Emmy sees the flash on the horizon and crumples."
         },
         {
           "id": "C",
-          "start": 16,
-          "end": 24,
+          "start": 31,
+          "end": 37,
           "title": "Escape",
-          "description": "Null steps backwards off the spire's edge onto a violet ribbon of light that races away north along the broken Way."
+          "description": "Null taunts them, steps backwards off the spire's edge onto a violet ribbon of light, and races away north along the broken Way."
         },
         {
           "id": "D",
-          "start": 24,
-          "end": 32,
-          "title": "Emmy",
-          "description": "At the bridgehead at dawn, Emmy and Gyroid look north: the Way's next stretch leads to two loop districts meeting at a beacon."
+          "start": 37,
+          "end": 45,
+          "title": "Resolve",
+          "description": "Dawn at the bridgehead. Emmy and Gyroid look north. Grief turns to resolve: they need a number that cannot change."
         },
         {
           "id": "E",
-          "start": 32,
-          "end": 38,
+          "start": 45,
+          "end": 51,
           "title": "World 0 complete",
-          "description": "Card: “World 0 complete — Retract Reef restored.” Then the World 1 map unfolds."
+          "description": "Card: “World 0 complete · Retract Reef restored.” Then the World 1 map unfolds."
         }
       ],
       "captions": [
@@ -1762,7 +1790,7 @@
         },
         {
           "t": 5,
-          "end": 8,
+          "end": 8.4,
           "speaker": "Count Null",
           "portrait": "count-null",
           "text": "Haven Ring. I say it is a point. Prove it isn’t."
@@ -1776,35 +1804,85 @@
         },
         {
           "t": 13,
-          "end": 16,
+          "end": 14.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Won’t — or can’t? You don’t know. Nobody here knows. And the Crown only spares what someone can prove."
+          "text": "Won’t — or can’t? You don’t know. Nobody here knows."
+        },
+        {
+          "t": 14.9,
+          "end": 16.2,
+          "speaker": "Count Null",
+          "portrait": "count-null",
+          "text": "And the Crown only spares what someone can prove."
         },
         {
           "t": 16.4,
-          "end": 20.4,
+          "end": 19,
+          "speaker": "Count Null",
+          "portrait": "count-null",
+          "text": "Then watch your home become what you couldn’t disprove."
+        },
+        {
+          "t": 19.4,
+          "end": 23.2,
           "speaker": "Narrator",
-          "text": "Far off on the sea, Haven Ring went grey and folded without a sound — guild hall, beacon, every road. Null stepped off the spire and was gone up the broken Winding Way."
+          "hold": false,
+          "text": "Far off on the sea, Haven Ring went dark. Guild hall, beacon, every road that wound around it."
         },
         {
-          "t": 24.4,
-          "end": 28.6,
-          "speaker": "Emmy Boundary",
-          "portrait": "emmy-boundary",
-          "text": "Gyroid… I’m so sorry. Bending can’t prove a hole is there. We need a number that can’t change — something the Crown has to respect."
+          "t": 23.4,
+          "end": 25,
+          "speaker": "Narrator",
+          "hold": false,
+          "text": "A ring became a ball. A ball became a point."
         },
         {
-          "t": 28.8,
-          "end": 31.8,
+          "t": 26.5,
+          "end": 28.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then we find it. And then I’m bringing Haven back."
+          "text": "HAVEN! No — no, no, NO! Everyone was on those roads!"
+        },
+        {
+          "t": 28.6,
+          "end": 31,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The whole guild… gone. He folded all of it."
+        },
+        {
+          "t": 31.4,
+          "end": 33.6,
+          "speaker": "Count Null",
+          "portrait": "count-null",
+          "text": "Prove it had a hole, courier. Then come and take it back."
+        },
+        {
+          "t": 33.8,
+          "end": 37,
+          "speaker": "Narrator",
+          "hold": false,
+          "text": "And Count Null stepped off the spire and was gone, up the broken Winding Way."
+        },
+        {
+          "t": 37.4,
+          "end": 41.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Gyroid… I’m so sorry. Bending can’t prove a hole is there. We need a number that can’t change: something the Crown has to respect."
+        },
+        {
+          "t": 41.8,
+          "end": 45,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Then we find it. I’ll prove Haven had a hole, I’ll bring it back — and then I’m taking that Crown off his head."
         }
       ],
       "title_card": {
-        "t": 32,
-        "end": 38
+        "t": 45,
+        "end": 51
       }
     },
     {

@@ -11,10 +11,15 @@ import { Hall, Throne } from '../levels/w0/CastleScene'
 
 export const TOP = 24
 export const SPIRE_R = (y) => 3.2 + (y / TOP) * 1.8
-/** A point on the spiral stair at height y. */
+export const HALL_R = 8.6 // the throne room's floor (ARENA_R in CastleScene)
+export const LANDING_R = 11 // where the stair tops out, just outside the hall's entrance
+const TURN = (Math.PI * 4) / TOP // two full turns: the stair ends on the same side it starts, at the entrance
+const ss = (x) => x * x * (3 - 2 * x)
+/** A point on the spiral stair at height y: it hugs the spire, then on its last turn swings out wide round the throne room (never up through its floor). */
 export const stairAt = (y) => {
-  const a = Math.PI / 2 + y * 0.55
-  const r = SPIRE_R(y) + 0.9
+  const a = Math.PI / 2 + y * TURN
+  const w = ss(Math.min(1, Math.max(0, (y - TOP / 2) / (TOP / 2 - 1.5))))
+  const r = SPIRE_R(y) + 0.9 + w * (LANDING_R - SPIRE_R(y) - 0.9)
   return [Math.cos(a) * r, y, Math.sin(a) * r, a]
 }
 
@@ -59,6 +64,34 @@ export default function CastleSet({ showTop = true }) {
           <meshStandardMaterial color="#1a1424" roughness={0.3} metalness={0.5} emissive={i % 6 === 0 ? '#5a2aa8' : '#000'} emissiveIntensity={0.6} />
         </mesh>
       ))}
+      {/* the top landing, and the doorway into the throne room (in the hall's open arch, at +z) */}
+      <mesh position={[0, TOP - 0.12, (HALL_R + LANDING_R) / 2 + 0.3]}>
+        <boxGeometry args={[2.2, 0.24, LANDING_R - HALL_R + 1.4]} />
+        <meshStandardMaterial color="#1a1424" roughness={0.3} metalness={0.5} />
+      </mesh>
+      <group position={[0, TOP, HALL_R + 0.9]}>
+        {[-1.3, 1.3].map((x) => (
+          <mesh key={x} position={[x, 1.7, 0]}>
+            <boxGeometry args={[0.45, 3.4, 0.5]} />
+            <meshStandardMaterial color="#120e1a" roughness={0.2} metalness={0.6} flatShading />
+          </mesh>
+        ))}
+        <mesh position={[0, 3.55, 0]}>
+          <boxGeometry args={[3.1, 0.4, 0.55]} />
+          <meshStandardMaterial color="#120e1a" roughness={0.2} metalness={0.6} flatShading />
+        </mesh>
+        {/* the glowing violet trim round the opening */}
+        <mesh position={[0, 3.32, 0.28]}>
+          <boxGeometry args={[2.2, 0.05, 0.04]} />
+          <meshBasicMaterial color="#a259ff" toneMapped={false} />
+        </mesh>
+        {[-1.06, 1.06].map((x) => (
+          <mesh key={`t${x}`} position={[x, 1.65, 0.28]}>
+            <boxGeometry args={[0.05, 3.3, 0.04]} />
+            <meshBasicMaterial color="#a259ff" toneMapped={false} />
+          </mesh>
+        ))}
+      </group>
       {/* the sea */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.2, 0]}>
         <planeGeometry args={[300, 300]} />
