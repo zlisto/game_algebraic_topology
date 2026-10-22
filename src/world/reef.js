@@ -41,14 +41,33 @@ export function gateSegments(open) {
   ]
 }
 
-/** Is (x, z) solid reef Gyroid can stand on? */
-export function makeWalkable({ gateOpen = false } = {}) {
-  const half = layout.causewayWidth / 2
+/** Open ground between the puzzle reefs (the third-person overworld only). */
+export const COMMONS = (layout.commons || []).map((c) => {
+  const shape = makeShape(c.shape)
+  return { ...c, def: c.shape, containsWorld: (x, z) => shape.inside(x - c.pos[0], z - c.pos[1]) }
+})
+
+/** Sites with holes: inside the outline but not on the reef. */
+const HOLES = SITES.filter((s) => s.def.sub?.length).map((s) => {
+  const outline = makeShape({ add: s.def.add })
+  return { inHole: (x, z) => outline.inside(x - s.pos[0], z - s.pos[1]) && !s.containsWorld(x, z) }
+})
+
+/**
+ * Is (x, z) solid reef Gyroid can stand on?
+ * open: the expansive overworld — wider causeways, plus the commons and the paths to them.
+ */
+export function makeWalkable({ gateOpen = false, open = false } = {}) {
+  const half = (open ? layout.openCausewayWidth || layout.causewayWidth : layout.causewayWidth) / 2
   const gate = gateSegments(gateOpen)
+  const paths = open ? [...layout.causeways, ...(layout.commonsCauseways || [])] : layout.causeways
   const inside = (x, z) => {
+    // a puzzle's holes (lagoons, the O's middle) stay water, however wide the paths get
+    if (open) for (const h of HOLES) if (h.inHole(x, z)) return false
     for (const s of SITES) if (s.containsWorld(x, z)) return true
-    for (const c of layout.causeways) if (segDist(x, z, c.a, c.b) <= half) return true
+    for (const c of paths) if (segDist(x, z, c.a, c.b) <= half) return true
     for (const [a, b] of gate) if (segDist(x, z, a, b) <= half) return true
+    if (open) for (const c of COMMONS) if (c.containsWorld(x, z)) return true
     return false
   }
   const { minX, maxX, minZ, maxZ } = layout.bounds

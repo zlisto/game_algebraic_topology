@@ -273,14 +273,14 @@ export function HollowThrone({ height = 7.2 }) {
  * gateOpen: the broken causeway has been mended.
  * ruin: show the Ringed Isle's ruin (after the collapse).
  */
-export default function ReefScenery({ y = 0, staticSites = false, skipSites = [], gateOpen = false, ruin = true, throne = true }) {
+export default function ReefScenery({ y = 0, staticSites = false, skipSites = [], gateOpen = false, ruin = true, throne = true, causewayWidth }) {
   return (
     <group position={[0, y, 0]}>
       {layout.causeways.map((c, i) => (
-        <CausewaySlab key={i} a={c.a} b={c.b} />
+        <CausewaySlab key={i} a={c.a} b={c.b} width={causewayWidth} />
       ))}
       {gateSegments(gateOpen).map(([a, b], i) => (
-        <CausewaySlab key={`g${i}`} a={a} b={b} spine={gateOpen} />
+        <CausewaySlab key={`g${i}`} a={a} b={b} spine={gateOpen} width={causewayWidth} />
       ))}
       {SITES.filter((s) => s.id === 'landing_pier' || (staticSites && !skipSites.includes(s.id))).map((s) => (
         <StaticReef key={s.id} shapeDef={s.def} pos={s.pos} />

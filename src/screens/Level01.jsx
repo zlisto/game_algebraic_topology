@@ -29,6 +29,8 @@ const PORTRAIT_CROP = {
   'emmy-boundary': ['400%', '54%', '5%'],
 }
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
+/** How much of each reef the overhead puzzle view frames. */
+const OVERHEAD_SIZE = { the_walkway: 15, the_fork: 10.5, the_o: 9.5, twin_lagoons: 10.5, nulls_mirage: 11 }
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id]
@@ -127,6 +129,8 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
   const [answer, setAnswer] = useState(null)
   const [levelClear, setLevelClear] = useState(false)
   const stateRef = useRef(null)
+  const camYawRef = useRef(Math.PI / 2) // chase camera yaw; starts east of the pier, looking down the Walkway
+  const talkingRef = useRef(false) // Emmy faces Gyroid and gestures while a line is up
   const [here, setHere] = useState({ site: null, pos: startPos })
   const judged = useRef(null)
   const [shown, setShown] = useState(0) // characters of the current line typed out so far
@@ -422,10 +426,15 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
   const playEnabled = (phase === 'play' || phase === 'clear') && !running && t === 0 && !levelClear
+  const quizActive = phase === 'quiz'
   const drawSite = !!site && ['fork', 'ring', 'lagoons'].includes(site.stage) && !saved[site.id]
   const spoolEnabled = playEnabled && drawSite
   const gameKey = `ow:${knockouts}`
-  const walkable = useMemo(() => makeWalkable({ gateOpen }), [gateOpen])
+  const walkable = useMemo(() => makeWalkable({ gateOpen, open: true }), [gateOpen])
+  talkingRef.current = !!line
+  // the chase camera rises to an overhead view while a reef is being drawn, slid, or judged
+  const overheadId = simSite && (running || t > 0) ? simSite : quizActive ? 'nulls_mirage' : tool === 'spool' && drawSite ? here.site : null
+  const overhead = useMemo(() => (overheadId ? { center: SITE[overheadId].pos, size: OVERHEAD_SIZE[overheadId] || 8 } : null), [overheadId])
   const game = useMemo(
     () => ({
       mode: 'overworld',
@@ -441,7 +450,6 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     const s = SITE[simSite]
     return { endpointAt: (x, z) => (s.containsWorld(x, z) ? s.toWorld(...(sim.endpointAt(...s.toLocal(x, z)) || s.toLocal(x, z))) : [x, z]) }
   }, [sim, simSite])
-  const quizActive = phase === 'quiz'
 
   if (import.meta.env.DEV) window.__lvl = { here, saved, strokesBySite, sim, simSite, enemies, phase, setTool, save: (ids) => setSaved((s) => ({ ...s, ...Object.fromEntries(ids.map((i) => [i, true])) })) } // dev
 
@@ -472,11 +480,15 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
         onEnemies={(by) => ((reported.current = true), setEnemies(by))}
         onHearts={setHearts}
         onSpooling={setSpooling}
+        open
+        camYawRef={camYawRef}
+        overhead={overhead}
+        talkingRef={talkingRef}
       />
     ),
     // handlers close over strokes and the current site, which are listed
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [samplesBySite, strokesBySite, liveStroke, sim, simWorld, simSite, saved, forgery, walkable, game, gameKey, playEnabled, spoolEnabled, tool, gateOpen, quizActive, here.site],
+    [samplesBySite, strokesBySite, liveStroke, sim, simWorld, simSite, saved, forgery, walkable, game, gameKey, playEnabled, spoolEnabled, tool, gateOpen, quizActive, here.site, overhead],
   )
 
   const objective = (() => {
@@ -657,7 +669,7 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
                 ? drawSite
                   ? 'Click to start the thread · walk it through the beacons · click to stop'
                   : 'The Spool lays spine on a reef — walk onto one'
-                : 'WASD to move · click to crack the Lash · 2 / Q for the Spool'}
+                : 'WASD to run · Z / C or right-drag to turn the camera · F or click to lash · 2 / Q for the Spool'}
           </div>
         )}
       </div>

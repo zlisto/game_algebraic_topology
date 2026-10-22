@@ -363,6 +363,7 @@ function SmithProp({ state, tool }) {
 }
 
 export default function ReefGame({
+  camYawRef, // chase camera (0-1): movement turns with the camera, and F lashes straight ahead
   stage,
   shape,
   playEnabled,
@@ -483,6 +484,7 @@ export default function ReefGame({
         keys.current[e.code] = true
         e.preventDefault() // movement keys never nudge a focused slider or scroll the page
       }
+      if (camYawRef && e.code === 'KeyF' && !e.repeat) keys.current.lashAhead = true
     }
     const up = (e) => (keys.current[e.code] = false)
     const blur = () => (keys.current = {})
@@ -532,6 +534,20 @@ export default function ReefGame({
       const k = keys.current
       mx = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0)
       mz = (k.KeyS || k.ArrowDown ? 1 : 0) - (k.KeyW || k.ArrowUp ? 1 : 0)
+      s.fwd = -mz
+      if (camYawRef) {
+        // camera-relative: forward is away from the camera, right is the camera's right
+        const yaw = camYawRef.current
+        const f = -mz
+        const r = mx
+        mx = -Math.sin(yaw) * f + Math.cos(yaw) * r
+        mz = -Math.cos(yaw) * f - Math.sin(yaw) * r
+      }
+      if (k.lashAhead) {
+        // F: lash straight ahead, no mouse needed
+        k.lashAhead = false
+        if (tool === 'lash') clicks.current.push([s.x + Math.sin(s.face) * 1.5, s.z + Math.cos(s.face) * 1.5])
+      }
     }
     const ml = Math.hypot(mx, mz)
     if (ml > 0) {

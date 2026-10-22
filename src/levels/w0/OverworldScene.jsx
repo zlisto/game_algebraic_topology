@@ -3,9 +3,11 @@ import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import ReefScenery from '../../world/ReefScenery'
+import ReefScenery, { CausewaySlab, StaticReef } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
-import { SITES } from '../../world/reef'
+import { COMMONS, SITES, layout } from '../../world/reef'
+import ChaseCamera from './ChaseCamera'
+import EmmyFollower from './EmmyFollower'
 import { Beacon, Footprint, Spine, TearLines, Tiles, Trails } from './ReefBoard'
 import ReefGame from './ReefGame'
 
@@ -106,11 +108,15 @@ export default function OverworldScene({
   onEnemies,
   onHearts,
   onSpooling,
+  open = false, // third-person overworld: chase camera, open commons, wide paths, Emmy following
+  camYawRef,
+  overhead,
+  talkingRef,
 }) {
   return (
     <>
       <color attach="background" args={['#060a14']} />
-      <fog attach="fog" args={['#060a14', 22, 55]} />
+      <fog attach="fog" args={open ? ['#060a14', 26, 70] : ['#060a14', 22, 55]} />
       <ambientLight intensity={0.35} />
       <hemisphereLight args={['#5b8fb8', '#0a0a14', 0.55]} />
       <directionalLight position={[8, 16, 10]} intensity={1.2} color="#d8eef8" />
@@ -118,7 +124,9 @@ export default function OverworldScene({
       <Sparkles count={260} scale={[70, 4, 50]} position={[0, 1, -8]} size={2} speed={0.25} color="#7fe8dc" />
       <Seascape y={-0.5} area={[0, -6, 90, 70]} seed={11} />
 
-      <ReefScenery gateOpen={gateOpen} />
+      <ReefScenery gateOpen={gateOpen} causewayWidth={open ? layout.openCausewayWidth : undefined} />
+      {open && COMMONS.map((c) => <StaticReef key={c.id} shapeDef={c.def} pos={c.pos} />)}
+      {open && (layout.commonsCauseways || []).map((c, i) => <CausewaySlab key={`cc${i}`} a={c.a} b={c.b} width={layout.openCausewayWidth} />)}
       {SITES.filter((s) => s.playable).map((site) => (
         <SiteReef
           key={site.id}
@@ -137,6 +145,7 @@ export default function OverworldScene({
 
       <ReefGame
         key={gameKey}
+        camYawRef={open ? camYawRef : undefined}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -152,7 +161,8 @@ export default function OverworldScene({
         onHearts={onHearts}
         onSpooling={onSpooling}
       />
-      <FollowCamera stateRef={stateRef} />
+      {open ? <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overhead={overhead} /> : <FollowCamera stateRef={stateRef} />}
+      {open && <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} />}
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.65} luminanceSmoothing={0.2} />

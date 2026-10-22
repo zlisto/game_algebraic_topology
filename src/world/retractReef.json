@@ -4,7 +4,7 @@
     "minX": -31,
     "maxX": 32,
     "minZ": -30,
-    "maxZ": 13
+    "maxZ": 19
   },
   "ringedIsle": {
     "pos": [
@@ -467,5 +467,184 @@
       "needs": "cell_smith",
       "note": "Unbuilt bridge: forge its cells with the Cell-Smith."
     }
-  }
+  },
+  "commons": [
+    {
+      "id": "landing_green",
+      "name": "Landing Green",
+      "pos": [
+        1.5,
+        14.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "fork_meadow",
+      "name": "Fork Meadow",
+      "pos": [
+        -12.5,
+        3.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.2
+          }
+        ]
+      }
+    },
+    {
+      "id": "west_bluff",
+      "name": "West Bluff",
+      "pos": [
+        -27.2,
+        3.4
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 2.6
+          }
+        ]
+      }
+    },
+    {
+      "id": "lagoon_terrace",
+      "name": "Lagoon Terrace",
+      "pos": [
+        -12.4,
+        -8.2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.0
+          }
+        ]
+      }
+    },
+    {
+      "id": "sunrise_plaza",
+      "name": "Sunrise Plaza",
+      "pos": [
+        5.4,
+        -7.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.0
+          }
+        ]
+      }
+    }
+  ],
+  "commonsCauseways": [
+    {
+      "from": "the_walkway",
+      "to": "landing_green",
+      "a": [
+        1.5,
+        10.2
+      ],
+      "b": [
+        1.5,
+        11.6
+      ]
+    },
+    {
+      "from": "the_walkway",
+      "to": "fork_meadow",
+      "a": [
+        -13.2,
+        9.4
+      ],
+      "b": [
+        -12.8,
+        6.6
+      ]
+    },
+    {
+      "from": "fork_meadow",
+      "to": "the_fork",
+      "a": [
+        -15.6,
+        3.2
+      ],
+      "b": [
+        -17.3,
+        2.0
+      ]
+    },
+    {
+      "from": "the_fork",
+      "to": "west_bluff",
+      "a": [
+        -22.8,
+        1.8
+      ],
+      "b": [
+        -24.8,
+        2.6
+      ]
+    },
+    {
+      "from": "lagoon_terrace",
+      "to": "twin_lagoons",
+      "a": [
+        -9.6,
+        -9.4
+      ],
+      "b": [
+        -7.0,
+        -11.4
+      ]
+    },
+    {
+      "from": "twin_lagoons",
+      "to": "sunrise_plaza",
+      "a": [
+        -1.0,
+        -11.6
+      ],
+      "b": [
+        3.2,
+        -9.6
+      ]
+    },
+    {
+      "from": "sunrise_plaza",
+      "to": "nulls_mirage",
+      "a": [
+        5.6,
+        -10.4
+      ],
+      "b": [
+        5.8,
+        -15.0
+      ]
+    }
+  ],
+  "openCausewayWidth": 2.4
 }
