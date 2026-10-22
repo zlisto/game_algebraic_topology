@@ -40,7 +40,7 @@ export function SnapGridLessonOverlay({ t }) {
         [24.4, 36, 'Slip off', ['$S² = e⁰ ∪ e²$', 'miss a point, push to $e⁰$: $π₁(S²) = 0$']],
         [36.4, 46, 'Too small', ['$πₖ(Sⁿ) = 0$ for $k < n$', '$k ≥ n$: no help']],
         [46.4, 58, 'The proof', ['skeleton by skeleton', 'rel what’s already cellular']],
-        [58.4, 64, 'In the Gallery', ['Cell-Smith (2)', 'snap, puncture, push, mark']],
+        [58.4, 64, 'In the Gallery', ['Cell Hammer (2)', 'snap, puncture, push, mark']],
       ]}
       summary={{ t: 64, title: 'Cellular approximation', items: ['Every map snaps to the grid', 'Dimension by dimension', 'Small spheres can’t wrap big ones'], cite: 'Hatcher §4.1, pp. 348–351 (Theorem 4.8)' }}
     />

@@ -50,7 +50,7 @@ export function CellBlockLessonOverlay({ t }) {
         [24.4, 36, 'ℝP²', ['rim $aa ⟹ d₂ = 2a$', '$H₁ = ℤ₂$, $H₂ = 0$']],
         [36.4, 48, 'Klein bottle', ['rim $aba⁻¹b ⟹ d₂ = 2b$', '$H₁ = ℤ ⊕ ℤ₂$, $H₂ = 0$']],
         [48.4, 58, 'Euler characteristic', ['$χ = Σ(−1)ⁿ cₙ = Σ(−1)ⁿ$ rank $Hₙ$', 'Klein: $1 − 2 + 1 = 1 − 1 + 0$']],
-        [58.4, 64, 'In the Block', ['Cell-Smith (2): attach', 'Degree Dial (8): set $d₂$']],
+        [58.4, 64, 'In the Block', ['Cell Hammer (2): attach', 'Degree Dial (8): set $d₂$']],
       ]}
       summary={{ t: 64, title: 'Cellular homology', items: ['One generator per cell', 'd₂ from the rim word', '$χ$: cells = ranks'], cite: 'Hatcher §2.2, pp. 137–149' }}
     />

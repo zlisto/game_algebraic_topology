@@ -19,6 +19,7 @@ export const STATION_ORDER = ['retractor', 'still_point', 'roots', 'antipodes']
 export const OPENING = [
   N('Squash the basin onto its rim, courier. The way I squashed your home.'),
   E('Null’s Retractor wants to push the whole basin — a disk — onto its rim circle, without moving the rim. You have the tools to show it can’t.'),
+  E('Each deck you finish leaves a Still Point: a little wire disk whose arrows swirl round and round, and one gold dot in the middle that never moves — the fixed point no map of the disk can get rid of. Collect all four and the Warp Portal at the north end opens.'),
   E('The Retractor deck is just ahead.'),
 ]
 
@@ -75,6 +76,7 @@ export const STATIONS = {
     blueprint: 'Three roots',
     arrive: [
       E('The arrows here follow the polynomial $p(z) = z³ − a³$. Walk the rim once with the Cord (4) and count the arrow over you.'),
+      E('Careful: a Möbius prowler guards this pool. Two lashes (1) — but the first cuts it down the middle into one band twice as long, and it runs twice as fast. Be ready to strike again.'),
     ],
     goals: [
       {
@@ -101,7 +103,7 @@ export const STATIONS = {
         type: 'pair',
         done: [
           E('Opposite stations, identical readings: $f(x) = f(−x)$. That’s the Borsuk–Ulam theorem — no map from the sphere to the plane can keep all opposite points apart.'),
-          E('The basin is clear. Gyroid — look south. Something on the horizon just lit up. The exit gate is open to the north.'),
+          E('The basin is clear. Gyroid — look south. Something on the horizon just lit up. The exit gate is open to the north; gather every Still Point and the Warp Portal there will take us on.'),
         ],
       },
       { type: 'exit', done: [E('That’s Haven’s beacon. Go on — the Torus Terraces are north, and we have a world to put back.')] },
@@ -126,9 +128,10 @@ export const DEFINITION = {
 
 export function emmyAdvice14(state) {
   const { current, goal, progress, stationId, enemies } = state
-  if (!current) return [E('The exit gate is open to the north.')]
-  if (stationId !== current) return [E(`Head to ${state.siteName(current)} — follow the NEXT marker on the map.`)]
-  if (enemies > 0) return [E('Lash the spawn (1) first — retractor drones drag you about, and whirl tops spin.')]
+  if (!current) return [E('Every deck is proved and the gate north is open. Gather every Still Point, then into the Warp Portal. I’m right behind you.')]
+  if (stationId !== current)
+    return [E(`${state.siteName(current)} is next: follow the NEXT ring on the map. The commons between the decks are open ground, full of Null’s beasts, so keep the Lash (1) ready. I’ll stay right behind you.`)]
+  if (enemies > 0) return [E('Lash the spawn (1) first — retractor drones drag you about, and whirl tops spin. A Möbius prowler takes two, and runs twice as fast after the first.')]
   if (!goal) return [E('Walk on to the next deck.')]
   if (goal.type === 'rim') return [E(`Winding Cord (4): walk the whole rim road once round without stepping off it. Watch the pink arrow over your head — it should turn ${goal.winding} time${goal.winding === 1 ? '' : 's'}.`)]
   if (goal.type === 'shrink') return [E('Tide Glass (3), then press X: the white loop shrinks toward the centre. Keep going all the way.')]

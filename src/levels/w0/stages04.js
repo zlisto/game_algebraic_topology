@@ -14,12 +14,12 @@ export const STATION_ORDER = ['sphere_press', 'twin_loops', 'one_loop', 'bluepri
 
 export const OPENING = [
   E('The Assembly Hall. Every place in the world was put together here, one cell at a time.'),
-  E('Hold the Cell-Smith (2) and come to the first press, just ahead.'),
+  E('Hold the Cell Hammer (2) and come to the first press, just ahead.'),
 ]
 
 /**
  * Goal types:
- *   point                 — click the hub with the Cell-Smith: a 0-cell
+ *   point                 — click the hub with the Cell Hammer: a 0-cell
  *   edges n               — walk tracks out and back until there are n edges (1-cells)
  *   disk word expect      — walk `word` along the edges, click the hub: a 2-cell on that loop
  *                           ('' = the disk's whole rim crushed to the point)
@@ -31,7 +31,7 @@ export const STATIONS = {
     blueprint: 'The sphere, twice',
     arrive: [
       E('My oldest press. Let’s start with the simplest place there is that still has a hollow: a sphere.'),
-      E('Step on the furnace in the middle and click with the Cell-Smith. That forges a point — a 0-cell.'),
+      E('Step on the furnace in the middle and click with the Cell Hammer. That forges a point — a 0-cell.'),
     ],
     goals: [
       { type: 'point', done: [E('One point. On its own, that’s the whole space: a 0-cell. Now glue a disk to it.'), E('Click the furnace again: the press stamps a disk and crushes its whole rim onto the point.')] },
@@ -182,20 +182,23 @@ export function emmyAdvice(s) {
   if (s.exitOpen) return [E('That’s every press. The forge door to the north is open — walk through it to reach the Cone Zone.')]
   if (!s.station) return [E('We’re done here.')]
   if (s.here !== s.station)
-    return [E(`Next is ${name(s.station)} — I’ll wait for you there. Follow the walkways; I’m standing right beside it.`)]
+    return [
+      E(`Next is ${name(s.station)} — the ring marked NEXT on your map. Follow the walkways; I’m right behind you.`),
+      E('Null’s spawn roam the open commons between the presses. Crack the Lash at them (1, then click), or run past — and if they take your hearts, you wake at the last press you finished.'),
+    ]
   const lines = []
   if (s.enemies) lines.push(E('First, Null’s spawn are crawling on the press. Press 1 for the Lash and click toward them to crack it.'))
   const g = s.goal
   const torn = s.cx.edges.filter((e) => e.torn)
   if (!g) return [E('This press is finished. On to the next one.')]
   if (g.type === 'point')
-    lines.push(E('Stand on the glowing furnace in the middle of the platform, hold the Cell-Smith — press 2 — and click the furnace. That forges the point, a 0-cell. Everything here gets glued to it.'))
+    lines.push(E('Stand on the glowing furnace in the middle of the platform, hold the Cell Hammer — press 2 — and click the furnace. That forges the point, a 0-cell. Everything here gets glued to it.'))
   else if (g.type === 'edges') {
     const k = s.cx.edges.length
-    lines.push(E(`Hold the Cell-Smith (2) and walk out along one of the dark tracks, round its loop, and all the way back to the furnace. That forges an edge — a 1-cell with both ends on the point. You have ${k} of ${g.n}.`))
+    lines.push(E(`Hold the Cell Hammer (2) and walk out along one of the dark tracks, round its loop, and all the way back to the furnace. That forges an edge — a 1-cell with both ends on the point. You have ${k} of ${g.n}.`))
     if (k > 0 && k < g.n) lines.push(E('Walk the other track for the next one — each track makes its own edge.'))
   } else if (g.type === 'disk' && g.word === '') {
-    lines.push(E('Stand on the furnace and click it with the Cell-Smith. The press stamps a disk and crushes its whole rim onto the point.'))
+    lines.push(E('Stand on the furnace and click it with the Cell Hammer. The press stamps a disk and crushes its whole rim onto the point.'))
   } else if (g.type === 'disk') {
     const want = g.word.replace(/-/g, '⁻¹')
     const walked = s.word.length ? s.word.map((l) => 'ab'[l.e] + (l.s < 0 ? '⁻¹' : '')).join(' ') : 'nothing yet'

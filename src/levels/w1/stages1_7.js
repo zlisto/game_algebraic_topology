@@ -12,7 +12,8 @@ export const STATION_ORDER = ['circle_press', 'torus_press', 'half_turn', 'two_p
 export const OPENING = [
   N('Another disk, Emmy? You always did think crushing a loop made you clever.'),
   E('It makes a relation. Glue a disk along a loop, and that word slides across the disk to nothing.'),
-  E('The Cell-Smith (2) presses disks. The Van Kampen Clasp (5) joins what two pieces agree on. First press — straight ahead.'),
+  E('The Cell Hammer (2) presses disks. The Van Kampen Clasp (5) joins what two pieces agree on.'),
+  E('Each press you finish leaves a Glue Ring: two wire rings overlapping, the overlap glowing gold, two pieces glued along what they share. Collect all four and the Warp Portal at the north end opens. First press — straight ahead.'),
 ]
 
 /**
@@ -30,6 +31,7 @@ export const STATIONS = {
     arrive: [
       E('One loop district, one furnace. Forge the point, walk the track for edge $a$, then glue a disk along $a$.'),
       E('After the press, the loop is a relation: $a = 1$. Every patrol that only walked $a$ has nothing left to stand on.'),
+      E('And watch that pale cross-cap: a Projective specter, built like the projective plane, where twice round is nothing. One lash (1) only flips it over. Land the second within about two seconds, or it settles back and you start again.'),
     ],
     goals: [
       { type: 'point', done: [] },
@@ -63,6 +65,7 @@ export const STATIONS = {
     arrive: [
       E('One loop again — but this time glue the disk along $a a$: twice round, the same way. That builds the projective plane.'),
       N('Walk it twice and pretend it means nothing. Once still counts.'),
+      E('He’s right that once counts — that’s why the Projective specter here shrugs off one lash. Two in quick succession, $a a$, and it’s gone.'),
     ],
     goals: [
       { type: 'point', done: [] },
@@ -98,7 +101,7 @@ export const STATIONS = {
         choices: ['Yes — a and b are the same loop', 'No — order still matters'],
         answer: 0,
         wrong: [E('On the overlap, $c$ is both $a$ and $b$. The clasp adds $a b⁻¹$ as a relation.')],
-        right: [E('That’s van Kampen’s theorem: take the free product of the pieces’ groups, then add a relation for each loop in the overlap. Here it collapses to $ℤ$.'), G('Sheetwater next — through the north gate.')],
+        right: [E('That’s van Kampen’s theorem: take the free product of the pieces’ groups, then add a relation for each loop in the overlap. Here it collapses to $ℤ$.'), G('Sheetwater next — gather every Glue Ring, then the Warp Portal past the north gate.')],
       },
     ],
     early: [E('The overlap deck is north — finish the torus and half-turn first.')],
@@ -123,14 +126,15 @@ export const DEFINITION17 = {
 
 export function emmyAdvice17(state) {
   const { current, done, goal, here, site, pres, wordWalk, enemies, waveOn } = state
-  if (!current) return [E('Walk out through the gate — Sheetwater waits.')]
-  if (here !== current) return [E(`Head to ${site?.name || current} — that's the live press.`)]
-  if (enemies) return [E('Lash the spawn — they block the press and tear disks.')]
+  if (!current) return [E('Gather every Glue Ring, then walk out through the gate into the Warp Portal. Sheetwater waits, and I’m right behind you.')]
+  if (here !== current)
+    return [E(`${site?.name || current} is the live press: follow the map’s NEXT ring. The commons on the way are crawling with Null’s beasts. A Projective specter only flips on one lash, so land the second inside about two seconds. I’m right behind you.`)]
+  if (enemies) return [E('Lash the spawn — they block the press and tear disks. A Projective specter needs two lashes inside about two seconds; one alone only flips it.')]
   if (!goal) return [E('Section clear. Follow the map to NEXT.')]
-  if (goal.type === 'point') return [E('Stand on the furnace · Cell-Smith (2) · click to forge the point.')]
+  if (goal.type === 'point') return [E('Stand on the furnace · Cell Hammer (2) · click to forge the point.')]
   if (goal.type === 'edges') return [E(`Walk each track out and back until ${goal.n} edge(s) are forged.`)]
   if (goal.type === 'disk') return [E(`Walked: ${wordWalk || '—'}. Match the blueprint, click the furnace.`)]
-  if (goal.type === 'trivial') return [E(`Walk ${goal.word === 'a' ? '$a$' : '$a b a⁻¹ b⁻¹$'} with the Cell-Smith (2) — out, round and back for each letter. The disk makes it slide to nothing.`)]
+  if (goal.type === 'trivial') return [E(`Walk ${goal.word === 'a' ? '$a$' : '$a b a⁻¹ b⁻¹$'} with the Cell Hammer (2) — out, round and back for each letter. The disk makes it slide to nothing.`)]
   if (goal.type === 'order') return [E('Which word is trivial now, $a$ or $a a$? Open the question panel.')]
   if (goal.type === 'clasp') return HINTS17.clasp
   if (goal.type === 'ask') return [E('Answer the clasp question on the panel.')]

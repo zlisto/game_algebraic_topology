@@ -13,7 +13,7 @@ import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
 /**
  * World 0 · Bonus "Extension Cord" — the Cylinder Works, a quiet puzzle room off the
  * Assembly Hall. Four floors (a cell complex X with a subcomplex A whose motion is given);
- * click a cell on the floor with the Cell-Smith to fill its column — allowed only once its
+ * click a cell on the floor with the Cell Hammer to fill its column — allowed only once its
  * whole boundary is decided. No enemies.
  */
 
@@ -298,7 +298,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
         )}
 
         {toast && !line && <div className="toast">{toast}</div>}
-        {playEnabled && !toast && <div className="hint">WASD to move · click a cell on the floor with the Cell-Smith</div>}
+        {playEnabled && !toast && <div className="hint">WASD to move · click a cell on the floor with the Cell Hammer</div>}
       </div>
 
       {lesson && (

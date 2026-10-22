@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { REWARDS_W1 } from '../w1/Rewards1'
 
 /**
  * Super Mario 64-style rewards for the open overworld: a Star that rises over each reef once its
@@ -224,7 +225,7 @@ function PetalRose() {
   )
 }
 
-const MODELS = { hourglass: Hourglass, lens: Lens, tile: Tile, cone: ConeCrystal, rose: PetalRose }
+const MODELS = { hourglass: Hourglass, lens: Lens, tile: Tile, cone: ConeCrystal, rose: PetalRose, ...REWARDS_W1 }
 
 /** One reward. kind = a reef stage (a Spine Shard of that shape), 'hourglass' (a Tide Hourglass) or 'lens' (a Mirror Lens). */
 export function Star({ pos, state, kind = 'walkway' }) {

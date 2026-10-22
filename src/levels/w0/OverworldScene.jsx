@@ -119,6 +119,7 @@ export default function OverworldScene({
   camYawRef,
   overhead,
   talkingRef,
+  emmyRef,
   stars = [],
   portal,
 }) {
@@ -179,7 +180,7 @@ export default function OverworldScene({
       {open ? <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overhead={overhead} /> : <FollowCamera stateRef={stateRef} />}
       {stars.map((st) => <Star key={st.id} {...st} />)}
       {portal && <WarpPortal {...portal} />}
-      {open && <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />}
+      {open && <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} posRef={emmyRef} />}
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.65} luminanceSmoothing={0.2} />

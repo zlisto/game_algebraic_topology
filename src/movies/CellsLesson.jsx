@@ -397,7 +397,7 @@ function Steps({ t }) {
       </div>
     )
   const steps = [
-    ['2', 'hold the Cell-Smith; stand on the furnace', t < DEMO.point - 0.3],
+    ['2', 'hold the Cell Hammer; stand on the furnace', t < DEMO.point - 0.3],
     ['click', 'the furnace: forge the point', t >= DEMO.point - 0.3 && t < DEMO.edgeWalk[0]],
     ['walk', 'out round the track and back: edge a', t >= DEMO.edgeWalk[0] && t < DEMO.wordWalk[0]],
     ['walk', 'it again: write a on the disk’s rim', t >= DEMO.wordWalk[0] && t < DEMO.press - 0.2],
@@ -407,7 +407,7 @@ function Steps({ t }) {
   const walked = t >= DEMO.word ? 'a' : '—'
   return (
     <div className="lesson-steps">
-      <h4>✦ The Cell-Smith</h4>
+      <h4>✦ The Cell Hammer</h4>
       {steps.map(([k, label, on], i) => (
         <div key={i} className={`lesson-step ${on ? 'on' : ''}`}>
           <kbd>{k}</kbd>

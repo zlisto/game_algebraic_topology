@@ -3,13 +3,14 @@ import { Html, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import { LiveLine } from '../w0/FlatsScenery'
 import ReefGame from '../w0/ReefGame'
+import CommonsIslands from '../../world/Commons'
 
 /**
  * World 1 · Level 3 "Winding Road". Each deck is a circle S¹ (the ring road) with the helix ℝ
@@ -240,10 +241,19 @@ export default function WindingRoadScene({
   onTrackMove,
   onEnemies,
   onHearts,
-  emmyScript,
+  emmyRef,
   liftRef,
   playEnabled,
+  camYawRef,
+  talkingRef,
+  camLockRef,
+  stars,
+  portal,
 }) {
+  const b = layout.bounds
+  const cz = (b.minZ + b.maxZ) / 2
+  const w = b.maxX - b.minX
+  const d = b.maxZ - b.minZ
   return (
     <>
       <color attach="background" args={['#060912']} />
@@ -252,10 +262,12 @@ export default function WindingRoadScene({
       <hemisphereLight args={['#9ab8ff', '#0a0a14', 0.5]} />
       <directionalLight position={[-10, 22, -8]} intensity={1.05} color="#cfe0ff" />
       <Stars radius={80} depth={36} count={1400} factor={2.4} fade speed={0.25} />
-      <Sparkles count={120} scale={[50, 8, 50]} position={[0, 4, 6]} size={2} speed={0.35} color="#ffe2a0" />
-      <Seascape y={-0.9} depth={2.2} area={[0, 8, 70, 60]} seed={303} palette={{ water: '#0e2848', sand: '#3a4458', weed: '#2a4a6a' }} lanterns={12} />
-      <Clouds y={-2} area={[0, 0, 80, 70]} count={14} color="#8898cc" opacity={0.22} seed={13} speed={0.28} />
-      <FloatingRocks center={[0, 0, 8]} radius={[20, 30]} count={10} />
+      <Sparkles count={220} scale={[w, 8, d]} position={[0, 4, cz]} size={2} speed={0.35} color="#ffe2a0" />
+      <Seascape y={-0.9} depth={2.2} area={[0, cz, w + 24, d + 24]} seed={303} palette={{ water: '#0e2848', sand: '#3a4458', weed: '#2a4a6a' }} lanterns={18} />
+      <Clouds y={-2} area={[0, cz, w + 30, d + 30]} count={20} color="#8898cc" opacity={0.22} seed={13} speed={0.28} />
+      <FloatingRocks center={[0, 0, cz]} radius={[w * 0.5, w * 0.75]} count={14} />
+      {/* the open battle commons between the decks */}
+      <CommonsIslands sites={sites} />
 
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
@@ -304,17 +316,20 @@ export default function WindingRoadScene({
         })}
 
       {exitOpen && layout.exit && (
-        <mesh position={[layout.exit.gate[0], 1.3, layout.exit.gate[1]]}>
+        // a halo over the causeway, high enough that the chase camera never flies through it
+        <mesh position={[layout.exit.gate[0], 4.2, layout.exit.gate[1]]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.2, 0.12, 8, 32]} />
           <meshStandardMaterial color="#ffcf6a" emissive="#ffb347" emissiveIntensity={1.8} toneMapped={false} />
         </mesh>
       )}
 
-      {emmyScript && <Emmy scale={S} script={emmyScript} />}
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} lockRef={camLockRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={stage}
         shape={walkable}
         playEnabled={playEnabled}

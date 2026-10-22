@@ -29,7 +29,7 @@ export default function Level2_7(props) {
       if (!k) return
       if (tool !== 'smith') {
         sfxRefuse()
-        return flash('Attach cells with the Cell-Smith (2).')
+        return flash('Attach cells with the Cell Hammer (2).')
       }
       const built = { ...(bag.built || {}) }
       if (built[k]) return flash('Already attached.')
@@ -62,7 +62,7 @@ export default function Level2_7(props) {
     if (near(x, z, PRESS)) {
       if (tool !== 'smith') {
         sfxRefuse()
-        return flash('Attach the $2$-cell with the Cell-Smith (2).')
+        return flash('Attach the $2$-cell with the Cell Hammer (2).')
       }
       const coef = { ...Object.fromEntries(c.letters.map((l) => [l, 1])), ...(bag.coef?.[current] || {}) }
       const want = d2(current)

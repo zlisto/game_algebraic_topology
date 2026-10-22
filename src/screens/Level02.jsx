@@ -49,7 +49,8 @@ import {
 } from '../audio/chip'
 import MathText from './MathText'
 import { stepBack } from './warpLevel'
-import { EmmyEndCard, PauseMenu, ViewCone, WarpIcon, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, TalkPrompt, ViewCone, WarpIcon, usePause, useEmmyTalk } from './LevelChrome'
+import { beastLine } from '../levels/w0/stages01'
 import { setWarpHum, sfxWarpOpen, stopWarpHum } from '../audio/chip'
 
 /**
@@ -231,6 +232,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
   // chase camera: it starts behind Gyroid, looking along the causeway onto the flats
   const camYawRef = useRef(Math.atan2(layout.entry.a[0] - layout.entry.b[0], layout.entry.a[1] - layout.entry.b[1]))
   const talkingRef = useRef(false)
+  const emmyRef = useRef(null) // where Emmy is, for 'press E to talk'
   const camLockRef = useRef(false) // the Tide Glass borrows Z / C and the wheel
   const [rewards, setRewards] = useState({}) // zone id → collected
   const rewardsRef = useRef(rewards)
@@ -564,7 +566,6 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
       else if (e.code === 'Digit3' && glassUnlocked) setTool('glass')
       else if (e.code === 'KeyQ') setTool((w) => TOOLS.filter((t) => t !== 'glass' || glassUnlocked)[(TOOLS.indexOf(w) + 1) % (glassUnlocked ? 3 : 2)])
       else if (e.code === 'KeyZ' || e.code === 'KeyC') scrubKeys.current[e.code] = true
-      else if (e.code === 'KeyE') markRef.current?.()
     }
     const up = (e) => (scrubKeys.current[e.code] = false)
     window.addEventListener('keydown', down)
@@ -574,8 +575,6 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
       window.removeEventListener('keyup', up)
     }
   }, [glassUnlocked])
-  const markRef = useRef(null)
-  markRef.current = markTear
 
   const glassActive = tool === 'glass' && phase === 'play' && ((here.zone === 'tide_line' && current === 'tide_line') || (here.zone === 'nulls_snap' && movie !== null))
   useEffect(() => {
@@ -749,6 +748,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
       onSpooling={setSpooling}
       camYawRef={camYawRef}
       talkingRef={talkingRef}
+      emmyRef={emmyRef}
       camLockRef={camLockRef}
       rewards={REWARD_ZONES.filter((id) => done[id]).map((id) => ({ id, kind: 'hourglass', pos: rewardPos(ZONE[id]), state: rewards[id] ? 'taken' : 'waiting' }))}
       portal={{ pos: layout.exit.b, facing: Math.atan2(layout.exit.b[0] - layout.exit.a[0], layout.exit.b[1] - layout.exit.a[1]), open: portalOpen, need: REWARD_ZONES.length - rewardCount, warping }}
@@ -798,6 +798,49 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
   }
   const why = status.match && !status.match.ok ? status.match.why : null
   const showGlassPanel = (here.zone === 'tide_line' && current === 'tide_line' && met.tide_line) || (here.zone === 'nulls_snap' && movie !== null)
+
+  // E: at Null's pool with the Tide Glass out, it marks the tear; everywhere else it talks to Emmy
+  const canMark = movie !== null && phase === 'play' && here.zone === 'nulls_snap' && tool === 'glass'
+  const talkOn = playEnabled && !line && !levelClear
+  const emmyAdvice = () => {
+    const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
+    const out = []
+    const zn = here.zone
+    if (zn && zn === current && met[zn]) {
+      if (!zoneClear(zn)) {
+        const types = [...(ZONE[zn].enemies || []).map(([type]) => type), ...(snappersOut[zn] ? ['snapper'] : []), ...(zn === 'nulls_snap' && wave === 'on' ? ZONE.nulls_snap.wave.map(([type]) => type) : [])]
+        out.push(E(`${ZONE[zn].name} won’t listen while Null’s spawn are on it: ${enemies[zn]} left.`))
+        out.push(beastLine(types))
+      } else if (zn === 'tide_line') {
+        out.push(E(`Hold the Tide Glass with 3, then scrub time with Z and C, or the mouse wheel. Find the moment the ribbon touches each marker stone: ${markersLit.filter(Boolean).length} of 3 so far.`))
+      } else if (zn === 'hold_posts') {
+        out.push(status.cut ? HINTS02.cut : E(`Spool out with 2, walk right up to the ribbon and click to grab it. Walk to pull; click to let go beside a stake and it hooks on.`))
+        out.push(E(targetIdx.hold_posts === 0 ? 'Match the faint gold path. The two end posts never move.' : 'The zigzag: the stake by the shrine first, then the far one. To unhook, grab the ribbon right where it’s pinned.'))
+      } else if (zn === 'the_pools') {
+        out.push(status.cut ? HINTS02.cut : targetIdx.the_pools === 0 ? E('Spool out with 2 and pull the ribbon round the near side of the pool onto the near pedestal’s gold path. It can never cross the water.') : E('Now try for the far-side path. When you’re sure whether it can be done, press “Answer the pedestal”.'))
+      } else if (zn === 'nulls_snap' && movie !== null) {
+        out.push(E(`Hold the Tide Glass with 3 and scrub Null’s movie with Z and C. Find the ${movie === 0 ? 'frame where it jumps' : 'first frame where his loop touches the water'}.`))
+        out.push(E('With the Glass out, E marks the tear (or press the button). Put it away with 1 and E talks to me again.'))
+      }
+    } else if (current) out.push(E(`Next shrine: ${ZONE[current].name}. The NEXT arrow on the map points the way.`))
+    const waiting = REWARD_ZONES.filter((id) => done[id] && !rewards[id])
+    if (waiting.length) out.push(E(`${waiting.length === 1 ? 'A Tide Hourglass is' : `${waiting.length} Tide Hourglasses are`} still waiting, by ${waiting.map((id) => ZONE[id].name).join(', ')}. Walk into them, or lash them.`))
+    if (exitOpen) out.push(portalOpen ? E('The Warp Portal’s open. Cross the bridge into it, on to Mirror Shoals.') : E(`The Warp Portal at the bridgehead stays sealed until you bring all ${REWARD_ZONES.length} Tide Hourglasses. You have ${rewardCount}.`))
+    const lines = out.filter(Boolean).slice(0, 3)
+    return lines.length ? lines : [E('Keep going: the map’s arrow points to what’s next.')]
+  }
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: talkOn,
+    advice: emmyAdvice,
+    say: (ls) => say(ls, phase === 'clear' ? 'clear' : 'play'),
+    claim: () => {
+      if (!canMark) return false
+      markTear()
+      return true
+    },
+  })
 
   return (
     <div className="screen level">
@@ -901,7 +944,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
               </p>
             ) : (
               <>
-                <p className="forgery-count">{tool === 'glass' ? ZONES.nulls_snap.movies[movie]?.hint : 'press 3 to hold the Tide Glass'}</p>
+                <p className="forgery-count">{tool === 'glass' ? <>{ZONES.nulls_snap.movies[movie]?.hint} <strong>E marks the tear while the Glass is out.</strong></> : 'Press 3 to hold the Tide Glass: then E marks the tear'}</p>
                 <button type="button" className="btn primary small" disabled={tool !== 'glass' || phase !== 'play'} onClick={(e) => (markTear(), e.currentTarget.blur())}>
                   {ZONES.nulls_snap.movies[movie]?.mark || 'Mark the tear'} <kbd>E</kbd>
                 </button>
@@ -943,6 +986,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
           </div>
         )}
 
+        <TalkPrompt near={nearEmmy} show={talkOn && !canMark} />
         {toast && !line && <div className="toast low">{toast}</div>}
         {status.strained && !line && <div className="toast">{HINTS02.stretch.text}</div>}
 
@@ -995,7 +1039,9 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
                   : 'The Spool grabs ribbons at the shrines'
                 : tool === 'glass'
                   ? glassActive
-                    ? 'Z / C or the wheel to scrub time'
+                    ? here.zone === 'nulls_snap'
+                      ? 'Z / C or the wheel to scrub time · E marks the tear · 1 puts the Glass away (then E talks to Emmy)'
+                      : 'Z / C or the wheel to scrub time'
                     : 'The Tide Glass works at the Tide Line and at Null’s pool'
                   : `WASD to run · Z / C or right-drag to turn the camera · F or click to lash · 2 Spool${glassUnlocked ? ' · 3 Tide Glass' : ''}`}
           </div>

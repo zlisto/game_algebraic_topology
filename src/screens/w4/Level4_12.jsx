@@ -19,11 +19,11 @@ export default function Level4_12(props) {
     if (Math.hypot(x, z) > 5.2) return
     if (tool !== 'smith' && tool !== 'caster') {
       sfxRefuse()
-      return flash('Cell-Smith (2) or Cup Caster (9) here.')
+      return flash('Cell Hammer (2) or Cup Caster (9) here.')
     }
 
     if (current === 'cell') {
-      if (tool !== 'smith') return flash('Extend with the Cell-Smith (2).')
+      if (tool !== 'smith') return flash('Extend with the Cell Hammer (2).')
       const i = CELLS.findIndex((_, i) => near(x, z, [cellX(i), CELL_Z], 0.85))
       if (i < 0) return
       const c = CELLS[i]
@@ -88,7 +88,7 @@ export default function Level4_12(props) {
     }
 
     // summit
-    if (tool !== 'smith') return flash('Open doors with the Cell-Smith (2).')
+    if (tool !== 'smith') return flash('Open doors with the Cell Hammer (2).')
     const i = DOORS.findIndex((_, i) => near(x, z, [cellX(i), 0.6], 0.9))
     if (i < 0) return
     const d = DOORS[i]

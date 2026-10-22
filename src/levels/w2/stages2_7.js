@@ -5,7 +5,7 @@
  * cellular homology equals singular homology (Theorem 2.35); and χ = Σ(−1)ⁿ cₙ = Σ(−1)ⁿ rank Hₙ
  * (Theorem 2.44).
  *
- * Cell-Smith (2): attach a cell; press "attach e²". Degree Dial (8): set a letter's coefficient in d₂.
+ * Cell Hammer (2): attach a cell; press "attach e²". Degree Dial (8): set a letter's coefficient in d₂.
  */
 import { CELLS } from './CellBlockScene'
 
@@ -18,12 +18,12 @@ export const OPENING = [
   E('The Cell Block. Here spaces come in crates: a $0$-cell is a point, a $1$-cell an edge, a $2$-cell a disk.'),
   E('You build a CW complex one dimension at a time — points first, then edges on the points, then disks on the edges.'),
   G('And then we count holes with way fewer pieces than triangles!'),
-  E('Exactly. Cell-Smith on 2, Degree Dial on 8. First block is west.'),
+  E('Exactly. Cell Hammer on 2, Degree Dial on 8. First block is west.'),
 ]
 
 const cellAsk = (id, extra) => ({
   type: 'action',
-  hint: 'Set each letter’s coefficient with the Dial (8), then click “attach e²” with the Cell-Smith (2)',
+  hint: 'Set each letter’s coefficient with the Dial (8), then click “attach e²” with the Cell Hammer (2)',
   done: extra,
 })
 
@@ -31,7 +31,7 @@ export const STATIONS = {
   crates: {
     blueprint: 'Crates',
     arrive: [
-      E('Build a torus from crates: one $0$-cell, two $1$-cells $a$ and $b$, and one $2$-cell. Click a crate with the Cell-Smith to attach it.'),
+      E('Build a torus from crates: one $0$-cell, two $1$-cells $a$ and $b$, and one $2$-cell. Click a crate with the Cell Hammer to attach it.'),
       E('Mind the order. Each cell is glued along its edge onto what’s already there.'),
     ],
     early: [E('Not yet — finish the earlier block first. Follow NEXT on the map.')],

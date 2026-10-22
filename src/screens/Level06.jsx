@@ -28,7 +28,7 @@ import {
 } from '../audio/chip'
 import TimberLesson, { TimberLessonOverlay } from '../movies/TimberLesson'
 import MathText from './MathText'
-import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from './LevelChrome'
 import { landNear, useWarpLevel } from './warpLevel'
 
 /**
@@ -38,7 +38,7 @@ import { landNear, useWarpLevel } from './warpLevel'
  *   The Wrong Cut    — a walkway that is already a loop can't be felled; guard the petals
  *                      from Loop-biters
  *   The Census Deck  — predict by χ which two tangles fell alike, fell them, forge the bridge
- * The Spool (2) marks and unmarks walkways (never closing a loop); the Cell-Smith (3) fells a
+ * The Spool (2) marks and unmarks walkways (never closing a loop); the Cell Hammer (3) fells a
  * spanning tree onto whichever platform is clicked, restrings bitten petals, and forges the bridge.
  */
 
@@ -143,9 +143,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
   const ribbonApi = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
-  const emmyTalking = useRef(false)
-  const [nearEmmy, setNearEmmy] = useState(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
   const waveSeen = useRef(false)
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
@@ -233,40 +231,16 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
     [goalIdx, say],
   )
 
-  // ---------- where is Gyroid; Emmy walks to the current deck
+  // ---------- where is Gyroid
   useEffect(() => {
     const id = setInterval(() => {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
-      const em = emmyAt.current
-      setNearEmmy(Math.hypot(s.x - em.x, s.z - em.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
   }, [])
-  useEffect(() => {
-    const id = setInterval(() => {
-      const target = current ? [SITE[current].pos[0] + SITE[current].emmy[0], SITE[current].pos[1] + SITE[current].emmy[1]] : [layout.bridge.foot[0] - 2, layout.bridge.foot[1] + 1]
-      const e = emmyAt.current
-      const dx = target[0] - e.x
-      const dz = target[1] - e.z
-      const d = Math.hypot(dx, dz)
-      if (d > 0.05) {
-        const step = Math.min(d, 2.6 * 0.05)
-        e.x += (dx / d) * step
-        e.z += (dz / d) * step
-        e.rotY = Math.atan2(dx, dz)
-        e.walk = 1
-      } else {
-        e.walk = 0
-        const look = current ? SITE[current].pos : layout.bridge.gate
-        e.rotY = Math.atan2(look[0] - e.x, look[1] - e.z)
-      }
-    }, 50)
-    return () => clearInterval(id)
-  }, [current])
-
   // arriving at a deck
   useEffect(() => {
     const st = here.site
@@ -304,7 +278,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
   // ---------- the Spool: mark / unmark walkways
   const onSpoolClick = (gx, gz, cx, cz) => {
     if (!atWork) return flash(current ? `Walk onto ${SITE[current].name} first` : 'Head for the bridge')
-    if (goal?.type !== 'fell') return flash(goal?.type === 'guard' ? 'Lash the Loop-biters! (1)' : goal?.type === 'bridge' ? 'Take the Cell-Smith (3) to the foot of the bridge' : 'Nothing to mark right now')
+    if (goal?.type !== 'fell') return flash(goal?.type === 'guard' ? 'Lash the Loop-biters! (1)' : goal?.type === 'bridge' ? 'Take the Cell Hammer (3) to the foot of the bridge' : 'Nothing to mark right now')
     const y = yard[current]
     let hit = null
     for (const g of goal.graphs) {
@@ -335,10 +309,10 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
     setY(current, (yy) => ({ ...yy, marked: { ...yy.marked, [hit.g]: next } }))
     sfxMark(true)
     const r = treeReach(graph, next)
-    flash(r.spanning ? 'The tree reaches every platform — fell it: Cell-Smith (3), click any of its platforms' : HINTS06.notSpanning(r.reached, graph.nodes.length))
+    flash(r.spanning ? 'The tree reaches every platform — fell it: Cell Hammer (3), click any of its platforms' : HINTS06.notSpanning(r.reached, graph.nodes.length))
   }
 
-  // ---------- the Cell-Smith: fell, restring, forge the bridge
+  // ---------- the Cell Hammer: fell, restring, forge the bridge
   const fell = (id, g, root) => {
     const tree = yard[id].marked[g] || []
     setY(id, (yy) => ({ ...yy, felled: { ...yy.felled, [g]: tree }, roots: { ...yy.roots, [g]: root } }))
@@ -436,7 +410,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
     }
     const bitten = Object.values(yard[current].bitten).some((b) => b.length)
     if (enemies[current]) return
-    if (bitten) return flash('The Loop-biters are gone — restring the bitten petal (Cell-Smith, 3)', 3400)
+    if (bitten) return flash('The Loop-biters are gone — restring the bitten petal (Cell Hammer, 3)', 3400)
     const gl = goal
     setWaveOn(false)
     advanceGoal(current, gl.done)
@@ -501,7 +475,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
           if (p >= 0) {
             setY(id, (yy) => ({ ...yy, bitten: { ...yy.bitten, [g]: [...(yy.bitten[g] || []), p] } }))
             sfxChew()
-            flash('A Loop-biter chewed a petal down — a hole is gone! Restring it with the Cell-Smith (3)', 3600)
+            flash('A Loop-biter chewed a petal down — a hole is gone! Restring it with the Cell Hammer (3)', 3600)
             return true
           }
         } else {
@@ -531,39 +505,6 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
     return () => window.removeEventListener('keydown', key)
   }, [])
 
-  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
-  const canTalk = nearEmmy && phase === 'play' && !askOpen && !levelClear && !lesson
-  const talkToEmmy = () => {
-    if (!canTalk) return
-    const s = stateRef.current
-    const em = emmyAt.current
-    if (s) em.rotY = Math.atan2(s.x - em.x, s.z - em.z) // she turns to face him
-    say(emmyAdvice06({
-        station: current,
-        goal,
-        here: here.site,
-        name: current ? SITE[current].name : '',
-        exitOpen,
-        enemies: current ? enemies[current] : 0,
-        tangles: current
-          ? visibleGraphs[current].map((gi) => {
-              const g = SITE[current].graphs[gi]
-              const r = treeReach(g, yard[current].marked[gi] || [])
-              return { label: g.label, reached: r.reached, total: g.nodes.length, spanning: r.spanning, felled: !!yard[current].felled[gi], bitten: (yard[current].bitten[gi] || []).length > 0 }
-            })
-          : [],
-      }))
-  }
-  const talkRef = useRef(null)
-  talkRef.current = talkToEmmy
-  useEffect(() => {
-    const k = (e) => {
-      if (e.code === 'KeyE') talkRef.current?.()
-    }
-    window.addEventListener('keydown', k)
-    return () => window.removeEventListener('keydown', k)
-  }, [])
-
   // ---------- dialogue (FF7 style)
   const advance = () => {
     const full = lines[lineIdx]?.text.length ?? 0
@@ -581,7 +522,6 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
   }
   const talking = phase.startsWith('talk:')
   const line = talking ? lines[lineIdx] : null
-  emmyTalking.current = !!line && line.speaker === 'Emmy Boundary'
   useEffect(() => {
     if (talking) dialogOpen()
     duckMusic(talking)
@@ -622,6 +562,28 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
   // ---------- game layer
   const [paused, setPaused] = usePause(levelClear || lesson)
   talkingRef.current = talking
+  // ---------- talking to Emmy: walk up to her (she follows Gyroid) and press E for advice
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: phase === 'play' && !paused && !levelClear && !lesson && !askOpen,
+    advice: () => emmyAdvice06({
+        station: current,
+        goal,
+        here: here.site,
+        name: current ? SITE[current].name : '',
+        exitOpen,
+        enemies: current ? enemies[current] : 0,
+        tangles: current
+          ? visibleGraphs[current].map((gi) => {
+              const g = SITE[current].graphs[gi]
+              const r = treeReach(g, yard[current].marked[gi] || [])
+              return { label: g.label, reached: r.reached, total: g.nodes.length, spanning: r.spanning, felled: !!yard[current].felled[gi], bitten: (yard[current].bitten[gi] || []).length > 0 }
+            })
+          : [],
+      }),
+    say,
+  })
   const warp = useWarpLevel({
     ids: STATION_ORDER,
     done,
@@ -663,9 +625,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
       visibleGraphs={visibleGraphs}
       bridgeK={bridgeK}
       current={current}
-      emmyAt={emmyAt}
-      emmyTalking={emmyTalking}
-      emmyNear={nearEmmy && phase === 'play'}
+      emmyRef={emmyRef}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -694,10 +654,10 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
     if (!goal) return ''
     if (goal.type === 'ask') return 'Answer Emmy'
     if (goal.type === 'guard') return 'Lash the Loop-biters (1) · restring bitten petals (3)'
-    if (goal.type === 'bridge') return 'Cell-Smith (3): click the foot of the bridge'
+    if (goal.type === 'bridge') return 'Cell Hammer (3): click the foot of the bridge'
     if (tool === 'spool') return 'Click walkways to mark a tree that reaches every platform'
     if (tool === 'smith') return 'Click any platform of a finished tree to fell it onto that platform'
-    return 'Spool (2) to mark walkways · Cell-Smith (3) to fell'
+    return 'Spool (2) to mark walkways · Cell Hammer (3) to fell'
   })()
 
   return (
@@ -813,11 +773,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {toast && !line && <div className="toast">{toast}</div>}
 
-        {canTalk && (
-          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
+        <TalkPrompt near={nearEmmy} show={phase === 'play' && !line && !askOpen && !levelClear && !paused && !lesson} />
 
         {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" face={warp.face} marks={warp.marks} markIcon="✿" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
@@ -830,13 +786,13 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
               <button type="button" className={`weapon ${tool === 'spool' ? 'active' : ''}`} onClick={(e) => (setTool('spool'), e.currentTarget.blur())} title="The Spool: click walkways to mark a tree">
                 ◎ Spool <kbd>2</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell-Smith: fell a finished tree onto a platform; restring petals; forge the bridge">
-                ✦ Cell-Smith <kbd>3</kbd>
+              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell Hammer: fell a finished tree onto a platform; restring petals; forge the bridge">
+                ✦ Cell Hammer <kbd>3</kbd>
               </button>
             </div>
           </div>
         )}
-        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD to move · click to crack the Lash · 2 Spool · 3 Cell-Smith · lost? walk up to Emmy and press E'}</div>}
+        {playEnabled && !toast && <div className="hint">{atStation ? <MathText text={stepText} /> : 'WASD to move · click or F to crack the Lash · 2 Spool · 3 Cell Hammer · lost? Emmy has advice (E)'}</div>}
       </div>
 
       {lesson && (

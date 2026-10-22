@@ -2,7 +2,7 @@
  * World 0 · Bonus "Extension Cord" — the Cylinder Works. Four floors, one cylinder: each
  * floor is a cell complex X (drawn on X × {0}); the given motion of a subcomplex A rises up
  * the cylinder as teal columns (A × I). Gyroid extends the motion over the rest of X × I one
- * cell at a time with the Cell-Smith. Hatcher, Algebraic Topology, Chapter 0, pp. 14–15
+ * cell at a time with the Cell Hammer. Hatcher, Algebraic Topology, Chapter 0, pp. 14–15
  * (the homotopy extension property; Proposition 0.16).
  */
 
@@ -12,7 +12,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const OPENING = [
   E('My first machine. The floor of the cylinder is the start: a space, drawn as cells. Going up the cylinder is time.'),
   E('The teal columns are a motion someone already chose for part of the floor — the subcomplex A. Our job: extend that motion over everything else, without changing the floor.'),
-  E('Hold the Cell-Smith and click a cell on the floor to raise its column.'),
+  E('Hold the Cell Hammer and click a cell on the floor to raise its column.'),
 ]
 
 export const FLOORS = [

@@ -1,15 +1,15 @@
 {
   "note": "World 1 · Level 3 — The Winding Road. Ring islands with a helix above each station. x east, z south.",
   "bounds": {
-    "minX": -22,
-    "maxX": 22,
-    "minZ": -8,
-    "maxZ": 28
+    "minX": -39.2,
+    "maxX": 39.2,
+    "minZ": -34,
+    "maxZ": 50
   },
-  "causewayWidth": 1.45,
+  "causewayWidth": 2.4,
   "start": [
     0,
-    22
+    43
   ],
   "helixPitch": 2.35,
   "sites": [
@@ -19,7 +19,7 @@
       "kind": "start",
       "pos": [
         0,
-        22
+        43
       ],
       "shape": {
         "add": [
@@ -37,8 +37,8 @@
       "name": "The Helix",
       "stage": "station",
       "pos": [
-        0,
-        12
+        0.0,
+        19.2
       ],
       "shape": {
         "add": [
@@ -83,8 +83,8 @@
       "name": "Sliding Doesn't Count",
       "stage": "station",
       "pos": [
-        13,
-        4
+        20.8,
+        6.4
       ],
       "shape": {
         "add": [
@@ -116,6 +116,11 @@
           "sphere",
           2.5,
           3
+        ],
+        [
+          "mobius",
+          -2.6,
+          -3.0
         ]
       ]
     },
@@ -124,8 +129,8 @@
       "name": "Unwind",
       "stage": "station",
       "pos": [
-        -13,
-        4
+        -20.8,
+        6.4
       ],
       "shape": {
         "add": [
@@ -177,8 +182,8 @@
       "name": "The Number Line",
       "stage": "station",
       "pos": [
-        0,
-        -4
+        0.0,
+        -6.4
       ],
       "shape": {
         "add": [
@@ -220,6 +225,252 @@
           "sphere",
           -3,
           -2.5
+        ],
+        [
+          "mobius",
+          0,
+          4.2
+        ]
+      ]
+    },
+    {
+      "id": "commons_1",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        32
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.5
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          1.71
+        ],
+        [
+          "torus",
+          -1.71,
+          2.5
+        ],
+        [
+          "mobius",
+          -2.5,
+          -1.71
+        ],
+        [
+          "sphere",
+          1.71,
+          -2.5
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Helix Commons East",
+      "kind": "commons",
+      "pos": [
+        10.55,
+        13.0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.0,
+          1.37
+        ],
+        [
+          "mobius",
+          -2.18,
+          1.05
+        ],
+        [
+          "torus",
+          0.18,
+          -2.41
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Helix Commons West",
+      "kind": "commons",
+      "pos": [
+        -10.55,
+        13.0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "torus",
+          2.0,
+          1.37
+        ],
+        [
+          "mobius",
+          -1.37,
+          2.0
+        ],
+        [
+          "projective",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Slide Commons",
+      "kind": "commons",
+      "pos": [
+        10.45,
+        0.3
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -1.37,
+          2.0
+        ],
+        [
+          "mobius",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_5",
+      "name": "Unwind Commons",
+      "kind": "commons",
+      "pos": [
+        -10.45,
+        0.3
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -1.37,
+          2.0
+        ],
+        [
+          "sphere",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_6",
+      "name": "Gate Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        -17.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -1.37,
+          2.0
+        ],
+        [
+          "mobius",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
         ]
       ]
     }
@@ -227,77 +478,127 @@
   "causeways": [
     {
       "a": [
-        0,
-        20.2
+        0.0,
+        41.6
       ],
       "b": [
-        0,
-        17.4
+        0.0,
+        37.1
       ]
     },
     {
       "a": [
-        3.8,
-        10.2
+        0.0,
+        26.9
       ],
       "b": [
-        9.5,
-        6.2
+        0.0,
+        24.3
       ]
     },
     {
       "a": [
-        -3.8,
-        10.2
+        4.397,
+        16.616
       ],
       "b": [
-        -9.5,
-        6.2
+        7.101,
+        15.027
       ]
     },
     {
       "a": [
-        9.5,
-        1.8
+        13.913,
+        10.834
       ],
       "b": [
-        3.6,
-        -1.2
+        16.512,
+        9.161
       ]
     },
     {
       "a": [
-        -9.5,
-        1.8
+        -4.397,
+        16.616
       ],
       "b": [
-        -3.6,
-        -1.2
+        -7.101,
+        15.027
       ]
     },
     {
       "a": [
-        0,
-        -9.4
+        -13.913,
+        10.834
       ],
       "b": [
-        0,
-        -12.2
+        -16.512,
+        9.161
+      ]
+    },
+    {
+      "a": [
+        16.406,
+        3.81
+      ],
+      "b": [
+        13.896,
+        2.331
+      ]
+    },
+    {
+      "a": [
+        7.083,
+        -1.859
+      ],
+      "b": [
+        4.378,
+        -3.593
+      ]
+    },
+    {
+      "a": [
+        -16.406,
+        3.81
+      ],
+      "b": [
+        -13.896,
+        2.331
+      ]
+    },
+    {
+      "a": [
+        -7.083,
+        -1.859
+      ],
+      "b": [
+        -4.378,
+        -3.593
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        -11.6
+      ],
+      "b": [
+        0.0,
+        -13.6
       ]
     }
   ],
   "exit": {
     "gate": [
       0,
-      -14.2
+      -23.6
     ],
     "a": [
       0,
-      -12.2
+      -21.6
     ],
     "b": [
       0,
-      -18.5
+      -27.9
     ],
     "to": "brouwers_basin"
   }

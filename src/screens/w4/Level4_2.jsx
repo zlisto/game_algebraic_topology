@@ -18,7 +18,7 @@ export default function Level4_2(props) {
     if (Math.hypot(x, z) > 5.2) return
     if (tool !== 'smith') {
       sfxRefuse()
-      return flash('Use the Cell-Smith (2).')
+      return flash('Use the Cell Hammer (2).')
     }
     if (current === 'snap' || current === 'approx') {
       const ends = { ...(bag.ends || {}) }

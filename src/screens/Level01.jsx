@@ -4,10 +4,10 @@ import { useExitTrigger } from './exitTrigger'
 import { MapNext } from './LevelMap'
 import OverworldScene from '../levels/w0/OverworldScene'
 import { cleanStroke, sampleShape, simulateSlide, snapPoint } from '../levels/w0/retraction'
-import { DEFINITION, HINTS, RULES, STAGES } from '../levels/w0/stages01'
+import { DEFINITION, HINTS, RULES, STAGES, beastLine } from '../levels/w0/stages01'
 import { SITE, SITES, gateSegments, layout, makeWalkable, siteAt, worldToMap } from '../world/reef'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, setWarpHum, sfxCorrect, sfxWarpOpen, sfxWrong, startReefMusic, stopReefMusic, stopWarpHum, textBlip, unlockAudio } from '../audio/chip'
-import { WarpIcon } from './LevelChrome'
+import { TalkPrompt, WarpIcon, useEmmyTalk } from './LevelChrome'
 import { stepBack } from './warpLevel'
 import MathText from './MathText'
 
@@ -187,6 +187,7 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
   const stateRef = useRef(null)
   const camYawRef = useRef(Math.PI / 2) // chase camera yaw; starts east of the pier, looking down the Walkway
   const talkingRef = useRef(false) // Emmy faces Gyroid and gestures while a line is up
+  const emmyRef = useRef(null) // where Emmy is, for 'press E to talk'
   const [here, setHere] = useState({ site: null, pos: startPos, face: Math.PI * 1.5 })
   const judged = useRef(null)
   const [shown, setShown] = useState(0) // characters of the current line typed out so far
@@ -588,6 +589,7 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
         camYawRef={camYawRef}
         overhead={overhead}
         talkingRef={talkingRef}
+        emmyRef={emmyRef}
         stars={STAR_SITES.filter((id) => saved[id]).map((id) => ({ id, kind: SITE[id].stage, pos: starPos(id), state: stars[id] !== undefined ? 'taken' : 'waiting', takenAt: stars[id] }))}
         portal={{ pos: layout.gate.b, facing: Math.atan2(layout.gate.b[0] - layout.gate.a[0], layout.gate.b[1] - layout.gate.a[1]), open: portalOpen, need: STAR_SITES.length - starCount, warping }}
       />
@@ -640,6 +642,31 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
   const siteEnemies = site ? enemies[site.id] || 0 : 0
   const beaconsOk = sim && simSite === here.site && t >= 1 ? sim.beaconHit.every(Boolean) : null
 
+  // press E beside Emmy: what to do right here, with which keys, and where next
+  const emmyAdvice = () => {
+    const out = []
+    const next = ORDER.find((id) => !saved[id])
+    if (site && site.stage !== 'forgeries' && !saved[site.id]) {
+      if (!siteClear(site.id)) {
+        out.push(E(`${site.name} first: ${siteEnemies || 'some'} of Null’s spawn still on it. The reef won’t Slide until they’re gone.`))
+        out.push(beastLine(site.enemies.map(([type]) => type)))
+      } else if (site.stage === 'walkway') out.push(E('The Walkway’s spine is already laid for us. Stand on the reef and press Slide.'))
+      else {
+        out.push(E(`Spool out with 2 or Q. Click to start the thread, walk it through every beacon, click to stop, then press Slide.`))
+        out.push(STAGE_OF[site.stage]?.beat === 'teach' ? null : E(site.stage === 'fork' ? 'One thin tree through all three beacons will do. No loops: there are no holes to go round.' : 'Every hole needs a loop of spine all the way round it, or the reef tears there.'))
+      }
+    } else if (site?.stage === 'forgeries' && !saved.nulls_mirage) {
+      out.push(allSaved ? E('Null’s Mirage. Watch each forgery and pick the rule it breaks.') : E(`Null’s Mirage has to wait: save the other reefs first. Next is ${SITE[next].name}.`))
+    } else if (next) out.push(E(`Next is ${SITE[next].name}. Follow the causeways: the NEXT arrow on the map points the way.`))
+    else if (!saved.nulls_mirage) out.push(E('All four reefs saved. Null’s Mirage is out past Twin Lagoons, by the broken causeway.'))
+    const waiting = STAR_SITES.filter((id) => saved[id] && stars[id] === undefined)
+    if (waiting.length) out.push(E(`${waiting.length === 1 ? 'A Spine Shard is' : `${waiting.length} Spine Shards are`} still waiting, over ${waiting.map((id) => SITE[id].name).join(', ')}. Walk into them, or lash them.`))
+    if (gateOpen) out.push(portalOpen ? E('The Warp Portal’s open. Walk the mended causeway into it, on to Tidewarp Flats.') : E(`The Warp Portal at the end of the mended causeway stays sealed until you bring all ${STAR_SITES.length} Spine Shards. You have ${starCount}.`))
+    const lines = out.filter(Boolean).slice(0, 3)
+    return lines.length ? lines : [E('Keep going: the map’s arrow points to what’s next.')]
+  }
+  const nearEmmy = useEmmyTalk({ stateRef, emmyRef, enabled: playEnabled && !line && !levelClear, advice: emmyAdvice, say: (ls) => say(ls, phase === 'clear' ? 'clear' : 'play') })
+
   return (
     <div className="screen level">
       <Canvas camera={{ position: [7.7, 11, 18], fov: 45 }} dpr={[1, 1.5]} frameloop={paused ? 'never' : 'always'}>
@@ -689,6 +716,7 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
         </div>
 
         {!line && <Minimap pos={here.pos} face={here.face} saved={saved} current={here.site} gateOpen={gateOpen} stars={stars} portalOpen={portalOpen} />}
+        <TalkPrompt near={nearEmmy} show={playEnabled && !line && !levelClear} />
         {toast && !line && (
           <div className="toast low">
             <MathText text={toast} />

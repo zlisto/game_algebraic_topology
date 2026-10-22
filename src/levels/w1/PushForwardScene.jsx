@@ -1,36 +1,37 @@
 import { useFrame } from '@react-three/fiber'
 import { Html, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
+import CommonsIslands from '../../world/Commons'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
 import Seascape from '../../world/Seascape'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import { EmmyBubble } from '../w0/FoundryScene'
 import { CordProp, SlingProp } from '../w0/worldTools'
 
-const S = 0.7
 const AMBER = '#ffb347'
 const GOLD = '#ffd27a'
 const VIOLET = '#b070ff'
 
-export function TerraceSky() {
+export function TerraceSky({ bounds }) {
+  // in the level the sea and the sky spread out with the (bigger) layout; the movies keep the old frame
+  const area = bounds ? [(bounds.minX + bounds.maxX) / 2, (bounds.minZ + bounds.maxZ) / 2, bounds.maxX - bounds.minX + 20, bounds.maxZ - bounds.minZ + 20] : null
   return (
     <>
       <color attach="background" args={['#120818']} />
-      <fog attach="fog" args={['#120818', 28, 72]} />
+      <fog attach="fog" args={bounds ? ['#120818', 30, 84] : ['#120818', 28, 72]} />
       <ambientLight intensity={0.42} />
       <hemisphereLight args={['#ffd0a0', '#0a0818', 0.55]} />
       <directionalLight position={[12, 14, -18]} intensity={1.05} color="#ffc49a" />
       <pointLight position={[0, 8, 4]} intensity={12} distance={36} color="#ffb070" />
       <Stars radius={90} depth={40} count={800} factor={2.1} fade speed={0.18} />
       <Sparkles count={90} scale={[50, 5, 50]} position={[0, 2, -4]} size={2} speed={0.25} color="#ffd2a0" />
-      <Seascape y={-2.4} depth={2.4} area={[0, -4, 70, 64]} seed={15} palette={{ water: '#1a3050', sand: '#4a5058', weed: '#2a3848' }} lanterns={10} />
-      <Clouds seed={5} area={[-20, -24, 40, 40]} y={14} />
-      <FloatingRocks seed={8} count={12} center={[0, 0, -4]} radius={[14, 22]} />
+      <Seascape y={-2.4} depth={2.4} area={area || [0, -4, 70, 64]} seed={15} palette={{ water: '#1a3050', sand: '#4a5058', weed: '#2a3848' }} lanterns={area ? 14 : 10} />
+      <Clouds seed={5} area={area || [-20, -24, 40, 40]} count={area ? 20 : 14} y={14} />
+      <FloatingRocks seed={8} count={area ? 18 : 12} center={area ? [area[0], 0, area[1]] : [0, 0, -4]} radius={area ? [30, 44] : [14, 22]} />
     </>
   )
 }
@@ -268,6 +269,10 @@ export default function PushForwardScene({
   game,
   gameKey,
   stateRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   frameRef,
   spawnRef,
   ribbonApi,
@@ -277,27 +282,21 @@ export default function PushForwardScene({
   onTrackMove,
   onEnemies,
   onHearts,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   liftRef,
 }) {
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   return (
     <>
-      <TerraceSky />
+      <TerraceSky bounds={layout.bounds} />
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
-      {sites.map((s) => (
-        <Deck key={s.id} site={s} current={s.id === current} />
-      ))}
+      {sites
+        .filter((s) => s.kind !== 'commons')
+        .map((s) => (
+          <Deck key={s.id} site={s} current={s.id === current} />
+        ))}
       {sites
         .filter((s) => s.projector)
         .map((s) => (
@@ -314,8 +313,8 @@ export default function PushForwardScene({
         .filter((s) => s.projector)
         .map((s) => (
           <group key={s.id + ':roads'} position={[s.pos[0], 0, s.pos[1]]}>
-            <BeltRing {...s.projector.source} color={GOLD} label="source circle" lit={current === s.id} />
-            <BeltRing {...s.projector.target} color="#7fe8dc" label="target circle" lit={current === s.id} />
+            <BeltRing {...s.projector.source} color={GOLD} label="gold · source circle" lit={current === s.id} />
+            <BeltRing {...s.projector.target} color="#7fe8dc" label="cyan · target circle" lit={current === s.id} />
           </group>
         ))}
       {sites
@@ -323,7 +322,7 @@ export default function PushForwardScene({
         .map((s) => (
           <group key={s.id} position={[s.pos[0], 0, s.pos[1]]}>
             <BeltRing {...s.ring} label="the rim" lit={current === s.id} />
-            {s.inner && <BeltRing {...s.inner} color="#ff8ad8" label="inner road" lit={current === s.id} />}
+            {s.inner && <BeltRing {...s.inner} color="#ff8ad8" label="pink · inner road" lit={current === s.id} />}
             {s.pool && <Pool r={s.pool} />}
           </group>
         ))}
@@ -338,8 +337,8 @@ export default function PushForwardScene({
         .filter((s) => s.tube)
         .map((s) => (
           <group key={s.id} position={[s.pos[0], 0, s.pos[1]]}>
-            <BeltRing {...s.tube} r={s.tube.r} color={GOLD} label="first factor" lit={current === s.id} />
-            {s.hole && <BeltRing {...s.hole} color="#7fe8dc" label="second factor" lit={current === s.id} />}
+            <BeltRing {...s.tube} r={s.tube.r} color={GOLD} label="gold · first factor" lit={current === s.id} />
+            {s.hole && <BeltRing {...s.hole} color="#7fe8dc" label="cyan · second factor" lit={current === s.id} />}
           </group>
         ))}
       <GridLift origin={sites.find((s) => s.id === 'two_roads')?.gridOrigin || [12, -9.5]} shadow={gridShadow} visible={showGrid} liftRef={liftRef} />
@@ -350,10 +349,13 @@ export default function PushForwardScene({
           <meshStandardMaterial color={GOLD} emissive={AMBER} emissiveIntensity={1.4} toneMapped={false} />
         </mesh>
       )}
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -368,10 +370,6 @@ export default function PushForwardScene({
       />
       <CordProp state={stateRef} tool={tool} />
       <SlingProp state={stateRef} tool={tool} />
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
     </>
   )
 }

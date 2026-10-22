@@ -3,14 +3,13 @@ import { Html, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { LiveLine } from './FlatsScenery'
 import { edgePath, felledAt } from './graphs'
 import { DevAdvance } from './OverworldScene'
 import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
-import { EmmyBubble } from './FoundryScene'
+import CommonsIslands from '../../world/Commons'
 import Seascape from '../../world/Seascape'
 
 /**
@@ -21,13 +20,12 @@ import Seascape from '../../world/Seascape'
  * north toward the black spire of the Hollow Throne.
  */
 
-const S = 0.7
 const WOOD = '#d8a46a'
 const AMBER = '#ffb347'
 const PETAL = '#ffd27a'
 const BITTEN = '#b070ff'
 
-export function Yard() {
+export function Yard({ spread = 1 }) {
   return (
     <>
       <color attach="background" args={['#160c1c']} />
@@ -35,18 +33,18 @@ export function Yard() {
       <ambientLight intensity={0.4} />
       <hemisphereLight args={['#ffb08a', '#0c0a18', 0.55]} />
       <directionalLight position={[14, 12, -20]} intensity={1.0} color="#ffc49a" />
-      <pointLight position={[0, 6, 2]} intensity={10} distance={30} color="#ffb070" />
+      <pointLight position={[0, 6, 2]} intensity={10} distance={30 * spread} color="#ffb070" />
       <Stars radius={90} depth={40} count={900} factor={2.2} fade speed={0.2} />
       {/* the low sun behind the Throne */}
       <mesh position={[14, 8, -70]}>
         <sphereGeometry args={[5, 32, 20]} />
         <meshBasicMaterial color="#ff8a5a" toneMapped={false} />
       </mesh>
-      <Sparkles count={120} scale={[44, 4, 50]} position={[0, 1, -2]} size={2} speed={0.3} color="#ffd2a0" />
+      <Sparkles count={120} scale={[44 * spread, 4, 50 * spread]} position={[0, 1, -2 * spread]} size={2} speed={0.3} color="#ffd2a0" />
       {/* the sea, with its seabed, and boats moored among the pilings */}
-      <Seascape y={-2.2} depth={2.2} area={[0, -2, 64, 60]} seed={41} palette={{ water: '#1a3a52', sand: '#4a5a50', weed: '#2a4a38' }} lanterns={8} />
+      <Seascape y={-2.2} depth={2.2} area={[0, -2 * spread, 64 * spread, 60 * spread]} seed={41} palette={{ water: '#1a3a52', sand: '#4a5a50', weed: '#2a4a38' }} lanterns={Math.round(8 * spread)} />
       {BOATS.map(([x, z, r], i) => (
-        <Boat key={i} at={[x, z]} rot={r} seed={i} />
+        <Boat key={i} at={[x * spread, z * spread]} rot={r} seed={i} />
       ))}
     </>
   )
@@ -243,9 +241,7 @@ export default function TimberScene({
   visibleGraphs, // { [siteId]: [gi] }
   bridgeK,
   current,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   walkable,
   game,
@@ -266,16 +262,10 @@ export default function TimberScene({
   onHearts,
 }) {
   const stations = sites.filter((s) => s.stage === 'station')
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   return (
     <>
-      <Yard />
+      <Yard spread={layout.decorScale || 1} />
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -314,10 +304,6 @@ export default function TimberScene({
       })}
       <Bridge bridge={layout.bridge} kRef={bridgeK} />
       <Throne at={layout.throne} />
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}
@@ -342,7 +328,7 @@ export default function TimberScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

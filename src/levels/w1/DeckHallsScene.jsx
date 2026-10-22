@@ -2,13 +2,14 @@
 import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import CommonsIslands from '../../world/Commons'
+import { LAND } from '../../theme/palette'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import { EmmyBubble } from '../w0/FoundryScene'
 import CoverGraph from '../../movies/w1/CoverGraph'
 
 /**
@@ -50,21 +51,64 @@ function CoverSpin({ site, shift }) {
   )
 }
 
-const S = 0.7
-
 function HallSky() {
   return (
     <>
-      <color attach="background" args={['#060912']} />
-      <fog attach="fog" args={['#060912', 22, 58]} />
-      <ambientLight intensity={0.34} />
-      <hemisphereLight args={['#a8c8ff', '#0a0818', 0.55]} />
-      <directionalLight position={[8, 18, -10]} intensity={0.95} color="#d0e4ff" />
-      <Stars radius={80} depth={36} count={1400} factor={2.4} fade speed={0.25} />
-      <Seascape y={-6} area={[0, 20, 90, 80]} bed={false} lanterns={4} palette={{ water: '#0f2848', deep: '#060c18' }} />
-      <Clouds y={4} area={[0, 10, 50, 70]} count={12} color="#8898cc" opacity={0.22} seed={11} speed={0.2} />
-      <FloatingRocks area={[0, 8, 40, 50]} count={8} seed={3} />
+      <color attach="background" args={['#0a1430']} />
+      <fog attach="fog" args={['#0a1430', 30, 86]} />
+      <ambientLight intensity={0.38} />
+      <hemisphereLight args={['#a8c8ff', '#0a0818', 0.6]} />
+      <directionalLight position={[8, 18, -10]} intensity={1.0} color="#d0e4ff" />
+      <Stars radius={90} depth={40} count={1400} factor={2.4} fade speed={0.25} />
+      <Sparkles count={120} scale={[60, 6, 140]} position={[0, 2, 16]} size={2.2} speed={0.25} color="#ffd6f0" />
+      <Seascape y={-2.4} depth={2.4} area={[0, 16, 96, 160]} seed={110} palette={{ water: '#16305a', sand: '#3a4458', weed: '#2a3a5a' }} lanterns={20} />
+      <Clouds y={15} area={[0, 16, 90, 150]} count={16} color="#a8b8ee" opacity={0.25} seed={11} speed={0.2} />
+      <FloatingRocks center={[0, 0, 16]} radius={[38, 62]} count={16} seed={3} glow="#ff8ad8" />
     </>
+  )
+}
+
+/** Calls onReady once the halls have drawn a few frames, so the opening never plays over black. */
+function FirstFrames({ onReady, after = 3 }) {
+  const n = useRef(0)
+  useFrame(() => {
+    n.current += 1
+    if (n.current === after) onReady()
+  })
+  return null
+}
+
+/** Every hall stands on a basalt slab and a rock pillar down into the sea. */
+function HallBase({ site }) {
+  const a = site.def.add[0]
+  const [x, z] = site.pos
+  if (a.type === 'rect') {
+    const w = a.x1 - a.x0
+    const d = a.z1 - a.z0
+    return (
+      <group position={[x + (a.x0 + a.x1) / 2, 0, z + (a.z0 + a.z1) / 2]}>
+        <mesh position={[0, -0.22, 0]}>
+          <boxGeometry args={[w, 0.4, d]} />
+          <meshStandardMaterial color="#26304a" roughness={0.8} />
+        </mesh>
+        <mesh position={[0, -2.2, 0]}>
+          <boxGeometry args={[w * 0.8, 3.6, d * 0.8]} />
+          <meshStandardMaterial color={LAND.rock} roughness={0.9} flatShading />
+        </mesh>
+      </group>
+    )
+  }
+  return (
+    <group position={[x, 0, z]}>
+      <mesh position={[0, -0.22, 0]}>
+        <cylinderGeometry args={[a.r, a.r * 0.96, 0.4, 48]} />
+        <meshStandardMaterial color="#26304a" roughness={0.8} />
+      </mesh>
+      <mesh position={[0, -2.2, 0]}>
+        <cylinderGeometry args={[a.r * 0.9, a.r * 0.5, 3.6, 20]} />
+        <meshStandardMaterial color={LAND.rock} roughness={0.9} flatShading />
+      </mesh>
+    </group>
   )
 }
 
@@ -173,9 +217,8 @@ export default function DeckHallsScene({
   playEnabled,
   stateRef,
   frameRef,
-  emmyAt,
-  emmyTalking,
-  nearEmmy,
+  emmyRef,
+  onFirstFrames,
   onEnemies,
   onHearts,
   tool,
@@ -183,18 +226,21 @@ export default function DeckHallsScene({
   spawnRef,
   ribbonApi,
   exitOpen,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
 }) {
-  const emmyScript = () => ({
-    pos: [emmyAt.current.x / S, 0, emmyAt.current.z / S],
-    rotY: emmyAt.current.rotY,
-    walk: emmyAt.current.walk,
-    gesture: emmyTalking.current ? 0.85 : 0,
-    talk: emmyTalking.current ? 1 : 0,
-    bow: 0,
-  })
   return (
     <>
       <HallSky />
+      {onFirstFrames && <FirstFrames onReady={onFirstFrames} />}
+      <CommonsIslands sites={sites} />
+      {sites
+        .filter((s) => s.stage === 'station' || s.kind === 'start' || s.id === 'exit_path' || s.id === 'north_gate')
+        .map((s) => (
+          <HallBase key={s.id} site={s} />
+        ))}
       {layout.causeways?.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth || 1.5} />
       ))}
@@ -203,7 +249,7 @@ export default function DeckHallsScene({
         if (site.kind === 'start' || site.id === 'exit_path' || site.id === 'north_gate') {
           const [x, z] = site.pos
           return (
-            <mesh key={site.id} position={[x, -0.02, z]} rotation={[-Math.PI / 2, 0, 0]}>
+            <mesh key={site.id} position={[x, 0.01, z]} rotation={[-Math.PI / 2, 0, 0]}>
               <circleGeometry args={[site.def.add[0].r || 2, 32]} />
               <meshStandardMaterial color="#1c2430" roughness={0.85} />
             </mesh>
@@ -228,12 +274,11 @@ export default function DeckHallsScene({
           </group>
         )
       })}
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={nearEmmy && !!current} />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -252,7 +297,7 @@ export default function DeckHallsScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={0}>
         <Bloom luminanceThreshold={0.35} luminanceSmoothing={0.85} intensity={0.85} />

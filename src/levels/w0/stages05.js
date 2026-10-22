@@ -14,7 +14,7 @@ export const STATION_ORDER = ['cone_works', 'suspension_works', 'wedge_product',
 
 export const OPENING = [
   E('The Cone Zone. Every works up here takes spaces in and puts a new space out.'),
-  E('Null’s Coners are loose on the terrace. Hold the Cell-Smith (2) and come to the Cone Works, just ahead.'),
+  E('Null’s Coners are loose on the terrace. Hold the Cell Hammer (2) and come to the Cone Works, just ahead.'),
 ]
 
 /**
@@ -30,7 +30,7 @@ export const STATIONS = {
     ops: ['cone'],
     arrive: [
       E('The Cone Works. Its machine does one thing: it joins every point of what you feed it to one new tip.'),
-      E('Click a pedestal with the Cell-Smith to take a copy of its space, carry it to the machine, and click the machine to feed it in. Start with the ring.'),
+      E('Click a pedestal with the Cell Hammer to take a copy of its space, carry it to the machine, and click the machine to feed it in. Start with the ring.'),
     ],
     goals: [
       {
@@ -174,10 +174,10 @@ export const HINTS05 = {
   spawn: E('Clear the spawn first — the machine won’t run with them crawling on it.'),
   firstPlug: [
     E('A Coner plugged it — see the violet cone? Coned, a space shrinks to a point. It isn’t what it was.'),
-    E('Lash Coners before their beam finishes. A plugged pedestal you can fix — click it with the Cell-Smith to pull the plug.'),
+    E('Lash Coners before their beam finishes. A plugged pedestal you can fix — click it with the Cell Hammer to pull the plug.'),
     E('But if they plug something you made, sitting on the shelf, that’s a cone for good. Watch the shelf.'),
   ],
-  carryFirst: E('Pick something up first: click a pedestal with the Cell-Smith.'),
+  carryFirst: E('Pick something up first: click a pedestal with the Cell Hammer.'),
 }
 
 /** The level-clear card. */
@@ -194,13 +194,17 @@ export const DEFINITION05 = {
 export function emmyAdvice05(s) {
   if (s.exitOpen) return [E('That’s every works. The gate to the Timber Yard is open — walk north through it.')]
   if (!s.station) return [E('We’re done here.')]
-  if (s.here !== s.station) return [E(`Next is ${s.name} — I’ll wait for you there. Follow the walkways; I’m standing on the platform.`)]
+  if (s.here !== s.station)
+    return [
+      E(`Next is ${s.name} — the ring marked NEXT on your map. Follow the walkways; I’m right behind you.`),
+      E('The open commons between the works are crawling with Null’s beasts — Klein bottles now too: three lashes, the last two quick together. Crack the Lash (1, then click), or run past.'),
+    ]
   const lines = []
   const g = s.goal
   const w = s.works
   const opName = { cone: 'CONE', suspension: 'SUSPENSION', wedge: 'WEDGE', product: 'PRODUCT', quotient: 'QUOTIENT' }
   const pick = (op) => (w.op === op ? '' : `First pick ${opName[op]} on your panel (top right). `)
-  if (s.enemies) lines.push(E('Lash the Coners before they plug things — press 1 and click toward them. A plugged pedestal you can fix: click it with the Cell-Smith.'))
+  if (s.enemies) lines.push(E('Lash the Coners before they plug things — press 1 and click toward them. A plugged pedestal you can fix: click it with the Cell Hammer.'))
   if (w.shelf.some((x) => x?.plugged)) lines.push(E('Something on your shelf got plugged — the violet cone. That one’s ruined; make a fresh one.'))
   if (s.carried) lines.push(E(`You’re carrying ${s.carried.name}. Click the machine to feed it in.`))
   else if (w.hopper.length === 1) lines.push(E(`The machine already holds ${w.hopper[0].name} — feed it one more space.`))
@@ -211,7 +215,7 @@ export function emmyAdvice05(s) {
   }
   const t = g.target
   const tips = {
-    cone_circle: 'Hold the Cell-Smith (2), click the ring’s pedestal to pick up a copy, then click the machine. It cones whatever you feed it.',
+    cone_circle: 'Hold the Cell Hammer (2), click the ring’s pedestal to pick up a copy, then click the machine. It cones whatever you feed it.',
     vee: 'Now pick up the two points and feed them to the machine.',
     circle: 'Pick up the two points and feed them to the machine: a tip above, a tip below.',
     sphere: s.station === 'recipe_board' ? `${pick('quotient')}Feed it the disk: the quotient collapses the disk’s whole rim to one point. (Suspending a circle works too.)` : 'Pick the circle up off the shelf — the teal pedestal — and feed it back into the machine.',

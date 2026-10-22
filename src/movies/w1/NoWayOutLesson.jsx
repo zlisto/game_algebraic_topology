@@ -7,7 +7,7 @@ import { LiveLine } from '../../levels/w0/FlatsScenery'
 import { DevAdvance } from '../../levels/w0/OverworldScene'
 import { ArrowTile, BasinSky, RetractorEngine, RimRoad, SphereCap } from '../../levels/w1/BasinScene'
 import { fieldAngle, fieldStrength, unitRoots } from '../../levels/w1/brouwer'
-import layout from '../../world/basin.json'
+import layout from '../../world/basin.movie.json'
 
 /**
  * "No Way Out" lesson (videos.json level-1-4-lesson): the boundary count, slowly.

@@ -1,15 +1,16 @@
 import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
-import Emmy from '../../characters/Emmy'
+import { useRef } from 'react'
 import { LAND } from '../../theme/palette'
 import { CausewaySlab } from '../../world/ReefScenery'
+import CommonsIslands from '../../world/Commons'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
 import Seascape from '../../world/Seascape'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import { Platform, Track, EmmyBubble, ForgeDoor } from '../w0/FoundryScene'
+import { Platform, Track, ForgeDoor } from '../w0/FoundryScene'
 import { HUB_RADIUS, makeTrack } from '../w0/cells'
 import { wordText } from './freeWords'
 import { LETTER_COLORS } from '../w0/Hologram'
@@ -98,10 +99,12 @@ export default function FreeWordScene({
   current,
   progressRef,
   stateRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   frameRef,
-  emmyAt,
-  emmyTalking,
-  nearEmmy,
+  emmyRef,
   checkpoint,
   gameKey,
   game,
@@ -116,26 +119,29 @@ export default function FreeWordScene({
   tape,
   clasped,
   exitOpen,
-  emmyNear,
 }) {
+  // the sea, the sky and the rocks spread out over the whole (bigger) forge
+  const b = layout.bounds
+  const area = [(b.minX + b.maxX) / 2, (b.minZ + b.maxZ) / 2, b.maxX - b.minX + 30, b.maxZ - b.minZ + 20]
   return (
     <>
       <color attach="background" args={['#080a12']} />
-      <fog attach="fog" args={['#080a12', 24, 58]} />
+      <fog attach="fog" args={['#080a12', 26, 70]} />
       <ambientLight intensity={0.28} />
       <hemisphereLight args={['#a8b8ff', '#120818', 0.42]} />
       <directionalLight position={[-8, 16, 6]} intensity={0.85} color="#ffe2c4" />
       <Stars radius={80} depth={36} count={800} factor={2} fade speed={0.15} />
-      <Sparkles count={180} scale={[36, 5, 36]} position={[0, 2, -6]} size={2.2} speed={0.35} color="#b090ff" />
-      <Seascape bounds={layout.bounds} y={-1.2} />
-      <FloatingRocks bounds={layout.bounds} count={14} y={4} />
-      <Clouds bounds={layout.bounds} y={8} />
+      <Sparkles count={240} scale={[area[2], 5, area[3]]} position={[area[0], 2, area[1]]} size={2.2} speed={0.35} color="#b090ff" />
+      <Seascape area={area} y={-1.2} lanterns={14} />
+      <FloatingRocks center={[area[0], 0, area[1]]} radius={[area[2] / 2, area[2] / 2 + 14]} count={18} />
+      <Clouds area={area} count={20} y={8} />
+      <CommonsIslands sites={sites} />
 
       {layout.causeways?.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
       {sites.map((site) => {
-        if (site.kind === 'start') return null
+        if (site.kind === 'start' || site.kind === 'commons') return null
         const tracks = (tracksBySite[site.id] || []).map((tr, i) => ({ track: tr, progressRef }))
         return (
           <DistrictPlatform
@@ -156,21 +162,15 @@ export default function FreeWordScene({
         </mesh>
       )}
 
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
-      <group scale={S}>
-        <Emmy
-          script={() => {
-            const at = emmyAt.current
-            return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-          }}
-        />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
       <WordTape stateRef={stateRef} tape={tape} />
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}

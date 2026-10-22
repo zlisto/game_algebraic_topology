@@ -1159,7 +1159,7 @@ export function sfxFill() {
   ;[72, 76, 79, 84].forEach((m, i) => blipAt(t + i * 0.09, hz(m), { dur: 0.3, type: 'sine', vol: 0.06, out: echo }))
 }
 
-/** The Cell-Smith's hammer striking: a hard metal clang with a ringing tail. */
+/** The Cell Hammer's hammer striking: a hard metal clang with a ringing tail. */
 export function sfxHammer() {
   if (!audio() || ctx.state !== 'running') return
   const t = ctx.currentTime

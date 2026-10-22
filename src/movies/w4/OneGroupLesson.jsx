@@ -35,7 +35,7 @@ export function OneGroupLessonOverlay({ t }) {
         [12.4, 24, 'K(G, 1)s', ['$S¹ = K(ℤ, 1)$, $T² = K(ℤ², 1)$', '$ℝP∞ = K(ℤ₂, 1)$: contractible covers']],
         [24.4, 36, 'Not K(G, 1)s', ['$S²$: $π₂ = ℤ$', '$ℝP²$: $π₂ = π₂(S²) = ℤ$']],
         [36.4, 58, 'Kill above', ['attach $(k+1)$-cells to kill $πₖ$', 'bottom up: $S² ⇝ K(ℤ, 2) = ℂP∞$']],
-        [58.4, 64, 'At One Group', ['Cell-Smith (2)', 'mark spaces, attach cells']],
+        [58.4, 64, 'At One Group', ['Cell Hammer (2)', 'mark spaces, attach cells']],
       ]}
       summary={{ t: 64, title: 'Eilenberg–MacLane', items: ['One group, one dimension', 'Contractible covers give K(G,1)s', 'Kill higher groups with cells'], cite: 'Hatcher §4.2, pp. 365–366' }}
     />

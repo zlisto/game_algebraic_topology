@@ -37,7 +37,7 @@ export default function Level2_1(props) {
     if (Math.hypot(x, z) > 5.6) return
     if (tool !== 'smith') {
       sfxRefuse()
-      return flash('Switch to the Cell-Smith (2) to work the tiles.')
+      return flash('Switch to the Cell Hammer (2) to work the tiles.')
     }
     const arrows = bag.arrows?.[current] || START_ARROWS[current]
     const onPress = Math.hypot(x - PRESS[0], z - PRESS[1]) < 1.1

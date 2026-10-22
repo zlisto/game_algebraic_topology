@@ -1,7 +1,7 @@
 /**
  * World 0 · Level 6 "Timber!" — the Timber Yard. Each deck carries tangles (graphs):
  * mark a tree of walkways with the Spool (it may not close a loop), then fell it at the
- * platform you click with the Cell-Smith: the tree shrinks to that one platform and every other
+ * platform you click with the Cell Hammer: the tree shrinks to that one platform and every other
  * walkway becomes a petal of a bouquet. Hatcher, Algebraic Topology, Chapter 0,
  * Example 0.7 (graphs, p. 11) and Proposition 0.17 (collapsing a contractible subcomplex).
  */
@@ -14,7 +14,7 @@ export const STATION_ORDER = ['one_edge', 'spanning_tree', 'wrong_cut', 'census'
 
 export const OPENING = [
   E('The Timber Yard. The walkways grew wild out here — platforms joined every which way.'),
-  E('You’ll need the Spool (2) to mark walkways and the Cell-Smith (3) to fell them. The first deck is just ahead.'),
+  E('You’ll need the Spool (2) to mark walkways and the Cell Hammer (3) to fell them. The first deck is just ahead.'),
 ]
 
 /**
@@ -22,14 +22,14 @@ export const OPENING = [
  *   fell graphs   — mark a spanning tree on each listed tangle and fell it (any order)
  *   guard         — keep every petal whole until the deck's wave of Loop-biters is gone
  *   ask           — answer a question (options, answer, right, wrong)
- *   bridge        — click the bridge foot with the Cell-Smith: the way out
+ *   bridge        — click the bridge foot with the Cell Hammer: the way out
  */
 export const STATIONS = {
   one_edge: {
     blueprint: 'Shrink a walkway',
     arrive: [
       E('The Sapling Deck. Two platforms, one walkway between them.'),
-      E('Hold the Spool (2) and click the walkway to mark it amber. Then take the Cell-Smith (3) and click either platform to fell the walkway onto it.'),
+      E('Hold the Spool (2) and click the walkway to mark it amber. Then take the Cell Hammer (3) and click either platform to fell the walkway onto it.'),
     ],
     goals: [
       {
@@ -57,7 +57,7 @@ export const STATIONS = {
     blueprint: 'Fell a tree',
     arrive: [
       E('The Thicket. Five platforms, seven walkways — two of them run side by side.'),
-      E('Mark a tree that reaches all five platforms, without closing any loop. Then click any one of its platforms with the Cell-Smith to fell it there.'),
+      E('Mark a tree that reaches all five platforms, without closing any loop. Then click any one of its platforms with the Cell Hammer to fell it there.'),
     ],
     goals: [
       {
@@ -85,7 +85,7 @@ export const STATIONS = {
         type: 'fell',
         graphs: [0],
         wave: true,
-        done: [E('Three petals. Now — Loop-biters! They chew a petal down to nothing. Lash them before they finish, and if one does, restring the petal with the Cell-Smith.')],
+        done: [E('Three petals. Now — Loop-biters! They chew a petal down to nothing. Lash them before they finish, and if one does, restring the petal with the Cell Hammer.')],
       },
       {
         type: 'guard',
@@ -154,7 +154,11 @@ export const DEFINITION06 = {
 export function emmyAdvice06(s) {
   if (s.exitOpen) return [E('The bridge is built. Walk north across it — the Hollow Throne is waiting.')]
   if (!s.station) return [E('We’re done here.')]
-  if (s.here !== s.station) return [E(`Next is ${s.name} — I’ll wait for you there.`)]
+  if (s.here !== s.station)
+    return [
+      E(`Next is ${s.name} — the ring marked NEXT on your map. Follow the walkways; I’m right behind you.`),
+      E('Null has packed the commons between the decks with his worst — Klein bottles, projective planes, Möbius bands. Lash them (1, then click) or run for the next deck.'),
+    ]
   const g = s.goal
   const lines = []
   if (!g) return [E('This deck is finished.')]
@@ -165,17 +169,17 @@ export function emmyAdvice06(s) {
       const cap = (x) => (who ? x : x[0].toUpperCase() + x.slice(1))
       if (!t.spanning)
         lines.push(E(`${who}${cap('hold')} the Spool (2) and click walkways to mark them amber. Keep going until the tree reaches every platform — it reaches ${t.reached} of ${t.total} now. If a walkway won’t mark, it would close a loop: skip it.`))
-      else lines.push(E(`${who}${cap('your')} tree reaches every platform. Take the Cell-Smith (3) and click any platform — the whole tree falls onto it.`))
+      else lines.push(E(`${who}${cap('your')} tree reaches every platform. Take the Cell Hammer (3) and click any platform — the whole tree falls onto it.`))
     }
     if (s.station === 'wrong_cut') lines.push(E('The walkway that starts and ends at the same platform can never be marked — it’s already a loop.'))
   } else if (g.type === 'guard') {
     if (s.enemies) lines.push(E('Lash the Loop-biters — press 1 and click toward them — before they chew a petal down.'))
-    if (s.tangles.some((t) => t.bitten)) lines.push(E('A petal got chewed (the violet dashed one). Take the Cell-Smith (3) and click it to restring it.'))
+    if (s.tangles.some((t) => t.bitten)) lines.push(E('A petal got chewed (the violet dashed one). Take the Cell Hammer (3) and click it to restring it.'))
     if (!lines.length) lines.push(E('Keep the petals safe until the Loop-biters are gone.'))
   } else if (g.type === 'ask') {
     lines.push(E('Answer the question on screen: count platforms minus walkways for each tangle — the numbers are on your panel.'))
   } else if (g.type === 'bridge') {
-    lines.push(E('Take the Cell-Smith (3) to the north edge of this deck, by the bridge posts, and click the foot of the bridge.'))
+    lines.push(E('Take the Cell Hammer (3) to the north edge of this deck, by the bridge posts, and click the foot of the bridge.'))
   }
   return lines
 }

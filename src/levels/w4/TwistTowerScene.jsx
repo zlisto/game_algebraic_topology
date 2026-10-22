@@ -3,13 +3,13 @@ import YardFrame from '../w2/YardFrame'
 
 /**
  * Twist Tower (4-11): Postnikov towers, Hatcher §4.3 pp. 410–412, for X = S² (π₁ = 0, π₂ = ℤ, π₃ = ℤ, π₄ = ℤ₂).
- *   stack   — Xₙ keeps πᵢ for i ≤ n and kills the rest (Cell-Smith)
+ *   stack   — Xₙ keeps πᵢ for i ≤ n and kills the rest (Cell Hammer)
  *   twist   — each Xₙ → Xₙ₋₁ is a fibration with fibre K(πₙX, n) (Cup Caster)
  *   untwist — all kₙ = 0 means X is the product of its K(πₙX, n)'s. S² and S³ × ℂP∞ have the same
  *             groups (p. 348, Example 4.51); the product has k₂ = 0, so S² can't: H₃(S²) = 0, but
  *             H₃(K(ℤ, 2) × K(ℤ, 3)) = ℤ. (That last deduction is ours, from Hurewicz-type reasoning,
  *             not a line in the book.)
- *   rebuild — Xₙ₊₁ is the homotopy fibre of kₙ: Xₙ → K(πₙ₊₁X, n + 2), so build bottom-up (Cell-Smith)
+ *   rebuild — Xₙ₊₁ is the homotopy fibre of kₙ: Xₙ → K(πₙ₊₁X, n + 2), so build bottom-up (Cell Hammer)
  */
 
 export const PI = ['0', 'ℤ', 'ℤ', 'ℤ₂'] // π₁..π₄ of S²

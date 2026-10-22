@@ -172,7 +172,7 @@ function Steps({ t }) {
   ]
   return (
     <div className="lesson-steps">
-      <h4>✦ The Cell-Smith</h4>
+      <h4>✦ The Cell Hammer</h4>
       {steps.map(([k, label, on], i) => (
         <div key={i} className={`lesson-step ${on ? 'on' : ''}`}>
           <kbd>{k}</kbd>

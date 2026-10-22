@@ -4,7 +4,7 @@
  * triangles, glued edge to edge with the arrows matching; every triangle's arrows must come from
  * an ordering of its vertices.
  *
- * Every station is the same square of two triangles (TileYardScene). The Cell-Smith turns an
+ * Every station is the same square of two triangles (TileYardScene). The Cell Hammer turns an
  * arrow round; the press folds the square, gluing a to a and b to b, first vertex to first vertex.
  */
 import { squareSurface } from './delta'
@@ -20,7 +20,7 @@ export const OPENING = [
   E('The Tile Yard. Out here every space is built from triangles — simplices — glued along their edges.'),
   G('Glued how? Can I just stick any edge to any edge?'),
   E('Only edge to edge with the arrows matching: an edge’s first vertex goes onto the other edge’s first vertex. Hatcher calls the result a Δ-complex.'),
-  E('Click an arrow with the Cell-Smith (2) to turn it round. Click the gold press to fold the tiles up. The first yard is to the west.'),
+  E('Click an arrow with the Cell Hammer (2) to turn it round. Click the gold press to fold the tiles up. The first yard is to the west.'),
 ]
 
 export const STATIONS = {
@@ -128,7 +128,7 @@ export function emmyAdvice(state) {
     return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Every yard is done. Walk through the gate to the south.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'two_tri') return [E('The two violet arrows sit on the same edge $c$. Click one with the Cell-Smith so they agree, then click the press.')]
+  if (current === 'two_tri') return [E('The two violet arrows sit on the same edge $c$. Click one with the Cell Hammer so they agree, then click the press.')]
   if (current === 'torus_glue') return [E('For a torus, the two orange $a$ arrows must point the same way, and so must the two blue $b$ arrows.')]
   if (current === 'flip_arrow') return [E('One pair the same way, the other pair opposite. Turn one outside arrow round, nothing else.')]
   if (check?.lowerCyclic || check?.upperCyclic)

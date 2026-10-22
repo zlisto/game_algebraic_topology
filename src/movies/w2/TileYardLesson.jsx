@@ -77,7 +77,7 @@ export function TileYardLessonOverlay({ t }) {
       {t >= 31 && t < 38 && card('Torus', ['$a$ to $a$, $b$ to $b$, both the same way', '1 vertex · 3 edges · 2 triangles'])}
       {t >= 38.4 && t < 48 && card('Klein bottle', ['one pair twisted', '1 vertex · 3 edges · 2 triangles'])}
       {t >= 48.4 && t < 58 && card('ℝP²', ['both pairs twisted', 'no triangle may run in a circle', '2 vertices · 3 edges · 2 triangles'])}
-      {t >= 58.4 && t < 64 && card('In the yard', ['Cell-Smith (2): turn an arrow', 'gold press: fold the square'])}
+      {t >= 58.4 && t < 64 && card('In the yard', ['Cell Hammer (2): turn an arrow', 'gold press: fold the square'])}
       {t >= 64 && (
         <div className="lesson-card lesson-steps">
           <h3 className="lesson-title">Δ-complexes</h3>

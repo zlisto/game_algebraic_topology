@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BasinScene from '../../levels/w1/BasinScene'
 import LevelMovie from '../LevelMovie'
 import LevelMap from '../LevelMap'
-import { useExitTrigger } from '../exitTrigger'
 import {
   DEFINITION,
   HINTS,
@@ -31,10 +30,20 @@ import {
 } from '../../audio/chip'
 import NoWayOutLesson, { NoWayOutLessonOverlay } from '../../movies/w1/NoWayOutLesson'
 import MathText from '../MathText'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from '../LevelChrome'
+import { landNear, useWarpLevel } from '../warpLevel'
 
 const TYPE_CPS = 45
 const SITES = buildSites(layout)
 const SITE = Object.fromEntries(SITES.map((s) => [s.id, s]))
+/** a station's mouth: where the causeway Gyroid came in by meets the deck (a knockout brings him back here, not to the gate) */
+const mouthOf = (site, x, z) => {
+  const ends = layout.causeways.flatMap((c) => [c.a, c.b]).filter((p) => site.containsWorld(p[0], p[1]))
+  if (!ends.length) return [site.pos[0], site.pos[1] + 2.2]
+  const p = ends.reduce((best, q) => (Math.hypot(q[0] - x, q[1] - z) < Math.hypot(best[0] - x, best[1] - z) ? q : best))
+  const d = Math.hypot(site.pos[0] - p[0], site.pos[1] - p[1]) || 1
+  return [p[0] + ((site.pos[0] - p[0]) / d) * 0.8, p[1] + ((site.pos[1] - p[1]) / d) * 0.8]
+}
 const PORTRAIT_CROP = {
   gyroid: ['400%', '63%', '9%'],
   'count-null': ['600%', '50%', '26%'],
@@ -44,6 +53,26 @@ const TOOL_KEYS = { Digit1: 'lash', Digit3: 'glass', Digit4: 'cord' }
 const RIM_BAND = 0.75
 const fmt = (v) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1)
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
+/** where each station's reward waits once it's done: on its outer ring, as far as it can get from the causeway mouths and Emmy's spot */
+const MOUTHS = [...layout.causeways.flatMap((c) => [c.a, c.b]), layout.exit.a]
+const REWARD_AT = Object.fromEntries(
+  SITES.filter((s) => s.stage === 'station').map((s) => {
+    const avoid = [...MOUTHS, s.emmy && [s.pos[0] + s.emmy[0], s.pos[1] + s.emmy[1]]].filter((p) => p && Math.hypot(p[0] - s.pos[0], p[1] - s.pos[1]) < 9)
+    let best = null
+    for (let k = 0; k < 24; k++) {
+      const a = (k / 24) * Math.PI * 2
+      const p = [s.pos[0] + Math.cos(a) * 4.6, s.pos[1] + Math.sin(a) * 4.6]
+      const score = Math.min(99, ...avoid.map((q) => Math.hypot(p[0] - q[0], p[1] - q[1])))
+      if (!best || score > best.score) best = { p, score }
+    }
+    return [s.id, landNear(s, best.p)]
+  }),
+)
+const NOUN = { icon: '◉', one: 'Still Point', many: 'Still Points', kind: 'stillpoint' }
+const END_CARD = {
+  learned: 'Every proof in the basin was the same move: walk a rim once and count how many times the arrow turns. Shrink that loop through the disk and the count can’t jump from 1 to 0, so the Retractor had to tear: there’s no retraction of D² onto S¹. That one count gave us Brouwer’s still tile, the three roots of z³ − a³, and two opposite weather stations reading exactly the same.',
+  ahead: 'Next, the Torus Terraces. A map between spaces carries loops along with it, so it carries π₁ along too: the induced map f*. We’ll push loops through projectors and watch what survives on the other side.',
+}
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id] || PORTRAIT_CROP.gyroid
@@ -57,7 +86,7 @@ function Portrait({ id, name }) {
   )
 }
 
-export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
+export default function Level1_4({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[1]?.levels?.find((l) => l.id === '1-4')
   const skipTo = Math.max(0, STATION_ORDER.indexOf(startAt))
 
@@ -99,13 +128,15 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
   const [waveSeen, setWaveSeen] = useState(0)
 
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking up the level from the landing
+  const camYawRef = useRef(Math.atan2(layout.start[0] - layout.exit.a[0], layout.start[1] - layout.exit.a[1]))
+  const talkingRef = useRef(false)
+  const camLockRef = useRef(false)
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
-  const emmyTalking = useRef(false)
-  const [nearEmmy, setNearEmmy] = useState(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
   const rimTrackers = useRef(
     Object.fromEntries(
       STATION_ORDER.filter((id) => SITE[id]?.rimRadius).map((id) => {
@@ -201,32 +232,10 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
-      const em = emmyAt.current
-      setNearEmmy(Math.hypot(s.x - em.x, s.z - em.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
   }, [])
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      const target = current
-        ? [SITE[current].pos[0] + SITE[current].emmy[0], SITE[current].pos[1] + SITE[current].emmy[1]]
-        : layout.start
-      const e = emmyAt.current
-      const dx = target[0] - e.x
-      const dz = target[1] - e.z
-      const d = Math.hypot(dx, dz)
-      if (d > 0.05) {
-        const step = Math.min(d, 2.6 * 0.05)
-        e.x += (dx / d) * step
-        e.z += (dz / d) * step
-        e.rotY = Math.atan2(dx, dz)
-        e.walk = 1
-      } else e.walk = 0
-    }, 50)
-    return () => clearInterval(id)
-  }, [current])
 
   useEffect(() => {
     const st = here.site
@@ -240,6 +249,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     }
     if (met[st]) return
     setMet((m) => ({ ...m, [st]: true }))
+    setCheckpoint(mouthOf(SITE[st], here.pos[0], here.pos[1]))
     say(STATIONS[st].arrive)
   }, [here.site, phase, current, met, done, say])
 
@@ -437,23 +447,6 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
         if (e.code === 'KeyX') setShrinkT((t) => Math.min(1, +(t + 0.1).toFixed(2)))
         if (e.code === 'KeyZ') setShrinkT((t) => Math.max(0, +(t - 0.1).toFixed(2)))
       }
-      if (e.code === 'KeyE' && nearEmmy && phase === 'play') {
-        emmyTalking.current = true
-        say(emmyAdvice14({
-          current,
-          goal,
-          stationId: here.site,
-          siteName: (id) => SITE[id]?.name || id,
-          enemies: here.site ? enemies[here.site] : 0,
-          progress: {
-            rim: basinState.rimWinding[current],
-            roots: (basinState.foundRoots[current] || []).length,
-          },
-        }))
-        setTimeout(() => {
-          emmyTalking.current = false
-        }, 400)
-      }
       if ((e.code === 'Space' || e.code === 'Enter') && talking) {
         e.preventDefault()
         advanceRef.current?.()
@@ -461,9 +454,46 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [basinState, current, enemies, goal, here.site, nearEmmy, phase, say, talking, tool])
+  }, [current, goal, here.site, phase, talking, tool])
 
-  const playEnabled = phase === 'play' && !lesson && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = talking
+  // ---------- talking to Emmy: she follows Gyroid; press E for advice (out of reach, she hurries over)
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: phase === 'play' && !paused && !levelClear && !lesson,
+    advice: () =>
+      emmyAdvice14({
+        current,
+        goal,
+        stationId: here.site,
+        siteName: (id) => SITE[id]?.name || id,
+        enemies: here.site ? enemies[here.site] : 0,
+        exitOpen,
+        progress: {
+          rim: basinState.rimWinding[current],
+          roots: (basinState.foundRoots[current] || []).length,
+        },
+      }),
+    say,
+  })
+  const warp = useWarpLevel({
+    ids: STATION_ORDER,
+    done,
+    posOf: (id) => REWARD_AT[id],
+    stateRef,
+    exitOpen,
+    portalAt: layout.exit.b,
+    hearts,
+    flash,
+    stopMusic,
+    onClear: () => setLevelClear(true),
+    noun: NOUN,
+  })
+  const playEnabled = phase === 'play' && !lesson && !levelClear && !paused && !warp.warping
+  // Z / X work the Tide Glass while it shrinks the Retractor's loop, so the camera's Z-turn (and wheel) step aside
+  camLockRef.current = tool === 'glass' && goal?.type === 'shrink' && here.site === current
   const gameKey = `basin:${knockouts}`
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, exitOpen ? [[layout.exit.a, layout.exit.b]] : []), [exitOpen])
   const game = useMemo(() => {
@@ -478,16 +508,26 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkpoint, done, gameKey])
 
-  const FRAME = { retractor: 12, still_point: 11.6, roots: 11.6, antipodes: 11.4 }
+  // overhead only while the puzzle needs the whole deck in view: the shrinking loop, and the arrow
+  // fields (finding the still tile and the roots). Walking a rim (the arrow rides over Gyroid's head),
+  // the globe at the Antipodes and the drone waves all play in the chase camera, up close.
+  const FRAME = { retractor: 12, still_point: 11.6, roots: 11.6 }
+  const overhead = ['shrink', 'still', 'roots'].includes(goal?.type)
   frameRef.current =
-    current && here.site === current && met[current]
+    overhead && current && here.site === current && met[current] && FRAME[current]
       ? { center: [SITE[current].pos[0] + 1.2, SITE[current].pos[1] - 0.2], size: FRAME[current], follow: 0.1 }
       : null
 
-  useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
-
   if (import.meta.env.DEV) {
     window.__lvl1_4 = {
+      warp,
+      clear: () => setLevelClear(true),
+      proveAll: () => {
+        setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true])))
+        setExitOpen(true)
+        for (const id of STATION_ORDER) window.__game?.killSite?.(id)
+      },
+      rewardAt: REWARD_AT,
       done,
       goalIdx,
       current,
@@ -508,11 +548,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
   }
 
   const nDone = STATION_ORDER.filter((id) => done[id]).length
-  const objective = exitOpen
-    ? 'Walk through the north gate'
-    : current
-      ? `Decks ${nDone}/4 · next: ${SITE[current].name}`
-      : ''
+  const objective = warp.objective(current ? `Decks ${nDone}/4 · next: ${SITE[current].name}` : '')
   const atStation = current && here.site === current && met[current]
   const stepText = (() => {
     if (!goal) return ''
@@ -534,14 +570,17 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           sites={SITES}
           current={current}
           basinState={basinState}
-          emmyAt={emmyAt}
-          emmyTalking={emmyTalking}
-          emmyNear={nearEmmy && phase === 'play'}
+          emmyRef={emmyRef}
           exitOpen={exitOpen}
           walkable={walkable}
           game={game}
           gameKey={gameKey}
           stateRef={stateRef}
+          camYawRef={camYawRef}
+          talkingRef={talkingRef}
+          lockRef={camLockRef}
+          stars={warp.stars}
+          portal={warp.portal}
           frameRef={frameRef}
           spawnRef={spawnRef}
           playEnabled={playEnabled}
@@ -638,13 +677,9 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
 
-        {nearEmmy && phase === 'play' && !levelClear && (
-          <button type="button" className="btn talk-btn" onClick={() => say(emmyAdvice14({ current, goal, stationId: here.site, siteName: (id) => SITE[id]?.name, enemies: enemies[here.site] || 0, progress: { rim: basinState.rimWinding[current], roots: (basinState.foundRoots[current] || []).length } }))}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
+        <TalkPrompt near={nearEmmy} show={phase === 'play' && !line && !levelClear && !paused && !lesson} />
 
-        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Brouwer's Basin" />}
+        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Brouwer's Basin" face={warp.face} marks={warp.marks} markIcon={NOUN.icon} portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
         {!talking && !levelClear && (
           <div className="controls">
@@ -661,7 +696,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
             </div>
           </div>
         )}
-        {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD to move · 1 Lash · 4 Winding Cord · E talk to Emmy'}</div>}
+        {playEnabled && !toast && <div className="hint">{atStation ? <MathText text={stepText} /> : 'WASD to move · click or F to crack the Lash (1) · 4 Winding Cord · lost? Emmy has advice (E)'}</div>}
       </div>
 
       {lesson && (
@@ -673,37 +708,32 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
           name="No Way Out"
           embedded
           startMusic={startBasinMusic}
-          onDone={() => (setLesson(false), startBasinMusic())}
-          onSkip={() => (setLesson(false), startBasinMusic())}
+          onDone={() => (setLesson(false), warp.portalOpen ? null : startBasinMusic())}
+          onSkip={() => (setLesson(false), warp.portalOpen ? null : startBasinMusic())}
         />
       )}
 
+      {warp.warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'No Way Out'}
+          progress={`${NOUN.icon} ${warp.count} of ${warp.total} ${NOUN.many}`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level1-4', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 1 · Level 4 clear</span>
-            <h2>{levelMeta?.title || 'No Way Out'}</h2>
-            <p className="def">{DEFINITION.text}</p>
-            <p className="cite">
-              {DEFINITION.cite}{' '}
-              <a href={DEFINITION.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Next: Torus Terraces — Push It Forward.</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                Continue ▸ Push It Forward
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 1 · Level 4 clear"
+          title={levelMeta?.title || 'No Way Out'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION}
+          onStay={() => (setLevelClear(false), warp.stay(layout.exit.a))}
+          onNext={onNext}
+          nextLabel="Continue ▸ Push It Forward"
+        />
       )}
     </div>
   )

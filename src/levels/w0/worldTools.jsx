@@ -10,7 +10,7 @@ export const WORLD_TOOLS = {
   lash: { key: '1', label: 'Lash', hook: 'lash' },
   spool: { key: '2', label: 'Spool', hook: 'stroke' },
   glass: { key: '3', label: 'Tide Glass', hook: 'glass' },
-  smith: { key: '2', label: 'Cell-Smith', hook: 'action', swing: true },
+  smith: { key: '2', label: 'Cell Hammer', hook: 'action', swing: true },
   sling: { key: '4', label: 'Suspension Sling', hook: 'action', item: 'suspension_sling' },
   cord: { key: '4', label: 'Winding Cord', hook: 'track', item: 'winding_cord' },
   clasp: { key: '5', label: 'Van Kampen Clasp', hook: 'action', item: 'van_kampen_clasp' },

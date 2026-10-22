@@ -29,7 +29,7 @@ import {
 } from '../audio/chip'
 import CellsLesson, { CellsLessonOverlay } from '../movies/CellsLesson'
 import MathText from './MathText'
-import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from './LevelChrome'
 import { landNear, useWarpLevel } from './warpLevel'
 
 /**
@@ -41,7 +41,7 @@ import { landNear, useWarpLevel } from './warpLevel'
  *   One Loop          — a disk on a (just a disk) vs. on a a: the projective plane
  *   Blueprint Wall    — a b a⁻¹ b: the Klein bottle, under an Unglue wave; then χ unlocks
  *                       the door to the Cone Zone
- * The Cell-Smith (2): click the furnace hub to forge the point or to press a disk; walk a
+ * The Cell Hammer (2): click the furnace hub to forge the point or to press a disk; walk a
  * track out and back to forge an edge, or to add a letter to the disk's word.
  */
 
@@ -179,9 +179,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const ribbonApi = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
-  const emmyTalking = useRef(false)
-  const [nearEmmy, setNearEmmy] = useState(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -249,40 +247,16 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     [goalIdx, say],
   )
 
-  // ---------- where is Gyroid; Emmy walks to the current station
+  // ---------- where is Gyroid
   useEffect(() => {
     const id = setInterval(() => {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
-      const e = emmyAt.current
-      setNearEmmy(Math.hypot(s.x - e.x, s.z - e.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
   }, [])
-  useEffect(() => {
-    const id = setInterval(() => {
-      const target = current ? SITE[current].emmy.map((v, i) => v + SITE[current].pos[i]) : layout.exit.a
-      const e = emmyAt.current
-      const dx = target[0] - e.x
-      const dz = target[1] - e.z
-      const d = Math.hypot(dx, dz)
-      if (d > 0.05) {
-        const step = Math.min(d, 2.6 * 0.05)
-        e.x += (dx / d) * step
-        e.z += (dz / d) * step
-        e.rotY = Math.atan2(dx, dz)
-        e.walk = 1
-      } else {
-        e.walk = 0
-        const hub = current ? SITE[current].pos : layout.exit.gate
-        e.rotY = Math.atan2(hub[0] - e.x, hub[1] - e.z)
-      }
-    }, 50)
-    return () => clearInterval(id)
-  }, [current])
-
   // arriving at a station
   useEffect(() => {
     const st = here.site
@@ -312,7 +286,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     say([HINTS04.knockout])
   }, [hearts, say])
 
-  // ---------- walking the tracks (Cell-Smith in hand): forge edges, or spell the disk's word
+  // ---------- walking the tracks (Cell Hammer in hand): forge edges, or spell the disk's word
   const working = !!current && here.site === current && met[current] && phase === 'play' && !chiOpen
   const stateForTick = useRef({})
   stateForTick.current = { working, tool, current, goal, cx, enemies }
@@ -366,7 +340,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     return () => clearInterval(id)
   }, [advanceGoal])
 
-  // ---------- clicking with the Cell-Smith: the furnace forges the point, or presses a disk
+  // ---------- clicking with the Cell Hammer: the furnace forges the point, or presses a disk
   const pressed = useRef(null) // a tentative disk shown in the hologram: { station, keep }
   const foldHologram = (station, kind, w) => {
     setHolograms((h) => ({ ...h, [station]: { kind, word: w } }))
@@ -508,25 +482,6 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     return () => window.removeEventListener('keydown', key)
   }, [])
 
-  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
-  const canTalk = nearEmmy && phase === 'play' && !chiOpen && !levelClear && !lesson
-  const talkToEmmy = () => {
-    if (!canTalk) return
-    const s = stateRef.current
-    const e = emmyAt.current
-    if (s) e.rotY = Math.atan2(s.x - e.x, s.z - e.z) // she turns to face him
-    say(emmyAdvice({ station: current, goal, cx, word, enemies: current ? enemies[current] : 0, here: here.site, exitOpen }))
-  }
-  const talkRef = useRef(null)
-  talkRef.current = talkToEmmy
-  useEffect(() => {
-    const k = (e) => {
-      if (e.code === 'KeyE') talkRef.current?.()
-    }
-    window.addEventListener('keydown', k)
-    return () => window.removeEventListener('keydown', k)
-  }, [])
-
   // ---------- dialogue (FF7 style)
   const advance = () => {
     const full = lines[lineIdx]?.text.length ?? 0
@@ -549,7 +504,6 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   }
   const talking = phase.startsWith('talk:')
   const line = talking ? lines[lineIdx] : null
-  emmyTalking.current = !!line && line.speaker === 'Emmy Boundary'
   useEffect(() => {
     if (talking) dialogOpen()
     duckMusic(talking)
@@ -590,6 +544,14 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   // ---------- game layer
   const [paused, setPaused] = usePause(levelClear || lesson)
   talkingRef.current = talking
+  // ---------- talking to Emmy: walk up to her (she follows Gyroid) and press E for advice
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: phase === 'play' && !paused && !levelClear && !lesson && !chiOpen,
+    advice: () => emmyAdvice({ station: current, goal, cx, word, enemies: current ? enemies[current] : 0, here: here.site, exitOpen }),
+    say,
+  })
   const warp = useWarpLevel({
     ids: STATION_ORDER,
     done,
@@ -616,7 +578,9 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey])
-  frameRef.current = current && here.site === current && met[current] ? { center: SITE[current].pos, size: 12.5 } : null
+  // no overhead here: the chase camera stays down behind Gyroid while he forges, so the shapes he
+  // builds (the hologram floats just in front of him) are seen up close
+  frameRef.current = null
 
   if (import.meta.env.DEV) window.__lvl4 = { warp, clear: () => setLevelClear(true), proveAll: () => (setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true]))), setExitOpen(true)), rewardAt: REWARD_AT, here, done, goalIdx, complexes, word, phase, enemies, setTool, current, goal, trackers: trackers.current, progressRef, working, TRACKS } // dev
 
@@ -631,9 +595,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       progressRef={progressRef}
       tracksBySite={TRACKS}
       current={current}
-      emmyAt={emmyAt}
-      emmyTalking={emmyTalking}
-      emmyNear={nearEmmy && phase === 'play'}
+      emmyRef={emmyRef}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -663,7 +625,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const F = cx.disks.length
   const stepText = (() => {
     if (!goal) return ''
-    if (goal.type === 'point') return 'Stand on the furnace · click (Cell-Smith) to forge the point'
+    if (goal.type === 'point') return 'Stand on the furnace · click (Cell Hammer) to forge the point'
     if (goal.type === 'edges') return `Walk a track out and back · edges ${Ecount}/${goal.n}`
     if (goal.type === 'disk') return goal.word === '' ? 'Click the furnace: press a disk with its rim crushed to the point' : 'Walk the word along the edges, then click the furnace'
     if (goal.type === 'chi') return 'Answer the door'
@@ -813,11 +775,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {!levelClear && !line && !chiOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" face={warp.face} marks={warp.marks} markIcon="▣" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
-        {canTalk && (
-          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
+        <TalkPrompt near={nearEmmy} show={phase === 'play' && !line && !chiOpen && !levelClear && !paused && !lesson} />
 
         {!talking && !levelClear && !chiOpen && (
           <div className="controls">
@@ -825,15 +783,15 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
               <button type="button" className={`weapon ${tool === 'lash' ? 'active' : ''}`} onClick={(e) => (setTool('lash'), e.currentTarget.blur())}>
                 ⚡ Lash <kbd>1</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell-Smith: click the furnace to forge or press; walk tracks to forge edges and spell words">
-                ✦ Cell-Smith <kbd>2</kbd>
+              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell Hammer: click the furnace to forge or press; walk tracks to forge edges and spell words">
+                ✦ Cell Hammer <kbd>2</kbd>
               </button>
             </div>
           </div>
         )}
         {playEnabled && phase === 'play' && !toast && (
           <div className="hint">
-            {atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith · lost? walk up to Emmy and press E'}
+            {atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell Hammer') : 'WASD to move · click or F to crack the Lash · 2 for the Cell Hammer · lost? Emmy has advice (E)'}
           </div>
         )}
       </div>

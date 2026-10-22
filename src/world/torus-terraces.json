@@ -1,15 +1,15 @@
 {
   "note": "World 1 · Level 5 — Torus Terraces (level-local units: x east, z south). Four terrace stations along a causeway; the torus deck has tube and hole belt roads. Gyroid arrives from the south; exit north toward Free-Word Forge.",
   "bounds": {
-    "minX": -22,
-    "maxX": 22,
-    "minZ": -28,
-    "maxZ": 18
+    "minX": -34.4,
+    "maxX": 34.4,
+    "minZ": -42.5,
+    "maxZ": 44
   },
-  "causewayWidth": 1.5,
+  "causewayWidth": 2.4,
   "start": [
     0,
-    14
+    36
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        14
+        36
       ],
       "shape": {
         "add": [
@@ -37,7 +37,7 @@
       "stage": "station",
       "pos": [
         0,
-        4
+        6.8
       ],
       "shape": {
         "add": [
@@ -98,8 +98,8 @@
       "name": "Retract Check",
       "stage": "station",
       "pos": [
-        -12,
-        -4
+        -20.4,
+        -6.8
       ],
       "shape": {
         "add": [
@@ -144,8 +144,8 @@
       "name": "Two Roads",
       "stage": "station",
       "pos": [
-        12,
-        -4
+        20.4,
+        -6.8
       ],
       "shape": {
         "add": [
@@ -169,8 +169,8 @@
         ]
       ],
       "gridOrigin": [
-        19.4,
-        -4.2
+        27.8,
+        -7.0
       ],
       "plaza": {
         "half": 3.3,
@@ -183,7 +183,7 @@
       "stage": "station",
       "pos": [
         0,
-        -14
+        -23.8
       ],
       "shape": {
         "add": [
@@ -239,82 +239,328 @@
           3
         ]
       }
+    },
+    {
+      "id": "landing_commons",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        24.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.5
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          1.71
+        ],
+        [
+          "torus",
+          -1.71,
+          2.5
+        ],
+        [
+          "sphere",
+          -2.5,
+          -1.71
+        ],
+        [
+          "mobius",
+          1.71,
+          -2.5
+        ]
+      ]
+    },
+    {
+      "id": "commons_1",
+      "name": "West Commons",
+      "kind": "commons",
+      "pos": [
+        -10.2,
+        0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "torus",
+          2.0,
+          1.37
+        ],
+        [
+          "mobius",
+          -1.37,
+          2.0
+        ],
+        [
+          "sphere",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "East Commons",
+      "kind": "commons",
+      "pos": [
+        10.2,
+        0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.0,
+          1.37
+        ],
+        [
+          "sphere",
+          -1.37,
+          2.0
+        ],
+        [
+          "torus",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Southwest Commons",
+      "kind": "commons",
+      "pos": [
+        -10.2,
+        -15.3
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -1.37,
+          2.0
+        ],
+        [
+          "projective",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Southeast Commons",
+      "kind": "commons",
+      "pos": [
+        10.2,
+        -15.3
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.0,
+          1.37
+        ],
+        [
+          "mobius",
+          -1.37,
+          2.0
+        ],
+        [
+          "torus",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        12.4
+        0.0,
+        34.9
       ],
       "b": [
-        0,
-        9.4
+        0.0,
+        29.3
       ]
     },
     {
       "a": [
-        -3.4,
-        2.8
+        0.0,
+        19.7
       ],
       "b": [
-        -7.6,
-        -0.53
+        0.0,
+        11.5
       ]
     },
     {
       "a": [
-        3.4,
-        2.8
+        -3.911,
+        4.193
       ],
       "b": [
-        7.6,
-        -0.53
+        -7.121,
+        2.052
       ]
     },
     {
       "a": [
-        -7.7,
-        -7.58
+        -13.279,
+        -2.052
       ],
       "b": [
-        -3.2,
-        -10.8
+        -16.489,
+        -4.193
       ]
     },
     {
       "a": [
-        7.7,
-        -7.58
+        3.911,
+        4.193
       ],
       "b": [
-        3.2,
-        -10.8
+        7.121,
+        2.052
       ]
     },
     {
       "a": [
-        0,
-        -8.6
+        13.279,
+        -2.052
       ],
       "b": [
-        0,
-        -11.6
+        16.323,
+        -4.082
+      ]
+    },
+    {
+      "a": [
+        -16.789,
+        -9.809
+      ],
+      "b": [
+        -13.042,
+        -12.931
+      ]
+    },
+    {
+      "a": [
+        -7.358,
+        -17.669
+      ],
+      "b": [
+        -3.611,
+        -20.791
+      ]
+    },
+    {
+      "a": [
+        16.636,
+        -9.937
+      ],
+      "b": [
+        13.042,
+        -12.931
+      ]
+    },
+    {
+      "a": [
+        7.358,
+        -17.669
+      ],
+      "b": [
+        3.611,
+        -20.791
       ]
     }
   ],
   "exit": {
     "gate": [
       0,
-      -19.2
+      -29.6
     ],
     "a": [
       0,
-      -17.4
+      -27.4
     ],
     "b": [
       0,
-      -21
+      -34.5
     ]
-  }
+  },
+  "decorScale": 1.7
 }

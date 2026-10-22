@@ -304,7 +304,7 @@ function Steps({ t }) {
       </div>
     )
   const steps = [
-    ['2', 'hold the Cell-Smith', t < 49],
+    ['2', 'hold the Cell Hammer', t < 49],
     ['click', 'a pedestal: take a copy of its space', t >= 49 && t < 50.6],
     ['click', 'the machine: feed it in', t >= 50.6 && t < 52],
     ['op', 'pick the operation (two inputs: feed two)', t >= 52 && t < 53.4],

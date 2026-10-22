@@ -26,7 +26,7 @@ import {
 } from '../audio/chip'
 import ConeLesson, { ConeLessonOverlay } from '../movies/ConeLesson'
 import MathText from './MathText'
-import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from './LevelChrome'
 import { landNear, useWarpLevel } from './warpLevel'
 
 /**
@@ -36,7 +36,7 @@ import { landNear, useWarpLevel } from './warpLevel'
  *   Wedge & Product      — circle ∨ circle, circle × circle; its cells match the Hall's torus
  *   The Recipe Board     — chain operations from a point, two points and a disk to make a
  *                          sphere, a torus and S² ∨ S¹, while Coners plug the pedestals
- * The Cell-Smith (2): click a pedestal to take a copy of its space, click the machine to
+ * The Cell Hammer (2): click a pedestal to take a copy of its space, click the machine to
  * feed what you carry, click the shelf to take a result. Coners beam a cone onto a
  * pedestal ("plug" it); click a plugged pedestal to pull the plug.
  */
@@ -135,9 +135,7 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
   const ribbonApi = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyAt = useRef({ x: layout.start[0] - 1.2, z: layout.start[1] - 0.8, rotY: Math.PI, walk: 0 })
-  const emmyTalking = useRef(false)
-  const [nearEmmy, setNearEmmy] = useState(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
 
   const current = STATION_ORDER.find((id) => !done[id]) || null
   const goals = current ? STATIONS[current].goals : []
@@ -203,40 +201,16 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
     [goalIdx, say],
   )
 
-  // ---------- where is Gyroid; Emmy walks to the current works
+  // ---------- where is Gyroid
   useEffect(() => {
     const id = setInterval(() => {
       const s = stateRef.current
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
-      const em = emmyAt.current
-      setNearEmmy(Math.hypot(s.x - em.x, s.z - em.z) < 2.4)
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
     }, 150)
     return () => clearInterval(id)
   }, [])
-  useEffect(() => {
-    const id = setInterval(() => {
-      const target = current ? W(SITE[current], SITE[current].emmy) : layout.exit.a.map((v, i) => v + (i ? 1.2 : -1.6))
-      const e = emmyAt.current
-      const dx = target[0] - e.x
-      const dz = target[1] - e.z
-      const d = Math.hypot(dx, dz)
-      if (d > 0.05) {
-        const step = Math.min(d, 2.6 * 0.05)
-        e.x += (dx / d) * step
-        e.z += (dz / d) * step
-        e.rotY = Math.atan2(dx, dz)
-        e.walk = 1
-      } else {
-        e.walk = 0
-        const look = current ? W(SITE[current], SITE[current].machine) : layout.exit.gate
-        e.rotY = Math.atan2(look[0] - e.x, look[1] - e.z)
-      }
-    }, 50)
-    return () => clearInterval(id)
-  }, [current])
-
   // arriving at a works
   useEffect(() => {
     const st = here.site
@@ -331,7 +305,7 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
     flash(`Made ${spec.name} · ${cellText(spec.cells)} · χ = ${chiOf(spec.cells)}${g?.type === 'make' ? ` — the board wants ${SPECIMENS[g.target].name}` : ''}`, 4200)
   }
 
-  // ---------- clicking with the Cell-Smith
+  // ---------- clicking with the Cell Hammer
   const onAction = (gx, gz, cx, cz) => {
     if (!current || here.site !== current || !met[current]) return flash(current ? `Walk to ${SITE[current].name} first` : 'Head for the gate')
     if (phase !== 'play' || askOpen) return
@@ -458,25 +432,6 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
     return () => window.removeEventListener('keydown', key)
   }, [])
 
-  // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
-  const canTalk = nearEmmy && phase === 'play' && !askOpen && !levelClear && !lesson
-  const talkToEmmy = () => {
-    if (!canTalk) return
-    const s = stateRef.current
-    const em = emmyAt.current
-    if (s) em.rotY = Math.atan2(s.x - em.x, s.z - em.z) // she turns to face him
-    say(emmyAdvice05({ station: current, goal, works: wk, carried, here: here.site, exitOpen, enemies: current ? enemies[current] : 0, name: current ? SITE[current].name : '' }))
-  }
-  const talkRef = useRef(null)
-  talkRef.current = talkToEmmy
-  useEffect(() => {
-    const k = (e) => {
-      if (e.code === 'KeyE') talkRef.current?.()
-    }
-    window.addEventListener('keydown', k)
-    return () => window.removeEventListener('keydown', k)
-  }, [])
-
   // ---------- dialogue (FF7 style)
   const advance = () => {
     const full = lines[lineIdx]?.text.length ?? 0
@@ -494,7 +449,6 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
   }
   const talking = phase.startsWith('talk:')
   const line = talking ? lines[lineIdx] : null
-  emmyTalking.current = !!line && line.speaker === 'Emmy Boundary'
   useEffect(() => {
     if (talking) dialogOpen()
     duckMusic(talking)
@@ -535,6 +489,14 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
   // ---------- game layer
   const [paused, setPaused] = usePause(levelClear || lesson)
   talkingRef.current = talking
+  // ---------- talking to Emmy: walk up to her (she follows Gyroid) and press E for advice
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: phase === 'play' && !paused && !levelClear && !lesson && !askOpen,
+    advice: () => emmyAdvice05({ station: current, goal, works: wk, carried, here: here.site, exitOpen, enemies: current ? enemies[current] : 0, name: current ? SITE[current].name : '' }),
+    say,
+  })
   const warp = useWarpLevel({
     ids: STATION_ORDER,
     done,
@@ -561,7 +523,9 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
     return { mode: 'overworld', bySite: true, start: checkpoint, enemies: list }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey])
-  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + 1.1, SITE[current].pos[1] + 0.4], size: 8.6, follow: 0.12 } : null
+  // no overhead: the works are a few pedestals round one machine, and the spaces they make are
+  // best seen from the chase camera, close up
+  frameRef.current = null
 
   if (import.meta.env.DEV) window.__lvl5 = { warp, clear: () => setLevelClear(true), proveAll: () => (setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true]))), setExitOpen(true)), rewardAt: REWARD_AT, here, done, goalIdx, works, carried, phase, enemies, setTool, current, goal, chooseOp, SITE, W } // dev
 
@@ -574,9 +538,7 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
       runRefs={runRefs}
       current={current}
       carried={carried}
-      emmyAt={emmyAt}
-      emmyTalking={emmyTalking}
-      emmyNear={nearEmmy && phase === 'play'}
+      emmyRef={emmyRef}
       exitOpen={exitOpen}
       walkable={walkable}
       game={game}
@@ -727,11 +689,7 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {toast && !line && <div className="toast">{toast}</div>}
 
-        {canTalk && (
-          <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
+        <TalkPrompt near={nearEmmy} show={phase === 'play' && !line && !askOpen && !levelClear && !paused && !lesson} />
 
         {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Cone Zone" face={warp.face} marks={warp.marks} markIcon="△" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
@@ -741,14 +699,14 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
               <button type="button" className={`weapon ${tool === 'lash' ? 'active' : ''}`} onClick={(e) => (setTool('lash'), e.currentTarget.blur())}>
                 ⚡ Lash <kbd>1</kbd>
               </button>
-              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell-Smith: click pedestals to pick up spaces, click the machine to feed them">
-                ✦ Cell-Smith <kbd>2</kbd>
+              <button type="button" className={`weapon ${tool === 'smith' ? 'active' : ''}`} onClick={(e) => (setTool('smith'), e.currentTarget.blur())} title="The Cell Hammer: click pedestals to pick up spaces, click the machine to feed them">
+                ✦ Cell Hammer <kbd>2</kbd>
               </button>
             </div>
           </div>
         )}
         {playEnabled && !toast && (
-          <div className="hint">{atStation ? (tool === 'smith' ? stepText : 'Press 2 for the Cell-Smith · lash Coners before their beam lands') : 'WASD to move · click to crack the Lash · 2 for the Cell-Smith · lost? walk up to Emmy and press E'}</div>
+          <div className="hint">{atStation ? (tool === 'smith' ? <MathText text={stepText} /> : 'Press 2 for the Cell Hammer · lash Coners before their beam lands') : 'WASD to move · click or F to crack the Lash · 2 for the Cell Hammer · lost? Emmy has advice (E)'}</div>
         )}
       </div>
 

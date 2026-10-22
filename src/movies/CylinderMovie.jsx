@@ -11,7 +11,7 @@ import { FLOORS } from '../levels/w0/stages0B'
 
 /**
  * Intro movie for World 0 · Bonus, "The Cylinder Works" (videos.json level-0-b-intro):
- *   A 0–7    the side door answers the Cell-Smith and slides open on a tall glass cylinder
+ *   A 0–7    the side door answers the Cell Hammer and slides open on a tall glass cylinder
  *   B 7–16   a gold pattern on the floor; teal bands of motion rise up the cylinder
  *   C 16–24  the machine fills the interior, cell by cell, until the whole cylinder glows
  *   D 24–28  title card

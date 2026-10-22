@@ -5,7 +5,7 @@
  * by a homotopy that is stationary where the map is already cellular. Consequence: πₖ(Sⁿ) = 0 for
  * k < n, since a cellular map from Sᵏ into Sⁿ = e⁰ ∪ eⁿ lands in the 0-cell.
  *
- * Cell-Smith (2): snap a piece of a path; puncture and push; mark a group.
+ * Cell Hammer (2): snap a piece of a path; puncture and push; mark a group.
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
@@ -16,7 +16,7 @@ export const OPENING = [
   E('The Grid Gallery. The floor is a CW complex: dots are 0-cells, grid lines 1-cells, squares 2-cells.'),
   E('A map can wander anywhere. Cellular approximation says you can always slide it — without moving what’s already tidy — so that it uses only the right skeleton.'),
   G('Snap it to the grid.'),
-  E('Snap it to the grid. Cell-Smith on 2.'),
+  E('Snap it to the grid. Cell Hammer on 2.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -114,8 +114,8 @@ export function emmyAdvice(state) {
     return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('The Gallery is tidy. Walk to the gate.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'slip') return [E('Cell-Smith (2): click a spot inside the loop to puncture it, then click the gold rim to push.')]
+  if (current === 'slip') return [E('Cell Hammer (2): click a spot inside the loop to puncture it, then click the gold rim to push.')]
   if (current === 'small') return [E('Click the tiles where the sphere’s dimension $k$ is smaller than $n$.')]
   if (current === 'approx') return [E('The pink dots first, then each wiggly piece.')]
-  return [E('Cell-Smith (2): click each wiggly pink piece.')]
+  return [E('Cell Hammer (2): click each wiggly pink piece.')]
 }

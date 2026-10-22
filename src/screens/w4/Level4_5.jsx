@@ -19,7 +19,7 @@ export default function Level4_5(props) {
     if (Math.hypot(x, z) > 5.2) return
     if (tool !== 'smith') {
       sfxRefuse()
-      return flash('Use the Cell-Smith (2).')
+      return flash('Use the Cell Hammer (2).')
     }
     if (current === 'recall') {
       const s = SPACES.find((q) => near(x, z, q.at, 0.9))

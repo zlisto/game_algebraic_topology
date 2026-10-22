@@ -3,14 +3,14 @@ import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import { EmmyBubble } from '../w0/FoundryScene'
 import { LiveLine, Post } from '../w0/FlatsScenery'
 import { linearHomotopy } from './routes'
 import Seascape from '../../world/Seascape'
+import CommonsIslands from '../../world/Commons'
 
 /** How each route is named on the deck (the ledger's ids are terse). */
 export const ROUTE_LABEL = {
@@ -97,7 +97,6 @@ function GardenDressing({ r, rect }) {
   )
 }
 
-const S = 0.7
 const STONE = '#5a6678'
 const HEDGE = '#1a3028'
 const GOLD = '#ffb347'
@@ -293,9 +292,7 @@ export default function EndpointGardensScene({
   enemies,
   spawnRef,
   stateRef,
-  emmyAt,
-  emmyTalking,
-  nearEmmy,
+  emmyRef,
   playEnabled,
   tool,
   onAction,
@@ -309,22 +306,25 @@ export default function EndpointGardensScene({
   selectedRoute,
   showLabels,
   onSpoolClick,
+  camYawRef,
+  talkingRef,
+  camLockRef,
+  stars,
+  portal,
 }) {
-  const emmyRef = useRef()
   const game = useMemo(() => ({ mode: 'overworld', bySite: true, start: checkpoint, enemies }), [checkpoint, enemies])
-  useFrame(() => {
-    const e = emmyAt.current
-    if (!emmyRef.current || !e) return
-    emmyRef.current.position.set(e.x, 0, e.z)
-    emmyRef.current.rotation.y = e.rotY ?? 0
-  })
+  const b = layout.bounds
+  const area = [(b.minX + b.maxX) / 2, (b.minZ + b.maxZ) / 2, b.maxX - b.minX + 24, b.maxZ - b.minZ + 24]
   return (
     <>
       <GardensSky />
-      <Seascape y={-0.9} depth={2.2} area={[0, -2, 64, 64]} seed={101} palette={{ water: '#123a52', sand: '#3a5a52', weed: '#22503a' }} lanterns={10} />
+      <Seascape y={-0.9} depth={2.2} area={area} seed={101} palette={{ water: '#123a52', sand: '#3a5a52', weed: '#22503a' }} lanterns={18} />
+      {/* the open battle commons between the gardens */}
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} tint="#6a7588" />
       ))}
+      {portal && <CausewaySlab a={layout.exit.a} b={layout.exit.b} width={layout.causewayWidth} tint="#6a7588" />}
       {sites.map((s) =>
         s.stage === 'station' ? (
           <GardenDeck
@@ -338,13 +338,15 @@ export default function EndpointGardensScene({
             selected={s.id === current ? selectedRoute : null}
             labels={s.id === current && showLabels}
           />
-        ) : (
+        ) : s.kind === 'start' ? (
           <LandingPad key={s.id} site={s} />
-        ),
+        ) : null,
       )}
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} checkpoint={checkpoint} />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -363,11 +365,7 @@ export default function EndpointGardensScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <group ref={emmyRef}>
-        <Emmy scale={S} script={() => ({ pos: [0, 0, 0], rotY: 0, walk: emmyAt.current.walk, gesture: emmyTalking.current ? 0.8 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 })} />
-      </group>
-      {/* Always mounted (like World 0) — mounting only when near used to crash (missing emmyAt). */}
-      <EmmyBubble emmyAt={emmyAt} show={nearEmmy && playEnabled} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} lockRef={camLockRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={0}>
         <Bloom luminanceThreshold={0.35} intensity={0.85} mipmapBlur />

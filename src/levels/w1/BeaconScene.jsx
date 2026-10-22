@@ -2,12 +2,13 @@ import { useFrame } from '@react-three/fiber'
 import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import { LiveLine } from '../w0/FlatsScenery'
-import { Platform, EmmyBubble } from '../w0/FoundryScene'
+import { Platform } from '../w0/FoundryScene'
+import CommonsIslands from '../../world/Commons'
 import { LOOP_NAMES } from './loops'
 import ReefGame from '../w0/ReefGame'
 import Seascape from '../../world/Seascape'
@@ -111,8 +112,15 @@ function ExitGate({ exit, open }) {
   })
   return (
     <group position={[exit.gate[0], 0, exit.gate[1]]}>
-      <mesh position={[0, 1.4, 0]}>
-        <boxGeometry args={[3.2, 2.8, 0.35]} />
+      {/* an open frame: two pillars and a lintel, so the Warp Portal beyond shows through */}
+      {[-2.75, 2.75].map((x) => (
+        <mesh key={x} position={[x, 1.8, 0]}>
+          <boxGeometry args={[0.7, 3.6, 0.5]} />
+          <meshStandardMaterial color="#2a2428" emissive="#ffb347" emissiveIntensity={open ? 0.5 : 0.15} />
+        </mesh>
+      ))}
+      <mesh position={[0, 3.75, 0]}>
+        <boxGeometry args={[6.2, 0.45, 0.55]} />
         <meshStandardMaterial color="#2a2428" emissive="#ffb347" emissiveIntensity={open ? 0.5 : 0.15} />
       </mesh>
       <mesh ref={left} position={[-0.8, 1.7, 0]}>
@@ -127,8 +135,9 @@ function ExitGate({ exit, open }) {
   )
 }
 
-export function BastionSky() {
-  return (
+/** The bastion's sky and sea. With `bounds` (the level) it spreads over the whole layout; the movies pass none. */
+export function BastionSky({ bounds }) {
+  const sky = (
     <>
       <color attach="background" args={['#0a0c14']} />
       <fog attach="fog" args={['#0a0c14', 24, 58]} />
@@ -136,10 +145,29 @@ export function BastionSky() {
       <hemisphereLight args={['#c8d8ff', '#1a1020', 0.42]} />
       <directionalLight position={[8, 20, 6]} intensity={0.85} color="#ffe8c8" />
       <Stars radius={80} depth={36} count={800} factor={2} fade speed={0.15} />
-      <Sparkles count={180} scale={[36, 8, 36]} position={[0, 3, -4]} size={2.4} speed={0.35} color="#ffb070" />
-      <Clouds area={[-20, -30, 20, 16]} count={12} y={14} />
-      <FloatingRocks center={[0, 0, -4]} radius={[14, 22]} count={8} />
-      <Seascape y={-0.9} depth={2.2} area={[0, -6, 64, 70]} seed={202} palette={{ water: '#132a4a', sand: '#3a4458', weed: '#3a2a5a' }} lanterns={12} />
+    </>
+  )
+  if (!bounds)
+    return (
+      <>
+        {sky}
+        <Sparkles count={180} scale={[36, 8, 36]} position={[0, 3, -4]} size={2.4} speed={0.35} color="#ffb070" />
+        <Clouds area={[-20, -30, 20, 16]} count={12} y={14} />
+        <FloatingRocks center={[0, 0, -4]} radius={[14, 22]} count={8} />
+        <Seascape y={-0.9} depth={2.2} area={[0, -6, 64, 70]} seed={202} palette={{ water: '#132a4a', sand: '#3a4458', weed: '#3a2a5a' }} lanterns={12} />
+      </>
+    )
+  const b = bounds
+  const cz = (b.minZ + b.maxZ) / 2
+  const w = b.maxX - b.minX
+  const d = b.maxZ - b.minZ
+  return (
+    <>
+      {sky}
+      <Sparkles count={260} scale={[w, 8, d]} position={[0, 3, cz]} size={2.4} speed={0.35} color="#ffb070" />
+      <Clouds area={[0, cz, w + 10, d + 10]} count={16} y={14} />
+      <FloatingRocks center={[0, 0, cz]} radius={[w * 0.45, w * 0.7]} count={12} />
+      <Seascape y={-0.9} depth={2.2} area={[0, cz, w + 24, d + 24]} seed={202} palette={{ water: '#132a4a', sand: '#3a4458', weed: '#3a2a5a' }} lanterns={18} />
     </>
   )
 }
@@ -159,26 +187,23 @@ export default function BeaconScene({
   game,
   gameKey,
   spawnRef,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   playEnabled,
   tool,
   onEnemies,
   onHearts,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
 }) {
   const stations = sites.filter((s) => s.stage === 'station')
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   return (
     <>
-      <BastionSky />
+      <BastionSky bounds={layout.bounds} />
+      {/* the open battle commons between the beacons */}
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -208,12 +233,11 @@ export default function BeaconScene({
         )
       })}
       <ExitGate exit={layout.exit} open={exitOpen} />
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -232,7 +256,7 @@ export default function BeaconScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

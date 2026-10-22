@@ -1,4 +1,4 @@
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import UnderCoverScene, { buildTracks } from '../../levels/w1/UnderCoverScene'
 import {
@@ -18,7 +18,8 @@ import { buildSites, makeSiteWalkable } from '../../world/sites'
 import LevelMovie from '../LevelMovie'
 import LevelMap from '../LevelMap'
 import MathText from '../MathText'
-import { useExitTrigger } from '../exitTrigger'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from '../LevelChrome'
+import { landNear, useWarpLevel } from '../warpLevel'
 import UnderCoverLesson, { UnderCoverLessonOverlay } from '../../movies/w1/UnderCoverLesson'
 import {
   dialogOpen,
@@ -29,7 +30,6 @@ import {
   sfxRefuse,
   sfxWrong,
   sfxZoot,
-  sfxExit,
   startSheetwaterMusic,
   stopMusic,
   textBlip,
@@ -47,6 +47,24 @@ const PORTRAIT_CROP = {
 }
 const TOOL_KEYS = { Digit1: 'lash', Digit4: 'cord', Digit6: 'compass' }
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
+// each deck's Cover Stack waits on its outer rim, clear of the causeway mouths, loops and ports
+const REWARD_SPOT = { two_floors: [3.8, 0], build_cover: [0, -4], rescue: [2.2, -3.8], order_proved: [-3.2, -3.4] }
+const REWARD_AT = Object.fromEntries(STATION_ORDER.map((id) => [id, landNear(SITE[id], [SITE[id].pos[0] + REWARD_SPOT[id][0], SITE[id].pos[1] + REWARD_SPOT[id][1]])]))
+const NOUN = { icon: '≡', one: 'Cover Stack', many: 'Cover Stacks', kind: 'coverstack' }
+const END_CARD = {
+  learned: 'A covering space is a stack of sheets over the ground, and every loop you walk downstairs lifts to a path upstairs. Two sheets over the circle told one lap from two: the lift closes only for loops that come from the cover itself. Then we wired three sheets over the figure-eight, and in that cover $ab$ closed while $ba$ did not. Homotopic loops lift to paths with the same end, so $ab ≠ ba$: proved, not just claimed.',
+  ahead: 'Next is Sheet Music, among the Sheet Stacks. There we build covers to order: pick a subgroup of $π₁$, and a cover with exactly that group will answer. Keep climbing far enough and the sheets stop closing up at all and grow into a tree, the universal cover.',
+}
+
+/** Calls onReady once the scene has actually drawn a few frames (shaders compiled, sea built). */
+function FirstFrames({ onReady, after = 3 }) {
+  const n = useRef(0)
+  useFrame(() => {
+    n.current += 1
+    if (n.current === after) onReady()
+  })
+  return null
+}
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id] || PORTRAIT_CROP.gyroid
@@ -60,7 +78,7 @@ function Portrait({ id, name }) {
   )
 }
 
-export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
+export default function Level1_8({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[1]?.levels?.find((l) => l.id === '1-8')
   const skipTo = Math.max(0, STATION_ORDER.indexOf(startAt))
 
@@ -88,13 +106,15 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
   const [here, setHere] = useState({ site: null, pos: checkpoint })
   const [seen, setSeen] = useState({})
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking up the viaduct from the landing
+  const camYawRef = useRef(Math.atan2(layout.start[0] - layout.exit.a[0], layout.start[1] - layout.exit.a[1]))
+  const talkingRef = useRef(false)
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyAt = useRef({ x: layout.start[0] - 1, z: layout.start[1] - 0.6, rotY: Math.PI, walk: 0 })
-  const emmyTalking = useRef(false)
-  const [nearEmmy, setNearEmmy] = useState(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
+  const [ready, setReady] = useState(false) // the scene has drawn its first frames
   const trackerRef = useRef(null)
   const lapCount = useRef(0)
   const liftRef = useRef(0)
@@ -139,9 +159,10 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
       stopMusic()
     }
   }, [])
+  // the opening waits for the viaduct to draw, so it never plays over a black canvas
   useEffect(() => {
-    if (!skipTo) say(OPENING)
-  }, [say, skipTo])
+    if (ready && !skipTo) say(OPENING)
+  }, [ready, say, skipTo])
 
   useEffect(() => {
     if (current === 'build_cover' && !done.build_cover) setCover(coverBrokenThreeSheet())
@@ -223,8 +244,31 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
   )
 
   const playEnabledRef = useRef(true)
-  const playEnabled = phase === 'play' && !lesson && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = !!lines.length
+  const warp = useWarpLevel({
+    ids: STATION_ORDER,
+    done,
+    posOf: (id) => REWARD_AT[id],
+    stateRef,
+    exitOpen,
+    portalAt: layout.exit.b,
+    hearts,
+    flash,
+    stopMusic,
+    onClear: () => setLevelClear(true),
+    noun: NOUN,
+  })
+  const playEnabled = phase === 'play' && !lesson && !levelClear && !paused && !warp.warping
   playEnabledRef.current = playEnabled
+  // talking to Emmy: she follows Gyroid; press E beside her (or anywhere: she hurries over)
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: phase === 'play' && !paused && !levelClear && !lesson,
+    advice: () => emmyAdvice18({ current, done, goal, liftSheet, cover, here, enemies, siteName: (id) => SITE[id]?.name || id }),
+    say,
+  })
 
   const onAction = useCallback(
     (gx, gz, cx, cz) => {
@@ -306,7 +350,7 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [lines.length])
 
-  // arrival / emmy
+  // arrival
   useEffect(() => {
     const id = setInterval(() => {
       const s = stateRef.current
@@ -321,28 +365,18 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
         setSeen((m) => ({ ...m, [`early-${st.id}`]: true }))
         say(STATIONS[st.id].early)
       }
-      const em = SITE[current]
-      if (em) {
-        const ex = em.pos[0] + (em.emmy?.[0] || 0)
-        const ez = em.pos[1] + (em.emmy?.[1] || 0)
-        emmyAt.current.x += (ex - emmyAt.current.x) * 0.04
-        emmyAt.current.z += (ez - emmyAt.current.z) * 0.04
-        setNearEmmy(Math.hypot(s.x - ex, s.z - ez) < 2.4)
-      }
     }, 120)
     return () => clearInterval(id)
   }, [current, done, met, say, seen])
 
-  const talkToEmmy = () => say(emmyAdvice18({ current, done, goal, liftSheet, cover, here, enemies, siteName: (id) => SITE[id]?.name || id }))
   useEffect(() => {
     const onKey = (e) => {
-      if (e.code === 'KeyE' && nearEmmy && phase === 'play') talkToEmmy()
       const t = TOOL_KEYS[e.code]
       if (t) setTool(t)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [nearEmmy, phase, goal, liftSheet, cover, here, enemies, current, done])
+  }, [])
 
   const gameKey = `sheetwater:${knockouts}`
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, exitOpen ? [[layout.exit.a, layout.exit.b]] : []), [exitOpen])
@@ -366,18 +400,37 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [gameKey, done])
 
-  const FRAME = { two_floors: 8.2, build_cover: 8.8, rescue: 8.8, order_proved: 8.8 }
-  frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + 1, SITE[current].pos[1] + 0.3], size: FRAME[current], follow: 0.12 } : null
-  useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.5 && z < layout.exit.gate[1] - 0.6, () => {
-    sfxExit()
-    setLevelClear(true)
-  })
+  // no overhead: from straight above the stacked glass sheets read as one disc. The chase camera
+  // stays down behind Gyroid, so the sheets show stacked floor over floor, up close
+  // at the stacked-sheet decks a raised three-quarter view sees every sheet (the chase camera ends up inside them)
+  frameRef.current = current && here.site === current && met[current] ? { center: SITE[current].pos, size: 10.5, follow: 0.35 } : null
 
-  if (import.meta.env.DEV) window.__lvl1_8 = { here, done, goalIdx, cover, liftSheet, phase, current, goal, advanceGoal, setTool }
+  if (import.meta.env.DEV)
+    window.__lvl1_8 = {
+      warp,
+      clear: () => setLevelClear(true),
+      proveAll: () => {
+        setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true])))
+        setExitOpen(true)
+        STATION_ORDER.forEach((id) => window.__game?.killSite?.(id))
+      },
+      rewardAt: REWARD_AT,
+      here,
+      done,
+      goalIdx,
+      cover,
+      liftSheet,
+      phase,
+      current,
+      goal,
+      advanceGoal,
+      setTool,
+    }
 
-  const emmyOnSheet = current === 'rescue' ? SITE.rescue.emmySheet : null
+  // the rescue deck: the beacon Null hung up on sheet two
+  const beacon = current === 'rescue' ? { site: 'rescue', sheet: SITE.rescue.emmySheet, x: SITE.rescue.emmy[0], z: SITE.rescue.emmy[1] } : null
   const nDone = STATION_ORDER.filter((id) => done[id]).length
-  const objective = exitOpen ? 'Walk north off the viaduct' : current ? `Decks ${nDone}/4 · ${SITE[current].name}` : ''
+  const objective = warp.objective(current ? `Decks ${nDone}/4 · ${SITE[current].name}` : '')
   const atStation = current && here.site === current && met[current]
   const stepText = (() => {
     if (!goal) return ''
@@ -398,10 +451,9 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
           current={current}
           liftSheet={liftSheet}
           cover={cover}
-          emmyAt={emmyAt}
-          emmyTalking={emmyTalking}
-          emmyNear={nearEmmy && phase === 'play'}
-          emmyOnSheet={emmyOnSheet}
+          emmyRef={emmyRef}
+          beacon={beacon}
+          onDeck={here.site}
           exitOpen={exitOpen}
           walkable={walkable}
           game={game}
@@ -415,10 +467,22 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
           onAction={onAction}
           onTrackMove={onTrackMove}
           onEnemies={setEnemies}
-          onHearts={setHearts}
+          onHearts={(h) => {
+            // all three hearts gone: wake at the last finished deck
+            if (h <= 0) {
+              setHearts(3)
+              setKnockouts((n) => n + 1)
+              say(HINTS18.knockout)
+            } else setHearts(h)
+          }}
           onPortClick={onPortClick}
           showPorts={goal?.type === 'wire' || goal?.type === 'prove'}
+          camYawRef={camYawRef}
+          talkingRef={talkingRef}
+          stars={warp.stars}
+          portal={warp.portal}
         />
+        <FirstFrames onReady={() => setReady(true)} />
       </Canvas>
       <div className="ui-overlay">
         <div className="lvl-top">
@@ -482,12 +546,8 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
         {toast && !line && <div className="toast"><MathText text={toast} /></div>}
-        {nearEmmy && phase === 'play' && (
-          <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
-        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Sheetwater" />}
+        <TalkPrompt near={nearEmmy} show={phase === 'play' && !line && !levelClear && !paused && !lesson} />
+        {!levelClear && !line && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Sheetwater" face={warp.face} marks={warp.marks} markIcon={NOUN.icon} portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
         {!line && !levelClear && (
           <div className="controls">
             <div className="weapons">
@@ -501,7 +561,7 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
                 🧭 Sheet Compass <kbd>6</kbd>
               </button>
             </div>
-            {playEnabled && !toast && <div className="hint">{atStation ? stepText : 'WASD · Cord (4) walks loops · Compass (6) · Talk to Emmy (E)'}</div>}
+            {playEnabled && !toast && <div className="hint">{atStation ? <MathText text={stepText} /> : 'WASD · click to Lash (1) the beasts · Cord (4) walks loops · Compass (6) · lost? Emmy’s right behind you (E)'}</div>}
           </div>
         )}
       </div>
@@ -513,33 +573,31 @@ export default function Level1_8({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 1 · Level 8 · Lesson"
           name="Covers and Lifts"
           embedded
-          onDone={() => setLesson(false)}
-          onSkip={() => setLesson(false)}
+          onDone={() => (setLesson(false), warp.portalOpen ? null : startSheetwaterMusic())}
+          onSkip={() => (setLesson(false), warp.portalOpen ? null : startSheetwaterMusic())}
+        />
+      )}
+      {warp.warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'Under Cover'}
+          progress={`${NOUN.icon} ${warp.count} of ${warp.total} ${NOUN.many}`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level1-8', { restart: Date.now() })}
+          onTitle={onBackToTitle}
         />
       )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 1 · Level 8 clear</span>
-            <h2>{levelMeta?.title || 'Under Cover'}</h2>
-            <p className="def">{DEFINITION18.text}</p>
-            <p className="cite">
-              {DEFINITION18.cite}{' '}
-              <a href={DEFINITION18.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Next: Sheet Stacks — covers built to order.</p>
-            <div className="btn-row">
-              <button type="button" className="btn primary" onClick={onNext}>
-                Continue ▸ Sheet Music
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 1 · Level 8 clear"
+          title={levelMeta?.title || 'Under Cover'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION18}
+          onStay={() => (setLevelClear(false), warp.stay(layout.exit.a))}
+          onNext={onNext}
+          nextLabel="Continue ▸ Sheet Music"
+        />
       )}
     </div>
   )

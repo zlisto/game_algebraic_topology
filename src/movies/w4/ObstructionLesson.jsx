@@ -39,7 +39,7 @@ export function ObstructionLessonOverlay({ t }) {
         [12.4, 24, 'The obstruction', ['boundary class in $πₙ(X)$', 'extend iff $ωₙ = 0$']],
         [24.4, 36, 'Reroute', ['twist lower cells:', 'cochain moves, class stays']],
         [36.4, 58, 'Guaranteed', ['$Hⁿ⁺¹(W, A; πₙX) = 0$', '⇒ every map extends']],
-        [58.4, 64, 'Obstruction Course', ['Cell-Smith (2), Cup Caster (9)', 'extend, read, reroute']],
+        [58.4, 64, 'Obstruction Course', ['Cell Hammer (2), Cup Caster (9)', 'extend, read, reroute']],
       ]}
       summary={{ t: 64, title: 'Obstruction theory', items: ['Extend cell by cell', 'Blocks are classes $ωₙ$', 'in $Hⁿ⁺¹(W, A; πₙX)$'], cite: 'Hatcher pp. 415–419' }}
     />

@@ -1731,3 +1731,38 @@ b.term {
 @media (max-width: 720px) {
   .rules-panel { transform: none; left: auto; right: 0.75rem; }
 }
+
+/* "E · Talk to Emmy": top right under the HUD; brighter when she's in reach */
+.talk-prompt { position: absolute; right: 1rem; top: 5.2rem; padding: 0.35rem 0.7rem; border-radius: 999px; font-size: 0.8rem; background: rgba(8, 12, 24, 0.72); color: #cfe8ff; border: 1px solid rgba(127, 232, 220, 0.35); pointer-events: none; z-index: 5; }
+.talk-prompt.near { color: #0b1220; background: #7fe8dc; border-color: #7fe8dc; font-weight: 700; }
+.talk-prompt kbd { font: inherit; font-weight: 800; padding: 0 0.35rem; border-radius: 4px; background: rgba(255, 255, 255, 0.18); margin-right: 0.25rem; }
+@media (max-width: 720px) { .talk-prompt { top: auto; bottom: 8.6rem; right: 0.6rem; font-size: 0.72rem; } }
+
+/* the controls hint gets a full row of its own instead of wrapping word by word */
+.controls .hint { position: static; transform: none; flex: 1 0 100%; order: 10; max-width: min(46rem, calc(100vw - 2rem)); text-align: center; }
+
+/* while a station's panel is up, the big map steps back to a small corner map so the puzzle shows */
+.ui-overlay:has(.rules-panel) .minimap.big,
+.ui-overlay:has(.rules-panel) .minimap.level-map.big { width: 9rem; max-width: 9rem; opacity: 0.85; }
+@media (max-width: 760px) {
+  .minimap.big, .minimap.level-map.big { top: auto; bottom: 4.6rem; width: 9rem; }
+  .rules-panel { transform: none; left: auto; right: 0.75rem; }
+}
+
+/* with a station panel up, the hint pill rides above it instead of clipping it */
+.ui-overlay:has(.rules-panel) > .hint, .ui-overlay:has(.rules-panel) .level-hint { bottom: 7rem; }
+
+/* toasts sit below the level's title row, not on top of it */
+.level .toast:not(.low) { top: 7.4rem; }
+@media (max-width: 720px) { .level .toast:not(.low) { top: 9rem; } }
+
+/* the talk prompt sits below the area toast row */
+.talk-prompt { top: 10.2rem; }
+
+/* with a station panel up, the talk prompt and long toasts stay clear of it */
+.ui-overlay:has(.rules-panel) .talk-prompt { top: auto; bottom: 7rem; }
+.level .toast { max-width: min(36rem, calc(100vw - 2rem)); white-space: normal; text-align: center; }
+@media (max-width: 760px) {
+  /* narrow: the station panel drops to the bottom right, so the prompt goes up top instead */
+  .ui-overlay:has(.rules-panel) .talk-prompt { top: 5.2rem; bottom: auto; }
+}

@@ -1,15 +1,15 @@
 {
   "note": "The Cone Zone (World 0 · Level 5): a terrace of operation works on the Foundry cliff, in level-local units (x east, z south). Each works is a round platform with a machine (it runs one or more operations on spaces), source pedestals that dispense specimen spaces (Coners plug them by coning them), and a two-place output shelf. Gyroid arrives from the forge door in the south and leaves north toward the Timber Yard.",
   "bounds": {
-    "minX": -20,
-    "maxX": 20,
-    "minZ": -26,
-    "maxZ": 20
+    "minX": -36.0,
+    "maxX": 36.0,
+    "minZ": -45.6,
+    "maxZ": 46.0
   },
   "causewayWidth": 2.4,
   "start": [
-    0,
-    16
+    0.0,
+    40.0
   ],
   "sites": [
     {
@@ -17,8 +17,8 @@
       "name": "Forge Door Landing",
       "kind": "start",
       "pos": [
-        0,
-        16
+        0.0,
+        40.0
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "The Cone Works",
       "stage": "station",
       "pos": [
-        0,
-        7
+        0.0,
+        11.2
       ],
       "shape": {
         "add": [
@@ -101,8 +101,8 @@
       "name": "The Suspension Works",
       "stage": "station",
       "pos": [
-        -11,
-        -2.5
+        -17.6,
+        -4.0
       ],
       "shape": {
         "add": [
@@ -159,8 +159,8 @@
       "name": "Wedge & Product",
       "stage": "station",
       "pos": [
-        11,
-        -2.5
+        17.6,
+        -4.0
       ],
       "shape": {
         "add": [
@@ -224,8 +224,8 @@
       "name": "The Recipe Board",
       "stage": "station",
       "pos": [
-        0,
-        -12
+        0.0,
+        -19.2
       ],
       "shape": {
         "add": [
@@ -302,73 +302,309 @@
           4.4
         ]
       ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons 2",
+      "kind": "commons",
+      "pos": [
+        -8.9,
+        3.55
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.08,
+          1.43
+        ],
+        [
+          "torus",
+          -2.28,
+          1.09
+        ],
+        [
+          "sphere",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Commons 3",
+      "kind": "commons",
+      "pos": [
+        8.9,
+        3.55
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "klein",
+          2.08,
+          1.43
+        ],
+        [
+          "coner",
+          -2.28,
+          1.09
+        ],
+        [
+          "sphere",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Commons 4",
+      "kind": "commons",
+      "pos": [
+        -9.25,
+        -12.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.08,
+          1.43
+        ],
+        [
+          "mobius",
+          -1.43,
+          2.08
+        ],
+        [
+          "torus",
+          -2.08,
+          -1.43
+        ],
+        [
+          "sphere",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_5",
+      "name": "Commons 5",
+      "kind": "commons",
+      "pos": [
+        9.25,
+        -12.6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.08,
+          1.43
+        ],
+        [
+          "coner",
+          -1.43,
+          2.08
+        ],
+        [
+          "torus",
+          -2.08,
+          -1.43
+        ],
+        [
+          "sphere",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_gate",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0.0,
+        28.0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.6
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          -1.88,
+          -3.44
+        ],
+        [
+          "coner",
+          1.88,
+          -3.44
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        14.5
+        0.0,
+        38.5
       ],
       "b": [
-        0,
-        12.1
+        0.0,
+        33.2
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        22.8
+      ],
+      "b": [
+        0.0,
+        16.2
       ]
     },
     {
       "a": [
         -3.6,
-        3.2
+        7.4
       ],
       "b": [
-        -7.6,
-        1.2
+        -6.473,
+        5.313
+      ]
+    },
+    {
+      "a": [
+        -11.327,
+        1.787
+      ],
+      "b": [
+        -14.2,
+        -0.3
       ]
     },
     {
       "a": [
         3.6,
-        3.2
+        7.4
       ],
       "b": [
-        7.6,
-        1.2
+        6.473,
+        5.313
       ]
     },
     {
       "a": [
-        -8.2,
-        -7.1
+        11.327,
+        1.787
+      ],
+      "b": [
+        14.2,
+        -0.3
+      ]
+    },
+    {
+      "a": [
+        -14.8,
+        -8.6
+      ],
+      "b": [
+        -11.684,
+        -10.846
+      ]
+    },
+    {
+      "a": [
+        -6.816,
+        -14.354
       ],
       "b": [
         -3.7,
-        -9.4
+        -16.6
       ]
     },
     {
       "a": [
-        8.2,
-        -7.1
+        14.8,
+        -8.6
+      ],
+      "b": [
+        11.684,
+        -10.846
+      ]
+    },
+    {
+      "a": [
+        6.816,
+        -14.354
       ],
       "b": [
         3.7,
-        -9.4
+        -16.6
       ]
     }
   ],
   "exit": {
     "gate": [
-      0,
-      -19.2
+      0.0,
+      -26.4
     ],
     "a": [
-      0,
-      -17.1
+      0.0,
+      -24.3
     ],
     "b": [
-      0,
-      -24.5
+      0.0,
+      -31.7
     ],
     "to": "timber_yard"
-  }
+  },
+  "decorScale": 1.6
 }

@@ -187,6 +187,7 @@ export default function FlatsScene({
   onSpooling,
   camYawRef,
   talkingRef,
+  emmyRef,
   camLockRef,
   rewards = [],
   portal,
@@ -265,7 +266,7 @@ export default function FlatsScene({
         <Star key={r.id} {...r} />
       ))}
       {portal && <WarpPortal {...portal} />}
-      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />
+      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} posRef={emmyRef} />
       <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overheadRef={frameRef} lockRef={camLockRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>

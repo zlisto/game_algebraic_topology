@@ -6,7 +6,7 @@
  * dimension n + 2, n + 3, … to kill the higher homotopy groups one at a time; from S² this gives
  * K(ℤ, 2), which is ℂP∞.
  *
- * Cell-Smith (2): mark a space; attach the cell that kills a group.
+ * Cell Hammer (2): mark a space; attach the cell that kills a group.
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
@@ -16,7 +16,7 @@ export const STATION_ORDER = ['recall', 'kill']
 export const OPENING = [
   E('One Group. Some spaces have exactly one non-zero homotopy group: $πₙ = G$, everything else $0$. They’re called $K(G, n)$.'),
   G('A space that only has one kind of hole?'),
-  E('Exactly. Cell-Smith on 2.'),
+  E('Exactly. Cell Hammer on 2.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -79,6 +79,6 @@ export function emmyAdvice(state) {
     return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('One group stands. Walk to the gate.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'recall') return [E('Cell-Smith (2): click a pedestal to cycle yes → no → unset. A $K(G, 1)$ has nothing above $π₁$.')]
-  return [E('Cell-Smith (2): click $π₃$ first, then $π₄$, then $π₅$.')]
+  if (current === 'recall') return [E('Cell Hammer (2): click a pedestal to cycle yes → no → unset. A $K(G, 1)$ has nothing above $π₁$.')]
+  return [E('Cell Hammer (2): click $π₃$ first, then $π₄$, then $π₅$.')]
 }

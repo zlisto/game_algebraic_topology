@@ -23,7 +23,7 @@ export default function Level4_11(props) {
     const want = current === 'stack' || current === 'rebuild' ? 'smith' : 'caster'
     if (tool !== want) {
       sfxRefuse()
-      return flash(want === 'smith' ? 'This floor takes the Cell-Smith (2).' : 'This floor takes the Cup Caster (9).')
+      return flash(want === 'smith' ? 'This floor takes the Cell Hammer (2).' : 'This floor takes the Cup Caster (9).')
     }
 
     if (current === 'stack') {

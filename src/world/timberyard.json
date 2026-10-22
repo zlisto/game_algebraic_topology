@@ -1,19 +1,19 @@
 {
-  "note": "The Timber Yard (World 0 · Level 6) in level-local units (x east, z south). Each deck carries one or more tangles: graphs of small platforms (nodes) joined by narrow walkways (edges), in deck-local units. Gyroid marks a spanning tree with the Spool and fells it with the Cell-Smith at the root platform. The unbuilt bridge to the Hollow Throne leaves the Census deck to the north.",
+  "note": "The Timber Yard (World 0 · Level 6) in level-local units (x east, z south). Each deck carries one or more tangles: graphs of small platforms (nodes) joined by narrow walkways (edges), in deck-local units. Gyroid marks a spanning tree with the Spool and fells it with the Cell Hammer at the root platform. The unbuilt bridge to the Hollow Throne leaves the Census deck to the north.",
   "bounds": {
-    "minX": -22,
-    "maxX": 22,
-    "minZ": -28,
-    "maxZ": 22
+    "minX": -39.2,
+    "maxX": 39.2,
+    "minZ": -48.8,
+    "maxZ": 48.0
   },
   "causewayWidth": 2.4,
   "start": [
-    0,
-    18
+    0.0,
+    42.0
   ],
   "throne": [
     0,
-    -52
+    -59.8
   ],
   "sites": [
     {
@@ -21,8 +21,8 @@
       "name": "Yard Gate",
       "kind": "start",
       "pos": [
-        0,
-        18
+        0.0,
+        42.0
       ],
       "shape": {
         "add": [
@@ -40,8 +40,8 @@
       "name": "The Sapling Deck",
       "stage": "station",
       "pos": [
-        0,
-        10
+        0.0,
+        16.0
       ],
       "shape": {
         "add": [
@@ -124,8 +124,8 @@
       "name": "The Thicket",
       "stage": "station",
       "pos": [
-        -11,
-        1
+        -17.6,
+        1.6
       ],
       "shape": {
         "add": [
@@ -218,8 +218,8 @@
       "name": "The Wrong Cut",
       "stage": "station",
       "pos": [
-        11,
-        1
+        17.6,
+        1.6
       ],
       "shape": {
         "add": [
@@ -316,8 +316,8 @@
       "name": "The Census Deck",
       "stage": "station",
       "pos": [
-        0,
-        -13
+        0.0,
+        -20.8
       ],
       "shape": {
         "add": [
@@ -514,91 +514,332 @@
           "root": 0
         }
       ]
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons 1",
+      "kind": "commons",
+      "pos": [
+        -8.35,
+        8.55
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "klein",
+          2.08,
+          1.43
+        ],
+        [
+          "torus",
+          -1.43,
+          2.08
+        ],
+        [
+          "mobius",
+          -2.08,
+          -1.43
+        ],
+        [
+          "sphere",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons 2",
+      "kind": "commons",
+      "pos": [
+        8.35,
+        8.55
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.08,
+          1.43
+        ],
+        [
+          "unglue",
+          -1.43,
+          2.08
+        ],
+        [
+          "torus",
+          -2.08,
+          -1.43
+        ],
+        [
+          "sphere",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Commons 3",
+      "kind": "commons",
+      "pos": [
+        -11.4,
+        -10.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "klein",
+          2.08,
+          1.43
+        ],
+        [
+          "mobius",
+          -2.28,
+          1.09
+        ],
+        [
+          "projective",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Commons 4",
+      "kind": "commons",
+      "pos": [
+        11.4,
+        -10.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "klein",
+          2.08,
+          1.43
+        ],
+        [
+          "projective",
+          -1.43,
+          2.08
+        ],
+        [
+          "torus",
+          -2.08,
+          -1.43
+        ],
+        [
+          "unglue",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_gate",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0.0,
+        30.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.6
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          -1.88,
+          -3.44
+        ],
+        [
+          "mobius",
+          1.88,
+          -3.44
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        16.3
+        0.0,
+        40.5
       ],
       "b": [
-        0,
-        14.6
+        0.0,
+        35.7
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        25.3
+      ],
+      "b": [
+        0.0,
+        20.6
       ]
     },
     {
       "a": [
         -3.5,
-        7
+        13.0
       ],
       "b": [
-        -6.6,
-        3.5
+        -6.139,
+        10.578
+      ]
+    },
+    {
+      "a": [
+        -10.561,
+        6.522
+      ],
+      "b": [
+        -13.2,
+        4.1
       ]
     },
     {
       "a": [
         3.5,
-        7
+        13.0
       ],
       "b": [
-        6.6,
-        3.5
+        6.139,
+        10.578
       ]
     },
     {
       "a": [
-        -9.2,
-        -4.2
+        10.561,
+        6.522
       ],
       "b": [
-        -7,
-        -9.6
+        13.2,
+        4.1
       ]
     },
     {
       "a": [
-        9.2,
-        -4.2
+        -15.8,
+        -3.6
       ],
       "b": [
-        7,
-        -9.6
+        -13.013,
+        -7.971
+      ]
+    },
+    {
+      "a": [
+        -9.787,
+        -13.029
+      ],
+      "b": [
+        -7.0,
+        -17.4
+      ]
+    },
+    {
+      "a": [
+        15.8,
+        -3.6
+      ],
+      "b": [
+        13.013,
+        -7.971
+      ]
+    },
+    {
+      "a": [
+        9.787,
+        -13.029
+      ],
+      "b": [
+        7.0,
+        -17.4
       ]
     }
   ],
   "bridge": {
     "foot": [
-      0,
-      -16.4
+      0.0,
+      -24.2
     ],
     "a": [
-      0,
-      -16.6
+      0.0,
+      -24.4
     ],
     "b": [
-      0,
-      -27
+      0.0,
+      -34.8
     ],
     "gate": [
-      0,
-      -19.2
+      0.0,
+      -27.0
     ]
   },
   "exit": {
     "gate": [
-      0,
-      -19.2
+      0.0,
+      -27.0
     ],
     "a": [
-      0,
-      -16.6
+      0.0,
+      -24.4
     ],
     "b": [
-      0,
-      -27
+      0.0,
+      -34.8
     ],
     "to": "hollow_throne"
-  }
+  },
+  "decorScale": 1.6
 }

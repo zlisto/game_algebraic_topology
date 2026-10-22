@@ -6,7 +6,7 @@ import { useExitTrigger } from './exitTrigger'
 import { MapNext } from './LevelMap'
 import { cleanStroke, sampleShape, simulateSlide, snapPoint } from '../levels/w0/retraction'
 import { grab, hookedStakes, loopShrunk, makeLoopRibbon, makeSiteEnv, release } from '../levels/w0/ribbon'
-import { HINTS, RULES } from '../levels/w0/stages01'
+import { HINTS, RULES, beastLine } from '../levels/w0/stages01'
 import { DEFINITION03, HINTS03, OPENING, SITES03, SITE_ORDER } from '../levels/w0/stages03'
 import layout from '../world/mirrorShoals.json'
 import { buildSites, makeSiteWalkable, siteAtIn } from '../world/sites'
@@ -31,7 +31,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import { stepBack } from './warpLevel'
-import { EmmyEndCard, PauseMenu, ViewCone, WarpIcon, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, TalkPrompt, ViewCone, WarpIcon, usePause, useEmmyTalk } from './LevelChrome'
 import MirrorLesson, { MirrorLessonOverlay } from '../movies/MirrorLesson'
 import MathText from './MathText'
 
@@ -56,6 +56,11 @@ const TYPE_CPS = 45
 const SITES = buildSites(layout)
 const SITE = Object.fromEntries(SITES.map((s) => [s.id, s]))
 const siteAt = siteAtIn(SITES)
+/** The open battle commons between the reefs (no puzzle: just Null's spawn to fight). */
+const COMMONS = SITES.filter((s) => s.kind === 'commons')
+const PUZZLE_SITES = SITES.filter((s) => s.kind !== 'commons')
+const commonsAt = (x, z) => COMMONS.find((s) => s.containsWorld(x, z)) || null
+const MAP_K = [1.9, 1.2] // minimap units per world unit (x, z)
 /** Where Gyroid stands on a reef (its center may be a hole: then by the loop's post). */
 const spawnOf = (s) => (s.loop ? s.toWorld(...s.loop.post) : s.pos)
 const REACH = 2.6 // how far from Gyroid a clicked stake can be grabbed
@@ -79,8 +84,8 @@ function Portrait({ id, name }) {
 }
 
 /** Minimap: reefs (gold once proven), causeways, the channel, Gyroid. */
-function ShoalsMap({ pos, face = 0, done, current, next, gateOpen, rewards = {}, portalOpen }) {
-  const P = ([x, z]) => [50 + x * 2.25, 30 + z * 1.8]
+function ShoalsMap({ pos, face = 0, done, current, next, gateOpen, rewards = {}, portalOpen, enemiesBy }) {
+  const P = ([x, z]) => [50 + (x + 4) * MAP_K[0], 30 + (z - 1.75) * MAP_K[1]]
   const [gx, gz] = P(pos)
   const [c0] = P([layout.channel.x0, 0])
   const [c1] = P([layout.channel.x1, 0])
@@ -88,12 +93,17 @@ function ShoalsMap({ pos, face = 0, done, current, next, gateOpen, rewards = {},
     <svg className="minimap big" viewBox="0 0 100 60" aria-label="Mirror Shoals map">
       <rect width="100" height="60" rx="3" fill="#0b1626" />
       <rect x={c0} y="0" width={c1 - c0} height="60" fill="#9fd8ff" opacity="0.08" />
+      {COMMONS.map((s) => {
+        const [x, y] = P(s.pos)
+        const r = s.def.add[0].r
+        return <ellipse key={s.id} cx={x} cy={y} rx={r * MAP_K[0]} ry={r * MAP_K[1]} fill="#1d2a40" stroke={enemiesBy?.[s.id] ? '#ff7a6a' : '#3b4a66'} strokeWidth="0.5" />
+      })}
       {layout.causeways.map((c, i) => {
         const [x1, y1] = P(c.a)
         const [x2, y2] = P(c.b)
         return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5c6680" strokeWidth="1.1" />
       })}
-      {SITES.map((s) => {
+      {PUZZLE_SITES.map((s) => {
         const [x, y] = P(s.pos)
         return <circle key={s.id} cx={x} cy={y} r={s.id === current ? 3.6 : 3} fill={done[s.id] ? '#ffb347' : s.kind === 'start' ? '#3ecfbf' : 'transparent'} stroke={s.id === current ? '#fff' : '#ffb347'} strokeWidth="0.7" />
       })}
@@ -208,6 +218,7 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
   // chase camera: it starts behind Gyroid, looking up the causeway toward Solid Shoal
   const camYawRef = useRef(Math.atan2(layout.start[0] - SITE.solid_shoal.pos[0], layout.start[1] - SITE.solid_shoal.pos[1]))
   const talkingRef = useRef(false)
+  const emmyRef = useRef(null) // where Emmy is, for 'press E to talk'
   const [rewards, setRewards] = useState({}) // site id → Mirror Lens collected
   const rewardsRef = useRef(rewards)
   rewardsRef.current = rewards
@@ -260,7 +271,7 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
   useEffect(() => {
     if (hearts < 3 && !taught.current.hearts) {
       taught.current.hearts = true
-      flash('♥ Mirror spawn bite like the rest. Lose all three hearts and you wake at the last reef you proved.', 4200)
+      flash('♥ Null’s spawn bite here too. Lose all three hearts and you wake at the last reef you proved.', 4200)
     }
   }, [hearts, flash])
   useEffect(() => {
@@ -672,6 +683,7 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
       onSpooling={setSpooling}
       camYawRef={camYawRef}
       talkingRef={talkingRef}
+      emmyRef={emmyRef}
       nullAt={nullScene ? SITE.dumbbell.toWorld(3.4, -1.6) : null}
       rewards={SITE_ORDER.filter((id) => done[id]).map((id) => ({ id, kind: 'lens', pos: rewardPos(id), state: rewards[id] ? 'taken' : 'waiting' }))}
       portal={gateOpen ? { pos: layout.gate.exit.b, facing: Math.atan2(layout.gate.exit.b[0] - layout.gate.exit.a[0], layout.gate.exit.b[1] - layout.gate.exit.a[1]), open: portalOpen, need: SITE_ORDER.length - rewardCount, warping } : null}
@@ -719,6 +731,54 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
   const ruleState = (id) => (!sim || simSite !== here.site || t < 1 ? 'idle' : sim.rules[id] ? 'ok' : 'bad')
   const beaconsOk = sim && simSite === here.site && t >= 1 ? sim.beaconHit.every(Boolean) : null
   const showRules = drawSite && !line
+  const commonsHere = site ? null : commonsAt(...here.pos)
+  // the first time Gyroid steps onto a commons with spawn on it, say what it's for
+  useEffect(() => {
+    if (!commonsHere || !enemies[commonsHere.id] || taught.current.commons) return
+    taught.current.commons = true
+    flash('Open ground: Null’s spawn roam the commons between the reefs. Fight them here, then walk on.', 4200)
+  }, [commonsHere, enemies, flash])
+
+  // press E beside Emmy: what to do here, with which keys, how to beat what's here, and where next
+  const talkOn = playEnabled && !line && !levelClear
+  const emmyAdvice = () => {
+    const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
+    const out = []
+    const typesOf = (s) => (s.enemies || []).map(([type]) => type)
+    if (commonsHere && enemies[commonsHere.id]) {
+      out.push(E(`${commonsHere.name} is open ground: no puzzle, just ${enemies[commonsHere.id]} of Null’s spawn. Clear them, or run past.`))
+      out.push(beastLine(typesOf(commonsHere)))
+    } else if (site && site.id === current && met[site.id]) {
+      const left = enemies[site.id] || 0
+      const types = typesOf(site)
+      if (loopMode(site)) {
+        const pins = (hooked[site.id] || []).length
+        out.push(E(`Spool out with 2. Walk onto a pinned × stake and click to grab the loop there; step off and click to let go. ${pins ? `${pins} stake${pins > 1 ? 's' : ''} still holding it.` : 'Let go and watch.'}`))
+        if (left) out.push(beastLine(types, `Mind the ${left} spawn here: 1 for the Lash, then click or F.`))
+      } else if (left) {
+        out.push(E(`${site.name} won’t slide while Null’s spawn are on it: ${left} left.`))
+        out.push(beastLine(types))
+      } else {
+        const k = spineIdx[site.id] || 0
+        const spine = {
+          twin_mirror: k === 0 ? 'A figure-eight: round both lagoons, crossing in the middle, through the three beacons.' : 'A theta: one loop round everything, and a bar across the middle, through the new beacons.',
+          dumbbell: k === 0 ? 'Null wants a ring round the left lagoon, through its beacons. Humour him, and watch.' : 'Add what’s missing: a loop round the right lagoon and a bar joining the two, through the beacons.',
+          mirror_gate: 'Any spine that works: a loop of spine all the way round each hole, all joined up. No beacons this time.',
+        }[site.id]
+        out.push(E(site.id === 'solid_shoal' ? 'A spine that’s just one point: Spool out with 2, stand on the beacon, click once, then click again.' : `Spool out with 2: click to start the thread, walk it, click to stop. ${spine || ''}`))
+        out.push(E('Then press Slide. Undo or Clear if the thread goes wrong.'))
+      }
+    } else if (current) {
+      const n = SITE_ORDER.indexOf(current)
+      out.push(E(`Next is ${SITE[current].name}${n ? '' : ', up the causeway to the west'}. Follow the NEXT arrow on the map; Null’s spawn roam the commons on the way.`))
+    }
+    const waiting = SITE_ORDER.filter((id) => done[id] && !rewards[id])
+    if (waiting.length) out.push(E(`${waiting.length === 1 ? 'A Mirror Lens is' : `${waiting.length} Mirror Lenses are`} still waiting, on ${waiting.map((id) => SITE[id].name).join(', ')}. Walk into them, or lash them.`))
+    if (gateOpen) out.push(portalOpen ? E('The Warp Portal’s open. Through the Mirror Gate, down the causeway, and into it. The Foundry’s waiting.') : E(`The Warp Portal past the Mirror Gate stays sealed until you bring all ${SITE_ORDER.length} Mirror Lenses. You have ${rewardCount}.`))
+    const ls = out.filter(Boolean).slice(0, 3)
+    return ls.length ? ls : [E('Keep going: the map’s arrow points to what’s next.')]
+  }
+  const nearEmmy = useEmmyTalk({ stateRef, emmyRef, enabled: talkOn, advice: emmyAdvice, say: (ls) => say(ls, phase === 'clear' ? 'clear' : 'play') })
 
   return (
     <div className="screen level">
@@ -767,10 +827,17 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
                 {done[site.id] ? ' · proven' : spawnHere ? ` · Null’s spawn: ${spawnHere}` : ' · clear'}
               </div>
             )}
+            {!site && commonsHere && (
+              <div className="here">
+                <strong>{commonsHere.name}</strong>
+                {enemies[commonsHere.id] ? ` · open ground · Null’s spawn: ${enemies[commonsHere.id]}` : ' · open ground · clear'}
+              </div>
+            )}
           </div>
         </div>
 
-        {!line && !showRules && <ShoalsMap pos={here.pos} face={here.face} done={done} current={here.site} next={current} gateOpen={gateOpen} rewards={rewards} portalOpen={portalOpen} />}
+        {!line && !showRules && <ShoalsMap pos={here.pos} face={here.face} done={done} current={here.site} next={current} gateOpen={gateOpen} rewards={rewards} portalOpen={portalOpen} enemiesBy={enemies} />}
+        <TalkPrompt near={nearEmmy} show={talkOn} />
 
         {showRules && (
           <div className="rules-panel">
@@ -865,7 +932,7 @@ export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt 
                       : 'The Spool works on the reef you’re proving'
                 : drawSite && !siteClear(site.id)
                   ? 'Clear the spawn first — lash the solid ones, not the reflections'
-                  : 'WASD to move · Z / C or right-drag to turn the camera · click to crack the Lash · 2 for the Spool · Esc to pause'}
+                  : 'WASD to move · Z / C or right-drag to turn the camera · click or F to crack the Lash · 2 for the Spool · Esc to pause'}
           </div>
         )}
       </div>

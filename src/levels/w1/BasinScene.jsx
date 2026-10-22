@@ -1,36 +1,48 @@
 import { Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
+import CommonsIslands from '../../world/Commons'
 import Seascape from '../../world/Seascape'
 import { Clouds, Gear } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import { EmmyBubble } from '../w0/FoundryScene'
 import { fieldAngle, fieldStrength, unitRoots } from './brouwer'
 import { LiveLine } from '../w0/FlatsScenery'
 
-const S = 0.7
 const GOLD = '#ffb347'
 const STONE = '#4a4a52'
 const VIOLET = '#8060d0'
 
-export function BasinSky() {
+export function BasinSky({ bounds }) {
+  // in the level the sea, the sky and the gears spread out with the (bigger) layout; the movies keep the old frame
+  const area = bounds ? [(bounds.minX + bounds.maxX) / 2, (bounds.minZ + bounds.maxZ) / 2, bounds.maxX - bounds.minX + 20, bounds.maxZ - bounds.minZ + 20] : [0, 4, 70, 50]
   return (
     <>
       <color attach="background" args={['#120818']} />
-      <fog attach="fog" args={['#120818', 28, 72]} />
+      <fog attach="fog" args={bounds ? ['#120818', 30, 84] : ['#120818', 28, 72]} />
       <ambientLight intensity={0.38} />
       <hemisphereLight args={['#c8a0ff', '#0a0610', 0.55]} />
       <directionalLight position={[12, 14, -8]} intensity={0.95} color="#e8c8ff" />
       <pointLight position={[0, 8, 4]} intensity={14} distance={36} color="#ffb070" />
-      <Seascape y={-2.4} depth={2.4} area={[0, 4, 70, 50]} seed={14} palette={{ water: '#1a2840', sand: '#3a4048', weed: '#2a3848' }} lanterns={6} />
-      <Clouds y={14} area={[0, 0, 70, 55]} count={12} seed={4} />
-      <Gear position={[-16, 0.2, 12]} r={2.1} speed={0.15} />
-      <Gear position={[17, 0.4, 8]} r={1.6} speed={-0.12} rotation={[0, 1.2, 0]} />
+      <Seascape y={-2.4} depth={2.4} area={area} seed={14} palette={{ water: '#1a2840', sand: '#3a4048', weed: '#2a3848' }} lanterns={bounds ? 12 : 6} />
+      <Clouds y={14} area={bounds ? area : [0, 0, 70, 55]} count={bounds ? 18 : 12} seed={4} />
+      {bounds ? (
+        <>
+          <Gear position={[-30, 0.2, 20]} r={2.6} speed={0.15} />
+          <Gear position={[30, 0.4, 16]} r={2} speed={-0.12} rotation={[0, 1.2, 0]} />
+          <Gear position={[-29, 0.3, -16]} r={1.8} speed={0.1} rotation={[0, 0.6, 0]} />
+          <Gear position={[29, 0.2, -18]} r={2.3} speed={-0.14} />
+        </>
+      ) : (
+        <>
+          <Gear position={[-16, 0.2, 12]} r={2.1} speed={0.15} />
+          <Gear position={[17, 0.4, 8]} r={1.6} speed={-0.12} rotation={[0, 1.2, 0]} />
+        </>
+      )}
     </>
   )
 }
@@ -264,14 +276,17 @@ export default function BasinScene({
   sites,
   current,
   basinState,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   walkable,
   game,
   gameKey,
   stateRef,
+  camYawRef,
+  talkingRef,
+  lockRef,
+  stars,
+  portal,
   frameRef,
   spawnRef,
   playEnabled,
@@ -282,17 +297,11 @@ export default function BasinScene({
   onHearts,
   shrinkT,
 }) {
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.75 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   const stations = sites.filter((s) => s.stage === 'station')
   return (
     <>
-      <BasinSky />
+      <BasinSky bounds={layout.bounds} />
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -327,13 +336,12 @@ export default function BasinScene({
       <ExitGate open={exitOpen} gate={layout.exit.gate} />
       {exitOpen && <CausewaySlab a={layout.exit.a} b={layout.exit.b} width={layout.causewayWidth} />}
       {current && sites.find((x) => x.id === current)?.rimRadius && <FieldCompass stateRef={stateRef} site={sites.find((x) => x.id === current)} />}
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -347,7 +355,7 @@ export default function BasinScene({
         onEnemies={onEnemies}
         onHearts={onHearts}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} lockRef={lockRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.58} luminanceSmoothing={0.22} />

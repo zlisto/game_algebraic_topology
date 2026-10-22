@@ -13,6 +13,7 @@ export const STATION_ORDER = ['laps_letters', 'cancel_deck', 'order_deck', 'patr
 export const OPENING = [
   N('Every lap you run here leaves a letter. Spell them wrong and the patrol will know.'),
   E('Two loops meet at each beacon here — a figure-eight. The orange petal is $a$, the blue petal is $b$; run one backwards and you get its inverse. First deck ahead.'),
+  E('Each deck you finish leaves a Free Loop: a little wire figure eight, its two petals arrowed $a$ and $b$ round one gold point, the space whose loops are words. Collect all four and the Warp Portal at the north end opens.'),
 ]
 
 /**
@@ -66,6 +67,7 @@ export const STATIONS = {
     blueprint: 'Order matters',
     arrive: [
       E('Run $a$ then $b$. Then the tape clears, and you run $b$ then $a$.'),
+      E('A Möbius prowler is loose on this deck. Two lashes (1) — but the first cuts it down the middle into one band twice as long, and it runs twice as fast. Strike again quickly.'),
     ],
     goals: [
       { type: 'tape', tokens: 'a b', done: [E('Tape reads $a b$.')] },
@@ -99,7 +101,7 @@ export const STATIONS = {
         type: 'patrol',
         word: 'a b a- b-',
         wave: true,
-        done: [G('Last letter first — one lash per letter. Patrol unravelled.'), E('That’s the free group on two letters. Glue Works is next — walk out through the north gate when you’re ready.')],
+        done: [G('Last letter first — one lash per letter. Patrol unravelled.'), E('That’s the free group on two letters. Glue Works is next: gather every Free Loop, then walk into the Warp Portal past the north gate.')],
       },
     ],
     early: [E('The patrol yard is the last deck — north of the Cancel deck.')],
@@ -122,8 +124,9 @@ export const HINTS16 = {
 
 export function emmyAdvice16(state) {
   const { current, done, goal, tape, here, enemies, patrolStep, waveOn } = state
-  if (!current) return [E('The gate north is open — walk out to finish.')]
-  if (here?.site !== current) return [E(`Head to ${state.siteName || 'the next deck'} — follow the map’s NEXT ring.`)]
+  if (!current) return [E('The gate north is open. Gather every Free Loop, then walk into the Warp Portal. I’m right behind you.')]
+  if (here?.site !== current)
+    return [E(`${state.siteName || 'The next deck'} is next: follow the map’s NEXT ring. The commons on the way are open ground and Null’s beasts are thick there. Möbius prowlers run twice as fast once cut, so strike twice. I’m right behind you.`)]
   if (!goal) return [E('Keep exploring — something’s still ahead on this deck.')]
   if (enemies?.[current] > 0) {
     if (goal.type === 'patrol') return [E(`Patrol still up — lash in reverse word order (step ${patrolStep || 0} of 4).`)]

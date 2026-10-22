@@ -6,7 +6,7 @@
  * k-invariant kₙ ∈ Hⁿ⁺²(Xₙ; πₙ₊₁X); all kₙ = 0 means X is the product of the K(πₙX, n).
  * S² and S³ × ℂP∞ have the same homotopy groups but are not homotopy equivalent (p. 348, Example 4.51).
  *
- * Cell-Smith (2): kill groups, raise floors. Cup Caster (9): set fibres and k-invariants.
+ * Cell Hammer (2): kill groups, raise floors. Cup Caster (9): set fibres and k-invariants.
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
@@ -19,7 +19,7 @@ export const OPENING = [
   E('The Twist. A Postnikov tower builds a space one homotopy group at a time: floor $Xₙ$ has the space’s $π₁, …, πₙ$ and nothing higher.'),
   E('Each floor sits over the last with fibre $K(πₙ, n)$ — but the floors can be glued with a twist. The twists are cohomology classes: the k-invariants.'),
   G('A tower of Eilenberg–MacLane spaces, held together by cohomology.'),
-  E('Cell-Smith on 2, Cup Caster on 9.'),
+  E('Cell Hammer on 2, Cup Caster on 9.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -27,7 +27,7 @@ const act = (hint, done) => ({ type: 'action', hint, done })
 export const STATIONS = {
   stack: {
     blueprint: 'Stack the Floors',
-    arrive: [E('The tower of $S²$: $π₂ = ℤ$, $π₃ = ℤ$, $π₄ = ℤ₂$. Each floor $Xₙ$ starts with all of them. With the Cell-Smith, kill every group above $n$ — attaching cells does that.')],
+    arrive: [E('The tower of $S²$: $π₂ = ℤ$, $π₃ = ℤ$, $π₄ = ℤ₂$. Each floor $Xₙ$ starts with all of them. With the Cell Hammer, kill every group above $n$ — attaching cells does that.')],
     early: [E('Not yet — finish the floor above first. Follow NEXT on the map.')],
     goals: [
       act('Kill the groups above n on each floor', [G('$X₂$: just $π₂$. $X₃$: $π₂$ and $π₃$.'), E('$S² → Xₙ$ is an isomorphism on $πᵢ$ for $i ≤ n$, and $πᵢ(Xₙ) = 0$ above. That’s the tower.')]),
@@ -111,8 +111,8 @@ export function emmyAdvice(state) {
     return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('The tower stands. Walk to the gate.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'stack') return [E('Cell-Smith (2) on the glowing meters: on floor $Xₙ$, every group above $πₙ$ goes.')]
+  if (current === 'stack') return [E('Cell Hammer (2) on the glowing meters: on floor $Xₙ$, every group above $πₙ$ goes.')]
   if (current === 'twist') return [E('Cup Caster (9) on each slab. The fibre of $Xₙ → Xₙ₋₁$ is $K(πₙ, n)$ — the group is on the right.')]
   if (current === 'untwist') return [E('Cup Caster (9) on each pad. A product has $k₂ = 0$, and then $H₃$ is $ℤ$. Which tower can’t have that?')]
-  return [E('Cell-Smith (2): raise $X₂$ first, then $X₃$, then $X₄$.')]
+  return [E('Cell Hammer (2): raise $X₂$ first, then $X₃$, then $X₄$.')]
 }

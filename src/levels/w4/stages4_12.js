@@ -6,7 +6,7 @@
  * groups are 0 (X abelian), every map A → X extends. The reroute station uses the cellular picture
  * Hatcher points to in [VBKT]; it goes slightly beyond the text.
  *
- * Cell-Smith (2): extend over cells, open doors. Cup Caster (9): read obstructions, twist cells.
+ * Cell Hammer (2): extend over cells, open doors. Cup Caster (9): read obstructions, twist cells.
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
@@ -17,7 +17,7 @@ export const OPENING = [
   E('The Obstruction Course — the top of the Spire. One question: given a map on $A$, can it extend over all of $W$?'),
   E('Go one cell at a time. When a cell won’t take the map, what blocks it is a cohomology class: the obstruction.'),
   G('So even the walls are readings.'),
-  E('Cell-Smith on 2, Cup Caster on 9.'),
+  E('Cell Hammer on 2, Cup Caster on 9.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -25,7 +25,7 @@ const act = (hint, done) => ({ type: 'action', hint, done })
 export const STATIONS = {
   cell: {
     blueprint: 'Cell by Cell',
-    arrive: [E('A map $A → S²$, and $W$ is $A$ plus cells. An $(n+1)$-cell extends if its boundary map $Sⁿ → S²$ is nullhomotopic — always, when $πₙ(S²) = 0$. Cell-Smith the cells that are safe.')],
+    arrive: [E('A map $A → S²$, and $W$ is $A$ plus cells. An $(n+1)$-cell extends if its boundary map $Sⁿ → S²$ is nullhomotopic — always, when $πₙ(S²) = 0$. Cell Hammer the cells that are safe.')],
     early: [E('Not yet — finish the floor below first. Follow NEXT on the map.')],
     goals: [
       act('Extend over every cell whose boundary lands in a zero group', [G('The $3$-cell’s boundary lands in $π₂(S²) = ℤ$. Not safe.'), E('Lemma 4.7: extensions exist if $πₙ(X) = 0$ for every $(n+1)$-cell of $W − A$.')]),
@@ -109,8 +109,8 @@ export function emmyAdvice(state) {
     return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('The summit is yours. Walk to the gate.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'cell') return [E('Cell-Smith (2) on each dome whose boundary group is $0$.')]
-  if (current === 'blocked') return [E('Cup Caster (9) reads a dome’s $ω$. Cell-Smith (2) extends over the one with $ω = 0$.')]
+  if (current === 'cell') return [E('Cell Hammer (2) on each dome whose boundary group is $0$.')]
+  if (current === 'blocked') return [E('Cup Caster (9) reads a dome’s $ω$. Cell Hammer (2) extends over the one with $ω = 0$.')]
   if (current === 'reroute') return [E('Cup Caster (9) on the shared $2$-cell twists it. If $A + B ≠ 0$, no twist works — use the red pad.')]
-  return [E('Cell-Smith (2) on a door opens it — if every obstruction group under it is $0$.')]
+  return [E('Cell Hammer (2) on a door opens it — if every obstruction group under it is $0$.')]
 }

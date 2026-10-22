@@ -16,6 +16,7 @@ export const STATION_ORDER = ['projector_deck', 'retract_deck', 'two_roads', 'sh
 export const OPENING = [
   E('The Torus Terraces. Here maps carry loops from one space to another — and every map sends loops to loops.'),
   G('Push it forward!'),
+  E('Every terrace you finish leaves a Torus Pair: a glassy torus with its two loops, $a$ round the long way and $b$ through the hole, the two loops every torus loop is built from. Collect all four and the Warp Portal at the north end opens.'),
   E('The Projector terrace is just ahead.'),
 ]
 
@@ -33,7 +34,8 @@ export const STATIONS = {
     blueprint: 'The Projector',
     arrive: [
       E('A map $f$ from one circle to another carries every loop with it: a loop $γ$ becomes $f ∘ γ$. On $π₁$ that’s the induced map, written $f∗$.'),
-      E('This projector is the map $z ↦ z²$: it wraps the source circle twice round the target. Cord (4): run one lap of the gold source circle, then click the projector.'),
+      E('This projector is the map $z ↦ z²$: it wraps the source circle twice round the target. Cord (4): run one lap of the gold source circle counter-clockwise, seen from above, the same $+1$ as on the Winding Road. Then click the projector.'),
+      E('Mind the Möbius prowler. It takes two lashes (1), and the first one cuts it down the middle into one band twice as long, which then runs twice as fast. Strike, then be ready to strike again.'),
     ],
     goals: [
       {
@@ -108,7 +110,7 @@ export const STATIONS = {
     blueprint: 'Shadows',
     arrive: [
       E('The torus is a product, $S¹ × S¹$. A loop on it casts a shadow on each factor circle, and the two shadows determine the loop.'),
-      E('The board wants the loop $(2, 3)$. Cord (4): run the gold first-factor circle twice and the teal second-factor circle three times. Run a circle backwards to take a lap off. Then press Rebuild.'),
+      E('The board wants the loop $(2, 3)$. Cord (4): run the gold first-factor circle twice and the cyan second-factor circle three times, counter-clockwise seen from above ($+1$ a lap). A clockwise lap counts $−1$, so it takes a lap off. Then press Rebuild.'),
     ],
     goals: [
       {
@@ -124,7 +126,7 @@ export const STATIONS = {
       {
         type: 'guard',
         wave: true,
-        done: [E('That’s the last of them. The causeway north is open — walk out when you’re ready.')],
+        done: [E('That’s the last of them. The causeway north is open: gather every Torus Pair and the Warp Portal at its end will take us on.')],
       },
     ],
     early: [E('Shadows waits until both roads make sense.')],
@@ -134,9 +136,9 @@ export const STATIONS = {
 export const HINTS = {
   knockout: E('Hearts back. Your terraces stay done; the spawn here are back.'),
   hijacked: E('Spawn on this terrace are jamming the projector. Lash them (1), then project.'),
-  wrongPush: E('Run one lap of the gold source circle with the Cord (4) first — then click the brass projector.'),
+  wrongPush: E('Run one lap of the gold source circle with the Cord (4) first, counter-clockwise seen from above ($+1$; a clockwise lap is $−1$). Then click the brass projector.'),
   swap: E('Press “Back to the start” in the panel. Then go through the other gate first, then the first one.'),
-  shadows: E('Run the gold circle twice and the teal circle three times, then press Rebuild.'),
+  shadows: E('Run the gold circle twice and the cyan circle three times, counter-clockwise ($+1$ a lap; clockwise takes one off), then press Rebuild.'),
 }
 
 export const DEFINITION = {
@@ -149,14 +151,15 @@ export const DEFINITION = {
 
 export function emmyAdvice15(state) {
   const { current, here, goal, SITE, loops, hijacked, waveOn, waveSpawned, enemies, exitOpen } = state
-  if (exitOpen) return [E('The north gate is open — walk through to leave.')]
+  if (exitOpen) return [E('The north gate is open. Gather every Torus Pair, then walk into the Warp Portal. I’m right behind you.')]
   if (!current) return [G('All terraces done!')]
-  if (here.site !== current) return [E(`Head to ${SITE[current].name} — follow the map’s NEXT ring.`)]
+  if (here.site !== current)
+    return [E(`${SITE[current].name} is next: follow the map’s NEXT ring. Null’s beasts roam the commons between the terraces, and a Projective specter needs its second lash quickly, so keep the Lash (1) ready. I’m right behind you.`)]
   const g = goal
   if (!g) return [E('Walk on.')]
   if (g.type === 'push') {
     if (hijacked) return [HINTS.hijacked]
-    if ((loops?.source ?? 0) < g.needSource) return [E('Cord (4): run all the way round the gold source circle, staying on it.')]
+    if ((loops?.source ?? 0) < g.needSource) return [E('Cord (4): run all the way round the gold source circle, staying on it, counter-clockwise seen from above. That’s $+1$; clockwise would be $−1$.')]
     return [E('Now click the brass projector.')]
   }
   if (g.type === 'retract') return [E(`Cord (4): run the pink inner road round the pool — ${g.w2} laps.`)]

@@ -39,7 +39,7 @@ export function TwistTowerLessonOverlay({ t }) {
         [12.4, 24, 'Fibres', ['$Xₙ → Xₙ₋₁$', 'fibre $K(πₙX, n)$']],
         [24.4, 36, 'k-invariants', ['$kₙ ∈ Hⁿ⁺²(Xₙ; πₙ₊₁X)$', '$Xₙ₊₁$ = its homotopy fibre']],
         [36.4, 58, 'Same groups', ['$S²$ vs $S³ × ℂP∞$', 'different $k₂$']],
-        [58.4, 64, 'The Twist', ['Cell-Smith (2), Cup Caster (9)', 'kill, name, twist, raise']],
+        [58.4, 64, 'The Twist', ['Cell Hammer (2), Cup Caster (9)', 'kill, name, twist, raise']],
       ]}
       summary={{ t: 64, title: 'Postnikov towers', items: ['One group per floor', 'k-invariants twist them', 'all zero: a product'], cite: 'Hatcher pp. 410–412' }}
     />

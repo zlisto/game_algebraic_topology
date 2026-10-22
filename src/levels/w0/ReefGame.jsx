@@ -79,7 +79,7 @@ export const GYROID_SCALE = 0.7
 const SPEED = 3.6
 const WHIP_TIME = 0.52 // long enough to see the rear-back and the wave roll out
 const WHIP_HIT_AT = 0.45 // fraction of the swing when the lash lands
-const WHIP_RANGE = 1.35
+const WHIP_RANGE = 1.7
 const WHIP_ARC = Math.PI * 0.42
 const CONTACT = 0.36
 const HEARTS = 3
@@ -268,9 +268,9 @@ function GlassProp({ state, tool }) {
   )
 }
 
-/** The Cell-Smith (0-4): a brass-and-indigo gauntlet whose palm shows a point, a loop and a disk. */
+/** The Cell Hammer (0-4): a brass-and-indigo gauntlet whose palm shows a point, a loop and a disk. */
 /**
- * The Cell-Smith: a forge hammer — a dark wooden haft, a brass-bound steel head with a
+ * The Cell Hammer: a forge hammer — a dark wooden haft, a brass-bound steel head with a
  * glowing gold rune band. Gyroid carries it at his side; a click winds it up and brings it
  * down (state.swing 0 → 1), with a flash of sparks at the strike.
  */
@@ -384,10 +384,10 @@ export default function ReefGame({
       face: camYawRef ? camYawRef.current + Math.PI : Math.PI / 2, // chase camera: start facing away from it
       moving: 0,
       whip: 0,
-      swing: 0, // the Cell-Smith's hammer swing, 0 → 1
+      swing: 0, // the Cell Hammer's hammer swing, 0 → 1
       hitDone: false,
       hearts: HEARTS,
-      hurt: 0,
+      hurt: 2.0, // a moment's grace on arrival (and after every knockout) before anything can bite
       spooling: false,
       slideFrom: null,
     }
@@ -401,6 +401,7 @@ export default function ReefGame({
       site,
       x,
       z,
+      commons: String(site || '').includes('commons'), // a battle-plaza pack: shorter leash
       hx: x, // home: spawn stay near where they were placed
       hz: z,
       hp: enemyHp(type, Array.isArray(def) ? undefined : def),
@@ -453,6 +454,8 @@ export default function ReefGame({
   const [, setDropCount] = useState(0) // re-render when one drops or is taken
   const pickSphere = useMemo(() => new THREE.Sphere(), [])
   const pickHit = useMemo(() => new THREE.Vector3(), [])
+  const toolRef = useRef(tool) // the tool in hand, for key handlers set up once
+  toolRef.current = tool
   if (import.meta.env.DEV) {
     // dev inspection / test shortcuts
     window.__game = {
@@ -476,7 +479,11 @@ export default function ReefGame({
         keys.current[e.code] = true
         e.preventDefault() // movement keys never nudge a focused slider or scroll the page
       }
-      if (camYawRef && e.code === 'KeyF' && !e.repeat) keys.current.lashAhead = true
+      if (camYawRef && e.code === 'KeyF' && !e.repeat) {
+        // F always means the Lash: with another tool out, switch to it (every level binds 1 to the Lash) and crack
+        if (toolRef.current !== 'lash') window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Digit1', key: '1' }))
+        keys.current.lashAhead = performance.now()
+      }
       if (e.code === 'KeyG' && !e.repeat) {
         // the lash's stance: chain (strike chains) or cochain (evaluate on the dual)
         const st = state.current
@@ -557,8 +564,27 @@ export default function ReefGame({
       }
       if (k.lashAhead) {
         // F: lash toward the mouse if it's over the ground, else straight ahead
-        k.lashAhead = false
-        if (tool === 'lash') clicks.current.push(aim.current ? [...aim.current] : [s.x + Math.sin(s.face) * 1.5, s.z + Math.cos(s.face) * 1.5])
+        // waits a moment for the switch to the Lash to land, then cracks
+        if (tool === 'lash' || performance.now() - k.lashAhead > 400) k.lashAhead = false
+        if (tool === 'lash') {
+          // aim assist: a live beast close by and roughly ahead takes the lash, wherever the mouse is
+          // (only beasts the lash can actually reach; ahead first, then the nearest from any side)
+          let best = null
+          let bd = Infinity
+          let side = null
+          let sd = Infinity
+          for (const e of enemies.current) {
+            if (!e.alive || e.dying) continue
+            const d = Math.hypot(e.x - s.x, e.z - s.z)
+            if (d > WHIP_RANGE + (ENEMY[e.type]?.radius || 0.4)) continue
+            let da = Math.atan2(e.x - s.x, e.z - s.z) - s.face
+            da = Math.atan2(Math.sin(da), Math.cos(da))
+            if (Math.abs(da) < Math.PI / 4 && d < bd) (best = e), (bd = d)
+            if (d < sd) (side = e), (sd = d)
+          }
+          best = best || side
+          clicks.current.push(best ? [best.x, best.z] : aim.current ? [...aim.current] : [s.x + Math.sin(s.face) * 1.5, s.z + Math.cos(s.face) * 1.5])
+        }
       }
     }
     const ml = Math.hypot(mx, mz)
@@ -708,7 +734,8 @@ export default function ReefGame({
             // a level can react to a hit, and can keep the target standing (1-9's Stack sentinel swaps the start vertex, again and again)
             if (stage.onEnemyHit?.(e) === 'keep') e.hp++
             e.stun = 0.5
-            const kb = e.type === 'beacon' || ENEMY[e.type].speed === 0 ? 0 : 0.55 / (d || 1)
+            // a flipped (torsion) enemy stays put, so the second lash of the pair can land
+            const kb = e.type === 'beacon' || ENEMY[e.type].speed === 0 || e.flipped ? 0 : 0.55 / (d || 1)
             const kx = e.x + dx * kb
             const kz = e.z + dz * kb
             if (enemyInside(kx, kz)) (e.x = kx), (e.z = kz)
@@ -746,7 +773,7 @@ export default function ReefGame({
     }
 
     // --- spawn: wander, chase when close, hurt on contact
-    s.hurt = Math.max(0, s.hurt - dt)
+    if (playEnabled) s.hurt = Math.max(0, s.hurt - dt) // the grace clock waits while a dialogue holds the world
     const drift = playEnabled && stage.drift ? stage.drift(clock.elapsedTime) : null
     for (const e of enemies.current) {
       e.flash = Math.max(0, e.flash - dt)
@@ -806,7 +833,7 @@ export default function ReefGame({
       const dx = s.x - e.x
       const dz = s.z - e.z
       const d = Math.hypot(dx, dz)
-      const leash = Math.hypot(s.x - e.hx, s.z - e.hz) < 6.5 // spawn guard their own patch of reef
+      const leash = Math.hypot(s.x - e.hx, s.z - e.hz) < (e.commons ? 4.5 : 6.5) // spawn guard their own patch of reef (plaza packs a tighter one)
       e.cooldown = Math.max(0, e.cooldown - dt)
       const ribbonGoal = (e.type === 'snapper' || e.type === 'unglue' || e.type === 'coner' || e.type === 'biter') && e.cooldown === 0 && playEnabled && !onPier ? ribbonApi?.current?.target(e) : null
       if (drift && e.type !== 'snapper' && e.type !== 'unglue' && e.type !== 'coner' && e.type !== 'biter') {
@@ -866,9 +893,10 @@ export default function ReefGame({
         else e.retarget = 0
         e.face = Math.atan2(vx, vz)
       }
-      if (d < cfg.radius + 0.3 && d > 0.001 && cfg.speed > 0) {
-        // never stand inside Gyroid: ease back out to arm's length
-        const push = (cfg.radius + 0.3 - d) / d
+      const touch = CONTACT + cfg.radius * 0.5 // biting distance (the bite check below allows +0.08)
+      if (d < touch && d > 0.001 && cfg.speed > 0) {
+        // never stand inside Gyroid: ease back out to biting distance (not past it, or a still player is never bitten)
+        const push = (touch - d) / d
         const px = e.x - dx * push
         const pz = e.z - dz * push
         if (enemyInside(px, pz)) (e.x = px), (e.z = pz)

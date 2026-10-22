@@ -1,15 +1,15 @@
 {
   "note": "The Skeleton Foundry's Assembly Hall (World 0 · Level 4) in level-local units: x east, z south. Each forge station is a round platform with a furnace hub at its center (the one 0-cell) and petal tracks that leave the hub and come back (each forged track is a 1-cell, a loop at the hub). Gyroid arrives from the Mirror Gate in the south and leaves north toward the Cone Zone.",
   "bounds": {
-    "minX": -20,
-    "maxX": 20,
-    "minZ": -26,
-    "maxZ": 18
+    "minX": -36.0,
+    "maxX": 36.0,
+    "minZ": -45.6,
+    "maxZ": 43.5
   },
   "causewayWidth": 2.4,
   "start": [
-    0,
-    14
+    0.0,
+    37.5
   ],
   "sites": [
     {
@@ -17,8 +17,8 @@
       "name": "Foundry Gate",
       "kind": "start",
       "pos": [
-        0,
-        14
+        0.0,
+        37.5
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "The Sphere Press",
       "stage": "station",
       "pos": [
-        0,
-        5.5
+        0.0,
+        8.8
       ],
       "shape": {
         "add": [
@@ -77,8 +77,8 @@
       "name": "Twin Loops",
       "stage": "station",
       "pos": [
-        -11,
-        -3.5
+        -17.6,
+        -5.6
       ],
       "shape": {
         "add": [
@@ -127,8 +127,8 @@
       "name": "One Loop",
       "stage": "station",
       "pos": [
-        11,
-        -3.5
+        17.6,
+        -5.6
       ],
       "shape": {
         "add": [
@@ -168,8 +168,8 @@
       "name": "The Blueprint Wall",
       "stage": "station",
       "pos": [
-        0,
-        -12.5
+        0.0,
+        -20.0
       ],
       "shape": {
         "add": [
@@ -224,73 +224,304 @@
           3
         ]
       ]
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons 1",
+      "kind": "commons",
+      "pos": [
+        -8.75,
+        1.25
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          2.08,
+          1.43
+        ],
+        [
+          "torus",
+          -2.28,
+          1.09
+        ],
+        [
+          "sphere",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons 2",
+      "kind": "commons",
+      "pos": [
+        8.75,
+        1.25
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.08,
+          1.43
+        ],
+        [
+          "sphere",
+          -2.28,
+          1.09
+        ],
+        [
+          "torus",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Commons 3",
+      "kind": "commons",
+      "pos": [
+        -9.3,
+        -13.45
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "torus",
+          2.08,
+          1.43
+        ],
+        [
+          "unglue",
+          -1.43,
+          2.08
+        ],
+        [
+          "sphere",
+          -2.08,
+          -1.43
+        ],
+        [
+          "sphere",
+          1.43,
+          -2.08
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Commons 4",
+      "kind": "commons",
+      "pos": [
+        9.3,
+        -13.45
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "projective",
+          2.08,
+          1.43
+        ],
+        [
+          "mobius",
+          -2.28,
+          1.09
+        ],
+        [
+          "sphere",
+          0.19,
+          -2.51
+        ]
+      ]
+    },
+    {
+      "id": "commons_gate",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0.0,
+        25.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.6
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          -1.88,
+          -3.44
+        ],
+        [
+          "torus",
+          1.88,
+          -3.44
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        12.5
+        0.0,
+        36.0
       ],
       "b": [
-        0,
-        10.6
+        0.0,
+        30.7
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        20.3
+      ],
+      "b": [
+        0.0,
+        13.8
       ]
     },
     {
       "a": [
         -3.6,
-        1.9
+        5.2
       ],
       "b": [
-        -7.3,
-        -0.6
+        -6.37,
+        3.076
+      ]
+    },
+    {
+      "a": [
+        -11.13,
+        -0.576
+      ],
+      "b": [
+        -13.9,
+        -2.7
       ]
     },
     {
       "a": [
         3.6,
-        1.9
+        5.2
       ],
       "b": [
-        7.3,
-        -0.6
+        6.37,
+        3.076
       ]
     },
     {
       "a": [
-        -8.4,
-        -7.6
+        11.13,
+        -0.576
+      ],
+      "b": [
+        13.9,
+        -2.7
+      ]
+    },
+    {
+      "a": [
+        -15.0,
+        -9.7
+      ],
+      "b": [
+        -11.806,
+        -11.801
+      ]
+    },
+    {
+      "a": [
+        -6.794,
+        -15.099
       ],
       "b": [
         -3.6,
-        -9.7
+        -17.2
       ]
     },
     {
       "a": [
-        8.4,
-        -7.6
+        15.0,
+        -9.7
+      ],
+      "b": [
+        11.806,
+        -11.801
+      ]
+    },
+    {
+      "a": [
+        6.794,
+        -15.099
       ],
       "b": [
         3.6,
-        -9.7
+        -17.2
       ]
     }
   ],
   "exit": {
     "gate": [
-      0,
-      -19.4
+      0.0,
+      -26.9
     ],
     "a": [
-      0,
-      -17.6
+      0.0,
+      -25.1
     ],
     "b": [
-      0,
-      -24.5
+      0.0,
+      -32.0
     ],
     "to": "cone_zone"
-  }
+  },
+  "decorScale": 1.6
 }

@@ -14,6 +14,8 @@ export const OPENING = [
   N('Shift every floor at once. If the ports still line up, nothing changed — and I still win.'),
   E('The Deck Halls. The Sheet Compass (6) turns a whole cover at once, when the cover lands on itself.'),
   E('Lash (1) clears Null’s spawn when a deck shift stacks every copy on one spot.'),
+  E('This is the last stretch of World 1, and Null has packed the commons between the halls: projective specters above all. They’re built like $ℝP²$, so one lash only flips them — land the second within two seconds. I’ll stay right behind you; press E for advice.'),
+  E('Each hall you finish leaves a Deck Sphere: a glass sphere with two opposite points joined by one deck swap, the sphere covering $ℝP²$ twice. Bring all four together and the Warp Portal past the north gate opens.'),
 ]
 
 export const STATIONS = {
@@ -21,7 +23,9 @@ export const STATIONS = {
     blueprint: 'Shift the deck',
     arrive: [
       E('Over this hall hangs a three-sheeted cover: $a$ and $b$ both carry sheet 1 to 2, 2 to 3, and 3 back to 1.'),
-      E('A deck transformation shuffles the sheets so the whole graph lands on itself — every edge onto an edge with the same letter. Click the wheel with the Sheet Compass (6) to turn the cover a third of the way round.'),
+      E('A deck transformation shuffles the sheets so the whole graph lands on itself — every edge onto an edge with the same letter.'),
+      N('My Deck guards stand on every sheet at once. Lash one copy and the others just laugh.'),
+      E('He’s right: a guard copied on three sheets can’t be hit until its copies stack. Click the wheel with the Sheet Compass (6) to turn the cover a third of the way round, and keep away from them until then.'),
     ],
     goals: [
       {
@@ -29,20 +33,41 @@ export const STATIONS = {
         cover: 'cyclic3',
         needShift: 1,
         guards: true,
-        done: [
-          E('A third of a turn, and every edge lands on an edge with the same letter. That turn is a deck transformation — a symmetry of the cover.'),
-          E('Here a deck transformation can carry any sheet to any other. That makes the cover normal.'),
+        // said the moment the turn lands, before the lash
+        stacked: [
+          E('A third of a turn, and every edge lands on an edge with the same letter. That turn is a deck transformation — a symmetry of the cover — and it carries each guard’s copies onto one spot.'),
           G('The guards stacked. One lash.'),
         ],
+        done: [E('Gone, every copy at once. Null’s sending more — turn the deck again when they come.')],
+      },
+      {
+        type: 'shift',
+        cover: 'cyclic3',
+        needShift: 2,
+        guards: true,
+        stacked: [E('Two thirds of a turn: the graph lands on itself again. That’s a second deck transformation. Lash them while they’re stacked!')],
+        done: [],
+      },
+      {
+        type: 'ask',
+        question: 'Counting “do nothing”, how many deck transformations does this three-sheeted cover have?',
+        options: ['1', '2', '3'],
+        answer: '3',
+        right: [
+          E('Three: do nothing, a third of a turn, two thirds. Sheet 1 can be carried to sheet 1, 2 or 3 — any sheet to any other. That makes this cover normal.'),
+          E('West, across the Carousel Commons, to the lopsided gallery. Its cover won’t be so kind.'),
+        ],
+        wrong: [E('Count the turns that landed the graph on itself: “do nothing”, then each turn you made with the wheel. Each one carries sheet 1 to a different sheet.')],
       },
     ],
-    early: [E('The carousel hall is just north of the landing.')],
+    early: [E('The carousel hall is north, past the landing commons.')],
   },
   lopsided: {
     blueprint: 'Lopsided cover',
     arrive: [
       E('Another three-sheeted cover: $a$ swaps sheets 1 and 2, $b$ swaps sheets 2 and 3. Look at the loops: sheet 1 has a $b$-loop, sheet 3 an $a$-loop, sheet 2 neither.'),
       N('Turn it all you like. It never lands on itself.'),
+      E('That’s a projective specter: it’s built like $ℝP²$, where a loop traced twice shrinks away. One lash only flips it. Land the second within two seconds, or it settles back.'),
     ],
     goals: [
       {
@@ -97,7 +122,7 @@ export const STATIONS = {
       {
         type: 'walk',
         loopId: 'half',
-        done: [E('You walked half the rim: door to opposite door. The Bastion goes on the Chart. The north gate is open — and Null’s trail runs straight through it.')],
+        done: [E('You walked half the rim: door to opposite door. The Bastion goes on the Chart. The north gate is open — and Null’s trail runs straight through it. Gather every Deck Sphere and the Warp Portal there will take us out of World 1.')],
       },
     ],
     early: [E('The sphere hall is north — after the quotient forge.')],
@@ -120,10 +145,11 @@ export const DEFINITION = {
 
 export function emmyAdvice110(state) {
   const { current, goal, done, shift, guardsAligned, here, enemies } = state
-  if (!current) return [E('All halls clear. Walk out north to leave.')]
-  if (here?.site !== current) return [E(`Head to ${STATIONS[current].blueprint} — follow the map’s NEXT ring.`)]
-  if (enemies?.[current] > 0 && !guardsAligned) return HINTS.guards
-  if (goal?.type === 'shift') return [E(`Rotate with the Compass until shift +${goal.needShift} is valid${goal.guards ? ', stack the guards, then Lash' : ''}.`)]
+  if (!current) return [E('All halls clear. Pick up every Deck Sphere, then walk north into the Warp Portal.')]
+  if (here?.site !== current) return [E(`I’m right behind you. Head to ${STATIONS[current].blueprint} — follow the map’s NEXT ring. On the commons, lash each projective specter twice in quick succession; a Klein bottle takes three.`)]
+  if (goal?.guards && enemies?.[current] > 0 && !guardsAligned) return [E(`Don’t waste lashes on the guards yet — each is copied on every sheet. Sheet Compass (6) on the wheel: turn the cover to shift +${goal.needShift}, and the copies stack.`)]
+  if (goal?.guards && guardsAligned) return [E('They’re stacked on one spot now. Lash (1) them — one strike takes every copy.')]
+  if (goal?.type === 'shift') return [E(`Sheet Compass (6) on the wheel in the middle: turn until shift +${goal.needShift}.`)]
   if (goal?.type === 'ask') return [E('Answer the question — think about which sheets can reach which.')]
   if (goal?.type === 'walk') return HINTS.walk
   return [E('Sheet Compass (6) on the wheel; Lash (1) when copies stack.')]

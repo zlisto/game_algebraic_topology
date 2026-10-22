@@ -12,7 +12,9 @@ export const STATION_ORDER = ['open_lawn', 'hedges', 'faster', 'chained']
 export const OPENING = [
   E('Endpoint Gardens. Couriers log routes between gatehouses — not parcels, but which delivery class a path belongs to.'),
   E('Two routes count as the same if one slides into the other while both ends stay pinned at their gates. That is a path homotopy rel the endpoints.'),
-  G('Ledger open. Tide Glass to watch a slide, Spool to pick routes up and sort them. Lost? I’ll ask Emmy — E.'),
+  E('Each garden you settle leaves a Path Seal: two routes between the same gates, and the sweep that slides one onto the other. Collect all four and the Warp Portal at the far end of the gardens opens.'),
+  E('Between the gardens lie open commons, and Null’s beasts roam them: spheres, tori, the odd Möbius band. Crack the Lash (1) and keep moving. I’ll be right behind you.'),
+  G('Ledger open. Tide Glass to watch a slide, Spool to pick routes up and sort them. And if I’m lost, I turn round and ask Emmy — E.'),
 ]
 
 /**
@@ -130,15 +132,15 @@ export const WRONG = {
 
 export function emmyAdvice11(s) {
   const lines = []
-  if (s.exitOpen) return [E('Exit is north. Walk through the gate — the iris will close behind you.')]
-  if (!s.station) return [E('Follow the map’s NEXT ring to the current garden.')]
-  if (s.here !== s.station) return [E(`You're not on ${s.name} yet — dashed line on the map.`), E(`Head to ${s.stationName}.`)]
-  if (s.enemies) return [E('Clear the spawn first — lash (1). Hedge spawn root if you wait too long.')]
+  if (s.exitOpen) return [E('Every garden’s settled. Pick up the Path Seals, then on through the far gate to the Warp Portal. I’m right behind you.')]
+  if (!s.station) return [E('Follow the map’s NEXT ring to the current garden. I’ll follow.')]
+  if (s.here !== s.station) return [E(`${s.stationName} is next: follow the NEXT ring on the map, and lash (1) whatever roams the commons on the way. I’m right on your heels.`)]
+  if (s.enemies) return [E('Clear the spawn on this deck first: lash (1). Hedge spawn root if you wait too long.')]
   const g = s.goal
   if (!g) return [E('Section clear. Walk to NEXT on the map.')]
   if (g.type === 'slide') return [E('Tide Glass (3): scrub t until the routes match. Gates stay fixed.')]
   if (g.type === 'ledger') return [E(`Ledger: sort routes into ${g.expectClasses || 2} classes. Click route, then bin.`), E('Same bin iff a homotopy rel the gates exists.')]
-  if (g.type === 'pace') return [E('Walk the slow route with Spool (2), then confirm the fast copy is the same class.')]
+  if (g.type === 'pace') return [E('The solid route walks the curve slowly, the dashed one hurries along the very same trail. Same class or not? Answer in the panel.')]
   if (g.type === 'chain') return [E('Chain A→B and B→C, note the class, swap B→C for an equivalent route, check the class again.')]
   if (g.type === 'guard') return [E('Lash every hedge spawn before it roots (1).')]
   return [E('Spool (2) for routes, Tide Glass (3) for slides, E to talk.')]

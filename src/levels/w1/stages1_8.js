@@ -11,7 +11,9 @@ export const STATION_ORDER = ['two_floors', 'build_cover', 'rescue', 'order_prov
 
 export const OPENING = [
   E('Sheetwater Viaduct. Over each deck hang glass copies of it — the sheets of a covering space. Wherever you walk, your lift (the white bead) walks the same way on one of the sheets.'),
-  E('The Sheet Compass (6) reads which sheet your lift is on. First deck: two sheets over a single loop — just ahead.'),
+  E('The Sheet Compass (6) reads which sheet your lift is on. First deck: two sheets over a single loop, past the landing commons.'),
+  E('Null’s beasts hold every commons between the decks, and these are the toughest in the Bastion: Möbius prowlers, projective specters, even a Klein bottle. Lash (1) them on the open ground. I’ll stay right behind you — press E whenever you want my advice.'),
+  E('Each deck you finish leaves a Cover Stack: glass sheets stacked over one circle, a bead on every sheet above the gold point below. Collect all four and the Warp Portal at the north end opens.'),
 ]
 
 /**
@@ -44,7 +46,7 @@ export const STATIONS = {
     goals: [
       {
         type: 'wire',
-        done: [E('Valid and connected — a three-sheeted cover of the figure-eight.'), G('The rescue deck is east — Emmy’s stuck on sheet two!')],
+        done: [E('Valid and connected — a three-sheeted cover of the figure-eight.'), G('East, past the crossing commons: Null’s hung the rescue deck’s beacon up on sheet two!')],
       },
     ],
     early: [E('Wire the three-sheet cover at the junction first.')],
@@ -52,14 +54,16 @@ export const STATIONS = {
   rescue: {
     blueprint: 'Rescue on sheet two',
     arrive: [
-      E('I’m up on sheet two. Run loops down there until your lift ends on my sheet.'),
-      G('Hold on. I’ll read the Compass and find a word that lands on sheet two.'),
+      N('The deck’s beacon is mine now. It hangs on sheet two, where your feet can’t reach.'),
+      E('Feet can’t, but your lift can. See the gold beacon up on sheet two? Run loops down here until your lift — the white bead — ends on that sheet.'),
+      G('I’ll read the Compass and find a word that lands on sheet two.'),
+      E('Watch the Möbius prowler. Your first lash cuts it down the middle — one band, twice as long, and twice as fast. Lash it again before it reaches you.'),
     ],
     goals: [
       {
         type: 'rescue',
         targetSheet: 2,
-        done: [E('You reached me. Back at the beacon downstairs, but on another sheet up here — a loop whose lift doesn’t close.'), G('Now let’s prove order matters. The last deck, north-west.')],
+        done: [E('Your lift reached the beacon. You’re back at the start downstairs, but on another sheet up there — a loop whose lift doesn’t close.'), G('Now let’s prove order matters. The last deck, past the ebb commons to the north.')],
       },
     ],
     early: [E('The rescue deck is east of the junction.')],
@@ -72,8 +76,7 @@ export const STATIONS = {
       E('Not here. Stand on the beacon with the Sheet Compass (6) and click: it lifts $a b$ and $b a$ from sheet one and shows where each ends.'),
     ],
     goals: [
-      { type: 'prove', done: [E('There it is: $a b$ closes and $b a$ doesn’t. So $ab ≠ ba$ in $π₁$ of the figure-eight — what Free Word Play claimed, now proved with a cover.'), G('The covers see what the loops downstairs can’t.')] },
-      { type: 'exit', done: [E('The viaduct exit is open north — Sheet Stacks wait beyond. Walk out when ready.')] },
+      { type: 'prove', done: [E('There it is: $a b$ closes and $b a$ doesn’t. So $ab ≠ ba$ in $π₁$ of the figure-eight — what Free Word Play claimed, now proved with a cover.'), G('The covers see what the loops downstairs can’t.'), E('The viaduct exit is open north. Gather every Cover Stack and the Warp Portal there will take us on to Sheet Music.')] },
     ],
     early: [E('The last deck — prove $ab ≠ ba$.')],
   },
@@ -97,13 +100,13 @@ export const DEFINITION18 = {
 
 export function emmyAdvice18(state) {
   const { current, done, goal, liftSheet, cover, here, enemies } = state
-  if (!current) return [E('The viaduct is clear. Walk north to leave.')]
-  if (here.site !== current) return [E(`Head to ${state.siteName(current)} — that is the active deck.`)]
-  if (enemies?.[current]) return [E('Lash the patrol — or the Liftling on your lift’s sheet first.')]
+  if (!current) return [E('The viaduct is clear. Pick up every Cover Stack, then walk north into the Warp Portal.')]
+  if (here.site !== current) return [E(`I’m right behind you. Head to ${state.siteName(current)} — follow the map’s NEXT ring. The commons between the decks are open ground: fight the beasts there with the Lash (1), and keep moving so they can’t box you in.`)]
+  if (enemies?.[current]) return [E('Lash the patrol — or the Liftling on your lift’s sheet first. A Möbius prowler needs two lashes, and the second must catch it after the first doubles its speed. A projective specter needs two lashes in quick succession.')]
   if (!goal) return [E('Press on — the next goal is close.')]
   if (goal.type === 'lap') return [E(`Winding Cord (4): run the orange loop ${goal.count === 1 ? 'once' : 'twice'}, beacon to beacon. Your lift is on sheet ${liftSheet + 1}.`)]
   if (goal.type === 'wire') return [E('Use the buttons in the panel to set where $a$ and $b$ send each sheet. No two sheets may go to the same sheet, and all three must link up.')]
-  if (goal.type === 'rescue') return [E(`Run loops from the beacon until your lift ends on sheet ${goal.targetSheet}. Watch the white bead.`)]
+  if (goal.type === 'rescue') return [E(`Run loops from the center until your lift ends on sheet ${goal.targetSheet}, where the gold beacon hangs. Watch the white bead climb the stack.`)]
   if (goal.type === 'prove') return [E('Wire so ab closes and ba does not, then click the beacon with the Compass to confirm.')]
   if (goal.type === 'exit') return [E('Walk north through the exit gate.')]
   return [E('Sheet Compass (6) for ports and tests · Lash (1) for spawn.')]

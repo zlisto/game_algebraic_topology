@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { duckMusic } from '../audio/chip'
 import MathText from './MathText'
 
@@ -63,7 +63,7 @@ export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
 }
 
 /** Emmy sums up the level: what we learned, what lies ahead; the formal definition tucked beneath. */
-export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay, onNext, nextLabel, extra }) {
+export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay, onNext, nextLabel, extra, stayLabel = 'Keep exploring', defLabel = 'The definition (after Hatcher)' }) {
   return (
     <div className="win-banner exit">
       <div className="win-card wide">
@@ -85,7 +85,7 @@ export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay,
         </div>
         {definition && (
           <details className="endcard-def">
-            <summary>The definition (after Hatcher)</summary>
+            <summary>{defLabel}</summary>
             <p className="def">{definition.text}</p>
             <p className="cite">
               {definition.cite}{' '}
@@ -97,7 +97,7 @@ export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay,
         )}
         <div className="btn-row">
           <button type="button" className="btn" onClick={onStay}>
-            Keep exploring
+            {stayLabel}
           </button>
           {extra}
           <button type="button" className="btn primary" onClick={onNext}>
@@ -133,4 +133,53 @@ export function ViewCone({ x, y, face, r = 9, id = 'viewcone' }) {
       <path d={`M ${x} ${y} L ${x + Math.sin(face - 0.5) * r} ${y + Math.cos(face - 0.5) * r} A ${r} ${r} 0 0 0 ${x + Math.sin(face + 0.5) * r} ${y + Math.cos(face + 0.5) * r} Z`} fill={`url(#${id})`} />
     </>
   )
+}
+
+/**
+ * Press E to talk to Emmy. `emmyRef.current` = { x, z } (the follower's position), `advice()` returns
+ * dialogue lines for right now (what to do next), `say(lines)` plays them. `enabled` gates it (not mid-
+ * dialogue, not paused). `claim(e)` may return true to let a level keep E for something else in context.
+ * Returns whether Emmy is close enough to talk to, for the on-screen prompt.
+ */
+export function useEmmyTalk({ stateRef, emmyRef, enabled, advice, say, claim, reach = 3.2 }) {
+  const [near, setNear] = useState(false)
+  const live = { enabled, advice, say, claim }
+  const ref = useRef(live)
+  ref.current = live
+  useEffect(() => {
+    const id = setInterval(() => {
+      const s = stateRef.current
+      const e = emmyRef.current
+      const n = !!(s && e && Math.hypot(s.x - e.x, s.z - e.z) < reach)
+      setNear((v) => (v === n ? v : n))
+    }, 200)
+    const onKey = (ev) => {
+      if (ev.code !== 'KeyE' || ev.repeat) return
+      const r = ref.current
+      if (!r.enabled || r.claim?.(ev)) return
+      const s = stateRef.current
+      const e = emmyRef.current
+      if (!s || !e) return
+      // out of reach: she hurries over (steps in just behind him) before she answers
+      if (Math.hypot(s.x - e.x, s.z - e.z) > reach) {
+        e.x = s.x - Math.sin(s.face || 0) * 1.4
+        e.z = s.z - Math.cos(s.face || 0) * 1.4
+      }
+      e.rotY = Math.atan2(s.x - e.x, s.z - e.z)
+      r.say(r.advice())
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      clearInterval(id)
+      window.removeEventListener('keydown', onKey)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return near && enabled
+}
+
+/** The on-screen reminder: "E · Talk to Emmy" when she's close, "Lost? Find Emmy and press E" otherwise. */
+export function TalkPrompt({ near, show = true }) {
+  if (!show) return null
+  return <div className={`talk-prompt ${near ? 'near' : ''}`}>{near ? <><kbd>E</kbd> Talk to Emmy</> : <>Lost? Press <kbd>E</kbd> to call Emmy</>}</div>
 }

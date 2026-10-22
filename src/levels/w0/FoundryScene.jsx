@@ -3,7 +3,6 @@ import { Html, Line, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { LAND } from '../../theme/palette'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { LETTERS } from './cells'
@@ -13,6 +12,7 @@ import { DevAdvance } from './OverworldScene'
 import OverworldKit from './OverworldKit'
 import { Clutter, Gear, LavaChannels, PlateFloor } from '../../world/Dressing'
 import ReefGame from './ReefGame'
+import CommonsIslands from '../../world/Commons'
 
 /**
  * Level 0-4's scene: the Skeleton Foundry's Assembly Hall. Forge stations (round basalt
@@ -22,7 +22,6 @@ import ReefGame from './ReefGame'
  * and the hologram above folds what was built into the space it makes.
  */
 
-const S = 0.7 // character scale
 
 // decorative lava channels and floor clutter (level-local units)
 const wiggle = (pts, amp, k) => pts.map(([x, z], i) => [x + Math.sin(i * k) * amp, z])
@@ -45,18 +44,18 @@ const CLUTTER = (() => {
 
 // ---------------------------------------------------------------- hall
 
-export function Hall({ layout }) {
+export function Hall({ layout, spread = layout.decorScale || 1 }) {
   const cracks = useMemo(() => {
     let seed = 5
     const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
     return Array.from({ length: 40 }, () => {
-      const x = (rnd() * 2 - 1) * 22
+      const x = (rnd() * 2 - 1) * 22 * spread
       const z = layout.bounds.minZ + rnd() * (layout.bounds.maxZ - layout.bounds.minZ)
       const pts = [[x, -0.47, z]]
       for (let k = 0; k < 4; k++) pts.push([pts[k][0] + (rnd() - 0.5) * 2.4, -0.47, pts[k][2] + (rnd() - 0.5) * 2.4])
       return pts
     })
-  }, [layout])
+  }, [layout, spread])
   return (
     <>
       <color attach="background" args={['#0a0708']} />
@@ -64,10 +63,11 @@ export function Hall({ layout }) {
       <ambientLight intensity={0.32} />
       <hemisphereLight args={['#ffb27a', '#120808', 0.45]} />
       <directionalLight position={[-6, 18, 10]} intensity={0.9} color="#ffe2c4" />
-      <pointLight position={[0, 6, 4]} intensity={18} distance={30} color="#ff8a3a" />
-      <pointLight position={[0, 6, -14]} intensity={14} distance={26} color="#ff9a4a" />
+      <pointLight position={[0, 6, 4 * spread]} intensity={18} distance={30 * spread} color="#ff8a3a" />
+      <pointLight position={[0, 6, -14 * spread]} intensity={14} distance={26 * spread} color="#ff9a4a" />
+      {spread > 1 && [-1, 1].map((sx) => <pointLight key={sx} position={[sx * 17, 6, -5]} intensity={14} distance={28} color="#ff8a3a" />)}
       <Stars radius={90} depth={40} count={900} factor={2} fade speed={0.2} />
-      <Sparkles count={240} scale={[40, 6, 40]} position={[0, 2, -4]} size={2.6} speed={0.5} color="#ffb070" />
+      <Sparkles count={240} scale={[40 * spread, 6, 40 * spread]} position={[0, 2, -4 * spread]} size={2.6} speed={0.5} color="#ffb070" />
       {/* the hall floor: dark basalt veined with forge-glow, below the platforms */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, -4]}>
         <planeGeometry args={[160, 160]} />
@@ -76,7 +76,8 @@ export function Hall({ layout }) {
       {cracks.map((pts, i) => (
         <Line key={i} points={pts} color="#ff6a1a" lineWidth={2} transparent opacity={0.55} toneMapped={false} />
       ))}
-      {/* molten channels in the floor, between the platforms */}
+      {/* molten channels, plates, clutter, gears and pillars: spread out with the level */}
+      <group scale={[spread, 1, spread]}>
       <LavaChannels paths={LAVA} width={0.3} color="#c8400e" />
       <PlateFloor bounds={PLATE_BOUNDS} color="#2a201c" />
       <Clutter spots={CLUTTER} y={-0.5} color="#2e2420" emissive="#3a1404" />
@@ -98,6 +99,7 @@ export function Hall({ layout }) {
           </group>
         )),
       )}
+      </group>
     </>
   )
 }
@@ -197,7 +199,9 @@ export function Track({ track, edge, progressRef, trackIdx, pos }) {
     <group position={[pos[0], 0, pos[1]]}>
       <Line points={local} color={color} lineWidth={edge && !edge.torn ? 7 : 3} transparent opacity={edge ? (edge.torn ? 0.5 : 1) : 0.8} dashed={!!edge?.torn} dashSize={0.25} gapSize={0.2} toneMapped={false} />
       {edge && !edge.torn && <Line points={local} color={color} lineWidth={16} transparent opacity={0.18} toneMapped={false} />}
-      <LiveLine getPts={lit} color="#fff2c4" width={6} />
+      {/* the stretch walked so far: bright red, with a glow, so it's unmistakable */}
+      <LiveLine getPts={lit} color="#ff2e3e" width={14} opacity={0.3} />
+      <LiveLine getPts={lit} color="#ff4a4a" width={8} />
       {edge && (
         <group ref={chev}>
           {Array.from({ length: N_CHEV }, (_, i) => (
@@ -215,6 +219,43 @@ export function Track({ track, edge, progressRef, trackIdx, pos }) {
           </div>
         </Html>
       )}
+    </group>
+  )
+}
+
+/**
+ * Where a station's hologram floats. Over the press by default; while Gyroid stands on that
+ * station it glides to just in front of him, at eye height, so the chase camera sees the shape
+ * he's building up close.
+ */
+const HOLO_Y = 0.2 // the hologram's own model sits above its origin
+function HoloAnchor({ site, stateRef, camYawRef, children }) {
+  const g = useRef()
+  const snapped = useRef(false)
+  useFrame((_, dt) => {
+    if (!g.current) return
+    const s = stateRef.current
+    const r = site.def.add[0].r
+    let tx = site.pos[0]
+    let ty = 4.3
+    let tz = site.pos[1] - 1.1
+    if (s && Math.hypot(s.x - site.pos[0], s.z - site.pos[1]) < r + 0.5) {
+      const yaw = camYawRef.current ?? 0
+      // ahead of Gyroid and off to his right, so he never hides it; low enough to sit mid-frame
+      tx = s.x - Math.sin(yaw) * 2.4 + Math.cos(yaw) * 1.3
+      ty = HOLO_Y
+      tz = s.z - Math.cos(yaw) * 2.4 - Math.sin(yaw) * 1.3
+    }
+    const k = snapped.current ? Math.min(1, dt * 3) : 1
+    snapped.current = true
+    g.current.position.x += (tx - g.current.position.x) * k
+    g.current.position.y += (ty - g.current.position.y) * k
+    g.current.position.z += (tz - g.current.position.z) * k
+    g.current.rotation.y += dt * 0.35
+  })
+  return (
+    <group ref={g} scale={1.05}>
+      {children}
     </group>
   )
 }
@@ -281,9 +322,7 @@ export default function FoundryScene({
   progressRef,
   tracksBySite,
   current,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   walkable,
   game,
@@ -303,16 +342,10 @@ export default function FoundryScene({
   onHearts,
 }) {
   const stations = sites.filter((s) => s.stage === 'station')
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   return (
     <>
       <Hall layout={layout} />
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -335,18 +368,14 @@ export default function FoundryScene({
             ))}
             <Press pos={s.pos} slamRef={slamRefs[s.id]} />
             {holograms[s.id] && (
-              <group position={[s.pos[0], 4.3, s.pos[1] - 1.1]} scale={1.05}>
+              <HoloAnchor site={s} stateRef={stateRef} camYawRef={camYawRef}>
                 <Hologram kind={holograms[s.id].kind} word={holograms[s.id].word} kRef={holoKRef[s.id]} />
-              </group>
+              </HoloAnchor>
             )}
           </group>
         )
       })}
       <ForgeDoor exit={layout.exit} open={exitOpen} />
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}
@@ -371,7 +400,7 @@ export default function FoundryScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

@@ -10,7 +10,7 @@ import Hologram from '../levels/w0/Hologram'
 import { LiveLine } from '../levels/w0/FlatsScenery'
 import { DevAdvance } from '../levels/w0/OverworldScene'
 import { CausewaySlab } from '../world/ReefScenery'
-import layout from '../world/foundry.json'
+import layout from '../world/foundry.movie.json'
 import { buildSites } from '../world/sites'
 
 /**
@@ -18,7 +18,7 @@ import { buildSites } from '../world/sites'
  *   A 0–7    through the Mirror Gate into the cold Foundry, faintly violet
  *   B 7–14   Emmy stops at the oldest press; her triangle mark glows on its frame
  *   C 14–22  her confession: she built the presses; the memory of them turning violet
- *   D 22–31  she gives Gyroid the Cell-Smith: a point, a loop, a disk; a square folds to a torus
+ *   D 22–31  she gives Gyroid the Cell Hammer: a point, a loop, a disk; a square folds to a torus
  *   E 31–36  the furnace relights gold; title card
  */
 
@@ -159,7 +159,7 @@ export default function FoundryMovie({ tRef }) {
         <Sparkles count={50} scale={[3, 2, 2]} size={4} speed={0.6} color="#c58bff" />
       </group>
 
-      {/* D: the Cell-Smith's lesson, above Emmy's palm */}
+      {/* D: the Cell Hammer's lesson, above Emmy's palm */}
       <mesh ref={dot} position={conj}>
         <sphereGeometry args={[0.025, 12, 10]} />
         <meshBasicMaterial color="#fff2c4" toneMapped={false} />

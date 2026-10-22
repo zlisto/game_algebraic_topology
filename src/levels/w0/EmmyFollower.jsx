@@ -31,7 +31,7 @@ function inSightline(x, z, s, yaw) {
   return off < 0.35 + u * 0.55
 }
 
-export default function EmmyFollower({ stateRef, talkingRef, camYawRef, walkable }) {
+export default function EmmyFollower({ stateRef, talkingRef, camYawRef, walkable, posRef }) {
   const me = useRef(null) // { x, z, rotY, walk, fade }
   const trail = useRef([]) // Gyroid's recent positions, newest last
   const last = useRef(null) // Gyroid's position last frame, to spot respawns
@@ -45,6 +45,7 @@ export default function EmmyFollower({ stateRef, talkingRef, camYawRef, walkable
     const okAt = (x, z) => !walkable || walkable.inside(x, z)
     if (!me.current) me.current = { x: s.x - 1, z: s.z + 1, rotY: 0, walk: 0, fade: 1 }
     const e = me.current
+    if (posRef) posRef.current = e // where she is, for 'press E to talk'
     // a respawn or a slide moved Gyroid in one jump: step back in beside him
     const jumped = last.current && Math.hypot(s.x - last.current[0], s.z - last.current[1]) > 2.5
     last.current = [s.x, s.z]

@@ -10,7 +10,7 @@ import { ConerSpawn } from '../characters/Spawn'
 import { DevAdvance } from '../levels/w0/OverworldScene'
 import SpaceModel from '../levels/w0/SpaceModel'
 import { CausewaySlab } from '../world/ReefScenery'
-import layout from '../world/conezone.json'
+import layout from '../world/conezone.movie.json'
 
 /**
  * Intro movie for World 0 · Level 5, "Null's Plugs" (videos.json level-0-5-intro):

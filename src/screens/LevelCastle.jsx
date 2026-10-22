@@ -6,7 +6,7 @@ import { BEACON_OFFSET, DEFINITION_CASTLE, HINTS_CASTLE, NULL_AT, OPENING, PANEL
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxWrong, startNullMusic, startReefMusic, stopMusic, textBlip, unlockAudio } from '../audio/chip'
 import CastleOutro from '../movies/CastleOutro'
 import MathText from './MathText'
-import { PauseMenu, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
 
 /**
  * World 0 · Castle "The Hollow Throne" — Count Null's three trials on the top of his spire.
@@ -266,7 +266,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   }, [gameKey])
   const nullScript = () => ({ gesture: nullTalking.current ? 1 : 0.2, crown: step === 'ring' ? 1 : 0.6, crownY: 0 })
 
-  if (import.meta.env.DEV) window.__castle = { step, trial, roundIdx, epoch, panelStates, phase, enemies, round } // dev
+  if (import.meta.env.DEV) window.__castle = { step, trial, roundIdx, epoch, panelStates, phase, enemies, round, complete: () => setComplete(true) } // dev
 
   const T = TRIALS[trial]
   const objective =
@@ -361,7 +361,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
         )}
 
         {toast && !line && <div className="toast">{toast}</div>}
-        {playEnabled && !toast && !line && <div className="hint">WASD to move · click to crack the Lash toward a beacon or a spawn</div>}
+        {playEnabled && !toast && !line && <div className="hint">WASD to move · click or F to crack the Lash toward a beacon or a spawn</div>}
 
         {rules && (
           <div className="win-banner" onClick={() => setRules(false)}>
@@ -385,30 +385,18 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
       )}
 
       {complete && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 complete — Retract Reef restored</span>
-            <h2>The Hollow Throne</h2>
-            <p className="def">{DEFINITION_CASTLE.text}</p>
-            <p className="cite">
-              {DEFINITION_CASTLE.cite}{' '}
-              <a href={DEFINITION_CASTLE.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Next: World 1 — the fundamental group, where loops get counted.</p>
-            <div className="btn-row">
-              {onNext && (
-                <button type="button" className="btn primary" onClick={onNext}>
-                  Continue ▸ World 1
-                </button>
-              )}
-              <button type="button" className={onNext ? 'btn ghost' : 'btn primary'} onClick={onBackToTitle}>
-                Back to title
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 complete · Retract Reef restored"
+          title="The Hollow Throne"
+          learned="Two places are the same shape when there are maps both ways and each round trip deforms back to standing still. We shrank reefs to spines, built spaces cell by cell, and let χ keep count. Null’s forgeries all cheated the same way: they tore, left the space, or crushed a loop that circles a hole. But here’s the honest part: nothing we did in this world can prove a ring isn’t just a point."
+          ahead="So World 1 is where we count loops. Loops get chained and run backwards, and loops that deform into each other count as one. That’s the fundamental group, and it’s the first proof Null can’t fold away: a circle’s loops wind any whole number of times, forwards, backwards or zero, and only zero shrinks away. On a point, every loop is zero."
+          definition={DEFINITION_CASTLE}
+          defLabel="World 0 in the book (after Hatcher)"
+          stayLabel="Back to title"
+          onStay={onBackToTitle}
+          onNext={onNext || onBackToTitle}
+          nextLabel={onNext ? 'Continue ▸ World 1' : 'Back to title'}
+        />
       )}
       {paused && (
         <PauseMenu

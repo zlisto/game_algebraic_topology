@@ -28,6 +28,23 @@ export const HINTS = {
   knockout: E('Oof — Gyroid’s down. Hearts back, and we’ll take that reef again from the top. Watch for Elixirs.'),
 }
 
+/** How to beat each of Null's beasts, in Emmy's words (for her 'press E' advice in World 0). */
+export const BEAST_TIPS = {
+  sphere: 'Spheres pop with one lash: every loop slides right off them.',
+  torus: 'A torus takes two lashes, one for each loop it can’t shed.',
+  mobius: 'A Möbius Prowler takes two lashes, and the first makes it twice as fast, so keep moving.',
+  projective: 'A Projective Specter needs two lashes in quick succession, before it rights itself.',
+  klein: 'A Klein spawn: one lash, then a quick pair.',
+  mirror: 'Mirror spawn: lash the solid one, not the flickering reflection with the hollow eye.',
+  snapper: 'Snappers clip ribbons: lash them, then re-tie any cut with the Spool.',
+}
+
+/** One Emmy line on fighting the beasts of these types (null if none): the Lash keys, then a tip per kind. */
+export function beastLine(types, lead = 'Lash out with 1, then click or press F toward them.') {
+  const tips = [...new Set(types)].filter((t) => BEAST_TIPS[t]).slice(0, 3).map((t) => BEAST_TIPS[t])
+  return tips.length ? E(`${lead} ${tips.join(' ')}`) : null
+}
+
 export const STAGES = [
   {
     id: 'walkway',

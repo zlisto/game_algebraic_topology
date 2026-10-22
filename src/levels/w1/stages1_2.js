@@ -11,8 +11,10 @@ export const STATION_ORDER = ['home_base', 'there_back', 'brackets', 'second_bea
 export const OPENING = [
   E('The Basepoint Beacon — every lap you run from here and back is a loop at this point.'),
   E('Your Lash closes them now. Run a loop, and it lands in your loop ledger.'),
+  E('Each deck you finish leaves a Basepoint Ring: two loops through one point, and their product, one run after the other. Collect all four and the Warp Portal past the north gate opens.'),
   G('And the hooded things running the tracks the wrong way?'),
   E('Backtracks. Each one is a loop run backwards — an inverse with teeth. One lash apiece.'),
+  E('And on the commons between the decks, Null’s beasts: spheres, tori, Möbius bands, and projective specters. A specter only flips at the first lash; land the second quickly. I’ll be right behind you.'),
 ]
 
 /**
@@ -30,7 +32,17 @@ export const STATIONS = {
       E('A loop must leave the beacon and come back to the same point — the basepoint.'),
       E('Standing still is a loop too: the identity. With the Lash (1) out, leave the amber pad along the arrows, run the petal all the way round, and step back onto the pad.'),
     ],
-    goals: [{ type: 'loop', seq: [{ track: 0, dir: 1 }], done: [G('One lap, closed. The ledger remembers it as $α$.'), E('That’s an element of the fundamental group $π₁(X, x₀)$ — based loops up to sliding.')] }],
+    goals: [
+      { type: 'loop', seq: [{ track: 0, dir: 1 }], done: [G('One lap, closed. The ledger remembers it as $α$.'), E('That’s an element of the fundamental group $π₁(X, x₀)$ — based loops up to sliding.'), E('Now run $α$ twice, pad to pad, one lap straight after the other. Two loops at one point, one after the other, make a new loop: their product.')] },
+      {
+        type: 'loop',
+        seq: [
+          { track: 0, dir: 1 },
+          { track: 0, dir: 1 },
+        ],
+        done: [G('$α$, then $α$ again: the ledger reads $α α$.'), E('That’s the product $α · α$: one loop followed by the other, both squeezed into one trip. Products of loops are loops, so they stay in the group.')],
+      },
+    ],
     early: [E('The beacon first — just ahead on the red-lantern ring.')],
   },
   there_back: {
@@ -128,7 +140,9 @@ export function emmyAdvice12(state) {
   if (enemies?.[here.site]) return [E('Lash the spawn on this deck first (a torus takes two hits; a Backtrack, one) — then run your laps.')]
   if (!current || here.site !== current) {
     const next = STATION_ORDER.find((id) => !done[id])
-    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('All sections done — walk north through the exit gate.')]
+    return next
+      ? [HINTS.wrongSection(STATIONS[next].blueprint), E('Lash whatever roams the commons on the way. I’m right behind you.')]
+      : [E('All four beacons are done. Pick up the Basepoint Rings, then walk north through the exit gate. I’ll follow.')]
   }
   if (!goal) return [E('Walk out through the exit when you’re ready.')]
   if (goal.type === 'loop' || goal.type === 'reduce') {
@@ -136,7 +150,7 @@ export function emmyAdvice12(state) {
     if (need) return [E(`Next lap: $${['α', 'β', 'γ'][need.track] || '?'}${need.dir < 0 ? '⁻¹' : ''}$. Start on the amber pad, run the ${['gold', 'blue', 'pink'][need.track]} petal ${need.dir < 0 ? 'against' : 'along'} its arrows, and step back onto the pad.`)]
     return [E('Run the laps in order from the beacon.')]
   }
-  if (goal.type === 'arrive_b') return [E('Follow the causeway to the smaller beacon at the north end.')]
+  if (goal.type === 'arrive_b') return [E('Follow the causeway, across the Beacon Commons, to the smaller beacon at the north end.')]
   if (goal.type === 'carry') return [E('Run this beacon’s petal $δ$ once, pad to pad.')]
   if (goal.type === 'ask') return [E('You ran the same three petals twice, timed two ways. Same trail — same class?')]
   return [E('Keep the beacon at your back when you start each lap.')]

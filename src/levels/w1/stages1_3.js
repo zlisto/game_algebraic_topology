@@ -16,7 +16,10 @@ export const STATION_ORDER = ['the_helix', 'sliding', 'unwind', 'number_line']
 export const OPENING = [
   N('Every loop on a circle is just a number. I wonder if anyone here can read it.'),
   E('The Winding Road. Each ring road is a circle, and over each one stands a helix — the circle unrolled into a line.'),
-  E('The Helix deck is straight ahead.'),
+  E('Each deck you finish leaves a Helix Coil: the helix sitting over its circle, where one lap round the bottom is one floor up. Collect all four and the Warp Portal past the north ring opens.'),
+  E('Watch for Möbius prowlers. One lash cuts one down the middle into a band twice as long, and it runs twice as fast. The second lash finishes it, so strike again quickly.'),
+  E('The commons on this road are thick with them, and with tori and projective specters too. A specter only flips at the first lash; land the second fast.'),
+  E('The Helix deck is straight ahead, past the Landing Commons. Lash (1) in hand. I’ll be right behind you.'),
 ]
 
 /**
@@ -40,6 +43,15 @@ export const STATIONS = {
         done: [
           G('One lap down here — one floor up there!'),
           E('The floor where the lift ends is the winding number, an integer. That’s the heart of $π₁(S¹) ≅ ℤ$.'),
+          E('Now the other way: one lap clockwise, against the arrows. Watch your shadow go down the helix instead. Then bank it on the beacon.'),
+        ],
+      },
+      {
+        type: 'lap',
+        n: -1,
+        done: [
+          G('Clockwise, and the lift ended one floor down: $−1$.'),
+          E('Laps the other way give negative winding numbers. Every loop’s lift starts on floor $0$ and ends on a whole floor, up or down.'),
           E('Next: Sliding Doesn’t Count, east along the causeway.'),
         ],
       },
@@ -136,13 +148,16 @@ export const DEFINITION13 = {
 
 export function emmyAdvice13(state) {
   const { current, goal, here, bank, pendingLap, winders, gateOpen, enemies, met, slideMax } = state
-  if (!current) return [E('Every deck is done. The exit ring is north.')]
-  if (here !== current) return [E(`Head for ${STATIONS[current].blueprint} — follow the NEXT marker on the map.`)]
+  if (!current) return [E('Every deck is done. Pick up the Helix Coils; the exit ring is north. I’m right behind you.')]
+  if (here !== current) return [E(`Head for ${STATIONS[current].blueprint}: follow the NEXT marker on the map, and lash (1) whatever roams the commons on the way. I’ll follow.`)]
   if (enemies?.[current] > 0 && goal?.type !== 'unwind') return [E('Lash the spawn on this deck first (1), then run your laps with the Cord (4).')]
   if (!met?.[current]) return STATIONS[current].arrive.slice(-1)
   if (!goal) return [E('Walk on — the next deck is waiting.')]
   if (pendingLap != null) return [E(`You have a lap of $${pendingLap > 0 ? '+' : '−'}${Math.abs(pendingLap)}$ waiting. Step onto the beacon in the middle to bank it.`)]
-  if (goal.type === 'lap') return [E('Winding Cord (4). Run the ring road all the way round counter-clockwise, with the arrows, then step onto the beacon in the middle.')]
+  if (goal.type === 'lap')
+    return goal.n < 0
+      ? [E('Winding Cord (4). Run the ring road all the way round clockwise, against the arrows, then step onto the beacon in the middle.')]
+      : [E('Winding Cord (4). Run the ring road all the way round counter-clockwise, with the arrows, then step onto the beacon in the middle.')]
   if (goal.type === 'slide')
     return slideMax < 0.9
       ? [E('Tide Glass (3): press X to deform the loop — all the way. Watch the white bead at the end of its lift on the helix.')]

@@ -66,7 +66,7 @@ export default function ChaseCamera({ stateRef, yawRef, overhead: overheadProp, 
     }
   }, [gl, yawRef, lockRef])
 
-  useFrame((_, rawDt) => {
+  useFrame(({ size }, rawDt) => {
     const s = stateRef.current
     if (!s) return
     const dt = Math.min(rawDt, 0.05)
@@ -88,8 +88,13 @@ export default function ChaseCamera({ stateRef, yawRef, overhead: overheadProp, 
     }
     const yaw = yawRef.current
     if (overhead) {
-      const zoom = (overhead.size || 8) / 8
-      const [cx, cz] = overhead.center
+      // tall, narrow windows show less across: pull back so the whole station still fits
+      const aspect = size.width / Math.max(1, size.height)
+      const zoom = ((overhead.size || 8) / 8) * Math.max(1, 1.1 / aspect)
+      // lean toward Gyroid, so he never walks out of the frame
+      const lean = overhead.follow ?? 0.35
+      const cx = overhead.center[0] + (s.x - overhead.center[0]) * lean
+      const cz = overhead.center[1] + (s.z - overhead.center[1]) * lean
       goal.set(cx + Math.sin(yaw) * 7 * zoom, 11 * zoom, cz + Math.cos(yaw) * 7 * zoom)
       aim.set(cx, 0, cz)
     } else {

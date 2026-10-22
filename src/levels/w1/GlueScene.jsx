@@ -1,17 +1,53 @@
 import { useMemo, useRef } from 'react'
+import { useFrame } from '@react-three/fiber'
 import { Html, Sparkles } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { Hall, Platform, Press, Track, EmmyBubble, ForgeDoor } from '../w0/FoundryScene'
+import { Hall, Platform, Press, Track, ForgeDoor } from '../w0/FoundryScene'
 import Hologram from '../w0/Hologram'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import OverworldKit from '../w0/OverworldKit'
 import ReefGame from '../w0/ReefGame'
-import Emmy from '../../characters/Emmy'
 import { ClaspProp } from '../w0/worldTools'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { FloatingRocks } from '../../world/Dressing'
+import CommonsIslands from '../../world/Commons'
 import { presentationLabel } from './glue.js'
 
 const S = 0.7
+
+/**
+ * Where a press's hologram floats (as in the Foundry, 0-4). Over the press by default; while Gyroid
+ * stands on that press it glides to just in front of him at eye height, so the chase camera sees the
+ * space he just glued up close instead of losing it off the top of the frame.
+ */
+function HoloAnchor({ site, stateRef, camYawRef, children }) {
+  const g = useRef()
+  const snapped = useRef(false)
+  useFrame((_, dt) => {
+    if (!g.current) return
+    const s = stateRef.current
+    let tx = site.pos[0]
+    let ty = 3.2
+    let tz = site.pos[1] - 1.1
+    if (s && site.containsWorld(s.x, s.z)) {
+      const yaw = camYawRef.current ?? 0
+      tx = s.x - Math.sin(yaw) * 3.2
+      ty = 1.3
+      tz = s.z - Math.cos(yaw) * 3.2
+    }
+    const k = snapped.current ? Math.min(1, dt * 3) : 1
+    snapped.current = true
+    g.current.position.x += (tx - g.current.position.x) * k
+    g.current.position.y += (ty - g.current.position.y) * k
+    g.current.position.z += (tz - g.current.position.z) * k
+    g.current.rotation.y += dt * 0.35
+  })
+  return (
+    <group ref={g} scale={1.05}>
+      {children}
+    </group>
+  )
+}
 
 // FoundryScene's Platform draws a round deck; a rectangular station gets a round hub plus a slab
 const platformSite = (s) => {
@@ -43,10 +79,12 @@ export default function GlueScene({
   gameKey,
   frameRef,
   stateRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   spawnRef,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   ribbonApi,
   playEnabled,
@@ -65,19 +103,14 @@ export default function GlueScene({
   claspReady,
 }) {
   const stations = sites.filter((s) => s.stage === 'station')
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
-  const hallLayout = useMemo(() => ({ bounds: layout.bounds }), [layout])
+  // the hall's plates, lava channels and pillars spread out with the (bigger) works
+  const hallLayout = useMemo(() => ({ bounds: layout.bounds, decorScale: layout.decorScale || 1 }), [layout])
   return (
     <>
       <Hall layout={hallLayout} />
-      <FloatingRocks count={12} spread={38} y={4} color="#2a3544" />
-      <Sparkles count={80} scale={[30, 8, 30]} position={[0, 3, -2]} size={2.2} speed={0.35} color="#ffb070" />
+      <CommonsIslands sites={sites} />
+      <FloatingRocks count={16} center={[0, 0, 2]} radius={[36, 50]} color="#2a3544" />
+      <Sparkles count={160} scale={[60, 8, 80]} position={[0, 3, 2]} size={2.2} speed={0.35} color="#ffb070" />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -98,9 +131,9 @@ export default function GlueScene({
             ))}
             <Press pos={s.pos} slamRef={slamRefs[s.id]} />
             {holograms[s.id] && (
-              <group position={[s.pos[0], 4.3, s.pos[1] - 1.1]} scale={1.05}>
+              <HoloAnchor site={s} stateRef={stateRef} camYawRef={camYawRef}>
                 <Hologram kind={holograms[s.id].kind} word={holograms[s.id].word} kRef={holoKRef[s.id]} />
-              </group>
+              </HoloAnchor>
             )}
             {s.id === 'two_pieces' && <ClaspPedestal pos={s.overlap.map((v, i) => v + s.pos[i])} active={claspReady} />}
           </group>
@@ -108,12 +141,13 @@ export default function GlueScene({
       })}
       <ForgeDoor exit={layout.exit} open={exitOpen} />
       <group scale={S}>
-        <Emmy script={emmyScript} />
         <ClaspProp state={stateRef} tool={tool} />
       </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -132,7 +166,7 @@ export default function GlueScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

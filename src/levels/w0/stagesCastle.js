@@ -128,7 +128,7 @@ export const HINTS_CASTLE = {
 }
 
 export const DEFINITION_CASTLE = {
-  text: 'World 0 in one sentence: two spaces are the same shape (homotopy equivalent) when each deforms into the other — deformations stay in the space and never tear; collapsing a tree or anything else contractible is allowed, collapsing a loop is not; and χ counts cells. What World 0 cannot do is prove that a circle is not a point. For that we need an invariant that counts loops: the fundamental group.',
+  text: 'World 0 in one sentence: two spaces are the same shape (homotopy equivalent) when there are maps each way whose round trips deform to the identity — deformations stay in the space and never tear; collapsing a contractible subcomplex (a tree, say) is allowed, collapsing a loop around a hole is not; and χ counts cells. What World 0 cannot do is prove that a circle is not a point. For that we need an invariant that counts loops: the fundamental group.',
   cite: 'Allen Hatcher, Algebraic Topology, Chapter 0 (homotopy, cell complexes, operations on spaces); the circle’s fundamental group is Theorem 1.7, Chapter 1.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATpage.html',
 }

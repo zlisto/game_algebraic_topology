@@ -250,12 +250,12 @@ function Steps({ t }) {
   const steps = [
     ['2', 'the Spool: click edges (walkways) to mark a tree', t < 57.2],
     ['✕', 'an edge that would close a cycle is refused', t >= 57.2 && t < 59.2],
-    ['3', 'the Cell-Smith: click any node (platform) to fell onto it', t >= 59.2 && t < 61.2],
+    ['3', 'the Cell Hammer: click any node (platform) to fell onto it', t >= 59.2 && t < 61.2],
     ['⚡', 'lash Loop-biters; restring a bitten petal (3)', t >= 61.2],
   ]
   return (
     <div className="lesson-steps">
-      <h4>◎ Spool · ✦ Cell-Smith</h4>
+      <h4>◎ Spool · ✦ Cell Hammer</h4>
       {steps.map(([k, label, on], i) => (
         <div key={i} className={`lesson-step ${on ? 'on' : ''}`}>
           <kbd>{k}</kbd>

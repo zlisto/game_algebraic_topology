@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import WindingRoadScene from '../../levels/w1/WindingRoadScene'
 import LevelMovie from '../LevelMovie'
 import LevelMap from '../LevelMap'
-import { useExitTrigger } from '../exitTrigger'
+import { EmmyEndCard, PauseMenu, TalkPrompt, useEmmyTalk, usePause } from '../LevelChrome'
+import { landNear, useWarpLevel } from '../warpLevel'
 import { WORLD_TOOLS } from '../../levels/w0/worldTools'
 import { addWindings, angleDelta, makeRingTracker } from '../../levels/w1/winding'
 import { DEFINITION13, HINTS13, OPENING, SLIDE_ASK, STATIONS, STATION_ORDER, emmyAdvice13 } from '../../levels/w1/stages1_3'
@@ -42,6 +43,15 @@ const BEACON_R = 0.85
 const TAU = Math.PI * 2
 const signed = (n) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : '0')
 
+/** Where each deck's Helix Coil waits: inside the ring road, clear of the beacon, Emmy, the Winders and the gates. */
+const REWARD_AT = Object.fromEntries(STATION_ORDER.map((id) => [id, landNear(SITE[id], SITE[id].toWorld(-1.9, -1.3))]))
+const NOUN = { icon: '↻', one: 'Helix Coil', many: 'Helix Coils', kind: 'helix' }
+
+const END_CARD = {
+  learned: 'Every loop on the circle has a lift to the helix, and the floor where that lift ends is its winding number. Sliding a loop can’t move that end between floors, so the number never changes. Running loops one after another adds their numbers and running one backwards negates it, which is how we unwound the Winders. Every integer opened a gate and nothing else did: $π₁(S¹) ≅ ℤ$.',
+  ahead: 'No Way Out, in Brouwer’s Basin, where we put that number to work. Walk the rim of a disk and count how many times the arrow under you turns. If the count isn’t zero, something inside must be still: no retraction of the disk onto its rim, and Brouwer’s fixed point theorem.',
+}
+
 const stationAt = (x, z) => SITES.find((s) => s.stage === 'station' && s.containsWorld(x, z)) || null
 const ringCenter = (site) => [site.pos[0] + site.ring.cx, site.pos[1] + site.ring.cz]
 const screenAngle = (x, z, c) => Math.atan2(-(z - c[1]), x - c[0])
@@ -69,7 +79,7 @@ function freshWinders() {
 }
 const held = (w) => w.winding + w.net
 
-export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
+export default function Level1_3({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[1]?.levels?.find((l) => l.id === '1-3')
   const skipTo = Math.max(0, STATION_ORDER.indexOf(startAt))
 
@@ -94,7 +104,7 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const [knockouts, setKnockouts] = useState(0)
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0], SITE[STATION_ORDER[skipTo]].pos[1] + 3] : layout.start))
   const [enemies, setEnemies] = useState({})
-  const [tool, setTool] = useState('cord')
+  const [tool, setTool] = useState('lash') // the commons come first: Lash in hand; the decks say when to take the Cord
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)
@@ -103,15 +113,17 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   const [here, setHere] = useState({ site: null, pos: checkpoint })
   const stateRef = useRef(null)
   const frameRef = useRef(null)
+  const camYawRef = useRef(Math.atan2(layout.start[0] - layout.exit.a[0], layout.start[1] - layout.exit.a[1]))
+  const talkingRef = useRef(false)
+  const camLockRef = useRef(false) // the Tide Glass borrows Z / X
   const spawnRef = useRef(null)
   const tRef = useRef(0)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
-  const emmyTalking = useRef(false)
+  const emmyRef = useRef(null) // Emmy follows Gyroid; her live position, for 'press E to talk'
   const liftRef = useRef({ U: null, U0: null })
   const windersRef = useRef(winders)
   windersRef.current = winders
-  const [nearEmmy, setNearEmmy] = useState(false)
 
   const trackers = useRef(Object.fromEntries(STATION_ORDER.map((id) => [id, makeRingTracker(ringCenter(SITE[id]), SITE[id].ring.inner, SITE[id].ring.outer, { screen: true })])))
 
@@ -239,7 +251,22 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
   }, [here.site, phase, current, met, done, say])
 
   const talking = phase.startsWith('talk:')
-  const playEnabled = phase === 'play' && !lines.length && !askOpen
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = talking
+  const warp = useWarpLevel({
+    ids: STATION_ORDER,
+    done,
+    posOf: (id) => REWARD_AT[id],
+    stateRef,
+    exitOpen,
+    portalAt: layout.exit.b,
+    hearts,
+    flash,
+    stopMusic,
+    onClear: () => setLevelClear(true),
+    noun: NOUN,
+  })
+  const playEnabled = phase === 'play' && !lines.length && !askOpen && !levelClear && !paused && !warp.warping
   const line = talking ? lines[lineIdx] : null
   useDialogKeys(!!line, advance)
 
@@ -340,13 +367,9 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
       if (!s) return
       const st = stationAt(s.x, s.z)?.id || null
       setHere((h) => (h.site === st && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: st, pos: [s.x, s.z] }))
-      if (current) {
-        const [ex, ez] = SITE[current].emmy
-        setNearEmmy(Math.hypot(s.x - SITE[current].pos[0] - ex, s.z - SITE[current].pos[1] - ez) < 2.4)
-      }
     }, 120)
     return () => clearInterval(id)
-  }, [current])
+  }, [])
 
   useEffect(() => {
     if (goal?.type !== 'gate' || !working) return
@@ -358,16 +381,23 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [bank, goal, working, gatesOpen, advanceGoal, current])
 
-  if (current && here.site === current && met[current]) frameRef.current = { center: [SITE[current].pos[0] + 1.4, SITE[current].pos[1] - 0.6], size: 12.5, follow: 0.1 }
+  // overhead only while the Tide Glass deforms a loop (the wiggled road and its lift on the helix, in
+  // one view); running laps, banking and unwinding stay on the chase camera, the helix up close
+  if (current && here.site === current && met[current] && goal?.type === 'slide') frameRef.current = { center: [SITE[current].pos[0] + 1.4, SITE[current].pos[1] - 0.6], size: 12.5, follow: 0.25 }
   else frameRef.current = null
+  camLockRef.current = tool === 'glass' && playEnabled && goal?.type === 'slide' // Z / X deform the loop, not turn the camera
 
-  useExitTrigger(exitOpen && !levelClear, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
-
-  const talkToEmmy = () => say(emmyAdvice13({ current, done, goal, here: here.site, bank, pendingLap, winders, gateOpen: gatesOpen, enemies, met, slideMax }))
+  // ---------- talking to Emmy: she follows right behind Gyroid; E asks her (from afar, she hurries over)
+  const nearEmmy = useEmmyTalk({
+    stateRef,
+    emmyRef,
+    enabled: playEnabled,
+    advice: () => emmyAdvice13({ current, done, goal, here: here.site, bank, pendingLap, winders, gateOpen: gatesOpen, enemies, met, slideMax }),
+    say,
+  })
   useEffect(() => {
     const down = (e) => {
       if (TOOL_KEYS[e.code]) setTool(TOOL_KEYS[e.code])
-      if (e.code === 'KeyE' && nearEmmy && playEnabled) talkToEmmy()
       if (tool === 'glass' && playEnabled && goal?.type === 'slide') {
         if (e.code === 'KeyZ') setHomotopyT((t) => Math.max(0, +(t - 0.1).toFixed(2)))
         if (e.code === 'KeyX') setHomotopyT((t) => Math.min(1, +(t + 0.1).toFixed(2)))
@@ -410,19 +440,18 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
     [checkpoint, knockouts],
   )
 
-  const emmyScript = useMemo(() => {
-    if (!current) return null
-    const site = SITE[current]
-    const p = [site.pos[0] + site.emmy[0], site.pos[1] + site.emmy[1]]
-    return () => {
-      const s = stateRef.current
-      return { pos: [p[0], 0, p[1]], rotY: s ? Math.atan2(s.x - p[0], s.z - p[1]) : 0, walk: 0, talk: emmyTalking.current ? 1 : 0, gesture: emmyTalking.current ? 0.6 : 0, bow: 0 }
-    }
-  }, [current])
-  emmyTalking.current = !!line && line.speaker === 'Emmy Boundary'
-
   if (import.meta.env.DEV) {
-    window.__lvl13 = { here, done, goalIdx, goal, bank, pendingLap, winders, phase, tool, lines, askOpen, homotopyT, slideMax, lift: liftRef.current, trackers: trackers.current, setTool, setHomotopyT, confirmSlide, answerSlide, advanceGoal }
+    window.__lvl1_3 = {
+      warp,
+      clear: () => setLevelClear(true),
+      proveAll: () => {
+        STATION_ORDER.forEach((id) => window.__game?.killSite?.(id))
+        setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true])))
+        setExitOpen(true)
+      },
+      rewardAt: REWARD_AT,
+      emmyRef,
+      here, done, goalIdx, goal, bank, pendingLap, winders, phase, tool, lines, askOpen, homotopyT, slideMax, lift: liftRef.current, trackers: trackers.current, setTool, setHomotopyT, confirmSlide, answerSlide, advanceGoal }
   }
 
   const stepText =
@@ -463,9 +492,14 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
           onTrackMove={() => {}}
           onEnemies={setEnemies}
           onHearts={setHearts}
-          emmyScript={emmyScript}
+          emmyRef={emmyRef}
           liftRef={liftRef}
           playEnabled={playEnabled}
+          camYawRef={camYawRef}
+          talkingRef={talkingRef}
+          camLockRef={camLockRef}
+          stars={warp.stars}
+          portal={warp.portal}
         />
       </Canvas>
 
@@ -493,7 +527,7 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
                   </span>
                 ))}
               </span>
-              <span className="objective">{exitOpen ? 'Walk north through the exit ring' : current ? `Decks ${STATION_ORDER.filter((id) => done[id]).length}/4 · next: ${STATIONS[current].blueprint}` : ''}</span>
+              <span className="objective">{warp.objective(current ? `next: ${SITE[current].name}` : '')}</span>
             </div>
             {here.site && (
               <div className="here">
@@ -561,12 +595,8 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
             <MathText text={toast} />
           </div>
         )}
-        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Winding Road" />}
-        {nearEmmy && !line && playEnabled && !levelClear && (
-          <button type="button" className="btn talk-btn" onClick={talkToEmmy}>
-            💬 Talk to Emmy <kbd>E</kbd>
-          </button>
-        )}
+        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Winding Road" face={warp.face} marks={warp.marks} markIcon="↻" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
+        <TalkPrompt near={nearEmmy} show={playEnabled && !line && !levelClear && !lesson} />
 
         {!talking && !levelClear && !askOpen && (
           <div className="controls">
@@ -578,7 +608,7 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
               ))}
             </div>
             <div className="hint">
-              WASD · {tool === 'cord' ? 'Cord: run laps on the ring road, bank them at the beacon' : tool === 'glass' ? 'Tide Glass: X / Z deform the loop' : 'Lash: strike spawn'} · lost? Talk to Emmy (E)
+              WASD · {tool === 'cord' ? 'Cord: run laps on the ring road, bank them at the beacon' : tool === 'glass' ? 'Tide Glass: X / Z deform the loop' : 'Lash: click to strike'} · Emmy’s right behind you (E)
             </div>
           </div>
         )}
@@ -593,37 +623,32 @@ export default function Level1_3({ concept, onBackToTitle, onNext, startAt }) {
           name="The Winding Number"
           embedded
           startMusic={startHelixMusic}
-          onDone={() => (setLesson(false), startHelixMusic())}
-          onSkip={() => (setLesson(false), startHelixMusic())}
+          onDone={() => (setLesson(false), warp.portalOpen ? null : startHelixMusic())}
+          onSkip={() => (setLesson(false), warp.portalOpen ? null : startHelixMusic())}
         />
       )}
 
+      {warp.warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'The Winding Road'}
+          progress={`↻ ${warp.count} of ${warp.total} Helix Coils`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level1-3', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 1 · Level 3 clear</span>
-            <h2>{levelMeta?.title || 'The Winding Road'}</h2>
-            <p className="def">{DEFINITION13.text}</p>
-            <p className="cite">
-              {DEFINITION13.cite}{' '}
-              <a href={DEFINITION13.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Next: 1-4 · No Way Out (Brouwer&apos;s Basin).</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                Continue ▸ 1-4
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 1 · Level 3 clear"
+          title={levelMeta?.title || 'The Winding Road'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION13}
+          onStay={() => (setLevelClear(false), warp.stay(layout.exit.a))}
+          onNext={onNext}
+          nextLabel="Continue ▸ 1-4"
+        />
       )}
     </div>
   )

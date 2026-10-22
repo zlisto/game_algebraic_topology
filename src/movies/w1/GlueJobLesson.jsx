@@ -280,7 +280,7 @@ function Steps({ t }) {
       </div>
     )
   const steps = [
-    ['2', 'Cell-Smith: click the furnace to forge the point', t < 56.2],
+    ['2', 'Cell Hammer: click the furnace to forge the point', t < 56.2],
     ['walk', 'out round a track and back: an edge', t >= 56.2 && t < 59.5],
     ['walk', 'walk the word the disk goes along', t >= 59.5 && t < 62.6],
     ['click', 'the furnace: press the disk', t >= 62.6 && t < 64.6],
@@ -288,7 +288,7 @@ function Steps({ t }) {
   ]
   return (
     <div className="lesson-steps">
-      <h4>⚒ Cell-Smith · ⧉ Clasp</h4>
+      <h4>⚒ Cell Hammer · ⧉ Clasp</h4>
       {steps.map(([k, label, on], i) => (
         <div key={i} className={`lesson-step ${on ? 'on' : ''}`}>
           <kbd>{k}</kbd>

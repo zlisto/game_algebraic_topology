@@ -9,7 +9,7 @@ import { PETAL_SIZE, petalAngles } from '../levels/w0/graphs'
 import { DevAdvance } from '../levels/w0/OverworldScene'
 import { Deck, GraphView, Throne, Yard } from '../levels/w0/TimberScene'
 import { CausewaySlab } from '../world/ReefScenery'
-import layout from '../world/timberyard.json'
+import layout from '../world/timberyard.movie.json'
 import { buildSites } from '../world/sites'
 
 /**

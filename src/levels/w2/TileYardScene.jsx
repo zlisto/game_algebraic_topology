@@ -17,7 +17,7 @@ import { S } from './movieKit'
  * The Tile Yard: on each deck lies Hatcher's square of two triangles (§2.1, pp. 102–103). Its
  * sides carry arrows — a (orange, one chevron) on the south and north sides, b (blue, two chevrons)
  * on the west and east sides, the diagonal c (violet) from the south-west corner to the north-east.
- * Clicking an arrow with the Cell-Smith turns it round; the press beside the square folds the
+ * Clicking an arrow with the Cell Hammer turns it round; the press beside the square folds the
  * square up, matching arrows to arrows, and the hologram shows the surface that made.
  */
 

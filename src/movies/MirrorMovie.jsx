@@ -9,7 +9,7 @@ import { MirrorGate, MirrorSea, Plinth } from '../levels/w0/MirrorScene'
 import { DevAdvance, SiteReef } from '../levels/w0/OverworldScene'
 import { cleanStroke, sampleShape, simulateSlide } from '../levels/w0/retraction'
 import { CausewaySlab } from '../world/ReefScenery'
-import layout from '../world/mirrorShoals.json'
+import layout from '../world/mirrorShoals.movie.json'
 import { buildSites } from '../world/sites'
 import { eight, f, gOf, theta, thread } from './shapeMaps'
 

@@ -1,14 +1,14 @@
 import { useFrame } from '@react-three/fiber'
 import { Html, Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import * as THREE from 'three'
-import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
-import { EmmyBubble, ForgeDoor } from './FoundryScene'
+import { ForgeDoor } from './FoundryScene'
 import { DevAdvance } from './OverworldScene'
 import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
+import CommonsIslands from '../../world/Commons'
 import Seascape from '../../world/Seascape'
 import { Clouds } from '../../world/Dressing'
 import SpaceModel from './SpaceModel'
@@ -21,12 +21,11 @@ import { OPS } from './spaces'
  * cone), and a two-place output shelf where new spaces are born.
  */
 
-const S = 0.7 // character scale
 export const PEDESTAL_TOP = 0.78
 
 // ---------------------------------------------------------------- terrace
 
-function Terrace() {
+function Terrace({ spread = 1 }) {
   return (
     <>
       <color attach="background" args={['#070b16']} />
@@ -34,22 +33,23 @@ function Terrace() {
       <ambientLight intensity={0.36} />
       <hemisphereLight args={['#9ab8ff', '#0a0a14', 0.5]} />
       <directionalLight position={[-12, 20, -14]} intensity={1.0} color="#cfe0ff" />
-      <pointLight position={[0, 6, 7]} intensity={14} distance={26} color="#ffc070" />
-      <pointLight position={[0, 6, -12]} intensity={14} distance={26} color="#ffc070" />
+      <pointLight position={[0, 6, 7 * spread]} intensity={14} distance={26 * spread} color="#ffc070" />
+      <pointLight position={[0, 6, -12 * spread]} intensity={14} distance={26 * spread} color="#ffc070" />
+      {spread > 1 && [-1, 1].map((sx) => <pointLight key={sx} position={[sx * 17, 6, -4]} intensity={12} distance={26} color="#ffc070" />)}
       <Stars radius={90} depth={40} count={1600} factor={2.6} fade speed={0.3} />
       {/* the moon */}
       <mesh position={[-30, 26, -58]}>
         <sphereGeometry args={[4, 32, 20]} />
         <meshBasicMaterial color="#f3f0dc" toneMapped={false} />
       </mesh>
-      <Sparkles count={160} scale={[40, 5, 44]} position={[0, 1.5, -2]} size={2.2} speed={0.4} color="#ffe2a0" />
+      <Sparkles count={160} scale={[40 * spread, 5, 44 * spread]} position={[0, 1.5, -2 * spread]} size={2.2} speed={0.4} color="#ffe2a0" />
       {/* the sea far below the cliff, and clouds drifting under the terrace */}
-      <Seascape y={-7} area={[0, -4, 110, 100]} bed={false} lanterns={0} palette={{ water: '#123060', deep: '#081428' }} />
-      <Clouds y={-4} area={[0, -2, 70, 60]} count={16} color="#b8c8ff" opacity={0.28} seed={5} speed={0.35} />
+      <Seascape y={-7} area={[0, -4 * spread, 110 * spread, 100 * spread]} bed={false} lanterns={0} palette={{ water: '#123060', deep: '#081428' }} />
+      <Clouds y={-4} area={[0, -2 * spread, 70 * spread, 60 * spread]} count={Math.round(16 * spread)} color="#b8c8ff" opacity={0.28} seed={5} speed={0.35} />
       {/* the cliff face the terrace is cut into (east and west walls) */}
       {[-19, 19].map((x) => (
-        <mesh key={x} position={[x, -3, -3]}>
-          <boxGeometry args={[4, 9, 50]} />
+        <mesh key={x} position={[x * spread + Math.sign(x) * 2, -3, -3 * spread]}>
+          <boxGeometry args={[4, 9, 50 * spread]} />
           <meshStandardMaterial color="#1c1a22" roughness={0.9} flatShading />
         </mesh>
       ))}
@@ -226,9 +226,7 @@ export default function ConeScene({
   runRefs,
   current,
   carried,
-  emmyAt,
-  emmyTalking,
-  emmyNear,
+  emmyRef,
   exitOpen,
   walkable,
   game,
@@ -248,16 +246,10 @@ export default function ConeScene({
   onHearts,
 }) {
   const stations = sites.filter((s) => s.stage === 'station')
-  const emmyScript = useMemo(
-    () => () => {
-      const at = emmyAt.current
-      return { pos: [at.x / S, 0, at.z / S], rotY: at.rotY, walk: at.walk || 0, gesture: emmyTalking.current ? 0.7 : 0, talk: emmyTalking.current ? 1 : 0, bow: 0 }
-    },
-    [emmyAt, emmyTalking],
-  )
   return (
     <>
-      <Terrace />
+      <Terrace spread={layout.decorScale || 1} />
+      <CommonsIslands sites={sites} />
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
@@ -289,10 +281,6 @@ export default function ConeScene({
       })}
       <Carried stateRef={stateRef} spec={carried} />
       <ForgeDoor exit={layout.exit} open={exitOpen} />
-      <group scale={S}>
-        <Emmy script={emmyScript} />
-      </group>
-      <EmmyBubble emmyAt={emmyAt} show={emmyNear} />
 
       <ReefGame
         key={gameKey}
@@ -317,7 +305,7 @@ export default function ConeScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower emmyRef={emmyRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

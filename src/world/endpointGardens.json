@@ -1,15 +1,15 @@
 {
   "note": "Endpoint Gardens (World 1 · Level 1). Gate-local units; gates on east/west rim of each station disc.",
   "bounds": {
-    "minX": -18,
-    "maxX": 18,
-    "minZ": -32,
-    "maxZ": 22
+    "minX": -34,
+    "maxX": 34,
+    "minZ": -38,
+    "maxZ": 44
   },
-  "causewayWidth": 1.5,
+  "causewayWidth": 2.4,
   "start": [
     0,
-    16
+    38.5
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        16
+        38.5
       ],
       "shape": {
         "add": [
@@ -37,7 +37,7 @@
       "stage": "station",
       "pos": [
         0,
-        8
+        12.8
       ],
       "shape": {
         "add": [
@@ -134,7 +134,7 @@
       "stage": "station",
       "pos": [
         0,
-        -2
+        -11.2
       ],
       "shape": {
         "add": [
@@ -312,8 +312,8 @@
       "name": "Pace Garden",
       "stage": "station",
       "pos": [
-        -12,
-        -10
+        -22,
+        -26
       ],
       "shape": {
         "add": [
@@ -329,7 +329,13 @@
         -2.8,
         2.2
       ],
-      "enemies": [],
+      "enemies": [
+        [
+          "torus",
+          -2.4,
+          -2.6
+        ]
+      ],
       "gates": {
         "a": [
           -3.8,
@@ -429,8 +435,8 @@
       "name": "Triple Gate",
       "stage": "station",
       "pos": [
-        12,
-        -10
+        22,
+        -26
       ],
       "shape": {
         "add": [
@@ -452,6 +458,11 @@
           "sphere",
           4,
           2
+        ],
+        [
+          "torus",
+          -2.2,
+          -2.8
         ]
       ],
       "gates": {
@@ -589,62 +600,297 @@
           ]
         ]
       }
+    },
+    {
+      "id": "commons_gate",
+      "name": "Landing Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        27.5
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 5.5
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          2.5,
+          1.71
+        ],
+        [
+          "sphere",
+          -2.73,
+          1.31
+        ],
+        [
+          "torus",
+          0.23,
+          -3.02
+        ]
+      ]
+    },
+    {
+      "id": "commons_1",
+      "name": "Lawn Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        0.9
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -2.18,
+          1.05
+        ],
+        [
+          "sphere",
+          0.18,
+          -2.41
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "West Commons",
+      "kind": "commons",
+      "pos": [
+        -10.5,
+        -18
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.0,
+          1.37
+        ],
+        [
+          "sphere",
+          -2.18,
+          1.05
+        ],
+        [
+          "torus",
+          0.18,
+          -2.41
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "East Commons",
+      "kind": "commons",
+      "pos": [
+        10.5,
+        -18
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "torus",
+          2.0,
+          1.37
+        ],
+        [
+          "sphere",
+          -2.18,
+          1.05
+        ],
+        [
+          "mobius",
+          0.18,
+          -2.41
+        ]
+      ]
+    },
+    {
+      "id": "commons_4",
+      "name": "Gate Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        -24
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 4.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "mobius",
+          2.0,
+          1.37
+        ],
+        [
+          "torus",
+          -1.37,
+          2.0
+        ],
+        [
+          "sphere",
+          -2.0,
+          -1.37
+        ],
+        [
+          "sphere",
+          1.37,
+          -2.0
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        16
+        0.0,
+        36.9
       ],
       "b": [
-        0,
-        12.9
+        0.0,
+        32.6
       ]
     },
     {
       "a": [
-        0,
-        -7.2
+        0.0,
+        22.4
       ],
       "b": [
-        -7.4,
-        -8.8
+        0.0,
+        17.6
       ]
     },
     {
       "a": [
-        0,
-        -7.2
+        0.0,
+        8.0
       ],
       "b": [
-        6.3,
-        -7.2
+        0.0,
+        4.9
       ]
     },
     {
       "a": [
-        0,
-        -7.2
+        0.0,
+        -3.1
       ],
       "b": [
-        0,
-        -14.8
+        0.0,
+        -6.2
+      ]
+    },
+    {
+      "a": [
+        -4.197,
+        -13.918
+      ],
+      "b": [
+        -7.143,
+        -15.826
+      ]
+    },
+    {
+      "a": [
+        -13.784,
+        -20.284
+      ],
+      "b": [
+        -18.224,
+        -23.373
+      ]
+    },
+    {
+      "a": [
+        4.197,
+        -13.918
+      ],
+      "b": [
+        7.143,
+        -15.826
+      ]
+    },
+    {
+      "a": [
+        13.784,
+        -20.284
+      ],
+      "b": [
+        16.328,
+        -22.055
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        -16.2
+      ],
+      "b": [
+        0.0,
+        -20.0
       ]
     }
   ],
   "exit": {
     "gate": [
       0,
-      -16
+      -29.2
     ],
     "a": [
       0,
-      -14.8
+      -28.0
     ],
     "b": [
       0,
-      -18
+      -31.2
     ]
   }
 }

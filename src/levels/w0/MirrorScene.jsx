@@ -12,6 +12,7 @@ import ChaseCamera from './ChaseCamera'
 import EmmyFollower from './EmmyFollower'
 import { Star, WarpPortal } from './StarPortal'
 import ReefGame from './ReefGame'
+import CommonsIslands from '../../world/Commons'
 import CountNull from '../../characters/CountNull'
 import { grabPin, ribbonLength, ribbonPieces, stepRibbon } from './ribbon'
 
@@ -27,15 +28,15 @@ import { grabPin, ribbonLength, ribbonPieces, stepRibbon } from './ribbon'
 export function MirrorSea({ channel }) {
   return (
     <>
-      <Seascape y={-0.5} area={[0, -8, 80, 76]} seed={31} calm palette={{ water: '#123a5a', sand: '#34505e', weed: '#24485a', coral: ['#9ad8ff', '#c58bff', '#e8eefc', '#7fe8dc'] }} lanterns={0} />
+      <Seascape y={-0.5} area={[0, 0, 96, 84]} seed={31} calm palette={{ water: '#123a5a', sand: '#34505e', weed: '#24485a', coral: ['#9ad8ff', '#c58bff', '#e8eefc', '#7fe8dc'] }} lanterns={0} />
       {/* the channel: a band of still, starlit glass */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[(channel.x0 + channel.x1) / 2, -0.48, 0]}>
-        <planeGeometry args={[channel.x1 - channel.x0, 60]} />
+        <planeGeometry args={[channel.x1 - channel.x0, 80]} />
         <meshBasicMaterial color="#9fd8ff" transparent opacity={0.04} toneMapped={false} depthWrite={false} />
       </mesh>
       {[channel.x0, channel.x1].map((x) => (
         <mesh key={x} rotation={[-Math.PI / 2, 0, 0]} position={[x, -0.47, 0]}>
-          <planeGeometry args={[0.05, 60]} />
+          <planeGeometry args={[0.05, 80]} />
           <meshBasicMaterial color="#cfe8ff" transparent opacity={0.35} toneMapped={false} depthWrite={false} />
         </mesh>
       ))}
@@ -237,8 +238,10 @@ export default function MirrorScene({
   rewards = [],
   portal,
   nullAt,
+  emmyRef,
 }) {
   const loopSites = sites.filter((s) => s.loop)
+  const puzzleSites = useMemo(() => sites.filter((s) => s.kind !== 'commons'), [sites])
   const nullScript = useMemo(() => () => ({ gesture: 0.5 + Math.sin(Date.now() / 900) * 0.3, crown: 0.6, crownY: 0 }), [])
   return (
     <>
@@ -248,17 +251,19 @@ export default function MirrorScene({
       <hemisphereLight args={['#6d9cc4', '#0a0a14', 0.55]} />
       <directionalLight position={[-8, 16, 12]} intensity={1.2} color="#dcefff" />
       <Stars radius={90} depth={40} count={2600} factor={3} fade speed={0.2} />
-      <Sparkles count={160} scale={[6, 2, 40]} position={[0, 0.2, 0]} size={2.5} speed={0.15} color="#cfe8ff" />
+      <Sparkles count={200} scale={[9, 2, 60]} position={[0, 0.2, 0]} size={2.5} speed={0.15} color="#cfe8ff" />
       <MirrorSea channel={layout.channel} />
 
       {layout.causeways.map((c, i) => (
         <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
       {gateOpen && <CausewaySlab a={layout.gate.exit.a} b={layout.gate.exit.b} width={layout.causewayWidth} />}
-      {sites.map((s) => (
+      {/* the open battle commons between the reefs: plazas, no puzzle */}
+      <CommonsIslands sites={sites} />
+      {puzzleSites.map((s) => (
         <Plinth key={`p${s.id}`} site={s} />
       ))}
-      {sites.map((site) => (
+      {puzzleSites.map((site) => (
         <SiteReef
           key={site.id}
           // the beacons of the spine this reef is asking for right now (none once proven)
@@ -313,7 +318,7 @@ export default function MirrorScene({
         <Star key={r.id} {...r} />
       ))}
       {portal && <WarpPortal {...portal} />}
-      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />
+      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} posRef={emmyRef} />
       <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overheadRef={frameRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
