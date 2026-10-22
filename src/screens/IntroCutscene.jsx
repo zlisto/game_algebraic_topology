@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import IntroWorld from '../intro/IntroWorld'
-import { createIntroScore } from '../audio/introScore'
+import { createHoldBed, createIntroScore } from '../audio/introScore'
 import { CAPTIONS, INTRO_START, INTRO_TOTAL, TITLE_CARD, seg, wallAt } from '../data/introScript'
 import { dialogOpen, textBlip } from '../audio/chip'
 import { isAdvanceEvent, makeGate } from './captionHold'
@@ -37,6 +37,8 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   const done = useRef(false)
   const score = useRef(null)
   const scoreStarted = useRef(false)
+  const bed = useRef(null) // chord that plays while a caption holds the movie
+  const tRefHold = useRef(0) // story time, for picking that chord
   const [muted, setMuted] = useState(readMuted)
   // Final Fantasy VII-style captions: each line holds the movie (and its score) until clicked through
   const acked = useRef(new Set())
@@ -51,6 +53,9 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
     scoreStarted.current = false
     if (!s) return
     s.setMuted(readMuted())
+    const b = createHoldBed()
+    bed.current = b
+    b?.setMuted(readMuted())
     s.resume()
     const unlock = () => s.resume() // e.g. dev links that open the intro without a click
     window.addEventListener('pointerdown', unlock)
@@ -59,6 +64,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
       window.removeEventListener('pointerdown', unlock)
       window.removeEventListener('keydown', unlock)
       s.stop()
+      b?.stop()
     }
   }, [])
 
@@ -66,6 +72,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
     const next = !muted
     setMuted(next)
     score.current?.setMuted(next)
+    bed.current?.setMuted(next)
     try {
       localStorage.setItem(MUTE_KEY, next ? '1' : '0')
     } catch {
@@ -77,6 +84,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   const onTick = useCallback(
     (time, wallTime) => {
       setIsHeld(held.current !== null)
+      tRefHold.current = time
       if (!scoreStarted.current && score.current) {
         scoreStarted.current = true
         score.current.start(time)
@@ -96,12 +104,18 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
   )
   const scene = useMemo(() => <IntroWorld onTick={onTick} gate={gate} />, [onTick, gate])
 
-  // the pre-composed score is timed to the movie, so it pauses while a line waits
+  // the pre-composed score is timed to the movie, so it pauses while a line waits —
+  // and a soft chord in the same key carries the music until the player moves on
   useEffect(() => {
     const ctx = score.current?.ctx
     if (!ctx) return
-    if (isHeld) ctx.suspend?.()
-    else if (ctx.state === 'suspended' && scoreStarted.current) ctx.resume()
+    if (isHeld) {
+      ctx.suspend?.()
+      bed.current?.play(tRefHold.current)
+    } else {
+      bed.current?.release()
+      if (ctx.state === 'suspended' && scoreStarted.current) ctx.resume()
+    }
   }, [isHeld])
 
   useEffect(() => {

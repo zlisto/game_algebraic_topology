@@ -412,3 +412,77 @@ export function createIntroScore() {
     },
   }
 }
+
+/** The chord under each part of the intro (story seconds), for the bed that plays while a caption waits. */
+const HOLD_CHORDS = [
+  [6, ['D3', 'A3', 'F4']], // wonder: D minor
+  [21, ['D2', 'A2', 'Eb3']], // Count Null and the collapse: his low, uneasy drone
+  [28, ['D3', 'A3', 'F4']], // the run: D minor
+  [34, ['F3', 'A3', 'C4']], // the spines hold: F major
+  [Infinity, ['D3', 'F#3', 'A3']], // Null watches, then the title: D major
+]
+
+/**
+ * A soft sustained chord in its own audio context. The score itself is pre-timed to the movie,
+ * so it must pause while a line waits; this keeps the room from going silent meanwhile.
+ */
+export function createHoldBed() {
+  const AC = window.AudioContext || window.webkitAudioContext
+  if (!AC) return null
+  const ctx = new AC()
+  const out = ctx.createGain()
+  out.gain.value = 0
+  const lp = ctx.createBiquadFilter()
+  lp.type = 'lowpass'
+  lp.frequency.value = 900
+  lp.connect(out).connect(ctx.destination)
+  let voices = []
+  let muted = false
+
+  const fadeTo = (v, secs) => {
+    const now = ctx.currentTime
+    out.gain.cancelScheduledValues(now)
+    out.gain.setValueAtTime(out.gain.value, now)
+    out.gain.linearRampToValueAtTime(muted ? 0 : v, now + secs)
+  }
+  const clear = (when) => {
+    for (const o of voices) o.stop(when)
+    voices = []
+  }
+
+  return {
+    /** fade in the chord for story time `t` */
+    play(t) {
+      if (ctx.state === 'suspended') ctx.resume()
+      const notes = HOLD_CHORDS.find(([until]) => t < until)[1]
+      clear(ctx.currentTime + 0.05)
+      for (const n of notes) {
+        for (const detune of [-5, 5]) {
+          const o = ctx.createOscillator()
+          o.type = 'triangle'
+          o.frequency.value = hz(n)
+          o.detune.value = detune
+          const g = ctx.createGain()
+          g.gain.value = 0.045
+          o.connect(g).connect(lp)
+          o.start()
+          voices.push(o)
+        }
+      }
+      fadeTo(1, 0.8)
+    },
+    /** fade out as the movie moves on */
+    release() {
+      fadeTo(0, 0.5)
+      clear(ctx.currentTime + 0.6)
+    },
+    setMuted(m) {
+      muted = m
+      if (m) fadeTo(0, 0.1)
+    },
+    stop() {
+      fadeTo(0, 0.2)
+      setTimeout(() => ctx.close().catch(() => {}), 300)
+    },
+  }
+}
