@@ -16,6 +16,7 @@ export const OPENING = [
   E('Mirror Pools — World 3. Here we turn homology inside out.'),
   E('A chain is a sum of simplices. A cochain is a reading: it assigns a number to each simplex, and so to each chain. Hatcher writes $Cⁿ(X; G) = $ Hom$(Cₙ(X), G)$.'),
   G('So instead of building things out of edges, we put numbers on them?'),
+  E('Careful — something with lattice wings is circling the pools: a Coboundary Harpy. It eats ordinary lashes, because it evaluates them. Press G to turn your lash to cochain stance — it glows cyan — and strike it on the dual. Three hits drive its δα to 0.'),
   E('Exactly. The Reading Wand (0) sets the numbers. First pool is just ahead.'),
 ]
 

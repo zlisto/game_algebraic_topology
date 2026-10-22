@@ -1,4 +1,7 @@
 import { useFrame } from '@react-three/fiber'
+import ChaseCamera from './ChaseCamera'
+import EmmyFollower from './EmmyFollower'
+import { Star, WarpPortal } from './StarPortal'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useMemo, useRef } from 'react'
 import CountNull from '../../characters/CountNull'
@@ -182,6 +185,11 @@ export default function FlatsScene({
   onEnemies,
   onHearts,
   onSpooling,
+  camYawRef,
+  talkingRef,
+  camLockRef,
+  rewards = [],
+  portal,
 }) {
   const Z = Object.fromEntries(zones.map((z) => [z.id, z]))
   const tide = Z.tide_line
@@ -234,6 +242,7 @@ export default function FlatsScene({
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -251,7 +260,12 @@ export default function FlatsScene({
         onHearts={onHearts}
         onSpooling={onSpooling}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      {rewards.map((r) => (
+        <Star key={r.id} {...r} />
+      ))}
+      {portal && <WarpPortal {...portal} />}
+      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />
+      <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overheadRef={frameRef} lockRef={camLockRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.65} luminanceSmoothing={0.2} />

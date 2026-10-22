@@ -19,8 +19,10 @@ export const RULES02 = [
 ]
 
 export const OPENING = [
-  E('Tidewarp Flats. Out here the tide reshapes every path, every hour — but slowly, one moment flowing into the next.'),
-  E('Head for the first shrine, just east of the causeway. And watch your step: the pools are deep.'),
+  E('Tidewarp Flats. Out here the tide reshapes every path, every hour — slowly, one moment flowing into the next. That’s how this land changes without dying.'),
+  G('And Null? He was here. I can see grey on the far pools.'),
+  E('He’s waiting at the big pool to the north-east. First, four shrines — each one leaves a Tide Hourglass when it’s solved, and the Warp Portal at the bridgehead needs all four.'),
+  E('Head for the first shrine, just east of the causeway. Watch your step: the pools are deep, and there’s something long and twisted in the water by the crossing.'),
 ]
 
 export const ZONES = {
@@ -28,7 +30,7 @@ export const ZONES = {
     arrive: [
       E('Watch the ribbon between those two posts. The tide is bending it — moment by moment.'),
       E('Each moment is one shape: a map from the ribbon into the flats. The whole movie of them, one frame flowing into the next, is a homotopy.'),
-      E('Here — the Tide Glass. Press 3 to hold it, then scrub time with Z and X (or the mouse wheel).'),
+      E('Here — the Tide Glass. Press 3 to hold it, then scrub time with Z and C (or the mouse wheel). While you hold it, the camera stays put.'),
       E('Find the moments when the ribbon touches each marker stone. Each moment is one frame, fₜ.'),
       E('If any of this gets slippery, the “? How it works” button up top replays the lesson.'),
     ],
@@ -36,7 +38,8 @@ export const ZONES = {
     done: [
       E('Three moments, one movie. Every frame sits right next to the one before — no jumps. That’s what makes it a homotopy and not just a pile of pictures.'),
       G('And those two posts never moved.'),
-      E('Right. A homotopy rel the posts. Next shrine: north-east, past the stakes.'),
+      E('Right. A homotopy rel the posts. And look — the shrine’s left you something: a Tide Hourglass, the whole movie turning over inside it. Take it.'),
+      E('Next shrine: north-east, past the stakes.'),
     ],
   },
   hold_posts: {
@@ -66,6 +69,8 @@ export const ZONES = {
   the_pools: {
     arrive: [
       E('A tide pool. The ribbon can’t cross water: every frame of the movie has to stay on the flats.'),
+      G('That thing in the water — it’s a ribbon too. One twist in it.'),
+      E('A Möbius Prowler. Cut it down the middle and it doesn’t fall in two — it gets twice as long, and twice as fast. Two lashes, and keep moving.'),
       E('Two pedestals, two paths — one around the near side of the pool, one around the far side. Try the near side first.'),
     ],
     early: [E('Not yet — the stakes shrine comes first.')],
@@ -91,10 +96,10 @@ export const ZONES = {
   },
   nulls_snap: {
     arrive: [
-      N('Such patience, courier. Bending, pinning, re-tying — just like her. Watch: I deform the whole flats onto my post in a single snap.'),
-      N('Every space retracts to a point.'),
+      N('Such patience, courier. Bending, pinning, re-tying — just like her. And for what? Every hour the tide takes something, and every hour you bend it back.'),
+      N('Let me end it. Watch: I deform the whole flats onto my post in a single snap. Every space retracts to a point.'),
       E('Sending everything to one point in one go — that’s a retraction, sure. A deformation has to be the whole movie, and every frame has to stay on the flats.'),
-      E('His movie breaks somewhere. Scrub it with the Tide Glass (3, then Z / X) and mark the frame where it tears: press E or the button.'),
+      E('His movie breaks somewhere. Scrub it with the Tide Glass (3, then Z / C) and mark the frame where it tears: press E or the button.'),
     ],
     early: [E('That’s Null’s pool. We’re not ready for him yet.')],
     movies: [
@@ -115,23 +120,23 @@ export const ZONES = {
         mark: 'Mark where it leaves the flats',
         hint: 'Scrub until the loop first touches the pool — the wet stretch glows violet.',
         right: [
-          E('There. A loop around the pool can only shrink by crossing the water — off the flats. So no deformation of the flats onto a point exists: the pool is a hole, and holes don’t deform away.'),
-          N('Then let my spawn do the tearing for me!'),
+          E('There. His loop could only shrink by crossing the water — off the flats. His movie can’t do it, and I’d bet no movie can: the pool is a hole. But proving that no movie exists needs a number we don’t have yet. That’s the next world’s job.'),
+          N('Clever. Cleverness doesn’t save anyone. Spawn — tear.'),
         ],
       },
     ],
     wrong: [E('That frame flows smoothly into the next — look at the faint ghosts on either side. Keep scrubbing.')],
-    wave: [E('Snappers and spawn — keep moving, keep lashing!')],
+    wave: [E('Snappers, spawn — and that pale thing is a Projective Specter. One lash only flips it into its mirror image — it has no inside to turn out. Hit it again, fast, before it rights itself!')],
     done: [
       N('Bend your little ribbons, then. But that loop round my pool — you will never shrink it. And you will never prove why.'),
       E('About the shrinking, he’s right: a place’s holes are exactly what stop a loop. About the proving, he’s wrong. Give me one more world.'),
-      E('The tide’s going out. Look — the way to Mirror Shoals.'),
+      E('The tide’s going out. Gather your hourglasses — the Warp Portal at the bridgehead will take us on to Mirror Shoals.'),
     ],
   },
 }
 
 export const HINTS02 = {
-  knockout: E('Shake it off — back to the last shrine you cleared.'),
+  knockout: E('Hearts back — back to the last shrine you cleared. Watch for Elixirs when the bigger ones burst.'),
   cut: E('The ribbon’s clipped — a map with a break in it isn’t continuous. Lash the Snapper, then click the cut with the Spool to re-tie it.'),
   stretch: E('That’s as far as the ribbon stretches.'),
   side: E('Close — but it goes around the pool the other way from the shrine’s path.'),
@@ -139,7 +144,7 @@ export const HINTS02 = {
 }
 
 export const DEFINITION02 = {
-  text: 'A homotopy is a family of maps fₜ : X → Y, one for each t in I = [0, 1], such that F(x, t) = fₜ(x) is continuous on X × I. It is a homotopy relative to A ⊂ X when fₜ does not change on A as t varies. A deformation retraction is a homotopy from the identity to a retraction — not just the single map at the end.',
+  text: 'A homotopy is a family of maps fₜ : X → Y, one for each t in I = [0, 1], such that F(x, t) = fₜ(x) is continuous on X × I. It is a homotopy relative to A ⊂ X when fₜ does not change on A as t varies. A deformation retraction of X onto A is a homotopy rel A from the identity of X to a retraction onto A — the whole movie, not just the single map at the end.',
   cite: 'Paraphrasing Allen Hatcher, Algebraic Topology, Chapter 0, pp. 2–3.',
   url: 'https://pi.math.cornell.edu/~hatcher/AT/ATpage.html',
 }

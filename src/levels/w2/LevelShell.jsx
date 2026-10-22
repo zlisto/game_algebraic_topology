@@ -140,6 +140,12 @@ export default function LevelShell({
   )
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState(tools[0] || 'lash')
+  const [stance, setStance] = useState('chain') // the lash's stance (G): chain or cochain
+  useEffect(() => {
+    const on = (ev) => setStance(ev.detail)
+    window.addEventListener('lash-stance', on)
+    return () => window.removeEventListener('lash-stance', on)
+  }, [])
   const [askOpen, setAskOpen] = useState(false)
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
@@ -451,7 +457,7 @@ export default function LevelShell({
 
   return (
     <div className={`screen level level-screen ${className || `level-${levelId}`}`}>
-      <Canvas className="world-canvas" camera={{ position: [0, 11, 26], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas className="world-canvas" camera={{ position: [0, 11, 26], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <Scene
           layout={layout}
           sites={SITES}
@@ -573,6 +579,11 @@ export default function LevelShell({
 
         {!talking && !levelClear && !askOpen && (
           <div className="controls">
+            {worldIndex >= 3 && (
+              <span className={`stance-badge ${stance}`} title="G switches the lash between chain and cochain stance">
+                {stance === 'cochain' ? 'Cochain stance' : 'Chain stance'} <kbd>G</kbd>
+              </span>
+            )}
             <div className="weapons">
               {tools.map((t) => (
                 <button key={t} type="button" className={`weapon ${tool === t ? 'active' : ''}`} onClick={() => setTool(t)}>

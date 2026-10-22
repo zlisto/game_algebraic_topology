@@ -17,6 +17,7 @@ export const OPENING = [
   E('The Lantern Rows. Readings can be multiplied. Two 1-readings make a 2-reading — the cup product.'),
   E('On a triangle $[v₀v₁v₂]$: $(φ ⌣ ψ)[v₀v₁v₂] = φ[v₀v₁] · ψ[v₁v₂]$. The first reading takes the front face, the second takes the back face.'),
   G('Front face, back face. And the Caster does the multiplying?'),
+  E('There’s a Cup Spider in the rows. Fast while it’s degree 1 — but if two legs land on you it cups itself up to degree 2. Alternate your stance with G every strike: the sign is graded, and the same stance twice makes the web snap back at you.'),
   E('The Cup Caster, on 9. First row is just ahead.'),
 ]
 

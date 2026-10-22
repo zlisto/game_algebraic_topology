@@ -590,7 +590,7 @@ export default function Level1_1({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level w1-1-level">
-      <Canvas camera={{ position: [0, 11, 28], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 28], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <EndpointGardensScene
           layout={layout}
           sites={SITES}

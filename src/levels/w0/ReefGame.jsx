@@ -1,8 +1,8 @@
 import { useFrame } from '@react-three/fiber'
-import { Line } from '@react-three/drei'
 import { createElement, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
+import Lash from './Lash'
 import { sfxCrack, sfxHammer, sfxHit, sfxHurt, sfxPop, sfxRefuse, sfxRoot, sfxWhoosh } from '../../audio/chip'
 import {
   BacktrackSpawn,
@@ -39,6 +39,9 @@ import {
   FiberWraithSpawn,
   TwistThiefSpawn,
 } from '../../characters/Spawn'
+import { BitorusSpawn, EarringSpawn, KleinSpawn, MobiusSpawn, ProjectiveSpawn } from '../../characters/Bestiary'
+import { ColossusSpawn, HarpySpawn, SpectreSpawn, SpiderSpawn } from '../../characters/Cohomology'
+import KleinElixir from './KleinElixir'
 import {
   ACTION_TOOLS,
   BladeProp,
@@ -74,7 +77,7 @@ export { WORLD_TOOLS } from './worldTools'
 
 export const GYROID_SCALE = 0.7
 const SPEED = 3.6
-const WHIP_TIME = 0.42
+const WHIP_TIME = 0.52 // long enough to see the rear-back and the wave roll out
 const WHIP_HIT_AT = 0.45 // fraction of the swing when the lash lands
 const WHIP_RANGE = 1.35
 const WHIP_ARC = Math.PI * 0.42
@@ -119,7 +122,20 @@ const ENEMY = {
   glitch: { hp: 1, speed: 1.35, radius: 0.34 },
   fiber_wraith: { hp: 2, speed: 1.05, radius: 0.4 },
   twist_thief: { hp: 2, speed: 0.9, radius: 0.38 },
+  // the topological bestiary (design/BESTIARY.md): hits = invariants
+  mobius: { hp: 2, speed: 1.0, radius: 0.42 }, // π₁ = ℤ; the first cut doubles its length — and its speed
+  projective: { hp: 2, speed: 0.8, radius: 0.4, torsionAt: 2 }, // π₁ = ℤ₂: two lashes in quick succession
+  klein: { hp: 3, speed: 0.6, radius: 0.46, torsionAt: 2 }, // H₁ = ℤ ⊕ ℤ₂: the free loop, then a torsion pair
+  bitorus: { hp: 4, speed: 0.7, radius: 0.55 }, // H₁ = ℤ⁴
+  earring: { hp: 5, speed: 0.6, radius: 0.6 }, // not a CW complex; shrinks and speeds up as rings shatter
+  // the cohomology wing: they answer to the lash's stance (G: chain / cochain)
+  harpy: { hp: 3, speed: 0.95, radius: 0.45, rule: 'harpy' }, // ⟨δα, c⟩ = ⟨α, ∂c⟩: chain lashes feed it; cochain lashes drive δα to 0
+  spider: { hp: 4, speed: 1.2, radius: 0.42, rule: 'spider' }, // α ⌣ β = (−1)^pq β ⌣ α: alternate stances, or the web recoils
+  spectre: { hp: 3, speed: 0.35, radius: 0.5, rule: 'spectre' }, // dω = 0, ω ≠ df: circle it (∮ω ≠ 0) to force it exact, then lash
+  colossus: { hp: 6, speed: 0.4, radius: 0.7, rule: 'colossus' }, // Hᵏ ≅ Hₙ₋ₖ: alternate stone (chain) and light (cochain)
 }
+/** Seconds a torsion pair stays open: miss the follow-up and it settles back. */
+const TORSION_WINDOW = 2.2
 
 /** Starting hit points: a definition may set `hp`; a 1-6 patrol gets one per letter of its word. */
 function enemyHp(type, def) {
@@ -155,46 +171,15 @@ const SPAWN_VIEW = {
   glitch: GlitchSpawn,
   fiber_wraith: FiberWraithSpawn,
   twist_thief: TwistThiefSpawn,
-}
-
-/** The Fundamental Lash: an amber cord cracked from Gyroid's hand. */
-function Lash({ state }) {
-  const line = useRef()
-  const flash = useRef()
-  const pts = useMemo(() => Array.from({ length: 16 }, () => new THREE.Vector3()), [])
-  useFrame(() => {
-    const s = state.current
-    const on = s.whip > 0
-    line.current.visible = on
-    flash.current.visible = on && s.whip > WHIP_HIT_AT && s.whip < WHIP_HIT_AT + 0.25
-    if (!on) return
-    const fx = Math.sin(s.face)
-    const fz = Math.cos(s.face)
-    const hx = s.x + fx * 0.17 - fz * 0.22 // right hand
-    const hz = s.z + fz * 0.17 + fx * 0.22
-    const ext = s.whip < 0.3 ? 0.25 : Math.min(1, (s.whip - 0.3) / 0.25) * (1 - Math.max(0, s.whip - 0.75) / 0.5)
-    const reach = 0.25 + WHIP_RANGE * ext
-    const arr = []
-    for (let k = 0; k < pts.length; k++) {
-      const u = k / (pts.length - 1)
-      const sway = Math.sin(u * Math.PI) * (0.35 - ext * 0.3) * (s.whip < 0.3 ? -1 : 1)
-      const x = hx + fx * reach * u - fz * sway
-      const z = hz + fz * reach * u + fx * sway
-      const y = 0.85 - u * 0.6 + Math.sin(u * Math.PI) * 0.3 * (1 - ext)
-      arr.push(x, y, z)
-    }
-    line.current.geometry.setPositions(arr)
-    flash.current.position.set(arr[arr.length - 3], arr[arr.length - 2], arr[arr.length - 1])
-  })
-  return (
-    <>
-      <Line ref={line} points={pts.map(() => [0, 0, 0])} color="#ffcf6a" lineWidth={4} toneMapped={false} />
-      <mesh ref={flash}>
-        <sphereGeometry args={[0.09, 10, 8]} />
-        <meshBasicMaterial color="#fff2c4" toneMapped={false} />
-      </mesh>
-    </>
-  )
+  mobius: MobiusSpawn,
+  projective: ProjectiveSpawn,
+  klein: KleinSpawn,
+  bitorus: BitorusSpawn,
+  earring: EarringSpawn,
+  harpy: HarpySpawn,
+  spider: SpiderSpawn,
+  spectre: SpectreSpawn,
+  colossus: ColossusSpawn,
 }
 
 // ---------------------------------------------------------------- the game
@@ -363,6 +348,7 @@ function SmithProp({ state, tool }) {
 }
 
 export default function ReefGame({
+  elixirs = true, // some kills drop a Klein Elixir that restores every heart
   camYawRef, // chase camera (0-1): movement turns with the camera, and F lashes straight ahead
   stage,
   shape,
@@ -394,7 +380,7 @@ export default function ReefGame({
     state.current = {
       x: onPier ? pier[0] : start[0],
       z: onPier ? pier[1] : start[1],
-      face: Math.PI / 2,
+      face: camYawRef ? camYawRef.current + Math.PI : Math.PI / 2, // chase camera: start facing away from it
       moving: 0,
       whip: 0,
       swing: 0, // the Cell-Smith's hammer swing, 0 → 1
@@ -461,6 +447,11 @@ export default function ReefGame({
   const keys = useRef({})
   const aim = useRef(null) // reef point under the mouse
   const clicks = useRef([]) // clicks waiting for the game loop
+  const drops = useRef([]) // Klein Elixirs on the ground: { id, x, z, taken }
+  const dropId = useRef(0)
+  const [, setDropCount] = useState(0) // re-render when one drops or is taken
+  const pickSphere = useMemo(() => new THREE.Sphere(), [])
+  const pickHit = useMemo(() => new THREE.Vector3(), [])
   if (import.meta.env.DEV) {
     // dev inspection / test shortcuts
     window.__game = {
@@ -485,6 +476,12 @@ export default function ReefGame({
         e.preventDefault() // movement keys never nudge a focused slider or scroll the page
       }
       if (camYawRef && e.code === 'KeyF' && !e.repeat) keys.current.lashAhead = true
+      if (e.code === 'KeyG' && !e.repeat) {
+        // the lash's stance: chain (strike chains) or cochain (evaluate on the dual)
+        const st = state.current
+        st.stance = st.stance === 'cochain' ? 'chain' : 'cochain'
+        window.dispatchEvent(new CustomEvent('lash-stance', { detail: st.stance }))
+      }
     }
     const up = (e) => (keys.current[e.code] = false)
     const blur = () => (keys.current = {})
@@ -536,17 +533,24 @@ export default function ReefGame({
       mz = (k.KeyS || k.ArrowDown ? 1 : 0) - (k.KeyW || k.ArrowUp ? 1 : 0)
       s.fwd = -mz
       if (camYawRef) {
-        // camera-relative: forward is away from the camera, right is the camera's right
-        const yaw = camYawRef.current
+        // camera-relative: forward is away from the camera, right is the camera's right. The frame
+        // is latched when the keys change, so holding S turns Gyroid round and he keeps running that
+        // way while the camera swings in behind him (rather than chasing its own tail).
         const f = -mz
         const r = mx
+        const sig = f * 3 + r
+        if (sig !== s.inSig) {
+          s.inSig = sig
+          s.inYaw = camYawRef.current
+        }
+        const yaw = s.inYaw
         mx = -Math.sin(yaw) * f + Math.cos(yaw) * r
         mz = -Math.cos(yaw) * f - Math.sin(yaw) * r
       }
       if (k.lashAhead) {
-        // F: lash straight ahead, no mouse needed
+        // F: lash toward the mouse if it's over the ground, else straight ahead
         k.lashAhead = false
-        if (tool === 'lash') clicks.current.push([s.x + Math.sin(s.face) * 1.5, s.z + Math.cos(s.face) * 1.5])
+        if (tool === 'lash') clicks.current.push(aim.current ? [...aim.current] : [s.x + Math.sin(s.face) * 1.5, s.z + Math.cos(s.face) * 1.5])
       }
     }
     const ml = Math.hypot(mx, mz)
@@ -641,9 +645,58 @@ export default function ReefGame({
             }
             // 1-6: a patrol only takes a hit if it is on the loop its word says to strike next
             if (e.type === 'patrol' && ribbonApi?.current?.patrolLash && !ribbonApi.current.patrolLash(e)) continue
+            // the cohomology wing answers to the stance
+            const rule = ENEMY[e.type]?.rule
+            if (rule) {
+              const st = s.stance || 'chain'
+              if (rule === 'harpy' && st === 'chain') {
+                // it evaluates the chain you hit it with — and grows on it
+                e.hp = Math.min(e.maxHp, e.hp + 1)
+                e.fed = 0.6
+                e.refused = 0.8
+                sfxRefuse()
+                continue
+              }
+              if (rule === 'spectre' && !(e.exact > 0)) {
+                e.refused = 0.8 // a closed form that isn't exact: the lash passes through
+                sfxRefuse()
+                continue
+              }
+              if (rule === 'colossus') {
+                const want = e.nextStance || 'chain'
+                if (st !== want) {
+                  e.refused = 0.8
+                  sfxRefuse()
+                  continue
+                }
+                e.nextStance = want === 'chain' ? 'cochain' : 'chain'
+              }
+              if (rule === 'spider') {
+                if (e.lastStance === st) {
+                  // the graded sign: strike the same way twice and the web snaps back at you
+                  e.refused = 0.8
+                  if (s.hurt === 0) {
+                    s.hurt = 1.3
+                    s.hearts = Math.max(0, s.hearts - 1)
+                    sfxHurt()
+                    onHearts?.(s.hearts)
+                  }
+                  continue
+                }
+                e.lastStance = st
+              }
+            }
             e.hp--
             e.flash = 0.15
             sfxHit()
+            const row = ENEMY[e.type] || {}
+            if (row.torsionAt && e.hp === row.torsionAt - 1) {
+              // 2-torsion: one lash only flips it; the next must come before it settles back
+              e.flipped = true
+              e.torsionClock = TORSION_WINDOW
+            } else if (row.torsionAt && e.hp < row.torsionAt - 1) e.flipped = false
+            if (e.type === 'mobius' && e.hp === 1) e.speedMul = 2 // cut down the middle: one band, twice as long, twice as fast
+            if (e.type === 'earring') e.speedMul = 1 + (e.maxHp - e.hp) * 0.3
             // a level can react to a hit, and can keep the target standing (1-9's Stack sentinel swaps the start vertex, again and again)
             if (stage.onEnemyHit?.(e) === 'keep') e.hp++
             e.stun = 0.5
@@ -660,11 +713,28 @@ export default function ReefGame({
               }
               sfxPop()
               report()
+              const tough = (ENEMY[e.type]?.hp || 1) >= 2
+              if (elixirs && Math.random() < (tough ? 0.45 : 0.15)) {
+                window.dispatchEvent(new CustomEvent('elixir-drop'))
+                drops.current.push({ id: dropId.current++, x: e.x, z: e.z })
+                setDropCount((n) => n + 1)
+              }
             }
           }
         }
       }
       if (s.whip >= 1) s.whip = 0
+    }
+
+    // --- Klein Elixirs: walk over one for every heart back
+    for (const dr of drops.current) {
+      if (!dr.taken && s.hearts < HEARTS && Math.hypot(dr.x - s.x, dr.z - s.z) < 0.75) {
+        dr.taken = true
+        s.hearts = HEARTS
+        onHearts?.(s.hearts)
+        sfxPop()
+        setDropCount((n) => n + 1)
+      }
     }
 
     // --- spawn: wander, chase when close, hurt on contact
@@ -673,6 +743,31 @@ export default function ReefGame({
     for (const e of enemies.current) {
       e.flash = Math.max(0, e.flash - dt)
       e.snipping = Math.max(0, e.snipping - dt)
+      e.px = s.x // so a beast can turn its eye on Gyroid
+      e.pz = s.z
+      if (e.fed > 0) e.fed -= dt
+      if (e.type === 'spectre' && e.alive) {
+        // run a closed loop round it and the line integral of its form is nonzero: it's forced exact
+        e.exact = Math.max(0, (e.exact || 0) - dt)
+        const ang = Math.atan2(s.x - e.x, s.z - e.z)
+        const dd = Math.hypot(s.x - e.x, s.z - e.z)
+        if (dd < 3.6 && e.lastAng !== undefined) {
+          e.wind = (e.wind || 0) + Math.atan2(Math.sin(ang - e.lastAng), Math.cos(ang - e.lastAng))
+          if (Math.abs(e.wind) >= Math.PI * 2) {
+            e.exact = 4.5
+            e.wind = 0
+            sfxPop()
+          }
+        } else if (dd >= 3.6) e.wind = 0
+        e.lastAng = ang
+        e.windFrac = Math.abs(e.wind || 0) / (Math.PI * 2)
+      }
+      if (e.flipped && e.alive && (e.torsionClock -= dt) <= 0) {
+        // the torsion pair wasn't finished: it untwists back
+        e.flipped = false
+        e.hp = ENEMY[e.type].torsionAt
+        e.refused = 0.8
+      }
       e.refused = Math.max(0, (e.refused || 0) - dt)
       if (e.dying > 0) {
         e.dying = Math.max(0, e.dying - dt)
@@ -755,15 +850,22 @@ export default function ReefGame({
       const vz = e.tz - e.z
       const vl = Math.hypot(vx, vz)
       if (vl > 0.01 && playEnabled) {
-        const nx = e.x + (vx / vl) * cfg.speed * dt
-        const nz = e.z + (vz / vl) * cfg.speed * dt
+        const nx = e.x + (vx / vl) * cfg.speed * (e.speedMul || 1) * dt
+        const nz = e.z + (vz / vl) * cfg.speed * (e.speedMul || 1) * dt
         if (enemyInside(nx, nz)) (e.x = nx), (e.z = nz)
         else if (enemyInside(nx, e.z)) e.x = nx
         else if (enemyInside(e.x, nz)) e.z = nz
         else e.retarget = 0
         e.face = Math.atan2(vx, vz)
       }
-      if (d < CONTACT + cfg.radius * 0.5 && s.hurt === 0 && playEnabled && !onPier && !cfg.harmless) {
+      if (d < cfg.radius + 0.3 && d > 0.001 && cfg.speed > 0) {
+        // never stand inside Gyroid: ease back out to arm's length
+        const push = (cfg.radius + 0.3 - d) / d
+        const px = e.x - dx * push
+        const pz = e.z - dz * push
+        if (enemyInside(px, pz)) (e.x = px), (e.z = pz)
+      }
+      if (d < CONTACT + cfg.radius * 0.5 + 0.08 && s.hurt === 0 && playEnabled && !onPier && !cfg.harmless) {
         s.hurt = 1.3
         s.hearts = Math.max(0, s.hearts - 1)
         sfxHurt()
@@ -772,6 +874,12 @@ export default function ReefGame({
         const kz = s.z + (dz / (d || 1)) * 0.7
         if (inside(kx, kz)) (s.x = kx), (s.z = kz)
         e.stun = 0.8
+        if (e.type === 'spider' && !e.graded) {
+          e.graded = true // cupped itself up to degree 2: slower, armored, one more lash
+          e.speedMul = 0.6
+          e.hp += 1
+          e.maxHp += 1
+        }
       }
     }
   })
@@ -801,7 +909,7 @@ export default function ReefGame({
       <group scale={GYROID_SCALE}>
         <Gyroid script={gyroidScript} />
       </group>
-      <Lash state={state} />
+      <Lash state={state} range={WHIP_RANGE} hitAt={WHIP_HIT_AT} equipped={tool === 'lash' && !onPier} />
       {!onPier && <SpoolLoop state={state} tool={tool} />}
       {!onPier && <GlassProp state={state} tool={tool} />}
       {!onPier && <SmithProp state={state} tool={tool} />}
@@ -816,6 +924,7 @@ export default function ReefGame({
       {!onPier && <WandProp state={state} tool={tool} />}
       {!onPier && <ExtensionProp state={state} tool={tool} />}
       <EnemyList enemies={enemies} />
+      {drops.current.filter((dr) => !dr.taken).map((dr) => <KleinElixir key={dr.id} x={dr.x} z={dr.z} />)}
       {playEnabled && <Reticle aim={aim} tool={tool} />}
 
       {/* mouse: aim under the cursor; click to lash toward it, or to start / stop the thread */}
@@ -828,7 +937,19 @@ export default function ReefGame({
           if (e.button !== 0) return
           e.stopPropagation()
           aim.current = [e.point.x, e.point.z]
-          clicks.current.push([e.point.x, e.point.z])
+          // a floating spawn under the cursor takes the click before the ground behind it
+          let best = null
+          let bestD = Infinity
+          for (const en of enemies.current) {
+            if (!en.alive) continue
+            pickSphere.center.set(en.x, 0.75, en.z)
+            pickSphere.radius = (ENEMY[en.type]?.radius || 0.4) + 0.25
+            if (e.ray.intersectSphere(pickSphere, pickHit)) {
+              const dd = pickHit.distanceTo(e.ray.origin)
+              if (dd < bestD) (bestD = dd), (best = en)
+            }
+          }
+          clicks.current.push(best ? [best.x, best.z] : [e.point.x, e.point.z])
         }}
       >
         <planeGeometry args={[240, 240]} />

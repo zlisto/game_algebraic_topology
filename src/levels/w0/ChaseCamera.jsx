@@ -17,7 +17,7 @@ const FOLLOW = 1.3 // how quickly the camera swings in behind a running Gyroid
 
 const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a))
 
-export default function ChaseCamera({ stateRef, yawRef, overhead }) {
+export default function ChaseCamera({ stateRef, yawRef, overhead: overheadProp, overheadRef, lockRef }) {
   const { camera, gl } = useThree()
   const keys = useRef({})
   const dist = useRef(DIST.start)
@@ -26,11 +26,12 @@ export default function ChaseCamera({ stateRef, yawRef, overhead }) {
   const goal = useMemo(() => new THREE.Vector3(), [])
   const aim = useMemo(() => new THREE.Vector3(), [])
   const snapped = useRef(false)
+  const shoulder = useRef(0) // slides over Gyroid's right shoulder while he lashes
 
   useEffect(() => {
     const el = gl.domElement
     const down = (e) => {
-      if (e.code === 'KeyZ' || e.code === 'KeyC') keys.current[e.code] = true
+      if ((e.code === 'KeyZ' || e.code === 'KeyC') && !lockRef?.current) keys.current[e.code] = true
     }
     const up = (e) => (keys.current[e.code] = false)
     const blur = () => (keys.current = {})
@@ -43,7 +44,7 @@ export default function ChaseCamera({ stateRef, yawRef, overhead }) {
       drag.current = e.clientX
     }
     const pup = (e) => e.button === 2 && (drag.current = null)
-    const wheel = (e) => (dist.current = THREE.MathUtils.clamp(dist.current + e.deltaY * 0.004, DIST.min, DIST.max))
+    const wheel = (e) => !lockRef?.current && (dist.current = THREE.MathUtils.clamp(dist.current + e.deltaY * 0.004, DIST.min, DIST.max))
     const menu = (e) => e.preventDefault() // right-drag turns the camera, so no context menu
     window.addEventListener('keydown', down)
     window.addEventListener('keyup', up)
@@ -63,21 +64,28 @@ export default function ChaseCamera({ stateRef, yawRef, overhead }) {
       el.removeEventListener('wheel', wheel)
       el.removeEventListener('contextmenu', menu)
     }
-  }, [gl, yawRef])
+  }, [gl, yawRef, lockRef])
 
   useFrame((_, rawDt) => {
     const s = stateRef.current
     if (!s) return
     const dt = Math.min(rawDt, 0.05)
-    const k = keys.current
+    const overhead = overheadRef ? overheadRef.current : overheadProp
+    const k = lockRef?.current ? {} : keys.current
     // manual turn
     yawRef.current = wrap(yawRef.current + ((k.KeyC ? 1 : 0) - (k.KeyZ ? 1 : 0)) * TURN * dt)
-    // swing in behind Gyroid while he runs forward (not while he backs up or strafes on the spot)
-    if ((s.fwd || 0) > 0 && s.moving > 0.5 && drag.current === null && !overhead) {
-      const behind = s.face + Math.PI
-      yawRef.current = wrap(yawRef.current + wrap(behind - yawRef.current) * Math.min(1, dt * FOLLOW))
+    // swing in behind Gyroid whenever he runs — gently for a curve, briskly when he turns right round
+    if (s.moving > 0.5 && drag.current === null && !overhead) {
+      const off = wrap(s.face + Math.PI - yawRef.current)
+      const rate = Math.abs(off) > 2.2 ? 4.5 : FOLLOW
+      yawRef.current = wrap(yawRef.current + off * Math.min(1, dt * rate))
     }
 
+    if (overhead) {
+      // square up to the nearest quarter turn: W / A / S / D then run straight along the reef
+      const square = Math.round(yawRef.current / (Math.PI / 2)) * (Math.PI / 2)
+      yawRef.current = wrap(yawRef.current + wrap(square - yawRef.current) * Math.min(1, dt * 6))
+    }
     const yaw = yawRef.current
     if (overhead) {
       const zoom = (overhead.size || 8) / 8
@@ -86,9 +94,13 @@ export default function ChaseCamera({ stateRef, yawRef, overhead }) {
       aim.set(cx, 0, cz)
     } else {
       const d = dist.current
-      // a little above the shoulder, looking past Gyroid to the ground ahead
-      goal.set(s.x + Math.sin(yaw) * d, 1.2 + d * 0.38, s.z + Math.cos(yaw) * d)
-      aim.set(s.x - Math.sin(yaw) * 2.2, 0.9, s.z - Math.cos(yaw) * 2.2)
+      // over the right shoulder while the whip flies, so the throw isn't hidden behind him
+      shoulder.current += ((s.whip > 0 ? 0.55 : 0) - shoulder.current) * Math.min(1, dt * 6)
+      const rx = Math.cos(yaw) * shoulder.current
+      const rz = -Math.sin(yaw) * shoulder.current
+      // above and behind, looking just past Gyroid — he sits mid-screen, clear of the HUD
+      goal.set(s.x + Math.sin(yaw) * d + rx, 1.4 + d * 0.42, s.z + Math.cos(yaw) * d + rz)
+      aim.set(s.x - Math.sin(yaw) * 1.1 + rx, 0.55, s.z - Math.cos(yaw) * 1.1 + rz)
     }
     const lerp = snapped.current ? Math.min(1, dt * (overhead ? 2.5 : 6)) : 1
     snapped.current = true

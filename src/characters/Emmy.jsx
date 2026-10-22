@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { cached, merge, piece } from './Beasts'
 
 /**
  * Emmy Boundary — procedural figure modeled on assets/characters/emmy-boundary.png:
@@ -102,6 +103,7 @@ export default function Emmy({ script, scale = 1 }) {
     }
     return out
   }, [])
+  const curlGeo = useMemo(() => cached('emmy-curls', () => merge(curls.map((cl) => piece(new THREE.IcosahedronGeometry(1, 1), { p: cl.p, s: cl.s, color: cl.c > 0.5 ? '#c9ccd4' : '#9da1ad' })))), [curls])
 
   useFrame(({ clock }, dt) => {
     const t = clock.elapsedTime
@@ -246,12 +248,10 @@ export default function Emmy({ script, scale = 1 }) {
               <meshStandardMaterial color={SKIN} roughness={0.55} />
             </mesh>
             {/* silver curls */}
-            {curls.map((cl, i) => (
-              <mesh key={i} position={cl.p} scale={cl.s}>
-                <icosahedronGeometry args={[1, 1]} />
-                <meshStandardMaterial color={cl.c > 0.5 ? '#c9ccd4' : '#9da1ad'} roughness={0.9} />
-              </mesh>
-            ))}
+            {/* (one merged mesh, coloured per curl: a single draw call instead of a hundred) */}
+            <mesh geometry={curlGeo}>
+              <meshStandardMaterial vertexColors roughness={0.9} />
+            </mesh>
             {/* amber goggles */}
             {[-1, 1].map((sd) => (
               <group key={sd} position={[sd * 0.055, 0.02, 0.115]}>

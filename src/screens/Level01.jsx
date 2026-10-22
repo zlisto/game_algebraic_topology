@@ -29,8 +29,22 @@ const PORTRAIT_CROP = {
   'emmy-boundary': ['400%', '54%', '5%'],
 }
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
+/** Emmy's end-of-level card: what the level taught, and what's coming. */
+const END_CARD = {
+  learned:
+    'A deformation retraction slides every point of a place onto a part of it — continuously, never tearing, with that part held still the whole time. The Walkway went onto its spine, the Fork onto a tree, the O onto a circle, Twin Lagoons onto a figure-eight. Nothing that matters was lost — and you caught every one of Null’s four forgeries breaking a rule.',
+  ahead:
+    'Tidewarp Flats. Out there the tide bends every path, hour by hour — that whole movie of shapes is called a homotopy. And somewhere on the flats is a pool Null swears a loop can shrink across. Keep your Spool ready.',
+}
+/** Each puzzle reef awards a Spine Shard when it's solved; all of them open the Warp Portal. */
+const STAR_SITES = ['the_walkway', 'the_fork', 'the_o', 'twin_lagoons', 'nulls_mirage']
+/** Where a reef's Star floats: over its centre if that's solid reef, else over its first beacon (never over a hole). */
+const starPos = (id) => {
+  const s = SITE[id]
+  return s.containsWorld(...s.pos) || !s.beacons?.length ? s.pos : s.toWorld(...s.beacons[0])
+}
 /** How much of each reef the overhead puzzle view frames. */
-const OVERHEAD_SIZE = { the_walkway: 15, the_fork: 10.5, the_o: 9.5, twin_lagoons: 10.5, nulls_mirage: 11 }
+const OVERHEAD_SIZE = { the_walkway: 15, the_fork: 14, the_o: 13, twin_lagoons: 15, nulls_mirage: 11 }
 
 function Portrait({ id, name }) {
   const [size, x, y] = PORTRAIT_CROP[id]
@@ -61,16 +75,20 @@ function arrivalLines(site, stage) {
 }
 
 /** Minimap from the same layout as the bible's map. */
-function Minimap({ pos, saved, current, gateOpen }) {
+function Minimap({ pos, face = 0, saved, current, gateOpen, stars = {}, portalOpen }) {
   const nextId = ORDER.find((id) => !saved[id])
   const P = (x, z) => worldToMap(x, z)
   const [gx, gz] = P(pos[0], pos[1])
   const [fx, fz] = P(...layout.scenery.skeleton_foundry.pos)
   return (
-    <svg className="minimap" viewBox="0 0 100 60" aria-label="Retract Reef map">
+    <svg className="minimap big" viewBox="0 0 100 60" aria-label="Retract Reef map">
       <rect width="100" height="60" rx="3" fill="#0b1626" />
       <circle cx={fx} cy={fz} r="7" fill="#3b4255" opacity="0.6" />
-      {layout.causeways.map((c, i) => {
+      {(layout.commons || []).map((c) => {
+        const [x, y] = P(...c.pos)
+        return <circle key={c.id} cx={x} cy={y} r={c.shape.add[0].r * 1.395} fill="#1d2a40" />
+      })}
+      {[...layout.causeways, ...(layout.commonsCauseways || [])].map((c, i) => {
         const [x1, y1] = P(...c.a)
         const [x2, y2] = P(...c.b)
         return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#5c6680" strokeWidth="1.1" />
@@ -89,15 +107,38 @@ function Minimap({ pos, saved, current, gateOpen }) {
         const fill = s.kind === 'start' ? '#3ecfbf' : saved[s.id] ? '#ffb347' : 'transparent'
         return <circle key={s.id} cx={x} cy={y} r={s.id === current ? 3.4 : 2.6} fill={fill} stroke={s.id === current ? '#fff' : '#ffb347'} strokeWidth="0.7" />
       })}
-      <MapNext from={[gx, gz]} to={nextId ? P(...SITE[nextId].pos) : gateOpen ? P(...layout.gate.b) : null} label={nextId ? 'NEXT' : 'EXIT'} />
+      {STAR_SITES.filter((id) => saved[id] && !stars[id]).map((id) => {
+        const [x, y] = P(...starPos(id))
+        return (
+          <text key={id} x={x} y={y - 3.2} fontSize="4.2" textAnchor="middle" fill="#ffc861">
+            ✦
+          </text>
+        )
+      })}
+      {(() => {
+        const [x, y] = P(...layout.gate.b)
+        return <circle cx={x} cy={y} r="2.4" fill={portalOpen ? '#b9a8ff' : '#2a2d3a'} stroke={portalOpen ? '#fff' : '#6a6e80'} strokeWidth="0.6" />
+      })()}
+      {/* view cone: which way Gyroid is facing */}
+      <path
+        d={`M ${gx} ${gz} L ${gx + Math.sin(face - 0.5) * 9} ${gz + Math.cos(face - 0.5) * 9} A 9 9 0 0 0 ${gx + Math.sin(face + 0.5) * 9} ${gz + Math.cos(face + 0.5) * 9} Z`}
+        fill="url(#viewcone)"
+      />
+      <defs>
+        <radialGradient id="viewcone" cx={gx} cy={gz} r="9" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff6c8" stopOpacity="0.75" />
+          <stop offset="1" stopColor="#fff6c8" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <MapNext from={[gx, gz]} to={nextId ? P(...SITE[nextId].pos) : gateOpen ? P(...layout.gate.b) : null} label={nextId ? 'NEXT' : portalOpen ? 'EXIT' : 'STARS'} />
       <circle cx={gx} cy={gz} r="1.8" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
 }
 
-export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
+export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-1')
-  const samplesBySite = useMemo(() => Object.fromEntries(PLAYABLE.map((s) => [s.id, sampleShape(s.shape)])), [])
+  const samplesBySite = useMemo(() => Object.fromEntries(PLAYABLE.map((s) => [s.id, sampleShape(s.shape, s.scale ? 0.2 : 0.14)])  /* scaled-up reefs get bigger tiles, not more of them */), [])
   const given = (site) => (site.givenSpine ? site.givenSpine.map((s) => cleanStroke(s)) : [])
 
   // debug: start at a later reef (or Null's Mirage), with the earlier reefs already saved
@@ -128,10 +169,23 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
   const [forgeryIdx, setForgeryIdx] = useState(0)
   const [answer, setAnswer] = useState(null)
   const [levelClear, setLevelClear] = useState(false)
+  const [stars, setStars] = useState({}) // site id → time collected (clock seconds)
+  const [toast, setToast] = useState(null)
+  const [warping, setWarping] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const starsRef = useRef(stars)
+  starsRef.current = stars
+  const savedRef = useRef(null)
+  const toastTimer = useRef(null)
+  const flash = useCallback((text, ms = 2200) => {
+    setToast(text)
+    clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(null), ms)
+  }, [])
   const stateRef = useRef(null)
   const camYawRef = useRef(Math.PI / 2) // chase camera yaw; starts east of the pier, looking down the Walkway
   const talkingRef = useRef(false) // Emmy faces Gyroid and gestures while a line is up
-  const [here, setHere] = useState({ site: null, pos: startPos })
+  const [here, setHere] = useState({ site: null, pos: startPos, face: Math.PI * 1.5 })
   const judged = useRef(null)
   const [shown, setShown] = useState(0) // characters of the current line typed out so far
   const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
@@ -163,6 +217,38 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     }
   }, [])
 
+  // first bite, first Elixir: taught the moment they happen, as a toast that doesn't stop play
+  const taught = useRef({})
+  useEffect(() => {
+    if (hearts < 3 && !taught.current.hearts) {
+      taught.current.hearts = true
+      flash('♥ Every bite costs a heart. Lose all three and you wake at the last reef you saved.', 4200)
+    }
+  }, [hearts, flash])
+  useEffect(() => {
+    const on = () => {
+      if (taught.current.elixir) return
+      taught.current.elixir = true
+      flash('A Klein Elixir — no inside, no outside. Save it for when you’re hurt: walk through it for every heart back.', 4800)
+    }
+    window.addEventListener('elixir-drop', on)
+    return () => window.removeEventListener('elixir-drop', on)
+  }, [flash])
+
+  // Esc pauses: the world freezes and a menu offers Resume, Restart and Title
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.code !== 'Escape' || levelClear) return
+      e.preventDefault()
+      setPaused((p) => !p)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [levelClear])
+  useEffect(() => {
+    duckMusic(paused)
+  }, [paused])
+
   // opening line
   useEffect(() => {
     if (skip) return
@@ -176,13 +262,32 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const at = siteAt(s.x, s.z)?.id || null
-      setHere((h) => (h.site === at && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: at, pos: [s.x, s.z] }))
+      setHere((h) => (h.site === at && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 && Math.abs(h.face - s.face) < 0.05 ? h : { site: at, pos: [s.x, s.z], face: s.face }))
+      // walk into a Star to collect it
+      const sv = savedRef.current || {}
+      for (const id of STAR_SITES) {
+        if (!sv[id] || starsRef.current[id] !== undefined) continue
+        const [px, pz] = starPos(id)
+        const d = Math.hypot(s.x - px, s.z - pz)
+        let off = Math.atan2(px - s.x, pz - s.z) - s.face
+        off = Math.atan2(Math.sin(off), Math.cos(off))
+        const lashed = s.whip > 0.4 && d < 2.1 && Math.abs(off) < 0.7
+        if (d < 1.3 || lashed) {
+          const got = Object.keys(starsRef.current).length + 1
+          setStars((st) => ({ ...st, [id]: performance.now() / 1000 }))
+          sfxCorrect()
+          flash(got < STAR_SITES.length ? `✦ ${SITE[id].name}'s Spine Shard — ${got} of ${STAR_SITES.length}` : `✦ All ${STAR_SITES.length} Spine Shards! The Warp Portal is open.`, 2600)
+        }
+      }
     }, 120)
     return () => clearInterval(id)
   }, [])
   const site = here.site ? SITE[here.site] : null
   const stage = site ? STAGE_OF[site.stage] : null
   const allSaved = ORDER.every((id) => saved[id])
+  savedRef.current = saved
+  const starCount = Object.keys(stars).length
+  const portalOpen = gateOpen && starCount === STAR_SITES.length
 
   // arriving at a site
   useEffect(() => {
@@ -330,19 +435,16 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     if (simSite === site.id) invalidate()
   }
 
-  // weapon switch: 1 = Lash, 2 = Spool, Q / wheel toggles
+  // weapon switch: 1 = Lash, 2 = Spool, Q toggles (the wheel zooms the camera)
   useEffect(() => {
     const key = (e) => {
       if (e.code === 'Digit1') setTool('lash')
       else if (e.code === 'Digit2') setTool('spool')
       else if (e.code === 'KeyQ') setTool((w) => (w === 'lash' ? 'spool' : 'lash'))
     }
-    const wheel = (e) => Math.abs(e.deltaY) > 4 && setTool((w) => (w === 'lash' ? 'spool' : 'lash'))
     window.addEventListener('keydown', key)
-    window.addEventListener('wheel', wheel, { passive: true })
     return () => {
       window.removeEventListener('keydown', key)
-      window.removeEventListener('wheel', wheel)
     }
   }, [])
 
@@ -425,7 +527,7 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
-  const playEnabled = (phase === 'play' || phase === 'clear') && !running && t === 0 && !levelClear
+  const playEnabled = (phase === 'play' || phase === 'clear') && !running && t === 0 && !levelClear && !paused && !warping
   const quizActive = phase === 'quiz'
   const drawSite = !!site && ['fork', 'ring', 'lagoons'].includes(site.stage) && !saved[site.id]
   const spoolEnabled = playEnabled && drawSite
@@ -451,7 +553,7 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
     return { endpointAt: (x, z) => (s.containsWorld(x, z) ? s.toWorld(...(sim.endpointAt(...s.toLocal(x, z)) || s.toLocal(x, z))) : [x, z]) }
   }, [sim, simSite])
 
-  if (import.meta.env.DEV) window.__lvl = { here, saved, strokesBySite, sim, simSite, enemies, phase, setTool, save: (ids) => setSaved((s) => ({ ...s, ...Object.fromEntries(ids.map((i) => [i, true])) })) } // dev
+  if (import.meta.env.DEV) window.__lvl = { here, saved, strokesBySite, sim, simSite, enemies, phase, setTool, clear: () => setLevelClear(true), save: (ids) => setSaved((s) => ({ ...s, ...Object.fromEntries(ids.map((i) => [i, true])) })) } // dev
 
   const scene = useMemo(
     () => (
@@ -484,30 +586,47 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
         camYawRef={camYawRef}
         overhead={overhead}
         talkingRef={talkingRef}
+        stars={STAR_SITES.filter((id) => saved[id]).map((id) => ({ id, kind: SITE[id].stage, pos: starPos(id), state: stars[id] !== undefined ? 'taken' : 'waiting', takenAt: stars[id] }))}
+        portal={{ pos: layout.gate.b, facing: Math.atan2(layout.gate.b[0] - layout.gate.a[0], layout.gate.b[1] - layout.gate.a[1]), open: portalOpen, need: STAR_SITES.length - starCount, warping }}
       />
     ),
     // handlers close over strokes and the current site, which are listed
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [samplesBySite, strokesBySite, liveStroke, sim, simWorld, simSite, saved, forgery, walkable, game, gameKey, playEnabled, spoolEnabled, tool, gateOpen, quizActive, here.site, overhead],
+    [samplesBySite, strokesBySite, liveStroke, sim, simWorld, simSite, saved, forgery, walkable, game, gameKey, playEnabled, spoolEnabled, tool, gateOpen, quizActive, here.site, overhead, stars, portalOpen, warping],
   )
 
   const objective = (() => {
-    if (levelClear || saved.nulls_mirage) return 'Walk the mended causeway to Tidewarp Flats'
+    if (portalOpen) return `✦ ${starCount}/${STAR_SITES.length} · Warp Portal open — walk the mended causeway into it`
+    if (saved.nulls_mirage) return `✦ ${starCount}/${STAR_SITES.length} · Collect every Spine Shard to open the Warp Portal`
     if (allSaved) return 'Go to Null’s Mirage, past Twin Lagoons'
     const next = ORDER.find((id) => !saved[id])
-    return `Reefs saved ${ORDER.filter((id) => saved[id]).length}/4 · next: ${SITE[next].name}`
+    return `✦ ${starCount}/${STAR_SITES.length} · next: ${SITE[next].name}`
   })()
 
   const ruleState = (id) => (!sim || simSite !== here.site || t < 1 ? 'idle' : sim.rules[id] ? 'ok' : 'bad')
   // the end-of-level menu waits until Gyroid walks the mended causeway to its far end
-  useExitTrigger(phase === 'clear', stateRef, (x, z) => Math.hypot(x - layout.gate.b[0], z - layout.gate.b[1]) < 1.6, () => setLevelClear(true))
-  const showRules = quizActive || (!!site && site.stage !== 'forgeries')
+  const nearPortal = (x, z) => Math.hypot(x - layout.gate.b[0], z - layout.gate.b[1]) < 1.4
+  useExitTrigger(phase === 'clear' && portalOpen && !warping, stateRef, nearPortal, () => {
+    // into the portal: a white-out warp, then the level-clear card
+    setWarping(true)
+    setTimeout(() => setLevelClear(true), 1100)
+  })
+  const lockedHint = useRef(false)
+  useEffect(() => {
+    if (!gateOpen || portalOpen) return
+    const near = nearPortal(...here.pos)
+    if (near && !lockedHint.current) flash(`The portal is sealed — it needs all ${STAR_SITES.length} Spine Shards (${starCount} so far).`, 2800)
+    lockedHint.current = near
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [here.pos, gateOpen, portalOpen])
+  // the rules card only while the camera is up in the puzzle view (or judging forgeries), so it doesn't hide fights
+  const showRules = quizActive || (!!site && site.stage !== 'forgeries' && !!overhead)
   const siteEnemies = site ? enemies[site.id] || 0 : 0
   const beaconsOk = sim && simSite === here.site && t >= 1 ? sim.beaconHit.every(Boolean) : null
 
   return (
     <div className="screen level">
-      <Canvas camera={{ position: [7.7, 11, 18], fov: 45 }} dpr={[1, 1.75]}>
+      <Canvas camera={{ position: [7.7, 11, 18], fov: 45 }} dpr={[1, 1.5]} frameloop={paused ? 'never' : 'always'}>
         {scene}
       </Canvas>
 
@@ -553,7 +672,12 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         </div>
 
-        {!line && <Minimap pos={here.pos} saved={saved} current={here.site} gateOpen={gateOpen} />}
+        {!line && <Minimap pos={here.pos} face={here.face} saved={saved} current={here.site} gateOpen={gateOpen} stars={stars} portalOpen={portalOpen} />}
+        {toast && !line && (
+          <div className="toast low">
+            <MathText text={toast} />
+          </div>
+        )}
 
         {showRules && (
           <div className="rules-panel">
@@ -674,19 +798,58 @@ export default function Level01({ concept, onBackToTitle, onNext, startAt }) {
         )}
       </div>
 
+      {warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <div className="win-banner pause">
+          <div className="win-card">
+            <span className="lvl-kicker">Paused</span>
+            <h2>{levelMeta?.title || 'A Good Deformation'}</h2>
+            <p className="next-up">✦ {starCount} of {STAR_SITES.length} Spine Shards</p>
+            <div className="btn-row" style={{ flexDirection: 'column', alignItems: 'stretch' }}>
+              <button type="button" className="btn primary" onClick={() => setPaused(false)}>
+                Resume
+              </button>
+              <button type="button" className="btn" onClick={() => onGo?.('level1', { restart: Date.now() })}>
+                Restart level
+              </button>
+              <button type="button" className="btn" onClick={onBackToTitle}>
+                Title screen
+              </button>
+            </div>
+            <p className="cite">Esc to resume</p>
+          </div>
+        </div>
+      )}
       {levelClear && (
         <div className="win-banner exit">
           <div className="win-card wide">
             <span className="lvl-kicker">World 0 · Level 1 clear</span>
             <h2>{levelMeta?.title || 'A Good Deformation'}</h2>
-            <p className="def">{DEFINITION.text}</p>
-            <p className="cite">
-              {DEFINITION.cite}{' '}
-              <a href={DEFINITION.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">The broken causeway is mended. Next: 0-2 · Bend, Don’t Break at Tidewarp Flats.</p>
+            {/* Emmy sums up the level, then points the way on */}
+            <div className="endcard-emmy">
+              <Portrait id="emmy-boundary" name="Emmy Boundary" />
+              <div>
+                <span className="speaker">Emmy Boundary</span>
+                <h4>What we learned</h4>
+                <p>
+                  <MathText text={END_CARD.learned} />
+                </p>
+                <h4>What lies ahead</h4>
+                <p>
+                  <MathText text={END_CARD.ahead} />
+                </p>
+              </div>
+            </div>
+            <details className="endcard-def">
+              <summary>The definition (after Hatcher)</summary>
+              <p className="def">{DEFINITION.text}</p>
+              <p className="cite">
+                {DEFINITION.cite}{' '}
+                <a href={DEFINITION.url} target="_blank" rel="noreferrer">
+                  Read the book
+                </a>
+              </p>
+            </details>
             <div className="btn-row">
               <button type="button" className="btn" onClick={() => setLevelClear(false)}>
                 Keep exploring

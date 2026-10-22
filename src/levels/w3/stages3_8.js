@@ -16,6 +16,7 @@ export const OPENING = [
   E('The Seam. On one side, cohomology. On the other, homology. On a closed, oriented manifold they mirror each other.'),
   E('Poincaré duality: for a closed orientable $n$-manifold, $Hᵏ(M) ≅ Hₙ₋ₖ(M)$. Degree $k$ on this side is twinned with degree $n − k$ on that one.'),
   G('So the towers come in pairs.'),
+  E('The Poincaré Colossus guards the seam: stone below, light above. Strike the stone in chain stance, then the light in cochain stance (G), back and forth — six pairings and it falls.'),
   E('Sheet Compass on 6. First pair of towers is ahead.'),
 ]
 

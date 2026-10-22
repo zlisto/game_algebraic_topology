@@ -426,7 +426,7 @@ export default function Level1_9({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level level-1-9">
-      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <SheetMusicScene
           layout={layout}
           sites={SITES}

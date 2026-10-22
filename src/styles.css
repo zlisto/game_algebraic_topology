@@ -1664,3 +1664,41 @@ b.term {
 .lesson-tapes { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.35rem; }
 .lesson-tape { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
 .lesson-tape-label { font-size: 0.72rem; font-weight: 700; min-width: 3.2rem; }
+
+/* Warp Portal: a white-out as Gyroid steps through */
+.warp-flash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 40;
+  background: radial-gradient(circle at 50% 55%, #ffffff 0%, #e6dcff 35%, rgba(185, 168, 255, 0.85) 70%);
+  animation: warp-in 1.1s ease-in forwards;
+}
+@keyframes warp-in {
+  from { opacity: 0; transform: scale(0.2); border-radius: 50%; }
+  60% { opacity: 1; }
+  to { opacity: 1; transform: scale(1.6); border-radius: 0; }
+}
+.win-banner.pause { background: rgba(4, 8, 18, 0.55); backdrop-filter: blur(3px); }
+
+/* 0-1 open overworld: a larger map, clear of the hint bar */
+.minimap.big { width: min(21rem, 44vw); }
+
+/* end-of-level card: Emmy explains what was learned and what's next */
+.endcard-emmy { display: flex; gap: 1rem; align-items: flex-start; text-align: left; margin: 0.8rem 0 0.6rem; }
+.endcard-emmy .portrait { flex: 0 0 auto; width: 4.6rem; height: 4.6rem; }
+.endcard-emmy .speaker { color: var(--accent, #3ecfbf); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; }
+.endcard-emmy h4 { margin: 0.45rem 0 0.15rem; font-size: 0.92rem; color: #ffd27a; }
+.endcard-emmy p { margin: 0; line-height: 1.45; font-size: 0.95rem; }
+.endcard-def { text-align: left; margin: 0.4rem 0 0.8rem; font-size: 0.85rem; opacity: 0.9; }
+.endcard-def summary { cursor: pointer; color: #9fb3c8; }
+.endcard-def .def { font-size: 0.95rem; }
+
+/* 0-1: the reward toast sits below the level title; the map rides above the hint bar */
+.level .toast.low { top: auto; bottom: 7.5rem; }
+.minimap.big { bottom: 4.6rem; }
+
+/* the lash's stance (World 3 on): chain gold, cochain cyan */
+.stance-badge { align-self: center; padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; border: 1px solid currentColor; background: rgba(8, 12, 24, 0.7); }
+.stance-badge.chain { color: #ffcf6a; }
+.stance-badge.cochain { color: #5cf0ff; }

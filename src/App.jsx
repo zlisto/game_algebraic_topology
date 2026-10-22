@@ -710,7 +710,7 @@ export default function App() {
   return (
     <div className="screen">
       <Screen
-        key={`${screen}:${opts.startAt || ''}`}
+        key={`${screen}:${opts.startAt || ''}:${opts.restart || ''}`}
         {...opts}
         onGo={go}
         concept={concept}

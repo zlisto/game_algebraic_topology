@@ -67,12 +67,12 @@
       ],
       "enemies": [
         [
-          "sphere",
+          "mobius",
           -2.5,
           -3.2
         ],
         [
-          "sphere",
+          "mobius",
           2.8,
           -2.6
         ]

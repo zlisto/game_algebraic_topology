@@ -166,7 +166,7 @@ export default function LevelMovie({ videoId, Scene, Overlay, kicker, name, star
 
   return (
     <div className={`screen intro${embedded ? ' embedded' : ''}`} onPointerDown={(e) => isAdvanceEvent(e) && advance()}>
-      <Canvas camera={{ position: [-20, 6, 18], fov: 40, near: 0.1, far: 220 }} dpr={[1, 1.75]}>
+      <Canvas camera={{ position: [-20, 6, 18], fov: 40, near: 0.1, far: 220 }} dpr={[1, 1.5]}>
         <MovieClock tRef={tRef} start={start} rate={rate} onTick={onTick} paused={paused} gate={gate} jumpRef={jumpRef} />
         {scene}
       </Canvas>

@@ -522,7 +522,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level lvl15">
-      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <PushForwardScene
           layout={layout}
           sites={SITES}

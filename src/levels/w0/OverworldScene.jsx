@@ -5,13 +5,16 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import ReefScenery, { CausewaySlab, StaticReef } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
-import { COMMONS, SITES, layout } from '../../world/reef'
+import { COMMONS, SITES, layout, trimToWater } from '../../world/reef'
 import ChaseCamera from './ChaseCamera'
 import EmmyFollower from './EmmyFollower'
+import { Star, WarpPortal } from './StarPortal'
 import { Beacon, Footprint, Spine, TearLines, Tiles, Trails } from './ReefBoard'
 import ReefGame from './ReefGame'
 
 const ZERO = { current: 0 }
+/** A brighter, bluer sea for the open overworld: more contrast against the grey-violet reef. */
+const BLUE_SEA = { water: '#1d63b0', deep: '#081a3e', sand: '#3c5f86', weed: '#2b5f78', coral: ['#ff7a8a', '#ffb070', '#c58bff', '#5ad6c8', '#ffd27a'] }
 
 /**
  * Overhead three-quarter follow camera (classic Metal Gear / Zelda angle), fixed yaw.
@@ -53,10 +56,14 @@ export function FollowCamera({ stateRef, frameRef }) {
 }
 
 export function DevAdvance() {
-  const { advance } = useThree()
+  const { advance, gl, scene } = useThree()
   useEffect(() => {
-    if (import.meta.env.DEV) window.__advance = advance
-  }, [advance])
+    if (import.meta.env.DEV) {
+      window.__advance = advance
+      window.__gl = gl // dev: renderer info
+      window.__scene = scene // dev: count visible meshes for a draw-call budget
+    }
+  }, [advance, gl, scene])
   return null
 }
 
@@ -112,21 +119,27 @@ export default function OverworldScene({
   camYawRef,
   overhead,
   talkingRef,
+  stars = [],
+  portal,
 }) {
   return (
     <>
       <color attach="background" args={['#060a14']} />
-      <fog attach="fog" args={open ? ['#060a14', 26, 70] : ['#060a14', 22, 55]} />
+      <fog attach="fog" args={open ? ['#071226', 26, 70] : ['#060a14', 22, 55]} />
       <ambientLight intensity={0.35} />
       <hemisphereLight args={['#5b8fb8', '#0a0a14', 0.55]} />
       <directionalLight position={[8, 16, 10]} intensity={1.2} color="#d8eef8" />
       <Stars radius={90} depth={40} count={2200} factor={3} fade speed={0.3} />
       <Sparkles count={260} scale={[70, 4, 50]} position={[0, 1, -8]} size={2} speed={0.25} color="#7fe8dc" />
-      <Seascape y={-0.5} area={[0, -6, 90, 70]} seed={11} />
+      <Seascape y={-0.5} area={[0, -6, 90, 70]} seed={11} palette={open ? BLUE_SEA : undefined} />
 
-      <ReefScenery gateOpen={gateOpen} causewayWidth={open ? layout.openCausewayWidth : undefined} />
+      <ReefScenery gateOpen={gateOpen} causewayWidth={open ? layout.openCausewayWidth : undefined} trim={open} />
       {open && COMMONS.map((c) => <StaticReef key={c.id} shapeDef={c.def} pos={c.pos} />)}
-      {open && (layout.commonsCauseways || []).map((c, i) => <CausewaySlab key={`cc${i}`} a={c.a} b={c.b} width={layout.openCausewayWidth} />)}
+      {open &&
+        (layout.commonsCauseways || []).map((c, i) => {
+          const seg = trimToWater(c.a, c.b, true)
+          return seg && <CausewaySlab key={`cc${i}`} a={seg[0]} b={seg[1]} width={layout.openCausewayWidth} />
+        })}
       {SITES.filter((s) => s.playable).map((site) => (
         <SiteReef
           key={site.id}
@@ -146,6 +159,7 @@ export default function OverworldScene({
       <ReefGame
         key={gameKey}
         camYawRef={open ? camYawRef : undefined}
+        elixirs={open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -162,7 +176,9 @@ export default function OverworldScene({
         onSpooling={onSpooling}
       />
       {open ? <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overhead={overhead} /> : <FollowCamera stateRef={stateRef} />}
-      {open && <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} />}
+      {stars.map((st) => <Star key={st.id} {...st} />)}
+      {portal && <WarpPortal {...portal} />}
+      {open && <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />}
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.65} luminanceSmoothing={0.2} />

@@ -270,7 +270,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
 
   return (
     <div className="screen level">
-      <Canvas camera={{ position: [0, 14, 18], fov: 45 }} dpr={[1, 1.75]} frameloop={step === 'outro' ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 14, 18], fov: 45 }} dpr={[1, 1.5]} frameloop={step === 'outro' ? 'never' : 'always'}>
         <CastleScene
           trial={trial}
           round={round}

@@ -1,6 +1,6 @@
 import { useFrame } from '@react-three/fiber'
 import { Html, Line, Sparkles, Stars } from '@react-three/drei'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import Seascape from '../../world/Seascape'
 import { LAND } from '../../theme/palette'
@@ -75,6 +75,28 @@ function FlatsGround({ layout }) {
   )
 }
 
+/** Rim stones, all in one instanced mesh (one draw call, however many stones). */
+function Stones({ stones }) {
+  const ref = useRef()
+  useEffect(() => {
+    const d = new THREE.Object3D()
+    stones.forEach((st, i) => {
+      d.position.set(...st.pos)
+      d.rotation.set(st.rot, st.rot * 2, 0)
+      d.scale.setScalar(st.s)
+      d.updateMatrix()
+      ref.current.setMatrixAt(i, d.matrix)
+    })
+    ref.current.instanceMatrix.needsUpdate = true
+  }, [stones])
+  return (
+    <instancedMesh ref={ref} args={[null, null, stones.length]}>
+      <dodecahedronGeometry args={[1, 0]} />
+      <meshStandardMaterial color={LAND.stoneDark} roughness={0.5} flatShading />
+    </instancedMesh>
+  )
+}
+
 /** A tide pool: dark deep water with a slow teal shimmer and a ring of rim stones. */
 function Pool({ pool, wet = false }) {
   const water = useRef()
@@ -104,12 +126,7 @@ function Pool({ pool, wet = false }) {
         <ringGeometry args={[pool.r - 0.12, pool.r, 64]} />
         <meshBasicMaterial color="#4fe0d0" transparent opacity={0.4} toneMapped={false} />
       </mesh>
-      {stones.map((st, i) => (
-        <mesh key={i} position={st.pos} rotation={[st.rot, st.rot * 2, 0]} scale={st.s}>
-          <dodecahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color={LAND.stoneDark} roughness={0.5} flatShading />
-        </mesh>
-      ))}
+      <Stones stones={stones} />
     </group>
   )
 }
@@ -288,7 +305,7 @@ export default function FlatsScenery({ layout, bridged = true, exitOpen = false 
       <pointLight position={[0, 6, 0]} intensity={8} distance={30} color="#7fe8dc" />
       <Stars radius={90} depth={40} count={2200} factor={3} fade speed={0.3} />
       <Sparkles count={220} scale={[44, 3, 30]} position={[0, 0.8, 0]} size={2} speed={0.2} color="#7fe8dc" />
-      <Seascape y={-0.55} area={[0, 0, 70, 56]} seed={23} palette={{ water: '#0c4a5a', sand: '#3e6a5a', weed: '#2a5a38' }} lanterns={8} />
+      <Seascape y={-0.55} area={[0, 0, 70, 56]} seed={23} palette={{ water: '#1d63b0', deep: '#081a3e', sand: '#3c5f86', weed: '#2b5f78', coral: ['#ff7a8a', '#ffb070', '#c58bff', '#5ad6c8', '#ffd27a'] }} lanterns={8} />
 
       <FlatsGround layout={layout} />
       {layout.pools.map((p) => (

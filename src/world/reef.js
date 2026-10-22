@@ -17,8 +17,23 @@ const segDist = (x, z, [ax, az], [bx, bz]) => {
 
 const lerp2 = ([ax, az], [bx, bz], u) => [ax + (bx - ax) * u, az + (bz - az) * u]
 
+/** A site's layout scaled up about its centre (`scale` in the layout): shape, beacons, spawn, spines. */
+function scaled(s) {
+  const k = s.scale || 1
+  if (k === 1) return s
+  const prim = (p) => Object.fromEntries(Object.entries(p).map(([key, v]) => [key, typeof v === 'number' ? v * k : v]))
+  const pt = ([x, z]) => [x * k, z * k]
+  return {
+    ...s,
+    shape: { ...s.shape, add: (s.shape.add || []).map(prim), sub: s.shape.sub && s.shape.sub.map(prim) },
+    beacons: s.beacons && s.beacons.map(pt),
+    enemies: s.enemies && s.enemies.map(([type, x, z]) => [type, x * k, z * k]),
+    givenSpine: s.givenSpine && s.givenSpine.map((stroke) => stroke.map(pt)),
+  }
+}
+
 /** Sites with their shapes, in site-local coordinates. */
-export const SITES = layout.sites.map((s) => {
+export const SITES = layout.sites.map(scaled).map((s) => {
   const shape = makeShape(s.shape)
   return {
     ...s,
@@ -46,6 +61,23 @@ export const COMMONS = (layout.commons || []).map((c) => {
   const shape = makeShape(c.shape)
   return { ...c, def: c.shape, containsWorld: (x, z) => shape.inside(x - c.pos[0], z - c.pos[1]) }
 })
+
+/**
+ * A bridge drawn only where it's over water: trim a causeway's ends back to where it leaves a
+ * platform (a reef, or — with `open` — a common), so it meets the edge instead of lying on top.
+ */
+export function trimToWater(a, b, open = false) {
+  const onLand = (x, z) => SITES.some((s) => s.containsWorld(x, z)) || (open && COMMONS.some((c) => c.containsWorld(x, z)))
+  const at = (u) => [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]
+  const N = 80
+  let u0 = 0
+  let u1 = 1
+  while (u0 < 1 && onLand(...at(u0))) u0 += 1 / N
+  while (u1 > u0 && onLand(...at(u1))) u1 -= 1 / N
+  if (u1 - u0 < 1 / N) return null
+  const tuck = 0.15 / Math.max(0.01, Math.hypot(b[0] - a[0], b[1] - a[1])) // tuck a hair under each edge
+  return [at(Math.max(0, u0 - tuck)), at(Math.min(1, u1 + tuck))]
+}
 
 /** Sites with holes: inside the outline but not on the reef. */
 const HOLES = SITES.filter((s) => s.def.sub?.length).map((s) => {

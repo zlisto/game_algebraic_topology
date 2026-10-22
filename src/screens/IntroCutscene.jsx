@@ -172,7 +172,7 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
 
   return (
     <div className="screen intro" onPointerDown={(e) => isAdvanceEvent(e) && advance()}>
-      <Canvas camera={{ position: [20, 12, 20], fov: 40, near: 0.1, far: 200 }} dpr={[1, 1.75]}>
+      <Canvas camera={{ position: [20, 12, 20], fov: 40, near: 0.1, far: 200 }} dpr={[1, 1.5]}>
         {scene}
       </Canvas>
 

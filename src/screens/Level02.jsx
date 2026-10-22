@@ -48,6 +48,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import MathText from './MathText'
+import { EmmyEndCard, PauseMenu, ViewCone, usePause } from './LevelChrome'
 
 /**
  * World 0 · Level 2 "Bend, Don't Break" — Tidewarp Flats. Gyroid crosses the mended
@@ -101,12 +102,12 @@ const segDist = (x, z, [ax, az], [bx, bz]) => {
 const zoneAt = (x, z) => layout.zones.find((zn) => Math.hypot(x - zn.center[0], z - zn.center[1]) < zn.radius) || null
 
 /** Minimap of the flats: outline, pools, shrines (gold once done), Gyroid. */
-function FlatsMap({ pos, done, current, next, exitOpen }) {
+function FlatsMap({ pos, face = 0, done, current, next, exitOpen, rewards = {}, portalOpen }) {
   const P = ([x, z]) => [50 + x * 2.3, 30 + z * 2.3]
   const outline = layout.outline.map((p) => P(p).join(',')).join(' ')
   const [gx, gz] = P(pos)
   return (
-    <svg className="minimap" viewBox="0 0 100 60" aria-label="Tidewarp Flats map">
+    <svg className="minimap big" viewBox="0 0 100 60" aria-label="Tidewarp Flats map">
       <rect width="100" height="60" rx="3" fill="#0b1626" />
       <polygon points={outline} fill="#2c3448" stroke="#5c6680" strokeWidth="0.6" />
       {layout.pools.map((p) => {
@@ -117,13 +118,36 @@ function FlatsMap({ pos, done, current, next, exitOpen }) {
         const [x, y] = P(zn.shrine)
         return <circle key={zn.id} cx={x} cy={y} r={zn.id === current ? 2.6 : 2} fill={done[zn.id] ? '#ffb347' : 'transparent'} stroke={zn.id === current ? '#fff' : '#ffb347'} strokeWidth="0.6" />
       })}
-      <MapNext from={[gx, gz]} to={next ? P(layout.zones.find((z) => z.id === next).shrine) : exitOpen ? P(layout.exit.b) : null} label={next ? 'NEXT' : 'EXIT'} />
+      {REWARD_ZONES.filter((id) => done[id] && !rewards[id]).map((id) => {
+        const [x, y] = P(rewardPos(layout.zones.find((z) => z.id === id)))
+        return (
+          <text key={id} x={x} y={y - 2.6} fontSize="4" textAnchor="middle" fill="#ffc861">
+            ⌛
+          </text>
+        )
+      })}
+      {(() => {
+        const [x, y] = P(layout.exit.b)
+        return <circle cx={x} cy={y} r="2.4" fill={portalOpen ? '#b9a8ff' : '#2a2d3a'} stroke={portalOpen ? '#fff' : '#6a6e80'} strokeWidth="0.6" />
+      })()}
+      <ViewCone x={gx} y={gz} face={face} id="flatscone" />
+      <MapNext from={[gx, gz]} to={next ? P(layout.zones.find((z) => z.id === next).shrine) : exitOpen ? P(layout.exit.b) : null} label={next ? 'NEXT' : portalOpen ? 'EXIT' : 'HOURGLASSES'} />
       <circle cx={gx} cy={gz} r="1.6" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
 }
 
-export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
+/** Each shrine solved leaves a Tide Hourglass; all four open the Warp Portal at the bridgehead. */
+const REWARD_ZONES = ['tide_line', 'hold_posts', 'the_pools', 'nulls_snap']
+const rewardPos = (zn) => [zn.shrine[0] + (zn.center[0] - zn.shrine[0]) * 0.35, zn.shrine[1] + (zn.center[1] - zn.shrine[1]) * 0.35]
+const END_CARD = {
+  learned:
+    'A homotopy is a whole movie of maps, one frame flowing into the next — no jumps, no tears, never off the land. Pin the posts and it is a homotopy rel the posts. Null’s “one snap” cheated twice: once in time, once off the flats. I’d bet no movie can shrink a loop around that pool — but a bet isn’t a proof. That proof is waiting in the next world.',
+  ahead:
+    'Mirror Shoals. Two reefs there look nothing alike — a figure-eight and a theta — and we’ll prove they’re the same shape, by sending each into the other and back. Past them, the Mirror Gate, and my old Foundry.',
+}
+
+export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt }) {
   // debug: start at a later shrine, with the earlier ones done
   const skipTo = Math.max(0, ZONE_ORDER.indexOf(startAt))
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-2')
@@ -194,7 +218,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
   const [glassT, setGlassTState] = useState(0)
   const glassTRef = useRef(0)
   const [spooling, setSpooling] = useState(false)
-  const [here, setHere] = useState({ zone: null, pos: checkpoint })
+  const [here, setHere] = useState({ zone: null, pos: checkpoint, face: 0 })
   const [status, setStatus] = useState({ hooked: [], cut: false, match: null, strained: false })
   const [levelClear, setLevelClear] = useState(false)
   const [exitOpen, setExitOpen] = useState(false)
@@ -202,6 +226,16 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
   const [toast, setToast] = useState(null)
   const [lesson, setLesson] = useState(false) // the 'How the Tide Works' lesson, over the level
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking along the causeway onto the flats
+  const camYawRef = useRef(Math.atan2(layout.entry.a[0] - layout.entry.b[0], layout.entry.a[1] - layout.entry.b[1]))
+  const talkingRef = useRef(false)
+  const camLockRef = useRef(false) // the Tide Glass borrows Z / C and the wheel
+  const [rewards, setRewards] = useState({}) // zone id → collected
+  const rewardsRef = useRef(rewards)
+  rewardsRef.current = rewards
+  const doneRef = useRef(null)
+  const [warping, setWarping] = useState(false)
+  const [nullScene, setNullScene] = useState(false) // from Null's arrival until his scene is over: his theme
   const frameRef = useRef(null) // the camera frames the shrine Gyroid is working
   const spawnRef = useRef(null)
   const ribbonApi = useRef(null)
@@ -246,7 +280,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
   useEffect(() => setGlassTick(tool === 'glass'), [tool])
 
   // Count Null's boss theme while he's here and through his wave; the tide theme otherwise
-  const boss = nullHere || wave === 'on'
+  const boss = nullScene || nullHere || wave === 'on'
   const levelTheme = boss ? startNullMusic : startTideMusic
   const wasBoss = useRef(false)
   useEffect(() => {
@@ -265,7 +299,23 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const zn = zoneAt(s.x, s.z)?.id || null
-      setHere((h) => (h.zone === zn && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { zone: zn, pos: [s.x, s.z] }))
+      setHere((h) => (h.zone === zn && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 && Math.abs(h.face - s.face) < 0.05 ? h : { zone: zn, pos: [s.x, s.z], face: s.face }))
+      // walk into a Tide Hourglass — or lash it — to collect it
+      const dn = doneRef.current || {}
+      for (const id of REWARD_ZONES) {
+        if (!dn[id] || rewardsRef.current[id]) continue
+        const [px, pz] = rewardPos(ZONE[id])
+        const d = Math.hypot(s.x - px, s.z - pz)
+        let off = Math.atan2(px - s.x, pz - s.z) - s.face
+        off = Math.atan2(Math.sin(off), Math.cos(off))
+        if (d < 1.3 || (s.whip > 0.4 && d < 2.1 && Math.abs(off) < 0.7)) {
+          const got = Object.keys(rewardsRef.current).length + 1
+          rewardsRef.current = { ...rewardsRef.current, [id]: true }
+          setRewards(rewardsRef.current)
+          sfxCorrect()
+          flash(got < REWARD_ZONES.length ? `⌛ Tide Hourglass — ${got} of ${REWARD_ZONES.length}` : `⌛ All ${REWARD_ZONES.length} Tide Hourglasses! The Warp Portal is open.`)
+        }
+      }
       const R = ribbonsRef.current
       const all = RIBBON_ZONES.flatMap((rid) => hookedStakes(R.ribbons[rid]))
       const rz = RIBBON_ZONES.includes(zn) ? zn : null
@@ -340,6 +390,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       }
     }
     if (zn === 'nulls_snap') {
+      setNullScene(true)
       setNullHere(true)
       setMovie(0)
       setGlassT(0)
@@ -510,7 +561,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       else if (e.code === 'Digit2') setTool('spool')
       else if (e.code === 'Digit3' && glassUnlocked) setTool('glass')
       else if (e.code === 'KeyQ') setTool((w) => TOOLS.filter((t) => t !== 'glass' || glassUnlocked)[(TOOLS.indexOf(w) + 1) % (glassUnlocked ? 3 : 2)])
-      else if (e.code === 'KeyZ' || e.code === 'KeyX') scrubKeys.current[e.code] = true
+      else if (e.code === 'KeyZ' || e.code === 'KeyC') scrubKeys.current[e.code] = true
       else if (e.code === 'KeyE') markRef.current?.()
     }
     const up = (e) => (scrubKeys.current[e.code] = false)
@@ -534,7 +585,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       const k = scrubKeys.current
-      const dir = (k.KeyX ? 1 : 0) - (k.KeyZ ? 1 : 0)
+      const dir = (k.KeyC ? 1 : 0) - (k.KeyZ ? 1 : 0)
       if (dir) setGlassT(glassTRef.current + dir * SCRUB_PER_SEC * dt)
       raf = requestAnimationFrame(tick)
     }
@@ -546,12 +597,6 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       window.removeEventListener('wheel', wheel)
     }
   }, [glassActive, setGlassT])
-  useEffect(() => {
-    if (glassActive) return
-    const wheel = (e) => Math.abs(e.deltaY) > 4 && setTool((w) => (w === 'lash' ? 'spool' : 'lash'))
-    window.addEventListener('wheel', wheel, { passive: true })
-    return () => window.removeEventListener('wheel', wheel)
-  }, [glassActive])
 
   // ---------- dialogue
   const advance = () => {
@@ -568,6 +613,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       spawnRef.current?.(ZONE.nulls_snap.wave.map(([type, x, z]) => ({ type, x, z, site: 'nulls_snap' })))
       say(ZONES.nulls_snap.wave)
     } else if (next === 'clear') {
+      setNullScene(false) // he's gone: the tide theme returns
       setExitOpen(true) // the bridge appears; the level ends when Gyroid crosses it
       setPhase('clear')
     } else setPhase(next)
@@ -616,7 +662,13 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
   }, [])
 
   // ---------- the game layer
-  const playEnabled = (phase === 'play' || phase === 'clear') && !askOpen && !lesson
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  const playEnabled = (phase === 'play' || phase === 'clear') && !askOpen && !lesson && !paused && !warping
+  doneRef.current = done
+  talkingRef.current = phase.startsWith('talk:')
+  camLockRef.current = tool === 'glass'
+  const rewardCount = Object.keys(rewards).length
+  const portalOpen = exitOpen && rewardCount === REWARD_ZONES.length
   const inRibbonZone = RIBBON_ZONES.includes(here.zone) && here.zone === current
   const spoolEnabled = playEnabled && phase === 'play' && inRibbonZone
   const gameKey = `flats:${knockouts}`
@@ -653,7 +705,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
   }
   // frame the whole shrine while Gyroid is working it (so the target shape is on screen)
   const working = here.zone && here.zone === current && met[here.zone] && !done[here.zone]
-  frameRef.current = working ? { center: ZONE[here.zone].center, size: ZONE[here.zone].radius * 2.1 } : null
+  frameRef.current = working && wave !== 'on' ? { center: ZONE[here.zone].center, size: ZONE[here.zone].radius * 2.1 } : null
   const view = {
     shrine: Object.fromEntries(layout.zones.map((zn) => [zn.id, done[zn.id] ? 'done' : zn.id === current ? 'active' : 'idle'])),
     glassAt: tool === 'glass' && here.zone === 'tide_line' && current === 'tide_line' ? 'tide_line' : null,
@@ -666,7 +718,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
     exitOpen,
   }
 
-  if (import.meta.env.DEV) window.__lvl2 = { here, done, phase, status, targetIdx, ribbons: ribbonsRef.current, setTool, setGlassT, movie, movies, enemies, markTear } // dev
+  if (import.meta.env.DEV) window.__lvl2 = { here, done, phase, status, targetIdx, ribbons: ribbonsRef.current, setTool, setGlassT, movie, movies, enemies, markTear, clear: () => setLevelClear(true) } // dev
 
   const scene = (
     <FlatsScene
@@ -693,16 +745,33 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
       onEnemies={(by) => ((reported.current = true), setEnemies(by))}
       onHearts={setHearts}
       onSpooling={setSpooling}
+      camYawRef={camYawRef}
+      talkingRef={talkingRef}
+      camLockRef={camLockRef}
+      rewards={REWARD_ZONES.filter((id) => done[id]).map((id) => ({ id, kind: 'hourglass', pos: rewardPos(ZONE[id]), state: rewards[id] ? 'taken' : 'waiting' }))}
+      portal={{ pos: layout.exit.b, facing: Math.atan2(layout.exit.b[0] - layout.exit.a[0], layout.exit.b[1] - layout.exit.a[1]), open: portalOpen, need: REWARD_ZONES.length - rewardCount, warping }}
     />
   )
 
   const objective = (() => {
-    if (done.nulls_snap) return 'Cross the bridge to Mirror Shoals (north-east)'
-    const n = ZONE_ORDER.filter((id) => done[id]).length
-    return `Shrines ${n}/4 · next: ${ZONE[current].name}`
+    if (portalOpen) return `⌛ ${rewardCount}/${REWARD_ZONES.length} · Warp Portal open — cross the bridge into it`
+    if (done.nulls_snap) return `⌛ ${rewardCount}/${REWARD_ZONES.length} · Collect every Tide Hourglass to open the Warp Portal`
+    return `⌛ ${rewardCount}/${REWARD_ZONES.length} · next: ${ZONE[current].name}`
   })()
   const zoneHere = here.zone ? ZONE[here.zone] : null
-  useExitTrigger(exitOpen, stateRef, (x, z) => Math.hypot(x - layout.exit.b[0], z - layout.exit.b[1]) < 2, () => setLevelClear(true))
+  const nearPortal = (x, z) => Math.hypot(x - layout.exit.b[0], z - layout.exit.b[1]) < 1.5
+  useExitTrigger(portalOpen && !warping, stateRef, nearPortal, () => {
+    setWarping(true)
+    setTimeout(() => setLevelClear(true), 1100)
+  })
+  const lockedHint = useRef(false)
+  useEffect(() => {
+    if (!exitOpen || portalOpen) return
+    const near = nearPortal(...here.pos)
+    if (near && !lockedHint.current) flash(`The portal is sealed — it needs all ${REWARD_ZONES.length} Tide Hourglasses (${rewardCount} so far).`)
+    lockedHint.current = near
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [here.pos, exitOpen, portalOpen])
   const spawnHere = here.zone ? enemies[here.zone] || 0 : 0
   const showRules = inRibbonZone && !done[here.zone] && met[here.zone]
   const ruleState = (id) => {
@@ -716,7 +785,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level">
-      <Canvas camera={{ position: [-17, 11, 18], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [-17, 11, 18], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson || paused ? 'never' : 'always'}>
         {scene}
       </Canvas>
 
@@ -765,7 +834,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         </div>
 
-        {!line && <FlatsMap pos={here.pos} done={done} current={here.zone} next={current} exitOpen={exitOpen} />}
+        {!line && <FlatsMap pos={here.pos} face={here.face} done={done} current={here.zone} next={current} exitOpen={exitOpen} rewards={rewards} portalOpen={portalOpen} />}
 
         {showRules && (
           <div className="rules-panel">
@@ -811,7 +880,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
             />
             {here.zone === 'tide_line' ? (
               <p className="forgery-count">
-                Markers {markersLit.filter(Boolean).length}/3 · {tool === 'glass' ? 'Z / X or wheel to scrub' : 'press 3 to hold the Tide Glass'}
+                Markers {markersLit.filter(Boolean).length}/3 · {tool === 'glass' ? 'Z / C or wheel to scrub' : 'press 3 to hold the Tide Glass'}
                 {!zoneClear('tide_line') && ' · clear the spawn first'}
               </p>
             ) : (
@@ -858,7 +927,7 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         )}
 
-        {toast && !line && <div className="toast">{toast}</div>}
+        {toast && !line && <div className="toast low">{toast}</div>}
         {status.strained && !line && <div className="toast">{HINTS02.stretch.text}</div>}
 
         {!talking && !levelClear && phase !== 'replay' && (
@@ -910,9 +979,9 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
                   : 'The Spool grabs ribbons at the shrines'
                 : tool === 'glass'
                   ? glassActive
-                    ? 'Z / X or the wheel to scrub time'
+                    ? 'Z / C or the wheel to scrub time'
                     : 'The Tide Glass works at the Tide Line and at Null’s pool'
-                  : 'WASD to move · click to crack the Lash · 2 Spool · 3 Tide Glass'}
+                  : `WASD to run · Z / C or right-drag to turn the camera · F or click to lash · 2 Spool${glassUnlocked ? ' · 3 Tide Glass' : ''}`}
           </div>
         )}
       </div>
@@ -925,34 +994,32 @@ export default function Level02({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 0 · Level 2 · Lesson"
           name="How the Tide Works"
           embedded
-          onDone={() => (setLesson(false), levelTheme())}
-          onSkip={() => (setLesson(false), levelTheme())}
+          onDone={() => (setLesson(false), switchMusic(levelTheme))}
+          onSkip={() => (setLesson(false), switchMusic(levelTheme))}
         />
       )}
 
+      {warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'Bend, Don’t Break'}
+          progress={`⌛ ${rewardCount} of ${REWARD_ZONES.length} Tide Hourglasses`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level2', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 · Level 2 clear</span>
-            <h2>{levelMeta?.title || 'Bend, Don’t Break'}</h2>
-            <p className="def">{DEFINITION02.text}</p>
-            <p className="cite">
-              {DEFINITION02.cite}{' '}
-              <a href={DEFINITION02.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">The tide has gone out. Next: 0-3 · Same Shape, Different Look at Mirror Shoals.</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                On to Mirror Shoals ▸
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 · Level 2 clear"
+          title={levelMeta?.title || 'Bend, Don’t Break'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION02}
+          onStay={() => setLevelClear(false)}
+          onNext={onNext}
+          nextLabel="On to Mirror Shoals ▸"
+        />
       )}
     </div>
   )

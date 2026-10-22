@@ -207,7 +207,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
   const given = allCells(cx).filter((id) => inA(cx, id))
   return (
     <div className="screen level">
-      <Canvas camera={{ position: [0, 11, 18], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 18], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <CylinderScene
           cx={cx}
           filled={filled}

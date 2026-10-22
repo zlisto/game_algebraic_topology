@@ -25,7 +25,7 @@ export const HINTS = {
   leak: E('See the red stretch? It touches two shores with no spine between them, so it’s pulled two ways and tears. Wrap the spine all the way around each hole.'),
   enclosed: E('That red patch is fenced in by spine with no hole inside. A solid patch can’t be squashed onto its own fence without tearing — erase that loop.'),
   cleared: E('Reef’s clear! Switch to the Spool (2 or Q), click to start the thread, walk your spine, click to stop — then Slide.'),
-  knockout: E('Oof — Gyroid’s down. Shake it off; we’ll take that reef again from the top.'),
+  knockout: E('Oof — Gyroid’s down. Hearts back, and we’ll take that reef again from the top. Watch for Elixirs.'),
 }
 
 export const STAGES = [
@@ -53,8 +53,8 @@ export const STAGES = [
       ['sphere', 2.6, -0.4],
     ],
     intro: [
-      E('Gyroid! Null’s spawn are crawling over the walkway. Run with WASD or the arrow keys.'),
-      E('Click to crack the Fundamental Lash toward your mouse. Those spheres are slippery — every loop slides right off them — so one lash collapses each one to a point.'),
+      E('Gyroid! Null’s spawn are crawling over the walkway. Run with WASD — Z and C, or a right-drag, swing the camera round.'),
+      E('Click a spawn, or press F, to crack the Fundamental Lash. Those spheres are slippery — every loop slides right off them — so one lash collapses each one to a point.'),
     ],
     cleared: [
       E('Walkway’s clear. Now, this walkway is too thick to hold — but its amber spine is solid. We shrink the walkway onto the spine.'),
@@ -64,7 +64,10 @@ export const STAGES = [
     success: [
       E('That’s a deformation retraction. Look at the rules — every one held.'),
       G('Nothing moved at the start, everything ended on the spine, the spine stayed put… and nothing tore.'),
-      E('And nobody fell in the sea. Your Spool can lay spines now — switch to it with 2 or Q. Let’s use it.'),
+      E('And nobody fell in the sea. See what’s rising over the reef? A Spine Shard — the very spine it shrank onto, set in amber. Walk into it, or lash it, to take it.'),
+      E('Every reef we save leaves one. Bring all five to the Warp Portal at the end of the broken causeway, and it’ll open the way to Tidewarp Flats.'),
+      G('Five shards, one portal. Got it.'),
+      E('Your Spool can lay spines now — switch to it with 2 or Q. When you take it out on a reef, I’ll lift the view so you can see the whole shape.'),
     ],
   },
   {

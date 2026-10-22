@@ -79,7 +79,7 @@
       ],
       "enemies": [
         [
-          "sphere",
+          "projective",
           2.5,
           -2
         ]
@@ -109,7 +109,7 @@
       ],
       "enemies": [
         [
-          "seam_wraith",
+          "colossus",
           2,
           -1.5
         ]

@@ -528,7 +528,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level w1-14-level">
-      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         <BasinScene
           layout={layout}
           sites={SITES}

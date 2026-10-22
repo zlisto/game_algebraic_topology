@@ -672,7 +672,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
 
   return (
     <div className="screen level">
-      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.75]} frameloop={lesson ? 'never' : 'always'}>
+      <Canvas camera={{ position: [0, 11, 30], fov: 45 }} dpr={[1, 1.5]} frameloop={lesson ? 'never' : 'always'}>
         {scene}
       </Canvas>
 

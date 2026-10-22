@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { LAND } from '../theme/palette'
 import { makeShape, sampleShape } from '../levels/w0/retraction'
-import { SITES, gateSegments, layout } from './reef'
+import { SITES, gateSegments, layout, trimToWater } from './reef'
 
 /**
  * Retract Reef scenery shared by the overworld level and the intro: everything that
@@ -273,12 +273,14 @@ export function HollowThrone({ height = 7.2 }) {
  * gateOpen: the broken causeway has been mended.
  * ruin: show the Ringed Isle's ruin (after the collapse).
  */
-export default function ReefScenery({ y = 0, staticSites = false, skipSites = [], gateOpen = false, ruin = true, throne = true, causewayWidth }) {
+export default function ReefScenery({ y = 0, staticSites = false, skipSites = [], gateOpen = false, ruin = true, throne = true, causewayWidth, trim = false }) {
   return (
     <group position={[0, y, 0]}>
-      {layout.causeways.map((c, i) => (
-        <CausewaySlab key={i} a={c.a} b={c.b} width={causewayWidth} />
-      ))}
+      {layout.causeways.map((c, i) => {
+        // trim: the bridge meets each platform's edge instead of lying across it
+        const seg = trim ? trimToWater(c.a, c.b, true) : [c.a, c.b]
+        return seg && <CausewaySlab key={i} a={seg[0]} b={seg[1]} width={causewayWidth} />
+      })}
       {gateSegments(gateOpen).map(([a, b], i) => (
         <CausewaySlab key={`g${i}`} a={a} b={b} spine={gateOpen} width={causewayWidth} />
       ))}

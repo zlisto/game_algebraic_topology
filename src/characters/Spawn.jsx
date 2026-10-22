@@ -1,22 +1,23 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { Lightning, cached, merge, piece } from './Beasts'
 
 /**
  * Count Null's spawn, modeled on the concept sheets in assets/characters/enemies/:
  *
- *   SphereSpawn  â€” an obsidian orb split by a jagged violet mouth of crystal teeth that
+ *   SphereSpawn  — an obsidian orb split by a jagged violet mouth of crystal teeth that
  *                  gnashes open, four slit eyes, a floating halo, violet smoke and
  *                  orbiting shards. One lash collapses it to a point.
- *   TorusSpawn   â€” an armored, spiked ring standing on edge like a wheel, violet
+ *   TorusSpawn   — an armored, spiked ring standing on edge like a wheel, violet
  *                  joints between its plates, one slit eye glaring from the hole, two
  *                  energy loops (around the tube, through the hole) that turn gold as
  *                  each lash catches one. Two lashes.
- *   SnapperSpawn â€” a cracked obsidian crab with oversized snipping claws, six jointed
+ *   SnapperSpawn — a cracked obsidian crab with oversized snipping claws, six jointed
  *                  legs that scuttle, eyes on wobbling stalks, gold thread caught in its
  *                  pincers. One lash.
  *
- * Each reads the live enemy record `e` (position, facing, flash, stun, dying, hpâ€¦).
+ * Each reads the live enemy record `e` (position, facing, flash, stun, dying, hp…).
  */
 
 const VIOLET = '#b070ff'
@@ -32,203 +33,105 @@ function place(g, e, y, dieTime, t, size = 1) {
   g.scale.setScalar(size * (e.dying > 0 ? Math.max(0.001, e.dying / dieTime) : 1 + (e.flash > 0 ? 0.12 : 0)))
 }
 
-// ---------------------------------------------------------------- sphere spawn
-
-export function SphereSpawn({ e }) {
-  const g = useRef()
-  const top = useRef()
-  const halo = useRef()
-  const shards = useRef()
-  const smoke = [useRef(), useRef(), useRef()]
-  const shell = useRef()
-  const R = 0.32
-  const teeth = useMemo(() => Array.from({ length: 16 }, (_, i) => (i / 16) * Math.PI * 2), [])
-  useFrame(({ clock }) => {
-    const t = clock.elapsedTime + e.seed
-    place(g.current, e, 0.62 + Math.sin(t * 3) * 0.06, 0.5, t, 1.15)
-    // the mouth gnashes: wider when it's close to biting (stunned = slack-jawed)
-    const open = e.stun > 0 ? 0.5 : 0.12 + 0.28 * Math.max(0, Math.sin(t * 5.5)) ** 3
-    top.current.rotation.x = -open
-    halo.current.position.y = R + 0.22 + Math.sin(t * 2) * 0.03
-    halo.current.rotation.z = Math.sin(t * 1.3) * 0.15
-    shards.current.rotation.y = t * 1.6
-    smoke.forEach((s, i) => {
-      const k = ((t * 0.7 + i / 3) % 1)
-      s.current.position.set(Math.sin(i * 2.1 + t) * 0.08, -R - k * 0.45, Math.cos(i * 1.7 + t) * 0.08)
-      s.current.scale.setScalar(0.12 * (1 - k) + 0.03)
-      s.current.material.opacity = 0.55 * (1 - k)
-    })
-    shell.current.material.emissiveIntensity = e.flash > 0 ? 2.5 : 0.35
-  })
-  const eye = (x, y, z, rz) => (
-    <mesh position={[x, y, z]} rotation={[0, 0, rz]} scale={[0.055, 0.03, 0.03]}>
-      <sphereGeometry args={[1, 12, 8]} />
-      {glow(LAVENDER)}
-    </mesh>
-  )
-  return (
-    <group ref={g}>
-      {/* lower jaw */}
-      <mesh rotation={[Math.PI, 0, 0]}>
-        <sphereGeometry args={[R, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        {obsidian({ side: THREE.DoubleSide })}
-      </mesh>
-      {teeth.map((a, i) => (
-        <mesh key={`b${i}`} position={[Math.sin(a) * R * 0.94, 0.03, Math.cos(a) * R * 0.94]} rotation={[0, a, 0]}>
-          <coneGeometry args={[0.035, 0.09, 4]} />
-          {glow('#d4a8ff')}
-        </mesh>
-      ))}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[R * 0.96, 0.02, 6, 40]} />
-        {glow()}
-      </mesh>
-      {/* upper half, hinged at the back so the mouth opens toward its target */}
-      <group position={[0, 0, -R * 0.9]}>
-        <group ref={top}>
-          <group position={[0, 0, R * 0.9]}>
-            <mesh ref={shell}>
-              <sphereGeometry args={[R, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              {obsidian({ side: THREE.DoubleSide })}
-            </mesh>
-            {teeth.map((a, i) => (
-              <mesh key={`t${i}`} position={[Math.sin(a + 0.2) * R * 0.94, -0.03, Math.cos(a + 0.2) * R * 0.94]} rotation={[Math.PI, a, 0]}>
-                <coneGeometry args={[0.035, 0.09, 4]} />
-                {glow('#d4a8ff')}
-              </mesh>
-            ))}
-            {eye(-0.09, 0.2, R * 0.82, 0.35)}
-            {eye(0.09, 0.2, R * 0.82, -0.35)}
-            {eye(-0.06, 0.28, R * 0.66, 0.5)}
-            {eye(0.06, 0.28, R * 0.66, -0.5)}
-            <mesh scale={1.05}>
-              <sphereGeometry args={[R, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2]} />
-              <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.55} toneMapped={false} />
-            </mesh>
-          </group>
-        </group>
-      </group>
-      <mesh rotation={[Math.PI, 0, 0]} scale={1.05}>
-        <sphereGeometry args={[R, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.55} toneMapped={false} />
-      </mesh>
-      <mesh ref={halo} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.2, 0.014, 6, 40]} />
-        {glow()}
-      </mesh>
-      <group ref={shards}>
-        {[0, 1, 2].map((i) => (
-          <mesh key={i} position={[Math.cos((i * Math.PI * 2) / 3) * 0.48, -0.05 + i * 0.06, Math.sin((i * Math.PI * 2) / 3) * 0.48]} scale={[0.04, 0.07, 0.04]}>
-            <octahedronGeometry args={[1, 0]} />
-            {glow('#c58bff')}
-          </mesh>
-        ))}
-      </group>
-      {smoke.map((s, i) => (
-        <mesh key={i} ref={s}>
-          <sphereGeometry args={[1, 10, 8]} />
-          <meshBasicMaterial color="#8a3cff" transparent opacity={0.5} toneMapped={false} depthWrite={false} />
-        </mesh>
-      ))}
-    </group>
-  )
-}
-
-// ---------------------------------------------------------------- torus spawn
-
-export function TorusSpawn({ e, maxHp = 2 }) {
-  const g = useRef()
-  const wheel = useRef()
-  const eye = useRef()
-  const meridian = useRef()
-  const longitude = useRef()
-  const RR = 0.44
-  const r = 0.17
-  const spikes = useMemo(() => Array.from({ length: 12 }, (_, i) => (i / 12) * Math.PI * 2), [])
-  const joints = useMemo(() => Array.from({ length: 10 }, (_, i) => (i / 10) * Math.PI * 2), [])
-  useFrame(({ clock }, dt) => {
-    const t = clock.elapsedTime + e.seed
-    place(g.current, e, 0.8 + Math.sin(t * 2.2) * 0.06, 0.6, t)
-    wheel.current.rotation.z += dt * (e.stun > 0 ? 7 : 1.4) // spins on its axle
-    eye.current.scale.y = 1 - 0.85 * Math.max(0, Math.sin(t * 0.7) - 0.96) / 0.04 // the odd slow blink
-    const caught = maxHp - e.hp
-    meridian.current.material.color.set(caught >= 1 || e.dying > 0 ? '#ffd27a' : VIOLET)
-    longitude.current.material.color.set(caught >= 2 || e.dying > 0 ? '#ffd27a' : VIOLET)
-    meridian.current.material.opacity = caught >= 1 ? 1 : 0.55
-    longitude.current.material.opacity = caught >= 2 ? 1 : 0.55
-  })
-  return (
-    <group ref={g}>
-      <group rotation={[-0.6, 0, 0]}>
-      <group ref={wheel}>
-        <mesh>
-          <torusGeometry args={[RR, r, 10, 20]} />
-          {obsidian({ flatShading: true })}
-        </mesh>
-        {/* violet joints between the armor plates */}
-        {joints.map((a, i) => (
-          <mesh key={i} position={[Math.cos(a) * RR, Math.sin(a) * RR, 0]} rotation={[0, 0, a]}>
-            <torusGeometry args={[r * 1.02, 0.012, 6, 20]} />
-            {glow()}
-          </mesh>
-        ))}
-        {spikes.map((a, i) => (
-          <mesh key={i} position={[Math.cos(a) * (RR + r + 0.05), Math.sin(a) * (RR + r + 0.05), 0]} rotation={[0, 0, a - Math.PI / 2]}>
-            <coneGeometry args={[0.04, 0.16, 5]} />
-            {obsidian()}
-          </mesh>
-        ))}
-        {/* the two loops a lash can catch: around the tube, and through the hole */}
-        <mesh ref={meridian} position={[RR, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[r + 0.06, 0.016, 6, 28]} />
-          <meshBasicMaterial color={VIOLET} transparent opacity={0.55} toneMapped={false} />
-        </mesh>
-      </group>
-      <mesh ref={longitude} rotation={[0.35, 0.25, 0]}>
-        <torusGeometry args={[RR + r + 0.12, 0.016, 6, 60]} />
-        <meshBasicMaterial color={VIOLET} transparent opacity={0.55} toneMapped={false} />
-      </mesh>
-      {/* the slit eye in the hole, glaring at its target (it doesn't spin) */}
-      <group ref={eye}>
-        <mesh scale={[0.13, 0.24, 0.06]}>
-          <sphereGeometry args={[1, 18, 12]} />
-          {glow('#d9c2ff')}
-        </mesh>
-        <mesh position={[0, 0, 0.055]} scale={[0.025, 0.2, 0.02]}>
-          <sphereGeometry args={[1, 10, 8]} />
-          <meshBasicMaterial color="#1a0730" />
-        </mesh>
-      </group>
-      <mesh scale={1.06}>
-        <torusGeometry args={[RR, r, 10, 20]} />
-        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.6} toneMapped={false} />
-      </mesh>
-      </group>
-    </group>
-  )
-}
+// The Sphere and Torus spawn are beasts now (Beasts.jsx); re-exported so every level gets them.
+export { SphereSpawn, TorusSpawn } from './Beasts'
 
 // ---------------------------------------------------------------- snapper
+// After the concept card (assets/characters/enemies/bestiary-snapper.png): a wide domed shell with an
+// overhanging rim, cracked with glowing magenta seams and crackling at the edge; a face tucked under the
+// rim; five eye-stalks; long pointed legs; two big pincers edged in magenta — one reared high, one
+// forward — and a cut golden ribbon fraying beside it. Static parts are merged (see Beasts.jsx).
+
+const SNAP_SHELL = () =>
+  cached('snapper-shell', () => {
+    // lathe profile: a low dome rising from a thin overhanging rim
+    const prof = []
+    for (let i = 0; i <= 14; i++) {
+      const u = i / 14
+      const r = 0.42 * Math.cos(u * Math.PI * 0.5) ** 0.7
+      const y = 0.17 * Math.sin(u * Math.PI * 0.5) + (u < 0.08 ? -0.02 * (1 - u / 0.08) : 0)
+      prof.push(new THREE.Vector2(Math.max(0.001, r), y))
+    }
+    const geo = new THREE.LatheGeometry(prof, 36)
+    geo.scale(1, 1, 0.82)
+    // knobbly plates
+    const p = geo.attributes.position
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i)
+      const z = p.getZ(i)
+      p.setY(i, p.getY(i) + Math.max(0, Math.sin(x * 23) * Math.sin(z * 19)) * 0.012)
+    }
+    geo.computeVertexNormals()
+    return geo
+  })
+
+const SNAP_CRACKS = () =>
+  cached('snapper-cracks', () => {
+    // a branching network of seams, laid on the dome
+    const onDome = (x, z) => {
+      const r = Math.hypot(x / 0.42, z / (0.42 * 0.82))
+      return 0.17 * Math.sqrt(Math.max(0, 1 - Math.min(1, r) ** 2)) + 0.012
+    }
+    const paths = [
+      [[-0.36, -0.05], [-0.2, 0.02], [-0.06, -0.04], [0.08, 0.03], [0.22, -0.02], [0.37, 0.04]],
+      [[-0.06, -0.04], [-0.02, -0.16], [0.05, -0.27]],
+      [[0.08, 0.03], [0.1, 0.16], [0.04, 0.28]],
+      [[-0.2, 0.02], [-0.25, 0.15], [-0.22, 0.24]],
+      [[0.22, -0.02], [0.26, -0.15]],
+    ]
+    return merge(
+      paths.map((pts) =>
+        piece(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(([x, z]) => new THREE.Vector3(x, onDome(x, z), z))), 24, 0.008, 4, false)),
+      ),
+    )
+  })
+
+const SNAP_FACE = () =>
+  cached('snapper-face', () =>
+    merge([
+      piece(new THREE.SphereGeometry(1, 14, 10), { p: [0, 0.02, 0.22], s: [0.12, 0.08, 0.08], color: '#24142e' }),
+      ...[-1, 1].map((sd) => piece(new THREE.SphereGeometry(1, 10, 8), { p: [sd * 0.05, 0.04, 0.29], s: 0.022, color: '#ff6aff' })),
+      ...[-0.03, 0, 0.03].map((x) => piece(new THREE.BoxGeometry(0.02, 0.04, 0.01), { p: [x, -0.02, 0.3], color: '#3a2448' })),
+    ]),
+  )
+
+const SNAP_STALKS = () =>
+  cached('snapper-stalks', () =>
+    merge(
+      [-0.14, -0.07, 0, 0.07, 0.14].flatMap((x, i) => {
+        const z = 0.04 + (i % 2) * 0.05
+        const h = 0.12 + (i % 2) * 0.04
+        return [
+          piece(new THREE.CylinderGeometry(0.006, 0.009, h, 5), { p: [x, 0.17 + h / 2, z], r: [0.15, 0, x * 1.5], color: '#4a2e5e' }),
+          piece(new THREE.SphereGeometry(0.026, 10, 8), { p: [x - x * 0.12, 0.17 + h, z + 0.02], color: '#d080ff' }),
+          piece(new THREE.SphereGeometry(0.011, 6, 5), { p: [x - x * 0.12, 0.17 + h, z + 0.045], color: '#1a0612' }),
+        ]
+      }),
+    ),
+  )
+
+/** One curved pincer blade: a thick torus arc, tapered by scale. */
+const BLADE = (arc, tube) => cached(`snapper-blade-${arc}-${tube}`, () => new THREE.TorusGeometry(0.11, tube, 6, 16, arc))
 
 function Leg({ side, i, phase }) {
   const hip = useRef()
   const knee = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime * 11 + phase + i * 2.1 + (side > 0 ? Math.PI : 0)
-    hip.current.rotation.y = side * (0.25 + Math.sin(t) * 0.35)
-    knee.current.rotation.z = side * (0.9 + Math.max(0, Math.cos(t)) * 0.4)
+    hip.current.rotation.y = side * (0.2 + Math.sin(t) * 0.3)
+    knee.current.rotation.z = side * (1.0 + Math.max(0, Math.cos(t)) * 0.35)
   })
   return (
-    <group position={[side * 0.2, 0.02, 0.08 - i * 0.11]}>
+    <group position={[side * 0.24, 0.05, 0.1 - i * 0.12]}>
       <group ref={hip}>
-        <mesh position={[side * 0.12, 0.04, 0]} rotation={[0, 0, side * -0.5]}>
-          <cylinderGeometry args={[0.022, 0.018, 0.26, 6]} />
+        <mesh position={[side * 0.13, 0.07, 0]} rotation={[0, 0, side * -0.75]}>
+          <cylinderGeometry args={[0.026, 0.02, 0.3, 6]} />
           {obsidian()}
         </mesh>
-        <group position={[side * 0.23, 0.1, 0]}>
+        <group position={[side * 0.25, 0.16, 0]}>
           <group ref={knee}>
-            <mesh position={[side * 0.1, -0.06, 0]} rotation={[0, 0, side * 0.6]}>
-              <coneGeometry args={[0.02, 0.26, 5]} />
+            <mesh position={[side * 0.12, -0.1, 0]} rotation={[0, 0, side * 0.55]}>
+              <coneGeometry args={[0.022, 0.36, 6]} />
               {obsidian()}
             </mesh>
           </group>
@@ -238,53 +141,97 @@ function Leg({ side, i, phase }) {
   )
 }
 
-function Claw({ side, e }) {
+/** A pincer on its arm; `reared` holds it high like the card's left claw. */
+function Claw({ side, e, reared }) {
   const upper = useRef()
   const lower = useRef()
   const arm = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
-    const snip = e.snipping > 0 ? Math.abs(Math.sin(t * 30)) : 0.3 + 0.3 * Math.max(0, Math.sin(t * 3 + side))
-    upper.current.rotation.x = -snip * 0.7
-    lower.current.rotation.x = snip * 0.5
-    arm.current.rotation.y = side * (0.35 + Math.sin(t * 2.2) * 0.12)
+    const snip = e.snipping > 0 ? Math.abs(Math.sin(t * 30)) : 0.25 + 0.35 * Math.max(0, Math.sin(t * 3 + side))
+    upper.current.rotation.z = snip * 0.6
+    lower.current.rotation.z = -snip * 0.4
+    arm.current.rotation.y = side * (0.3 + Math.sin(t * 2.2) * 0.12)
   })
   return (
-    <group position={[side * 0.24, 0.06, 0.18]}>
-      <group ref={arm}>
-        <mesh position={[side * 0.08, 0.02, 0.1]} rotation={[Math.PI / 2.4, 0, side * -0.4]}>
-          <cylinderGeometry args={[0.035, 0.03, 0.22, 7]} />
+    <group position={[side * 0.26, 0.08, 0.2]}>
+      <group ref={arm} rotation={[reared ? -1.0 : -0.15, 0, 0]}>
+        {/* the arm, in two segments */}
+        <mesh position={[side * 0.05, 0.04, 0.09]} rotation={[Math.PI / 2.3, 0, side * -0.3]}>
+          <cylinderGeometry args={[0.04, 0.034, 0.2, 7]} />
           {obsidian()}
         </mesh>
-        <group position={[side * 0.13, 0.05, 0.24]}>
-          {/* the pincer: a fat palm and two curved blades edged in violet */}
-          <mesh scale={[0.09, 0.075, 0.11]}>
+        <group position={[side * 0.09, 0.08, 0.22]}>
+          <mesh scale={[0.09, 0.08, 0.12]}>
             <sphereGeometry args={[1, 14, 10]} />
             {obsidian()}
           </mesh>
-          <group ref={upper} position={[0, 0.03, 0.08]}>
-            <mesh position={[0, 0.015, 0.1]} rotation={[Math.PI / 2 + 0.25, 0, 0]} scale={[0.6, 1, 0.45]}>
-              <coneGeometry args={[0.06, 0.24, 6]} />
-              {obsidian()}
-            </mesh>
-            <mesh position={[0, -0.005, 0.1]} rotation={[Math.PI / 2 + 0.25, 0, 0]} scale={[0.25, 1.02, 0.12]}>
-              <coneGeometry args={[0.06, 0.24, 6]} />
-              {glow()}
-            </mesh>
+          {/* the pincer: a big curved upper blade and a smaller lower one, both edged in magenta */}
+          <group position={[0, 0, 0.08]} rotation={[0, -Math.PI / 2, 0]}>
+            <group ref={upper}>
+              <mesh geometry={BLADE(Math.PI * 0.75, 0.034)} position={[-0.11, 0, 0]} rotation={[0, 0, 0.05]}>
+                {obsidian()}
+              </mesh>
+              <mesh geometry={BLADE(Math.PI * 0.7, 0.012)} position={[-0.11, -0.022, 0]} rotation={[0, 0, 0.1]}>
+                {glow('#ff5cff')}
+              </mesh>
+            </group>
+            <group ref={lower} rotation={[Math.PI, 0, 0]}>
+              <mesh geometry={BLADE(Math.PI * 0.55, 0.026)} position={[-0.09, 0, 0]} scale={0.85}>
+                {obsidian()}
+              </mesh>
+              <mesh geometry={BLADE(Math.PI * 0.5, 0.01)} position={[-0.09, -0.016, 0]} scale={0.85}>
+                {glow('#ff5cff')}
+              </mesh>
+            </group>
           </group>
-          <group ref={lower} position={[0, -0.03, 0.08]}>
-            <mesh position={[0, -0.01, 0.08]} rotation={[Math.PI / 2 - 0.2, 0, 0]} scale={[0.55, 0.85, 0.4]}>
-              <coneGeometry args={[0.055, 0.2, 6]} />
-              {obsidian()}
-            </mesh>
-          </group>
-          {/* a few strands of cut gold thread caught in it */}
-          <mesh position={[side * 0.03, -0.07, 0.06]} rotation={[0.2, 0, side * 0.3]}>
-            <cylinderGeometry args={[0.004, 0.004, 0.14, 4]} />
-            {glow('#ffd27a')}
-          </mesh>
         </group>
       </group>
+    </group>
+  )
+}
+
+/** The golden ribbon it cut: two pieces drifting apart, frayed where the cut is. */
+function CutRibbon({ e }) {
+  const g = useRef()
+  const geo = useMemo(
+    () =>
+      cached('snapper-ribbon', () => {
+        const strip = (pts) => {
+          // a flat ribbon along a curve
+          const curve = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(...q)))
+          const n = 24
+          const pos = []
+          const idx = []
+          for (let i = 0; i <= n; i++) {
+            const c = curve.getPoint(i / n)
+            const tw = (i / n) * Math.PI
+            pos.push(c.x, c.y + Math.cos(tw) * 0.025, c.z + Math.sin(tw) * 0.025, c.x, c.y - Math.cos(tw) * 0.025, c.z - Math.sin(tw) * 0.025)
+            if (i < n) idx.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2)
+          }
+          const b = new THREE.BufferGeometry()
+          b.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3))
+          b.setIndex(idx)
+          b.computeVertexNormals()
+          return b.toNonIndexed()
+        }
+        return merge([
+          strip([[-0.3, 0.55, 0.15], [-0.2, 0.68, 0.1], [-0.08, 0.6, 0.18], [0.0, 0.66, 0.12]]),
+          strip([[0.1, 0.62, 0.14], [0.2, 0.7, 0.08], [0.3, 0.58, 0.16], [0.42, 0.64, 0.1]]),
+        ])
+      }),
+    [],
+  )
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime + e.seed
+    g.current.position.y = Math.sin(t * 1.8) * 0.03
+    g.current.rotation.y = Math.sin(t * 0.7) * 0.2
+  })
+  return (
+    <group ref={g}>
+      <mesh geometry={geo}>
+        <meshStandardMaterial color="#ffd27a" emissive="#ffb000" emissiveIntensity={0.7} metalness={0.4} roughness={0.35} side={THREE.DoubleSide} />
+      </mesh>
     </group>
   )
 }
@@ -292,60 +239,35 @@ function Claw({ side, e }) {
 export function SnapperSpawn({ e }) {
   const g = useRef()
   const shell = useRef()
-  const stalks = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
-    place(g.current, e, 0.16 + Math.abs(Math.sin(t * 11)) * 0.03, 0.5, t, 1.5)
-    shell.current.material.emissiveIntensity = e.flash > 0 ? 2.5 : 0.35
-    stalks.current.children.forEach((c, i) => {
-      c.rotation.z = Math.sin(t * 3 + i * 1.3) * 0.25
-      c.rotation.x = Math.cos(t * 2.4 + i) * 0.15
-    })
+    place(g.current, e, 0.22 + Math.abs(Math.sin(t * 11)) * 0.03, 0.5, t, 1.5)
+    shell.current.material.emissiveIntensity = e.flash > 0 ? 2.5 : 0.4
   })
-  const cracks = useMemo(() => [[0, 0.3, 0.5], [0.6, -0.4, 0.35], [-0.7, 0.2, 0.4], [2.4, 0.1, 0.45]], [])
   return (
     <group ref={g}>
-      {/* carapace */}
-      <mesh ref={shell} scale={[0.36, 0.14, 0.28]} position={[0, 0.1, 0]}>
-        <sphereGeometry args={[1, 22, 12]} />
+      {/* carapace: a low dome with an overhanging rim, glowing seams, a violet rim-light */}
+      <mesh ref={shell} geometry={SNAP_SHELL()} position={[0, 0.1, 0]}>
         {obsidian()}
       </mesh>
-      <mesh scale={[0.38, 0.15, 0.3]} position={[0, 0.1, 0]}>
-        <sphereGeometry args={[1, 22, 12]} />
-        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.5} toneMapped={false} />
+      <mesh geometry={SNAP_SHELL()} position={[0, 0.1, 0]} scale={1.05}>
+        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.45} toneMapped={false} depthWrite={false} />
       </mesh>
-      {/* glowing cracks across the shell */}
-      {cracks.map(([a, x, len], i) => (
-        <mesh key={i} position={[x * 0.25, 0.235, Math.sin(a) * 0.08]} rotation={[0, a, 0]}>
-          <boxGeometry args={[len * 0.4, 0.006, 0.012]} />
-          {glow()}
-        </mesh>
-      ))}
-      {/* the mouth plate and two low eyes */}
-      {[-1, 1].map((sd) => (
-        <mesh key={sd} position={[sd * 0.08, 0.13, 0.26]} scale={0.03}>
-          <sphereGeometry args={[1, 10, 8]} />
-          {glow(LAVENDER)}
-        </mesh>
-      ))}
-      {/* eye stalks */}
-      <group ref={stalks} position={[0, 0.2, 0.06]}>
-        {[-0.12, -0.06, 0, 0.06, 0.12].map((x, i) => (
-          <group key={i} position={[x, 0, (i % 2) * 0.05]}>
-            <mesh position={[0, 0.08, 0]}>
-              <cylinderGeometry args={[0.006, 0.008, 0.16, 5]} />
-              <meshStandardMaterial color="#6d4a9c" />
-            </mesh>
-            <mesh position={[0, 0.17, 0]} scale={0.026}>
-              <sphereGeometry args={[1, 10, 8]} />
-              {glow(LAVENDER)}
-            </mesh>
-          </group>
-        ))}
-      </group>
+      <mesh geometry={SNAP_CRACKS()} position={[0, 0.1, 0]}>
+        {glow('#ff6aff')}
+      </mesh>
+      <Lightning radius={0.44} tilt={Math.PI / 2} speed={1.3} seed={e.seed || 0} />
+      {/* the face under the rim, and the eye-stalks on top */}
+      <mesh geometry={SNAP_FACE()} position={[0, 0.06, 0]}>
+        <meshBasicMaterial vertexColors toneMapped={false} />
+      </mesh>
+      <mesh geometry={SNAP_STALKS()} position={[0, 0.1, 0]}>
+        <meshBasicMaterial vertexColors toneMapped={false} />
+      </mesh>
       {[-1, 1].map((sd) => [0, 1, 2].map((i) => <Leg key={`${sd}${i}`} side={sd} i={i} phase={e.seed} />))}
-      <Claw side={-1} e={e} />
+      <Claw side={-1} e={e} reared />
       <Claw side={1} e={e} />
+      <CutRibbon e={e} />
     </group>
   )
 }
@@ -390,7 +312,7 @@ function MirrorBody({ e, ghost, axis }) {
         <icosahedronGeometry args={[0.32, 0]} />
         <meshBasicMaterial color={VIOLET} wireframe transparent opacity={ghost ? 0.35 : 0.85} toneMapped={false} />
       </mesh>
-      {/* one wide eye â€” lavender on the real one, hollow on its reflection */}
+      {/* one wide eye — lavender on the real one, hollow on its reflection */}
       <group ref={eye} position={[0, 0.04, 0.27]}>
         <mesh scale={[0.12, 0.07, 0.04]}>
           <sphereGeometry args={[1, 14, 10]} />
@@ -414,7 +336,7 @@ function MirrorBody({ e, ghost, axis }) {
 /**
  * Mirror spawn: a faceted mirror-crystal creature with one wide eye, always shadowed by
  * its reflection across its reef's mirror line (`e.axis`). Only the real one can be
- * lashed â€” the reflection flickers, its eye is hollow, and a lash passes through it.
+ * lashed — the reflection flickers, its eye is hollow, and a lash passes through it.
  */
 export function MirrorSpawn({ e }) {
   const axis = e.axis ?? e.hx
@@ -429,7 +351,7 @@ export function MirrorSpawn({ e }) {
 // ---------------------------------------------------------------- unglue (0-4)
 
 /**
- * Unglue: a violet seam-ripper sprite from the Skeleton Foundry â€” a hooked needle head
+ * Unglue: a violet seam-ripper sprite from the Skeleton Foundry — a hooked needle head
  * with one glaring eye and a whipping tail of torn thread. It goes for forged edges and
  * pulls them loose (a torn edge must be re-forged). One lash.
  */
@@ -484,7 +406,7 @@ export function UnglueSpawn({ e }) {
 // ---------------------------------------------------------------- coner (0-5)
 
 /**
- * Coner: a violet engineer drone â€” a faceted body under a spinning rotor ring, with a
+ * Coner: a violet engineer drone — a faceted body under a spinning rotor ring, with a
  * projector that throws a cone of violet light down onto a space to plug its hole.
  * While it beams (e.beam > 0) the cone of light grows; lash it before the beam finishes.
  * Two lashes.
@@ -542,7 +464,7 @@ export function ConerSpawn({ e }) {
 // ---------------------------------------------------------------- loop-biter (0-6)
 
 /**
- * Loop-biter: a violet beetle â€” an obsidian shell split down the middle, six legs that
+ * Loop-biter: a violet beetle — an obsidian shell split down the middle, six legs that
  * scuttle, and big crystal mandibles. It perches on a petal loop and chews it (e.beam > 0:
  * the mandibles work and gold splinters fly); lash it before it finishes. Two lashes.
  */
@@ -628,7 +550,7 @@ export function LoopBiterSpawn({ e }) {
 /**
  * A judgment beacon: a tall violet crystal on a black-glass stand above one of Null's
  * demonstrations. Lash it to call that demonstration a forgery. It flares gold when hit.
- * (Level code reads e.label for nothing â€” the beacon is the same everywhere.)
+ * (Level code reads e.label for nothing — the beacon is the same everywhere.)
  */
 export function BeaconSpawn({ e }) {
   const g = useRef()

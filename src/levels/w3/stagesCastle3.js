@@ -15,6 +15,7 @@ export const OPENING = [
   C('Welcome to my station. Count my holes, read my groups — I match anything you name.'),
   E('Groups can match. Rings can’t lie. Every disguise he wears, we test with a cup product.'),
   G('Three disguises, three casts.'),
+  E('One of his guards has no body at all — a de Rham Spectre, a field circling a hole. Nothing touches it while it circulates. Run a full loop around it to force it exact, then lash it while it’s only a gradient. (Hatcher only mentions de Rham in passing; this one is from beyond the book.)'),
   E('Cup Caster on 9.'),
 ]
 

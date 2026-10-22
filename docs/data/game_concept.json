@@ -6160,5 +6160,139 @@
         ]
       }
     ]
-  }
+  },
+  "bestiary": [
+    {
+      "id": "sphere",
+      "name": "Sphere Minion",
+      "space": "S² (2-sphere)",
+      "invariant": "π₁ = 0, π₂ = ℤ",
+      "lashes": "1",
+      "mechanic": "Every loop on it contracts, so a single lash collapses it to a point.",
+      "appears": "0-1 onward",
+      "wing": "Homotopy",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-sphere.png"
+    },
+    {
+      "id": "torus",
+      "name": "Torus Horror",
+      "space": "T² = S¹ × S¹",
+      "invariant": "π₁ = ℤ ⊕ ℤ",
+      "lashes": "2",
+      "mechanic": "Two independent loops: the first lash cuts one (the ring splits open into a tube), the second snuffs the watcher eye.",
+      "appears": "0-1 onward",
+      "wing": "Homotopy",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-torus.png"
+    },
+    {
+      "id": "mobius",
+      "name": "Möbius Prowler",
+      "space": "Möbius strip",
+      "invariant": "π₁ = ℤ; non-orientable, one boundary circle",
+      "lashes": "2",
+      "mechanic": "Cut down the middle it does not fall apart: it becomes one band, twice as long with two full twists, moving twice as fast. The second lash dissolves it.",
+      "appears": "1-3, 1-5, 3-7",
+      "wing": "Homotopy",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-mobius.png"
+    },
+    {
+      "id": "projective",
+      "name": "Projective Specter",
+      "space": "ℝP² (as a cross-cap)",
+      "invariant": "π₁ = ℤ₂",
+      "lashes": "2 (in quick succession)",
+      "mechanic": "2-torsion: one lash only flips its orientation. Land the second within 2.2 s, or it settles back.",
+      "appears": "1-7, 1-10, 3-8",
+      "wing": "Homotopy",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-projective.png"
+    },
+    {
+      "id": "klein",
+      "name": "Klein Bottle Sentinel",
+      "space": "Klein bottle",
+      "invariant": "H₁ = ℤ ⊕ ℤ₂",
+      "lashes": "3",
+      "mechanic": "One lash severs the free loop; then a torsion pair resolves the ℤ₂ twist.",
+      "appears": "2-1, 2-9",
+      "wing": "Homology",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-klein.png"
+    },
+    {
+      "id": "bitorus",
+      "name": "Bitorus Pretzel Horror",
+      "space": "Σ₂ (genus-2 surface)",
+      "invariant": "H₁ = ℤ⁴; π₁ = ⟨a₁, b₁, a₂, b₂ | [a₁,b₁][a₂,b₂]⟩",
+      "lashes": "4",
+      "mechanic": "Each lash cuts one generator: an eye goes dark, then that ring collapses, then the other side.",
+      "appears": "2-7, 2-8, 2-10, 3-4",
+      "wing": "Homology",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-bitorus.png"
+    },
+    {
+      "id": "earring",
+      "name": "Hawaiian Earring (mini-boss)",
+      "space": "Union of circles of radius 1/n, tangent at one point",
+      "invariant": "Uncountable π₁; not a CW complex",
+      "lashes": "5",
+      "mechanic": "Each lash shatters the biggest ring; it shrinks and speeds up until the accumulation point itself is struck.",
+      "appears": "4-2 (Snap to Grid)",
+      "wing": "Higher homotopy",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-earring.png"
+    },
+    {
+      "id": "harpy",
+      "name": "Coboundary Harpy",
+      "space": "A cochain α with its coboundary δ",
+      "invariant": "⟨δα, c⟩ = ⟨α, ∂c⟩; δ² = 0",
+      "lashes": "3 (cochain lashes)",
+      "mechanic": "Ordinary chain lashes feed it — it evaluates them. Switch the lash to cochain stance and strike along dual edges to drive δα to 0.",
+      "appears": "3-1 (Reverse Engineering)",
+      "wing": "Cohomology",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-harpy.png"
+    },
+    {
+      "id": "spider",
+      "name": "Cup Spider",
+      "space": "The cup product on H*(X)",
+      "invariant": "α ⌣ β = (−1)^pq β ⌣ α",
+      "lashes": "4 (alternating stances)",
+      "mechanic": "Starts as a fast degree-1 web-weaver; if two legs land on you it cups itself up to an armored degree-2 form. Decouple α and β, then finish obeying the sign: alternate stances, or the web recoils.",
+      "appears": "3-3, 3-5",
+      "wing": "Cohomology",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-spider.png"
+    },
+    {
+      "id": "spectre",
+      "name": "de Rham Spectre",
+      "space": "A closed, non-exact 1-form",
+      "invariant": "dω = 0 but ω ≠ df",
+      "lashes": "3 (contour lashes)",
+      "mechanic": "Invulnerable while it circulates round a hole. Run a closed loop around it — ∮ω ≠ 0 — to force it exact; then lash it while it is a mere gradient.",
+      "appears": "World 3 castle (Counterfeit Station)",
+      "wing": "Cohomology (beyond Hatcher: de Rham is only mentioned in passing)",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-spectre.png"
+    },
+    {
+      "id": "colossus",
+      "name": "Poincaré Duality Colossus",
+      "space": "A closed oriented n-manifold",
+      "invariant": "Hᵏ ≅ Hₙ₋ₖ; ⟨α ⌣ β, [M]⟩ = 1",
+      "lashes": "6 (3 chain + 3 cochain, alternating)",
+      "mechanic": "The stone half takes only chain lashes, the luminous half only cochain lashes; alternate between them, and each resolved pairing shatters a joint.",
+      "appears": "3-8, 3-9",
+      "wing": "Cohomology",
+      "status": "in game",
+      "image_path": "games/algebraic_topology/assets/characters/enemies/bestiary-colossus.png"
+    }
+  ]
 }

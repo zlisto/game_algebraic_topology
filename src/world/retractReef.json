@@ -151,7 +151,8 @@
           0.6
         ]
       ],
-      "playable": true
+      "playable": true,
+      "scale": 1.6
     },
     {
       "id": "the_o",
@@ -199,7 +200,8 @@
           -1.4
         ]
       ],
-      "playable": true
+      "playable": true,
+      "scale": 1.6
     },
     {
       "id": "twin_lagoons",
@@ -263,7 +265,8 @@
           1.9
         ]
       ],
-      "playable": true
+      "playable": true,
+      "scale": 1.6
     },
     {
       "id": "nulls_mirage",
@@ -491,8 +494,8 @@
       "id": "fork_meadow",
       "name": "Fork Meadow",
       "pos": [
-        -12.5,
-        3.6
+        -11.8,
+        4.2
       ],
       "shape": {
         "add": [
@@ -500,7 +503,7 @@
             "type": "circle",
             "cx": 0,
             "cz": 0,
-            "r": 3.2
+            "r": 2.9
           }
         ]
       }
@@ -577,24 +580,24 @@
       "from": "the_walkway",
       "to": "fork_meadow",
       "a": [
-        -13.2,
+        -12.6,
         9.4
       ],
       "b": [
-        -12.8,
-        6.6
+        -12.2,
+        6.9
       ]
     },
     {
       "from": "fork_meadow",
       "to": "the_fork",
       "a": [
-        -15.6,
-        3.2
+        -14.6,
+        3.6
       ],
       "b": [
-        -17.3,
-        2.0
+        -15.6,
+        2.6
       ]
     },
     {
