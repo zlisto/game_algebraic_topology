@@ -117,6 +117,17 @@ const DEBUG_ENTRIES = [
       ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level1-${k}`, opts: { startAt } })),
     ],
   })),
+  {
+    group: 'World 1 · Castle — The Delta Sphere',
+    items: [
+      { label: 'Intro movie', screen: 'moviec1' },
+      { label: 'Castle (from the start)', screen: 'castle1' },
+      { label: '↳ Trial 2 · Forged lifts', screen: 'castle1', opts: { startAt: '1' } },
+      { label: '↳ Trial 3 · Word claims', screen: 'castle1', opts: { startAt: '2' } },
+      { label: '↳ The Crown’s guard', screen: 'castle1', opts: { startAt: '3' } },
+      { label: 'Outro movie: Your Number Reads Zero', screen: 'outroc1' },
+    ],
+  },
   // World 2 · Chain Delta
   ...[
     [1, 'Tile Yard', 'Tile and Error', [['Two Triangles', 'two_tri'], ['The Torus', 'torus_glue'], ['Flip an Arrow', 'flip_arrow'], ['Wrong Order', 'wrong_order']]],
@@ -138,6 +149,14 @@ const DEBUG_ENTRIES = [
       ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level2-${k}`, opts: { startAt } })),
     ],
   })),
+  {
+    group: 'World 2 · Castle — The Retractor',
+    items: [
+      { label: 'Intro movie', screen: 'moviec2' },
+      { label: 'Castle (from the start)', screen: 'castle2' },
+      { label: 'Outro movie: The Twins', screen: 'outroc2' },
+    ],
+  },
   // World 3 · Cup Product Gardens
   ...[
     [1, 'Mirror Pools', 'Reverse Engineering', [['Read an Edge', 'read_edge'], ['Balanced Readings', 'balanced'], ['Readings from Points', 'from_points'], ['Around the Hole', 'around_hole']]],
@@ -163,10 +182,7 @@ const DEBUG_ENTRIES = [
     items: [
       { label: 'Intro movie', screen: 'moviec3' },
       { label: 'Castle (from the start)', screen: 'castle3' },
-      { label: '↳ The Façade', screen: 'castle3', opts: { startAt: 'facade' } },
-      { label: '↳ False Powers', screen: 'castle3', opts: { startAt: 'false_powers' } },
-      { label: '↳ No Twin', screen: 'castle3', opts: { startAt: 'no_twin' } },
-      { label: 'Outro movie', screen: 'outroc3' },
+      { label: 'Outro movie: Null’s Last Lesson', screen: 'outroc3' },
     ],
   },
   // World 4 · Postnikov Spire
@@ -192,6 +208,24 @@ const DEBUG_ENTRIES = [
       ...sections.map(([label, startAt]) => ({ label: `↳ ${label}`, screen: `level4-${k}`, opts: { startAt } })),
     ],
   })),
+  {
+    group: 'World 4 · Castle — The Crown',
+    items: [
+      { label: 'Intro movie', screen: 'moviec4' },
+      { label: 'Final boss (from the start)', screen: 'castle4' },
+      { label: '↳ Trial 2', screen: 'castle4', opts: { startAt: '1' } },
+      { label: '↳ Trial 3', screen: 'castle4', opts: { startAt: '2' } },
+      { label: '↳ The Crown’s facets', screen: 'castle4', opts: { startAt: '3' } },
+      { label: '↳ The seals', screen: 'castle4', opts: { startAt: '4' } },
+    ],
+  },
+  {
+    group: 'World 4 · The Ending',
+    items: [
+      { label: 'Ending movie', screen: 'ending' },
+      { label: 'Credits', screen: 'credits' },
+    ],
+  },
 ]
 const SHOW_DEBUG = true // the level select is part of the game now, not just a dev tool
 
