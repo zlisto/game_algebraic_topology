@@ -52,8 +52,22 @@ const SNAP_SHELL = () =>
       const y = 0.17 * Math.sin(u * Math.PI * 0.5) + (u < 0.08 ? -0.02 * (1 - u / 0.08) : 0)
       prof.push(new THREE.Vector2(Math.max(0.001, r), y))
     }
-    const geo = new THREE.LatheGeometry(prof, 36)
+    const geo = new THREE.LatheGeometry(prof, 48)
     geo.scale(1, 1, 0.82)
+    // scallop the rim into plates: the overhang dips between them
+    {
+      const q = geo.attributes.position
+      for (let i = 0; i < q.count; i++) {
+        const x = q.getX(i)
+        const z = q.getZ(i)
+        const r = Math.hypot(x, z / 0.82)
+        if (r > 0.3) {
+          const a = Math.atan2(z, x)
+          const dip = (1 - Math.abs(Math.cos(a * 4))) * 0.03 * ((r - 0.3) / 0.12)
+          q.setY(i, q.getY(i) - dip)
+        }
+      }
+    }
     // knobbly plates
     const p = geo.attributes.position
     for (let i = 0; i < p.count; i++) {
@@ -90,7 +104,8 @@ const SNAP_FACE = () =>
   cached('snapper-face', () =>
     merge([
       piece(new THREE.SphereGeometry(1, 14, 10), { p: [0, 0.02, 0.22], s: [0.12, 0.08, 0.08], color: '#24142e' }),
-      ...[-1, 1].map((sd) => piece(new THREE.SphereGeometry(1, 10, 8), { p: [sd * 0.05, 0.04, 0.29], s: 0.022, color: '#ff6aff' })),
+      ...[-1, 1].map((sd) => piece(new THREE.SphereGeometry(1, 12, 10), { p: [sd * 0.07, 0.12, 0.32], s: 0.04, color: '#ff6aff' })),
+      ...[-1, 1].map((sd) => piece(new THREE.SphereGeometry(1, 8, 6), { p: [sd * 0.07, 0.12, 0.355], s: [0.012, 0.03, 0.01], color: '#1a0612' })),
       ...[-0.03, 0, 0.03].map((x) => piece(new THREE.BoxGeometry(0.02, 0.04, 0.01), { p: [x, -0.02, 0.3], color: '#3a2448' })),
     ]),
   )
@@ -118,20 +133,28 @@ function Leg({ side, i, phase }) {
   const knee = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime * 11 + phase + i * 2.1 + (side > 0 ? Math.PI : 0)
-    hip.current.rotation.y = side * (0.2 + Math.sin(t) * 0.3)
-    knee.current.rotation.z = side * (1.0 + Math.max(0, Math.cos(t)) * 0.35)
+    // alternating tripod: legs 0 and 2 of one side step with leg 1 of the other
+    const step = Math.sin(t + (i % 2 ? Math.PI : 0))
+    hip.current.rotation.y = side * (0.15 + step * 0.3)
+    knee.current.rotation.z = side * (0.15 + Math.max(0, step) * 0.25)
   })
   return (
-    <group position={[side * 0.24, 0.05, 0.1 - i * 0.12]}>
+    <group position={[side * 0.26, 0.08, 0.1 - i * 0.13]}>
       <group ref={hip}>
-        <mesh position={[side * 0.13, 0.07, 0]} rotation={[0, 0, side * -0.75]}>
-          <cylinderGeometry args={[0.026, 0.02, 0.3, 6]} />
+        {/* thigh rises to a high knee above the shell line */}
+        <mesh position={[side * 0.1, 0.13, 0]} rotation={[0, 0, side * -0.55]}>
+          <cylinderGeometry args={[0.038, 0.03, 0.32, 7]} />
           {obsidian()}
         </mesh>
-        <group position={[side * 0.25, 0.16, 0]}>
+        <mesh position={[side * 0.19, 0.26, 0]}>
+          <sphereGeometry args={[0.038, 8, 6]} />
+          {obsidian()}
+        </mesh>
+        <group position={[side * 0.19, 0.26, 0]}>
           <group ref={knee}>
-            <mesh position={[side * 0.12, -0.1, 0]} rotation={[0, 0, side * 0.55]}>
-              <coneGeometry args={[0.022, 0.36, 6]} />
+            {/* shin plunges to a planted point */}
+            <mesh position={[side * 0.1, -0.2, 0]} rotation={[0, 0, side * 0.4]}>
+              <coneGeometry args={[0.032, 0.48, 6]} />
               {obsidian()}
             </mesh>
           </group>
@@ -154,33 +177,34 @@ function Claw({ side, e, reared }) {
     arm.current.rotation.y = side * (0.3 + Math.sin(t * 2.2) * 0.12)
   })
   return (
-    <group position={[side * 0.26, 0.08, 0.2]}>
-      <group ref={arm} rotation={[reared ? -1.0 : -0.15, 0, 0]}>
+    <group position={[side * 0.26, reared ? 0.2 : 0.1, 0.2]} scale={1.4}>
+      <group ref={arm} rotation={[reared ? -1.35 : -0.1, 0, 0]}>
         {/* the arm, in two segments */}
         <mesh position={[side * 0.05, 0.04, 0.09]} rotation={[Math.PI / 2.3, 0, side * -0.3]}>
           <cylinderGeometry args={[0.04, 0.034, 0.2, 7]} />
           {obsidian()}
         </mesh>
         <group position={[side * 0.09, 0.08, 0.22]}>
-          <mesh scale={[0.09, 0.08, 0.12]}>
+          <mesh scale={[0.055, 0.05, 0.075]}>
             <sphereGeometry args={[1, 14, 10]} />
             {obsidian()}
           </mesh>
           {/* the pincer: a big curved upper blade and a smaller lower one, both edged in magenta */}
           <group position={[0, 0, 0.08]} rotation={[0, -Math.PI / 2, 0]}>
-            <group ref={upper}>
-              <mesh geometry={BLADE(Math.PI * 0.75, 0.034)} position={[-0.11, 0, 0]} rotation={[0, 0, 0.05]}>
+            {/* two crescent blades with a gap between them; the inner edges glow and carry teeth */}
+            <group ref={upper} rotation={[0, 0, 0.18]}>
+              <mesh geometry={BLADE(Math.PI * 0.8, 0.055)} position={[-0.11, 0, 0]} scale={[1.25, 1.25, 1]}>
                 {obsidian()}
               </mesh>
-              <mesh geometry={BLADE(Math.PI * 0.7, 0.012)} position={[-0.11, -0.022, 0]} rotation={[0, 0, 0.1]}>
+              <mesh geometry={BLADE(Math.PI * 0.72, 0.018)} position={[-0.11, -0.05, 0]} scale={[1.08, 1.08, 1.4]}>
                 {glow('#ff5cff')}
               </mesh>
             </group>
-            <group ref={lower} rotation={[Math.PI, 0, 0]}>
-              <mesh geometry={BLADE(Math.PI * 0.55, 0.026)} position={[-0.09, 0, 0]} scale={0.85}>
+            <group ref={lower} rotation={[Math.PI, 0, -0.18]}>
+              <mesh geometry={BLADE(Math.PI * 0.6, 0.045)} position={[-0.09, 0, 0]} scale={1.05}>
                 {obsidian()}
               </mesh>
-              <mesh geometry={BLADE(Math.PI * 0.5, 0.01)} position={[-0.09, -0.016, 0]} scale={0.85}>
+              <mesh geometry={BLADE(Math.PI * 0.55, 0.016)} position={[-0.09, -0.04, 0]} scale={[0.92, 0.92, 1.4]}>
                 {glow('#ff5cff')}
               </mesh>
             </group>
@@ -203,10 +227,11 @@ function CutRibbon({ e }) {
           const n = 24
           const pos = []
           const idx = []
+          const w = 0.045
           for (let i = 0; i <= n; i++) {
             const c = curve.getPoint(i / n)
             const tw = (i / n) * Math.PI
-            pos.push(c.x, c.y + Math.cos(tw) * 0.025, c.z + Math.sin(tw) * 0.025, c.x, c.y - Math.cos(tw) * 0.025, c.z - Math.sin(tw) * 0.025)
+            pos.push(c.x, c.y + Math.cos(tw) * w, c.z + Math.sin(tw) * w, c.x, c.y - Math.cos(tw) * w, c.z - Math.sin(tw) * w)
             if (i < n) idx.push(i * 2, i * 2 + 1, i * 2 + 2, i * 2 + 1, i * 2 + 3, i * 2 + 2)
           }
           const b = new THREE.BufferGeometry()
@@ -216,8 +241,10 @@ function CutRibbon({ e }) {
           return b.toNonIndexed()
         }
         return merge([
-          strip([[-0.3, 0.55, 0.15], [-0.2, 0.68, 0.1], [-0.08, 0.6, 0.18], [0.0, 0.66, 0.12]]),
-          strip([[0.1, 0.62, 0.14], [0.2, 0.7, 0.08], [0.3, 0.58, 0.16], [0.42, 0.64, 0.1]]),
+          // hanging from the reared claw (on the left, up high)…
+          strip([[-0.42, 0.72, 0.42], [-0.4, 0.55, 0.38], [-0.46, 0.4, 0.3], [-0.42, 0.28, 0.24]]),
+          // …and the other half trailing off behind, where it was cut
+          strip([[0.22, 0.44, -0.12], [0.34, 0.5, -0.24], [0.42, 0.42, -0.36], [0.52, 0.48, -0.46]]),
         ])
       }),
     [],
@@ -230,8 +257,15 @@ function CutRibbon({ e }) {
   return (
     <group ref={g}>
       <mesh geometry={geo}>
-        <meshStandardMaterial color="#ffd27a" emissive="#ffb000" emissiveIntensity={0.7} metalness={0.4} roughness={0.35} side={THREE.DoubleSide} />
+        <meshStandardMaterial color="#ffd27a" emissive="#ffb000" emissiveIntensity={0.8} metalness={0.4} roughness={0.35} side={THREE.DoubleSide} />
       </mesh>
+      {/* the frayed, glowing cut ends */}
+      {[[-0.42, 0.28, 0.24], [0.22, 0.44, -0.12]].map((q, i) => (
+        <mesh key={i} position={q}>
+          <sphereGeometry args={[0.035, 8, 6]} />
+          <meshBasicMaterial color="#fff2c4" toneMapped={false} />
+        </mesh>
+      ))}
     </group>
   )
 }
@@ -241,7 +275,7 @@ export function SnapperSpawn({ e }) {
   const shell = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
-    place(g.current, e, 0.22 + Math.abs(Math.sin(t * 11)) * 0.03, 0.5, t, 1.5)
+    place(g.current, e, 0.36 + Math.abs(Math.sin(t * 11)) * 0.03, 0.5, t, 1.5)
     shell.current.material.emissiveIntensity = e.flash > 0 ? 2.5 : 0.4
   })
   return (
@@ -251,7 +285,7 @@ export function SnapperSpawn({ e }) {
         {obsidian()}
       </mesh>
       <mesh geometry={SNAP_SHELL()} position={[0, 0.1, 0]} scale={1.05}>
-        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.45} toneMapped={false} depthWrite={false} />
+        <meshBasicMaterial color="#d8b8ff" side={THREE.BackSide} transparent opacity={0.55} toneMapped={false} depthWrite={false} />
       </mesh>
       <mesh geometry={SNAP_CRACKS()} position={[0, 0.1, 0]}>
         {glow('#ff6aff')}

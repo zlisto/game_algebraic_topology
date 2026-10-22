@@ -349,6 +349,7 @@ function SmithProp({ state, tool }) {
 
 export default function ReefGame({
   elixirs = true, // some kills drop a Klein Elixir that restores every heart
+  purge = false, // the Warp Portal is open: every spawn bursts and is gone
   camYawRef, // chase camera (0-1): movement turns with the camera, and F lashes straight ahead
   stage,
   shape,
@@ -496,6 +497,13 @@ export default function ReefGame({
     // run once per mount (the board remounts per stage)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (!purge) return
+    for (const e of enemies.current) if (e.alive) (e.alive = false), (e.dying = 0.5)
+    report()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [purge])
 
   const inside = (x, z) => shape.inside(x, z)
   const enemyInside = (x, z) => (shape.insideForSpawn || shape.inside)(x, z)

@@ -1702,3 +1702,7 @@ b.term {
 .stance-badge { align-self: center; padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; border: 1px solid currentColor; background: rgba(8, 12, 24, 0.7); }
 .stance-badge.chain { color: #ffcf6a; }
 .stance-badge.cochain { color: #5cf0ff; }
+
+/* the open Warp Portal pulses on the minimap */
+.warp-pulse { transform-box: fill-box; transform-origin: center; animation: warp-ping 1.4s ease-out infinite; }
+@keyframes warp-ping { from { transform: scale(0.6); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }

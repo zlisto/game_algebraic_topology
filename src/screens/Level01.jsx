@@ -6,7 +6,8 @@ import OverworldScene from '../levels/w0/OverworldScene'
 import { cleanStroke, sampleShape, simulateSlide, snapPoint } from '../levels/w0/retraction'
 import { DEFINITION, HINTS, RULES, STAGES } from '../levels/w0/stages01'
 import { SITE, SITES, gateSegments, layout, makeWalkable, siteAt, worldToMap } from '../world/reef'
-import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxWrong, startReefMusic, stopReefMusic, textBlip, unlockAudio } from '../audio/chip'
+import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, setWarpHum, sfxCorrect, sfxWarpOpen, sfxWrong, startReefMusic, stopReefMusic, stopWarpHum, textBlip, unlockAudio } from '../audio/chip'
+import { WarpIcon } from './LevelChrome'
 import MathText from './MathText'
 
 /**
@@ -117,7 +118,7 @@ function Minimap({ pos, face = 0, saved, current, gateOpen, stars = {}, portalOp
       })}
       {(() => {
         const [x, y] = P(...layout.gate.b)
-        return <circle cx={x} cy={y} r="2.4" fill={portalOpen ? '#b9a8ff' : '#2a2d3a'} stroke={portalOpen ? '#fff' : '#6a6e80'} strokeWidth="0.6" />
+        return <WarpIcon x={x} y={y} open={portalOpen} />
       })()}
       {/* view cone: which way Gyroid is facing */}
       <path
@@ -611,6 +612,20 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
     setWarping(true)
     setTimeout(() => setLevelClear(true), 1100)
   })
+  // the portal opens: a fanfare, the music falls silent, and the portal's hum takes over
+  const opened = useRef(false)
+  useEffect(() => {
+    if (!portalOpen || opened.current) return
+    opened.current = true
+    sfxWarpOpen()
+    stopReefMusic()
+  }, [portalOpen])
+  useEffect(() => {
+    if (!portalOpen) return
+    const d = Math.hypot(here.pos[0] - layout.gate.b[0], here.pos[1] - layout.gate.b[1])
+    setWarpHum(Math.max(0.08, 1 - d / 16))
+  }, [portalOpen, here.pos])
+  useEffect(() => () => stopWarpHum(), [])
   const lockedHint = useRef(false)
   useEffect(() => {
     if (!gateOpen || portalOpen) return

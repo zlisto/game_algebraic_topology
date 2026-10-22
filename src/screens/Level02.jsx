@@ -48,7 +48,8 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import MathText from './MathText'
-import { EmmyEndCard, PauseMenu, ViewCone, usePause } from './LevelChrome'
+import { EmmyEndCard, PauseMenu, ViewCone, WarpIcon, usePause } from './LevelChrome'
+import { setWarpHum, sfxWarpOpen, stopWarpHum } from '../audio/chip'
 
 /**
  * World 0 · Level 2 "Bend, Don't Break" — Tidewarp Flats. Gyroid crosses the mended
@@ -128,7 +129,7 @@ function FlatsMap({ pos, face = 0, done, current, next, exitOpen, rewards = {}, 
       })}
       {(() => {
         const [x, y] = P(layout.exit.b)
-        return <circle cx={x} cy={y} r="2.4" fill={portalOpen ? '#b9a8ff' : '#2a2d3a'} stroke={portalOpen ? '#fff' : '#6a6e80'} strokeWidth="0.6" />
+        return <WarpIcon x={x} y={y} open={portalOpen} />
       })()}
       <ViewCone x={gx} y={gz} face={face} id="flatscone" />
       <MapNext from={[gx, gz]} to={next ? P(layout.zones.find((z) => z.id === next).shrine) : exitOpen ? P(layout.exit.b) : null} label={next ? 'NEXT' : portalOpen ? 'EXIT' : 'HOURGLASSES'} />
@@ -764,6 +765,20 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
     setWarping(true)
     setTimeout(() => setLevelClear(true), 1100)
   })
+  // the portal opens: a fanfare, the music falls silent, and the portal's hum takes over
+  const opened = useRef(false)
+  useEffect(() => {
+    if (!portalOpen || opened.current) return
+    opened.current = true
+    sfxWarpOpen()
+    stopMusic()
+  }, [portalOpen])
+  useEffect(() => {
+    if (!portalOpen) return
+    const d = Math.hypot(here.pos[0] - layout.exit.b[0], here.pos[1] - layout.exit.b[1])
+    setWarpHum(Math.max(0.08, 1 - d / 16))
+  }, [portalOpen, here.pos])
+  useEffect(() => () => stopWarpHum(), [])
   const lockedHint = useRef(false)
   useEffect(() => {
     if (!exitOpen || portalOpen) return

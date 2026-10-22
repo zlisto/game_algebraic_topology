@@ -108,6 +108,17 @@ export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay,
   )
 }
 
+/** The Warp Portal on a minimap: a swirl that pulses once it's open, a dim ring while sealed. */
+export function WarpIcon({ x, y, open }) {
+  return (
+    <g className={open ? 'warp-icon open' : 'warp-icon'} transform={`translate(${x} ${y})`}>
+      {open && <circle r="4.2" className="warp-pulse" fill="none" stroke="#c8b6ff" strokeWidth="0.8" />}
+      <circle r="2.6" fill={open ? '#6a4ad8' : '#2a2d3a'} stroke={open ? '#ffffff' : '#6a6e80'} strokeWidth="0.6" />
+      {open && <path d="M 0 0 m -1.6 0 a 1.6 1.6 0 1 1 1.6 1.6 a 0.9 0.9 0 1 1 -0.9 -0.9" fill="none" stroke="#ffffff" strokeWidth="0.5" />}
+    </g>
+  )
+}
+
 /** An SVG wedge for a minimap: which way Gyroid is facing, from (x, y) in map units. */
 export function ViewCone({ x, y, face, r = 9, id = 'viewcone' }) {
   return (

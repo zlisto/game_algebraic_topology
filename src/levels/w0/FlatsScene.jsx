@@ -243,6 +243,7 @@ export default function FlatsScene({
       <ReefGame
         key={gameKey}
         camYawRef={camYawRef}
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}

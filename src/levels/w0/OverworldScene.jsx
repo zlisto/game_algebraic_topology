@@ -160,6 +160,7 @@ export default function OverworldScene({
         key={gameKey}
         camYawRef={open ? camYawRef : undefined}
         elixirs={open}
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}

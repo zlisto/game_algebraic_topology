@@ -1678,3 +1678,59 @@ export function sfxSnapCell() {
   if (!audio() || ctx.state !== 'running') return
   blipAt(ctx.currentTime, hz(64), { dur: 0.08, type: 'square', vol: 0.07, slide: 1.4 })
 }
+
+// ---------------------------------------------------------------- the Warp Portal
+
+/** The last reward is in: a rising, ringing fanfare as the Warp Portal opens. */
+export function sfxWarpOpen() {
+  if (!audio() || ctx.state !== 'running') return
+  const t = ctx.currentTime + 0.02
+  // a major arpeggio climbing two octaves, then a held, shimmering chord
+  ;[60, 64, 67, 72, 76, 79, 84].forEach((n, i) => blipAt(t + i * 0.085, hz(n), { dur: 0.32, type: 'square', vol: 0.08, out: echo }))
+  ;[72, 76, 79, 84].forEach((n) => blipAt(t + 0.65, hz(n), { dur: 1.6, type: 'triangle', vol: 0.07 }))
+  blipAt(t + 0.65, hz(48), { dur: 1.8, type: 'sine', vol: 0.12, slide: 2 })
+}
+
+let hum = null
+/** The open portal hums: a low, slowly beating drone. level 0 (silent) … 1 (standing in it). */
+export function setWarpHum(level) {
+  if (!audio()) return
+  if (!hum) {
+    if (level <= 0) return
+    const g = ctx.createGain()
+    g.gain.value = 0
+    const f = ctx.createBiquadFilter()
+    f.type = 'lowpass'
+    f.frequency.value = 520
+    f.connect(g).connect(sfxBus)
+    const oscs = [55, 55.7, 110.4, 164.8].map((fr, i) => {
+      const o = ctx.createOscillator()
+      o.type = i < 2 ? 'sawtooth' : 'sine'
+      o.frequency.value = fr
+      const og = ctx.createGain()
+      og.gain.value = i < 2 ? 0.18 : 0.12
+      o.connect(og).connect(f)
+      o.start()
+      return o
+    })
+    // a slow wobble in the filter: the swirl breathing
+    const lfo = ctx.createOscillator()
+    lfo.frequency.value = 0.6
+    const lg = ctx.createGain()
+    lg.gain.value = 180
+    lfo.connect(lg).connect(f.frequency)
+    lfo.start()
+    hum = { g, oscs, lfo }
+  }
+  hum.g.gain.setTargetAtTime(Math.max(0, Math.min(1, level)) * 0.5, ctx.currentTime, 0.25)
+}
+export function stopWarpHum() {
+  if (!hum) return
+  const h = hum
+  hum = null
+  h.g.gain.setTargetAtTime(0, ctx.currentTime, 0.15)
+  setTimeout(() => {
+    h.oscs.forEach((o) => o.stop())
+    h.lfo.stop()
+  }, 600)
+}
