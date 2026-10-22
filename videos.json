@@ -7,18 +7,18 @@
       "plays": "New Game, before World 0 · Level 1",
       "world": 0,
       "status": "built",
-      "story_start": -30,
+      "story_start": -18,
       "story_end": 46,
       "pace": [
         [
-          -30,
+          -18,
           0,
           1
         ],
         [
           0,
           6,
-          0.65
+          0.75
         ],
         [
           6,
@@ -28,17 +28,17 @@
         [
           13,
           21,
-          0.65
+          0.7
         ],
         [
           21,
           28,
-          0.85
+          0.9
         ],
         [
           28,
           34,
-          0.6
+          0.65
         ],
         [
           34,
@@ -54,21 +54,21 @@
       "scenes": [
         {
           "id": "X1",
-          "start": -30,
-          "end": -17,
+          "start": -18,
+          "end": -12,
           "title": "The Winding World",
-          "description": "Fade in from black. Slow descending fly-in over Retract Reef at night: the long Walkway ending at the Landing Pier, the T-shaped Fork, the O, the round reef of Twin Lagoons, Tidewarp Flats, the Mirror Shoals and the Foundry cliff, all strung on glowing causeways around the ringed island at the center. Gyroid is a small figure on the Walkway in the foreground. (The same layout as the World 0 map and the playable overworld.)"
+          "description": "Fade in from black. Slow descending fly-in over Retract Reef at night: the long Walkway ending at the Landing Pier, the T-shaped Fork, the O, the round reef of Twin Lagoons, Tidewarp Flats, the Mirror Shoals and the Foundry cliff, all strung on glowing causeways around the ringed island at the center. The islands breathe gently with the tide. Count Null is not yet on his spire. (The same layout as the World 0 map and the playable overworld.)"
         },
         {
           "id": "X2",
-          "start": -17,
-          "end": -10,
+          "start": -12,
+          "end": -7,
           "title": "The ringed island",
-          "description": "Close, slow orbit around the central ringed island, intact, its eight amber beacons lit. Causeways arc away from it to the other islands."
+          "description": "Close, slow orbit around the central ringed island, intact, its eight amber beacons and its lit windows glowing: people live here. Causeways arc away from it to the other islands."
         },
         {
           "id": "X3",
-          "start": -10,
+          "start": -7,
           "end": 0,
           "title": "Gyroid on the reef",
           "description": "Gyroid stands idle on the thick basalt walkway with its amber spine, facing along the path. The camera eases in from a three-quarter front angle. Gyroid's theme plays."
@@ -78,7 +78,7 @@
           "start": 0,
           "end": 6,
           "title": "Establishing orbit",
-          "description": "Wide orbit high over the whole world, settling toward the ringed island at its center. Black spire visible in the distance."
+          "description": "Wide orbit high over the whole world, then the camera turns to find the black spire and the figure on top of it."
         },
         {
           "id": "B",
@@ -99,21 +99,21 @@
           "start": 15.6,
           "end": 21,
           "title": "The collapse",
-          "description": "Wide on the ring. It turns violet and flickers (from 14.2); its hole closes as it swells into a ball (14.6–19), shrinks to a point (19.1–20) and vanishes in a white-violet flash (19.9) with camera shake. The four causeways tied to the ring snap loose and fall into the sea (19.6–22.5)."
+          "description": "Wide on the ring. It turns violet and flickers (from 14.2); torn up out of the sea, its causeways snap loose and fall (15-17.5). Its hole closes as it swells into a ball (14.6-19), shrinks to a single glowing point (19.1-19.8) that hangs there (to 20.4), then vanishes in a small, fast white flash (20.4) with camera shake."
         },
         {
           "id": "D",
           "start": 21,
           "end": 28,
           "title": "The run",
-          "description": "Tracking shot alongside Gyroid sprinting down the walkway (21–27.6). Behind them, the basalt slabs shudder, turn violet and fall away one by one, but the amber spine stays in place."
+          "description": "High shot ahead of Gyroid, looking back down the walkway as they sprint toward camera (21-27.6). Behind them, the basalt slabs shudder, turn violet and fall away one by one, but the amber spine stays in place."
         },
         {
           "id": "E1",
           "start": 28,
           "end": 30.6,
           "title": "The edge",
-          "description": "Gyroid stops at the end of the walkway and turns toward camera, looking back at the ruined path where only the spine remains."
+          "description": "Gyroid stops at the end of the walkway. Reverse shot over Gyroid's shoulder: the walkway is gone, and only the glowing amber spine still spans the water."
         },
         {
           "id": "E2",
@@ -127,53 +127,44 @@
           "start": 34,
           "end": 40,
           "title": "Null watches",
-          "description": "Back on the spire: Null, calm, watches from afar and gives a small dismissive gesture (36.5–39)."
+          "description": "Back on the spire, from below: Null, calm, high against the sky, watches from afar and gives a small dismissive gesture (36.5-39)."
         },
         {
           "id": "G",
           "start": 40,
           "end": 46,
           "title": "Title",
-          "description": "Wide pull-back over Retract Reef with the ringed island now missing from the center — open water where it stood. Title card fades in at 40.5: “Winding World — Shape can change. Topology can’t.” and “World 0 · Level 1 — A Good Deformation”. Fade to black at 46, then Level 1 starts."
+          "description": "Wide pull-back over the open water where the ringed island stood. Title card fades in at 40.5: \"Winding World: Shape can change. Topology can't.\" and \"World 0 · Level 1: A Good Deformation\". Fade to black at 46, then Level 1 starts."
         }
       ],
       "captions": [
         {
-          "t": -29.4,
-          "end": -22.6,
+          "t": -17.4,
+          "end": -12.2,
           "speaker": "Narrator",
-          "text": "Beyond the edge of every map lies the Winding World — ring-shaped islands, strung together by glowing causeways."
+          "hold": false,
+          "text": "Beyond every map: soft islands, held together by their holes."
         },
         {
-          "t": -22.4,
-          "end": -17.2,
+          "t": -11.6,
+          "end": -7.2,
           "speaker": "Narrator",
-          "text": "The land here is soft. It stretches and drifts with the tide, and nothing is lost — so long as nothing tears."
+          "hold": false,
+          "text": "A road round a hole is someone’s road home."
         },
         {
-          "t": -16.8,
-          "end": -10.2,
-          "speaker": "Narrator",
-          "text": "Every island is held together by its holes. A road that winds around a hole is somebody’s road home."
-        },
-        {
-          "t": -9.8,
-          "end": -4.6,
-          "speaker": "Narrator",
-          "text": "Gyroid ran those roads: a courier from Haven Ring, the guild island — today with a sealed parcel at the hip."
-        },
-        {
-          "t": -4.4,
-          "end": -0.2,
+          "t": -6.4,
+          "end": -0.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One delivery for Emmy Boundary, out on Retract Reef. Back to Haven by supper."
+          "text": "Courier run for Emmy Boundary, out on Retract Reef. Back to Haven Ring by supper."
         },
         {
           "t": 0.4,
           "end": 5.8,
           "speaker": "Narrator",
-          "text": "But high on a spire of black glass, someone had been counting the holes — and calling them wounds."
+          "hold": false,
+          "text": "But high on a spire of black glass, someone had been counting the holes, and calling them wounds."
         },
         {
           "t": 6.6,
@@ -187,26 +178,29 @@
           "end": 13,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "No more. I will fold this world down to a single point — and nothing will ever be lost again."
+          "text": "No more. I will fold this world down to a single point, and nothing will ever be lost again."
         },
         {
           "t": 13.6,
           "end": 17,
           "speaker": "Narrator",
+          "hold": false,
           "text": "The Null Crown woke. It does not simplify. It erases."
         },
         {
           "t": 17,
           "end": 21,
           "speaker": "Narrator",
-          "text": "A ring became a ball. A ball became a point. Every road that wound through it — and everyone on those roads — folded into silence."
+          "hold": false,
+          "text": "Ring, to ball, to point. Everyone on it, gone."
         },
         {
           "t": 21.4,
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Courier! The reef’s folding — get to the amber spines! Whatever keeps its shape, the Crown can’t swallow!"
+          "hold": false,
+          "text": "Courier, it’s Emmy, on the reef ahead! Run for the amber spines! Whatever winds round a hole, the Crown can’t fold!"
         },
         {
           "t": 28.3,
@@ -220,7 +214,7 @@
           "end": 33.9,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Anchor set! I’m still here!"
+          "text": "Anchor set on the spine: every loop I walk starts here. I’m still here!"
         },
         {
           "t": 34.5,

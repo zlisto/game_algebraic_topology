@@ -6,6 +6,7 @@ import { BEACON_OFFSET, DEFINITION_CASTLE, HINTS_CASTLE, NULL_AT, OPENING, PANEL
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxWrong, startNullMusic, startReefMusic, stopMusic, textBlip, unlockAudio } from '../audio/chip'
 import CastleOutro from '../movies/CastleOutro'
 import MathText from './MathText'
+import { PauseMenu, usePause } from './LevelChrome'
 
 /**
  * World 0 · Castle "The Hollow Throne" — Count Null's three trials on the top of his spire.
@@ -57,6 +58,8 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   const shownNow = useRef(0) // the typed count right now (a skip jumps it to the end)
   shownNow.current = shown
   const [hearts, setHearts] = useState(3)
+  // chase camera: behind Gyroid, facing Null across the floor
+  const camYawRef = useRef(Math.atan2(START[0] - NULL_AT[0], START[1] - NULL_AT[1]))
   const [knockouts, setKnockouts] = useState(0)
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash')
@@ -253,7 +256,8 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
   }, [])
 
   // ---------- game layer (rebuilt after a knockout with what should be on the floor)
-  const playEnabled = phase === 'play' && !rules && step !== 'outro' && !complete
+  const [paused, setPaused] = usePause(step === 'outro' || complete)
+  const playEnabled = phase === 'play' && !rules && step !== 'outro' && !complete && !paused
   const gameKey = `castle:${knockouts}`
   const game = useMemo(() => {
     const list = step === 'trial' ? beaconsFor(trial, roundIdx, epoch, ['live', 'live', 'live']) : step === 'wave' ? WAVES[trial].map(([type, x, z]) => ({ type, x, z, site: 'arena' })) : []
@@ -287,6 +291,7 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
           tool={tool}
           onEnemies={(by) => setEnemies(by)}
           onHearts={setHearts}
+          camYawRef={camYawRef}
         />
       </Canvas>
 
@@ -404,6 +409,15 @@ export default function LevelCastle({ onBackToTitle, onNext, onGo, startAt }) {
             </div>
           </div>
         </div>
+      )}
+      {paused && (
+        <PauseMenu
+          title="The Hollow Throne"
+          progress={`Trial ${Math.min(3, trial + 1)} of 3`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('castle0', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
       )}
     </div>
   )

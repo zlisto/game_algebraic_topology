@@ -15,7 +15,9 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const SITE_ORDER = ['solid_shoal', 'ring_reef', 'twin_mirror', 'dumbbell', 'mirror_gate']
 
 export const OPENING = [
-  E('Mirror Shoals. Two reefs can look nothing alike and still be the same shape — today we prove it.'),
+  E('Mirror Shoals. Null’s Crown can only fold what nobody has proved has a hole. So today we prove which reefs are the same shape, and which might not be.'),
+  E('Every reef you prove leaves a Mirror Lens behind. Collect all five: past the Mirror Gate there’s a Warp Portal, and it won’t open without them.'),
+  E('Watch for the mirror spawn: one is real, one is a reflection. Projective spawn need two lashes in quick succession; Klein spawn, one lash and then a quick pair.'),
   E('Start at Solid Shoal, up the causeway to the west.'),
 ]
 
@@ -31,6 +33,7 @@ export const SITES03 = {
     ],
     done: [
       E('The whole shoal slid onto a single point. A place that deforms onto a point is contractible — it’s the same shape as a point.'),
+      E('There’s your first Mirror Lens, over by the post. Walk through it.'),
       G('And the ring next door?'),
       E('Try its loop. West, across the little causeway.'),
     ],
@@ -41,7 +44,7 @@ export const SITES03 = {
     done: [
       E('It catches on the hole. I can’t find any slide that shrinks it… but “I couldn’t find one” isn’t a proof. Proving none exists means counting how the loop winds — that’s World 1.'),
       G('So a ring isn’t the same shape as a point. Probably.'),
-      E('Probably. Hold onto that. Now — across the channel to Twin Mirror.'),
+      E('Probably. Hold onto that. It still left a Mirror Lens by the post — grab it, then across the channel to Twin Mirror.'),
     ],
     early: [E('Finish Solid Shoal first.')],
   },
@@ -68,7 +71,7 @@ export const SITES03 = {
     ],
     doomed: [
       E('It leaks: the right lagoon has no loop around it, so its water floods the slide. Every hole needs a loop of spine around it.'),
-      N('Details. People drown in details.'),
+      N('Details. People drown in details. And a hole with no loop around it? My Crown folds it flat.'),
       E('Add what’s missing: a loop around the right lagoon and a bar joining the two — through the new beacons.'),
     ],
     spines: [
@@ -91,7 +94,7 @@ export const SITES03 = {
       E('Because we haven’t proved it different — not yet. But the gate is satisfied.'),
       E('…There’s the Foundry. I know that light.'),
       G('You’ve been here before.'),
-      E('A long time ago. With him. Come on.'),
+      E('A long time ago. With him. The Warp Portal’s at the end of that causeway. Bring every Mirror Lens and it’ll take us there.'),
     ],
     early: [E('The gate can wait — finish the Dumbbell first.')],
   },

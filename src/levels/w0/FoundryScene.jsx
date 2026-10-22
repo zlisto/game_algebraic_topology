@@ -9,7 +9,8 @@ import { CausewaySlab } from '../../world/ReefScenery'
 import { LETTERS } from './cells'
 import Hologram, { LETTER_COLORS } from './Hologram'
 import { LiveLine } from './FlatsScenery'
-import { DevAdvance, FollowCamera } from './OverworldScene'
+import { DevAdvance } from './OverworldScene'
+import OverworldKit from './OverworldKit'
 import { Clutter, Gear, LavaChannels, PlateFloor } from '../../world/Dressing'
 import ReefGame from './ReefGame'
 
@@ -289,6 +290,10 @@ export default function FoundryScene({
   gameKey,
   stateRef,
   frameRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   spawnRef,
   ribbonApi,
   playEnabled,
@@ -345,6 +350,9 @@ export default function FoundryScene({
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -363,7 +371,7 @@ export default function FoundryScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

@@ -27,6 +27,10 @@ function withTerms(segs) {
     }
     let last = 0
     for (const m of seg.text.matchAll(TERM_RE)) {
+      // part of a proper name ("Emmy Boundary", "Retract Reef")? leave it plain
+      const before = seg.text.slice(0, m.index).match(/(\S+)\s+$/)?.[1] || ''
+      const after = seg.text.slice(m.index + m[0].length).match(/^\s+(\S+)/)?.[1] || ''
+      if (/^\p{Lu}/u.test(m[0]) && (/^\p{Lu}/u.test(before) || /^\p{Lu}/u.test(after))) continue
       if (m.index > last) out.push({ text: seg.text.slice(last, m.index), math: false })
       out.push({ text: m[0], math: false, term: true })
       last = m.index + m[0].length

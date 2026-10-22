@@ -20,11 +20,18 @@ import {
   sfxHook,
   sfxRelease,
   sfxWrong,
+  setWarpHum,
+  sfxWarpOpen,
   startMirrorMusic,
+  startNullMusic,
   stopMusic,
+  stopWarpHum,
+  switchMusic,
   textBlip,
   unlockAudio,
 } from '../audio/chip'
+import { stepBack } from './warpLevel'
+import { EmmyEndCard, PauseMenu, ViewCone, WarpIcon, usePause } from './LevelChrome'
 import MirrorLesson, { MirrorLessonOverlay } from '../movies/MirrorLesson'
 import MathText from './MathText'
 
@@ -72,13 +79,13 @@ function Portrait({ id, name }) {
 }
 
 /** Minimap: reefs (gold once proven), causeways, the channel, Gyroid. */
-function ShoalsMap({ pos, done, current, next, gateOpen }) {
+function ShoalsMap({ pos, face = 0, done, current, next, gateOpen, rewards = {}, portalOpen }) {
   const P = ([x, z]) => [50 + x * 2.25, 30 + z * 1.8]
   const [gx, gz] = P(pos)
   const [c0] = P([layout.channel.x0, 0])
   const [c1] = P([layout.channel.x1, 0])
   return (
-    <svg className="minimap" viewBox="0 0 100 60" aria-label="Mirror Shoals map">
+    <svg className="minimap big" viewBox="0 0 100 60" aria-label="Mirror Shoals map">
       <rect width="100" height="60" rx="3" fill="#0b1626" />
       <rect x={c0} y="0" width={c1 - c0} height="60" fill="#9fd8ff" opacity="0.08" />
       {layout.causeways.map((c, i) => {
@@ -94,13 +101,55 @@ function ShoalsMap({ pos, done, current, next, gateOpen }) {
         const [x, y] = P(layout.gate.pos)
         return <rect x={x - 2.5} y={y - 1.5} width="5" height="3" fill="#ff8a3a" opacity="0.7" />
       })()}
-      <MapNext from={[gx, gz]} to={next ? P(SITE[next].pos) : gateOpen ? P(layout.gate.pos) : null} label={next ? 'NEXT' : 'EXIT'} />
+      {SITE_ORDER.filter((id) => done[id] && !rewards[id]).map((id) => {
+        const [x, y] = P(rewardPos(id))
+        return (
+          <g key={id}>
+            <circle cx={x} cy={y} r="2.6" fill="none" stroke="#cfe8ff" strokeWidth="0.7" className="map-pulse" />
+            <text x={x} y={y + 1.8} fontSize="5" textAnchor="middle" fill="#cfe8ff">
+              ◐
+            </text>
+          </g>
+        )
+      })}
+      {(() => {
+        const [x, y] = P(layout.gate.exit.b)
+        return gateOpen ? <WarpIcon x={x} y={y} open={portalOpen} /> : null
+      })()}
+      <ViewCone x={gx} y={gz} face={face} id="shoalscone" />
+      {(() => {
+        const waiting = SITE_ORDER.filter((id) => done[id] && !rewards[id]).map((id) => rewardPos(id))
+        const nearest = waiting.sort((a, b) => Math.hypot(a[0] - pos[0], a[1] - pos[1]) - Math.hypot(b[0] - pos[0], b[1] - pos[1]))[0]
+        const to = next ? P(SITE[next].pos) : gateOpen ? (portalOpen || !nearest ? P(layout.gate.exit.b) : P(nearest)) : null
+        return <MapNext from={[gx, gz]} to={to} label={next ? 'NEXT' : portalOpen ? 'EXIT' : 'LENS'} />
+      })()}
       <circle cx={gx} cy={gz} r="1.6" fill="#3ecfbf" stroke="#fff" strokeWidth="0.5" />
     </svg>
   )
 }
 
-export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
+/** Each reef proven leaves a Mirror Lens on solid ground; all five open the Warp Portal past the Mirror Gate. */
+function landNear(s, [x, z]) {
+  if (s.containsWorld(x, z)) return [x, z]
+  for (let r = 0.4; r < 6; r += 0.4)
+    for (let k = 0; k < 16; k++) {
+      const a = (k / 16) * Math.PI * 2
+      const p = [x + Math.cos(a) * r, z + Math.sin(a) * r]
+      // well inside the land, not on its rim
+      if ([0, 1, 2, 3].every((j) => s.containsWorld(p[0] + Math.cos(j * 1.57) * 0.6, p[1] + Math.sin(j * 1.57) * 0.6))) return p
+    }
+  return s.pos
+}
+const REWARD_AT = Object.fromEntries(SITE_ORDER.map((id) => [id, landNear(SITE[id], SITE[id].loop ? SITE[id].toWorld(SITE[id].loop.post[0] + 1.2, SITE[id].loop.post[1]) : [SITE[id].pos[0] + 1.6, SITE[id].pos[1] + 1.2])]))
+const rewardPos = (id) => REWARD_AT[id]
+const END_CARD = {
+  learned:
+    'Two reefs can look nothing alike and still be the same shape. Twin Mirror slid onto a figure-eight and onto a theta, so there are maps both ways between them, and each round trip deforms back to standing still. That’s a homotopy equivalence. Solid Shoal went all the way down to a point: contractible. Ring Reef wouldn’t, though I still can’t prove it never will.',
+  ahead:
+    'The Skeleton Foundry, my old workshop. Instead of shrinking spaces down to spines, we’ll build them up: points first, then edges, then disks glued along their rims. Cell by cell. And Null knows that forge as well as I do.',
+}
+
+export default function Level03({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-3')
   const samplesBySite = useMemo(() => Object.fromEntries(SITES.map((s) => [s.id, sampleShape(s.shape)])), [])
   const skipTo = Math.max(0, SITE_ORDER.indexOf(startAt))
@@ -149,13 +198,23 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
   const [lesson, setLesson] = useState(false)
   const [toast, setToast] = useState(null)
   const toastTimer = useRef(null)
-  const flash = (text) => {
+  const flash = useCallback((text, ms = 2400) => {
     setToast(text)
     clearTimeout(toastTimer.current)
-    toastTimer.current = setTimeout(() => setToast(null), 2400)
-  }
-  const [here, setHere] = useState({ site: null, pos: checkpoint })
+    toastTimer.current = setTimeout(() => setToast(null), ms)
+  }, [])
+  const [here, setHere] = useState({ site: null, pos: checkpoint, face: 0 })
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking up the causeway toward Solid Shoal
+  const camYawRef = useRef(Math.atan2(layout.start[0] - SITE.solid_shoal.pos[0], layout.start[1] - SITE.solid_shoal.pos[1]))
+  const talkingRef = useRef(false)
+  const [rewards, setRewards] = useState({}) // site id → Mirror Lens collected
+  const rewardsRef = useRef(rewards)
+  rewardsRef.current = rewards
+  const doneRef = useRef(done)
+  doneRef.current = done
+  const [warping, setWarping] = useState(false)
+  const [nullScene, setNullScene] = useState(false) // Null's theme from his arrival at the Dumbbell until it's proven
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
   const grabbing = useRef(null)
@@ -189,6 +248,30 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
   useEffect(() => {
     if (!skipTo) say(OPENING)
   }, [say, skipTo])
+  const wasBoss = useRef(false)
+  useEffect(() => {
+    if (nullScene === wasBoss.current) return
+    wasBoss.current = nullScene
+    switchMusic(nullScene ? startNullMusic : startMirrorMusic)
+  }, [nullScene])
+
+  // first bite, first Elixir: taught as they happen, in a toast that doesn't stop play
+  const taught = useRef({})
+  useEffect(() => {
+    if (hearts < 3 && !taught.current.hearts) {
+      taught.current.hearts = true
+      flash('♥ Mirror spawn bite like the rest. Lose all three hearts and you wake at the last reef you proved.', 4200)
+    }
+  }, [hearts, flash])
+  useEffect(() => {
+    const on = () => {
+      if (taught.current.elixir) return
+      taught.current.elixir = true
+      flash('A Klein Elixir dropped. Walk through it when you’re hurt: every heart back.', 4200)
+    }
+    window.addEventListener('elixir-drop', on)
+    return () => window.removeEventListener('elixir-drop', on)
+  }, [flash])
 
   // where is Gyroid; which stakes still hold the loops
   useEffect(() => {
@@ -196,7 +279,22 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
       const s = stateRef.current
       if (!s) return
       const at = siteAt(s.x, s.z)?.id || null
-      setHere((h) => (h.site === at && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 ? h : { site: at, pos: [s.x, s.z] }))
+      setHere((h) => (h.site === at && Math.abs(h.pos[0] - s.x) < 0.05 && Math.abs(h.pos[1] - s.z) < 0.05 && Math.abs(h.face - s.face) < 0.05 ? h : { site: at, pos: [s.x, s.z], face: s.face || 0 }))
+      // walk into a Mirror Lens, or lash it, to collect it
+      for (const id of SITE_ORDER) {
+        if (!doneRef.current[id] || rewardsRef.current[id]) continue
+        const [px, pz] = rewardPos(id)
+        const d = Math.hypot(s.x - px, s.z - pz)
+        let off = Math.atan2(px - s.x, pz - s.z) - (s.face || 0)
+        off = Math.atan2(Math.sin(off), Math.cos(off))
+        if (d < 1.3 || (s.whip > 0.4 && d < 2.1 && Math.abs(off) < 0.7)) {
+          const got = Object.keys(rewardsRef.current).length + 1
+          rewardsRef.current = { ...rewardsRef.current, [id]: true }
+          setRewards(rewardsRef.current)
+          sfxCorrect()
+          flash(got < SITE_ORDER.length ? `◐ Mirror Lens: ${got} of ${SITE_ORDER.length}` : `◐ All ${SITE_ORDER.length} Mirror Lenses! The Warp Portal is open.`)
+        }
+      }
       const L = loopsRef.current.ribbons
       const hk = Object.fromEntries(Object.keys(L).map((k) => [k, hookedStakes(L[k].r)]))
       setHooked((old) => (JSON.stringify(old) === JSON.stringify(hk) ? old : hk))
@@ -220,6 +318,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
     setMet((m) => ({ ...m, [site.id]: true }))
     const extra = site.enemies?.some(([type]) => type === 'mirror') && !met.mirrorHint ? [HINTS03.mirror] : []
     if (extra.length) setMet((m) => ({ ...m, mirrorHint: true }))
+    if (site.id === 'dumbbell') setNullScene(true)
     say([...SITES03[site.id].arrive, ...extra])
   }, [site, phase, current, met, done, say])
 
@@ -305,9 +404,9 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
       setStrokesBySite((m) => ({ ...m, [id]: [] }))
     }
     if (spec?.doomed) {
-      // Null's ring spine on the dumbbell: it can only leak
+      // Null's ring spine on the dumbbell: it can only leak. Keep the ring: the fix adds to it
       sfxWrong()
-      afterRegrow.current = nextSpine
+      afterRegrow.current = () => setSpineIdx((m) => ({ ...m, [id]: k + 1 }))
       return say(words.doomed, 'regrow')
     }
     if (!sim.valid) {
@@ -322,11 +421,12 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
     }
     // the reef's last spine: proven
     setDone((d) => ({ ...d, [id]: true }))
+    if (id === 'dumbbell') setNullScene(false)
     setCheckpoint(spawnOf(SITE[id]))
     if (id === 'mirror_gate') {
       setGateLit(true)
       afterRegrow.current = () => {
-        setGateOpen(true) // the mirror lifts; the level ends when Gyroid walks through
+        setGateOpen(true) // the mirror lifts; the Warp Portal waits at the end of the causeway beyond
         setPhase('clear')
       }
       return say(words.done, 'regrow')
@@ -444,13 +544,8 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
       else if (e.code === 'Digit2') setTool('spool')
       else if (e.code === 'KeyQ') setTool((w) => (w === 'lash' ? 'spool' : 'lash'))
     }
-    const wheel = (e) => Math.abs(e.deltaY) > 4 && setTool((w) => (w === 'lash' ? 'spool' : 'lash'))
     window.addEventListener('keydown', key)
-    window.addEventListener('wheel', wheel, { passive: true })
-    return () => {
-      window.removeEventListener('keydown', key)
-      window.removeEventListener('wheel', wheel)
-    }
+    return () => window.removeEventListener('keydown', key)
   }, [])
 
   // ---------- dialogue
@@ -516,7 +611,11 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
   }, [])
 
   // ---------- game layer
-  const playEnabled = (phase === 'play' || phase === 'clear') && !running && !lesson && t === 0
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = talking
+  const rewardCount = Object.keys(rewards).length
+  const portalOpen = gateOpen && rewardCount === SITE_ORDER.length
+  const playEnabled = (phase === 'play' || phase === 'clear') && !running && !lesson && t === 0 && !paused && !warping
   const spoolEnabled = playEnabled && phase === 'play' && !!site && site.id === current && (loopMode(site) || drawSite)
   const gameKey = `shoals:${knockouts}`
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, gateOpen ? [[layout.gate.exit.a, layout.gate.exit.b]] : []), [gateOpen])
@@ -536,7 +635,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
   }, [sim, simSite])
   frameRef.current = working && !done[site.id] ? { center: site.pos, size: 9.5 } : null
 
-  if (import.meta.env.DEV) window.__lvl3 = { here, done, loopDone, spineIdx, phase, strokesBySite, sim, enemies, setTool, loops: loopsRef.current, setStrokes: setStrokesBySite, grabbing } // dev
+  if (import.meta.env.DEV) window.__lvl3 = { here, done, loopDone, spineIdx, phase, strokesBySite, sim, enemies, setTool, loops: loopsRef.current, setStrokes: setStrokesBySite, grabbing, rewards, rewardAt: REWARD_AT, clear: () => setLevelClear(true), proveAll: () => (setDone(Object.fromEntries(SITE_ORDER.map((id) => [id, true]))), setGateLit(true), setGateOpen(true), setPhase('clear')) } // dev
 
   const scene = (
     <MirrorScene
@@ -571,18 +670,55 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
       onEnemies={(by) => ((reported.current = true), setEnemies(by))}
       onHearts={setHearts}
       onSpooling={setSpooling}
+      camYawRef={camYawRef}
+      talkingRef={talkingRef}
+      nullAt={nullScene ? SITE.dumbbell.toWorld(3.4, -1.6) : null}
+      rewards={SITE_ORDER.filter((id) => done[id]).map((id) => ({ id, kind: 'lens', pos: rewardPos(id), state: rewards[id] ? 'taken' : 'waiting' }))}
+      portal={gateOpen ? { pos: layout.gate.exit.b, facing: Math.atan2(layout.gate.exit.b[0] - layout.gate.exit.a[0], layout.gate.exit.b[1] - layout.gate.exit.a[1]), open: portalOpen, need: SITE_ORDER.length - rewardCount, warping } : null}
     />
   )
 
   const proven = SITE_ORDER.filter((id) => done[id]).length
-  const objective = levelClear || done.mirror_gate ? (gateOpen ? 'Walk through the Mirror Gate' : 'The gate is judging…') : `Reefs proven ${proven}/5 · next: ${SITE[current]?.name}`
-  // past the gate's threshold, onto the causeway toward the Foundry
-  useExitTrigger(gateOpen, stateRef, (x, z) => Math.abs(x - layout.gate.pos[0]) < 1.4 && z < layout.gate.pos[1] - 0.8, () => setLevelClear(true))
+  const objective = portalOpen
+    ? `◐ ${rewardCount}/5 · Warp Portal open: through the Mirror Gate and into it`
+    : done.mirror_gate
+      ? gateOpen
+        ? `◐ ${rewardCount}/5 · Collect every Mirror Lens to open the Warp Portal`
+        : 'The gate is judging…'
+      : `◐ ${rewardCount}/5 · reefs proven ${proven}/5 · next: ${SITE[current]?.name}`
+  // the Warp Portal at the end of the causeway past the gate
+  const nearPortal = (x, z) => Math.hypot(x - layout.gate.exit.b[0], z - layout.gate.exit.b[1]) < 1.5
+  useExitTrigger(portalOpen && !warping, stateRef, nearPortal, () => {
+    setWarping(true)
+    setTimeout(() => setLevelClear(true), 1100)
+  })
+  // the portal opens: a fanfare, the music falls silent, and the portal's hum takes over
+  const opened = useRef(false)
+  useEffect(() => {
+    if (!portalOpen || opened.current) return
+    opened.current = true
+    sfxWarpOpen()
+    stopMusic()
+  }, [portalOpen])
+  useEffect(() => {
+    if (!portalOpen) return
+    const d = Math.hypot(here.pos[0] - layout.gate.exit.b[0], here.pos[1] - layout.gate.exit.b[1])
+    setWarpHum(Math.max(0.08, 1 - d / 16))
+  }, [portalOpen, here.pos])
+  useEffect(() => () => stopWarpHum(), [])
+  const lockedHint = useRef(false)
+  useEffect(() => {
+    if (!gateOpen || portalOpen) return
+    const near = nearPortal(...here.pos)
+    if (near && !lockedHint.current) flash(`The portal is sealed: it needs all 5 Mirror Lenses (${rewardCount} so far).`)
+    lockedHint.current = near
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [here.pos, gateOpen, portalOpen])
   const spawnHere = site ? enemies[site.id] || 0 : 0
   const sp = site && site.spines ? spineOf(site.id) : null
   const ruleState = (id) => (!sim || simSite !== here.site || t < 1 ? 'idle' : sim.rules[id] ? 'ok' : 'bad')
   const beaconsOk = sim && simSite === here.site && t >= 1 ? sim.beaconHit.every(Boolean) : null
-  const showRules = drawSite
+  const showRules = drawSite && !line
 
   return (
     <div className="screen level">
@@ -634,7 +770,7 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
           </div>
         </div>
 
-        {!line && <ShoalsMap pos={here.pos} done={done} current={here.site} next={current} gateOpen={gateOpen} />}
+        {!line && !showRules && <ShoalsMap pos={here.pos} face={here.face} done={done} current={here.site} next={current} gateOpen={gateOpen} rewards={rewards} portalOpen={portalOpen} />}
 
         {showRules && (
           <div className="rules-panel">
@@ -716,16 +852,20 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
                 ? 'Holding the loop · click to let go — or click on the next × stake to unhook it too'
                 : 'Threading… walk to lay spine · click to stop'
               : tool === 'spool'
-                ? site && loopMode(site)
+                ? site && site.id === current && !done[site.id] && !siteClear(site.id) && !loopMode(site)
+                  ? 'Clear the spawn first: press 1 for the Lash'
+                  : site && loopMode(site)
                   ? 'Walk onto a pinned stake (×) and click to grab the loop there'
                   : drawSite
                     ? site.id === 'solid_shoal'
                       ? 'Stand on the beacon · click, then click again: a one-point spine'
                       : 'Click to start the thread · walk it through the beacons · click to stop'
-                    : 'The Spool works on the reef you’re proving'
+                    : site && site.id === current && !siteClear(site.id)
+                      ? 'Clear the spawn first: press 1 for the Lash'
+                      : 'The Spool works on the reef you’re proving'
                 : drawSite && !siteClear(site.id)
                   ? 'Clear the spawn first — lash the solid ones, not the reflections'
-                  : 'WASD to move · click to crack the Lash · 2 for the Spool'}
+                  : 'WASD to move · Z / C or right-drag to turn the camera · click to crack the Lash · 2 for the Spool · Esc to pause'}
           </div>
         )}
       </div>
@@ -738,37 +878,32 @@ export default function Level03({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 0 · Level 3 · Lesson"
           name="Same Shape"
           embedded
-          onDone={() => (setLesson(false), startMirrorMusic())}
-          onSkip={() => (setLesson(false), startMirrorMusic())}
+          onDone={() => (setLesson(false), portalOpen ? null : switchMusic(nullScene ? startNullMusic : startMirrorMusic))}
+          onSkip={() => (setLesson(false), portalOpen ? null : switchMusic(nullScene ? startNullMusic : startMirrorMusic))}
         />
       )}
 
+      {warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'Same Shape, Different Look'}
+          progress={`◐ ${rewardCount} of 5 Mirror Lenses · ${proven} of 5 reefs proven`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level3', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 · Level 3 clear</span>
-            <h2>{levelMeta?.title || 'Same Shape, Different Look'}</h2>
-            <p className="def">{DEFINITION03.text}</p>
-            <p className="cite">
-              {DEFINITION03.cite}{' '}
-              <a href={DEFINITION03.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Through the Mirror Gate, the Skeleton Foundry’s forges are burning. Next: 0-4 · Some Assembly Required.</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                On to the Skeleton Foundry ▸
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 · Level 3 clear"
+          title={levelMeta?.title || 'Same Shape, Different Look'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION03}
+          onStay={() => (setLevelClear(false), setWarping(false), stepBack(stateRef, layout.gate.exit.b, layout.gate.exit.a))}
+          onNext={onNext}
+          nextLabel="On to the Skeleton Foundry ▸"
+        />
       )}
     </div>
   )

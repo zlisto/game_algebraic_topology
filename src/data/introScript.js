@@ -77,12 +77,18 @@ export function gyroidScript(t) {
     rotY,
     run,
     cast,
-    loop: easeOut(seg(t, 30.9, 32.2)),
-    loopDrop: smooth(seg(t, 32.4, 33.4)),
+    loop: 0, // the intro draws its own based loop (BasedLoop in IntroWorld)
+    loopDrop: 0,
   }
 }
 
 // ---------- Count Null choreography ----------
+/** the based loop: it leaves the anchor on the spine, rounds the gap where the walkway fell, comes home */
+export const ANCHOR = [3.7, WALK_Z]
+export function loopScript(t) {
+  return { draw: easeOut(seg(t, 30.9, 32.4)), pin: smooth(seg(t, 32.4, 33.2)) }
+}
+
 export function nullScript(t) {
   const raise = seg(t, 9.6, 11) * (1 - seg(t, 12.2, 13))
   const thrust = seg(t, 13.6, 14.4) * (1 - seg(t, 19.5, 21))
@@ -90,20 +96,24 @@ export function nullScript(t) {
   return {
     gesture: Math.max(raise * 0.7, thrust, sneer * 0.45),
     crown: Math.max(seg(t, 9.6, 10.6) * 0.6, thrust, 0.15),
-    crownY: mix(1.4, 0, smooth(seg(t, 7, 9.6))),
+    crownY: mix(0.75, 0, smooth(seg(t, 7, 9.6))), // starts low enough to stay inside the letterbox
   }
 }
 
 // ---------- ring collapse (torus → ball → point) ----------
+export const POINT_AT = 20.4 // the point hangs until here, then flashes out
 export function ringScript(t) {
   const k = smooth(seg(t, 14.6, 19))
+  const tide = t < 0 ? Math.sin(t * 0.9) * 0.22 : 0 // "the land here is soft": it breathes before the collapse
   return {
-    R: 3 * (1 - k), // hole closes as the core radius → 0
-    r: mix(0.7, 1.9, k),
-    shrink: 1 - smooth(seg(t, 19.1, 20)),
+    R: (3 + tide) * (1 - k), // hole closes as the core radius → 0
+    r: mix(0.7 - tide * 0.3, 1.9, k),
+    // the ball shrinks to a small glowing point, which hangs a moment before the flash
+    shrink: t < POINT_AT ? 1 - smooth(seg(t, 19.1, 19.8)) * 0.95 : 0,
+    point: seg(t, 19.5, 19.8),
     corrupt: seg(t, 14.2, 17),
-    flash: seg(t, 19.9, 21.2),
-    beam: seg(t, 14.0, 14.5) * (1 - seg(t, 19.6, 20.1)),
+    flash: seg(t, POINT_AT, POINT_AT + 0.6),
+    beam: seg(t, 14.0, 14.5) * (1 - seg(t, POINT_AT - 0.1, POINT_AT)),
   }
 }
 
@@ -149,8 +159,9 @@ const CAMERA = [
     // A: establishing — orbit over the Winding World
     id: 'A',
     cam: (k) => {
+      // orbit, then turn to find the black spire and the figure on it
       const a = 0.75 + 0.4 * k
-      return { pos: [Math.cos(a) * 25, 12 - 2.5 * k, Math.sin(a) * 25], target: [-1, 0, -3] }
+      return { pos: [Math.cos(a) * 25, 12 - 3.5 * k, Math.sin(a) * 25], target: mix3([-1, 0, -3], [N[0] + 2, N[1] - 1, N[2] + 2], smooth(seg(k, 0.25, 1))) }
     },
   },
   {
@@ -158,7 +169,8 @@ const CAMERA = [
     id: 'B',
     cam: (k) => {
       const e = smooth(k)
-      return { pos: nullCam(mix(4.6, 3.0, e), mix(1.2, 0.4, e), mix(0.7, 3.0, e)), target: [N[0], N[1] + mix(1.2, 2.85, e), N[2]] }
+      // pulled back enough that the mask and the descending crown clear the letterbox
+      return { pos: nullCam(mix(5.4, 4.3, e), mix(1.2, 0.4, e), mix(0.8, 2.9, e)), target: [N[0], N[1] + mix(1.6, 3.15, e), N[2]] }
     },
   },
   {
@@ -172,32 +184,35 @@ const CAMERA = [
     cam: (k) => ({ pos: mix3([13, 6.5, 15], [9.5, 4.2, 11], smooth(k)), target: mix3([-1, 0.5, -1], [0, 0.2, 0], k) }),
   },
   {
-    // D: tracking Gyroid along the crumbling walkway
+    // D: high and ahead, looking back down the walkway: Gyroid sprints toward us while the slabs
+    // fall away behind them and the amber spine stays (framed high, clear of the caption)
     id: 'D',
     cam: (k, t) => {
       const x = gyroidX(t)
-      return { pos: [x + 1.2, WALK_Y + 1.6, WALK_Z + 4.4], target: [x + 0.5, WALK_Y + 1.0, WALK_Z] }
+      return { pos: [x + 2.6, WALK_Y + 4.8, WALK_Z + 6.6], target: [x - 2.2, WALK_Y - 1.4, WALK_Z] }
     },
   },
   {
-    // E1: Gyroid stops at the edge, turns
+    // E1: over Gyroid's shoulder, back along the ruin: the slabs are gone, the spine still spans the water
     id: 'E1',
-    cam: (k) => ({ pos: mix3([8.6, 1.9, 12.4], [8.0, 1.8, 12.9], k), target: [4.6, WALK_Y + 1.15, WALK_Z] }),
+    cam: (k) => ({ pos: mix3([8.9, WALK_Y + 2.8, WALK_Z + 3.4], [8.5, WALK_Y + 3.1, WALK_Z + 3.7], smooth(k)), target: [-2, WALK_Y - 0.6, WALK_Z - 0.6] }),
   },
   {
     // E2: cast — pull back and up as the anchored loop opens
     id: 'E2',
-    cam: (k) => ({ pos: mix3([8.2, 2.2, 13.2], [10.5, 5.2, 17.5], smooth(k)), target: [4.6, WALK_Y + 0.6, WALK_Z] }),
+    cam: (k) => ({ pos: mix3([8.2, 2.6, 14.2], [9.5, 6.4, 18.5], smooth(k)), target: [2.2, WALK_Y, WALK_Z] }),
   },
   {
     // F: Count Null watches from the spire
     id: 'F',
-    cam: (k) => ({ pos: nullCam(mix(3.6, 2.8, smooth(k)), mix(0.9, 0.3, k), 2.9), target: [N[0], N[1] + 2.8, N[2]] }),
+    // from below: Null high against the sky, the gesture above the caption
+    cam: (k) => ({ pos: nullCam(mix(6.2, 5.6, smooth(k)), mix(-2.4, -1.8, k), mix(-2.2, -1.6, k)), target: [N[0], N[1] + 2.4, N[2]] }),
   },
   {
     // G: title — wide pull-back over the reef, the ring now missing
     id: 'G',
-    cam: (k) => ({ pos: mix3([12, 4.5, 21], [17, 9, 30], smooth(k)), target: mix3([3, 1, 8], [-3, 1, 0], k) }),
+    // aimed at the open water where the ring stood
+    cam: (k) => ({ pos: mix3([-9, 4.5, 9], [-13, 8.5, 14], smooth(k)), target: mix3([0, -0.6, 0], [1, -1.6, 0], k) }),
   },
 ]
 

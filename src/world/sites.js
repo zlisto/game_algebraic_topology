@@ -33,7 +33,9 @@ export function buildSites(layout) {
 export function makeSiteWalkable(layout, sites, extra = []) {
   const half = layout.causewayWidth / 2
   const segs = [...layout.causeways.map((c) => [c.a, c.b]), ...extra]
-  const inside = (x, z) => sites.some((s) => s.containsWorld(x, z)) || segs.some(([a, b]) => segDist(x, z, a, b) <= half)
+  // a reef's lagoons stay water, even where a causeway's rounded end reaches over them
+  const inHole = (x, z) => sites.some((s) => (s.def.sub || []).some((h) => h.type !== 'rect' && Math.hypot(x - s.pos[0] - h.cx, z - s.pos[1] - h.cz) < h.r))
+  const inside = (x, z) => !inHole(x, z) && (sites.some((s) => s.containsWorld(x, z)) || segs.some(([a, b]) => segDist(x, z, a, b) <= half))
   const insideForSpawn = (x, z) => sites.some((s) => s.containsWorld(x, z))
   return { inside, insideForSpawn, bounds: layout.bounds }
 }

@@ -6,7 +6,8 @@ import * as THREE from 'three'
 import CountNull from '../../characters/CountNull'
 import { LiveLine } from './FlatsScenery'
 import { petalPath } from './graphs'
-import { DevAdvance, FollowCamera } from './OverworldScene'
+import { DevAdvance } from './OverworldScene'
+import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
 import SpaceModel from './SpaceModel'
 import { GraphView } from './TimberScene'
@@ -320,7 +321,7 @@ export function Panel({ at, trial, exhibit, state }) {
   )
 }
 
-export default function CastleScene({ trial, round, panelStates, showPanels, nullScript, walkable, game, gameKey, stateRef, frameRef, spawnRef, playEnabled, tool, onEnemies, onHearts }) {
+export default function CastleScene({ trial, round, panelStates, showPanels, nullScript, walkable, game, gameKey, stateRef, frameRef, camYawRef, spawnRef, playEnabled, tool, onEnemies, onHearts }) {
   return (
     <>
       <Hall />
@@ -332,6 +333,8 @@ export default function CastleScene({ trial, round, panelStates, showPanels, nul
         PANELS.map((at, i) => <Panel key={`${trial}:${round}:${i}`} at={at} trial={trial} exhibit={round[i]} state={panelStates[i]} />)}
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -350,7 +353,7 @@ export default function CastleScene({ trial, round, panelStates, showPanels, nul
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} frameRef={frameRef} walkable={walkable} follower={false} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.9} luminanceThreshold={0.6} luminanceSmoothing={0.2} />

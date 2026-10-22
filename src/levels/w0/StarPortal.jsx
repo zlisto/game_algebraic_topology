@@ -78,11 +78,160 @@ function Hourglass() {
   )
 }
 
-/** One reward. kind = a reef stage (a Spine Shard of that shape) or 'hourglass' (a Tide Hourglass). */
+/**
+ * A Mirror Lens (0-3's reward): a silver-glass disc with a figure-eight wire on one face and a theta
+ * on the other. As it turns you see one, then the other: two looks, one homotopy type.
+ */
+const LENS_WIRES = (() => {
+  const circ = (cx, cy, rx, ry = rx) => Array.from({ length: 33 }, (_, i) => [cx + Math.cos((i / 32) * Math.PI * 2) * rx, cy + Math.sin((i / 32) * Math.PI * 2) * ry])
+  const tube = (poly, z) => new THREE.TubeGeometry(new THREE.CatmullRomCurve3(poly.map(([x, y]) => new THREE.Vector3(x, y, z)), false, 'catmullrom', 0.1), Math.max(8, poly.length * 3), 0.03, 6, false)
+  return {
+    eight: [circ(-0.17, 0, 0.17), circ(0.17, 0, 0.17)].map((p) => tube(p, 0.05)),
+    theta: [circ(0, 0, 0.32, 0.24), [[-0.32, 0], [0.32, 0]]].map((p) => tube(p, -0.05)),
+  }
+})()
+function Lens() {
+  return (
+    <group>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.46, 0.46, 0.05, 40]} />
+        <meshPhysicalMaterial color="#cfe8ff" metalness={0.9} roughness={0.08} transparent opacity={0.45} depthWrite={false} />
+      </mesh>
+      <mesh>
+        <torusGeometry args={[0.47, 0.04, 8, 48]} />
+        <meshStandardMaterial color="#e8eefc" metalness={0.9} roughness={0.2} emissive="#9fd8ff" emissiveIntensity={0.5} />
+      </mesh>
+      {LENS_WIRES.eight.map((geo, i) => (
+        <mesh key={`e${i}`} geometry={geo}>
+          <meshStandardMaterial color="#ffc861" emissive="#ff9a2a" emissiveIntensity={1.3} toneMapped={false} />
+        </mesh>
+      ))}
+      {LENS_WIRES.theta.map((geo, i) => (
+        <mesh key={`t${i}`} geometry={geo}>
+          <meshStandardMaterial color="#c8f0ff" emissive="#7fd8ff" emissiveIntensity={1.3} toneMapped={false} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+const wireTube = (pts, r = 0.03, closed = false) =>
+  new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(([x, y, z = 0]) => new THREE.Vector3(x, y, z)), closed, 'catmullrom', 0.05), Math.max(12, pts.length * 4), r, 6, closed)
+const gold = <meshStandardMaterial color="#ffc861" emissive="#ff9a2a" emissiveIntensity={1.3} toneMapped={false} />
+
+/**
+ * A Blueprint Tile (0-4): one square 2-cell with its edge word a b a⁻¹ b⁻¹ — the torus recipe —
+ * each side an arrow in its letter's colour, the four corners one point.
+ */
+const TILE = (() => {
+  const C = [[-0.32, -0.32], [0.32, -0.32], [0.32, 0.32], [-0.32, 0.32]]
+  const sides = [0, 1, 2, 3].map((i) => {
+    const [a, b] = [C[i], C[(i + 1) % 4]]
+    return wireTube([a, b], 0.028)
+  })
+  return { sides, heads: [0, 1, 2, 3].map((i) => {
+    const [a, b] = [C[i], C[(i + 1) % 4]]
+    const fwd = i < 2 // a, b forward; a⁻¹, b⁻¹ run backward
+    return { p: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], rot: Math.atan2(b[1] - a[1], b[0] - a[0]) + (fwd ? 0 : Math.PI) - Math.PI / 2 }
+  }) }
+})()
+function Tile() {
+  const COL = ['#ff7a8a', '#7fd8ff', '#ff7a8a', '#7fd8ff'] // a, b, a⁻¹, b⁻¹
+  return (
+    <group>
+      <mesh>
+        <boxGeometry args={[0.64, 0.64, 0.04]} />
+        <meshStandardMaterial color="#5a3a1a" emissive="#ff9a2a" emissiveIntensity={0.35} transparent opacity={0.7} />
+      </mesh>
+      {TILE.sides.map((geo, i) => (
+        <mesh key={i} geometry={geo} position={[0, 0, 0.03]}>
+          <meshStandardMaterial color={COL[i]} emissive={COL[i]} emissiveIntensity={1.2} toneMapped={false} />
+        </mesh>
+      ))}
+      {TILE.heads.map((h, i) => (
+        <mesh key={`h${i}`} position={[h.p[0], h.p[1], 0.04]} rotation={[0, 0, h.rot]}>
+          <coneGeometry args={[0.06, 0.12, 4]} />
+          <meshStandardMaterial color={COL[i]} emissive={COL[i]} emissiveIntensity={1.4} toneMapped={false} />
+        </mesh>
+      ))}
+      <mesh position={[-0.32, -0.32, 0.04]}>
+        <sphereGeometry args={[0.05, 8, 6]} />
+        <meshBasicMaterial color="#fff2c4" toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+/** A Cone Crystal (0-5): a glowing ring, every point of it joined by a line to one apex — the cone on a circle, a disk. */
+const CONE = (() => {
+  const ring = Array.from({ length: 33 }, (_, i) => [Math.cos((i / 32) * Math.PI * 2) * 0.34, -0.22, Math.sin((i / 32) * Math.PI * 2) * 0.34])
+  const apex = [0, 0.36, 0]
+  return { ring: wireTube(ring, 0.03, true), spokes: Array.from({ length: 10 }, (_, i) => wireTube([ring[Math.round((i / 10) * 32)], apex], 0.012)), apex }
+})()
+function ConeCrystal() {
+  return (
+    <group>
+      <mesh geometry={CONE.ring}>{gold}</mesh>
+      {CONE.spokes.map((g, i) => (
+        <mesh key={i} geometry={g}>
+          <meshStandardMaterial color="#c8f0ff" emissive="#7fd8ff" emissiveIntensity={1.1} toneMapped={false} />
+        </mesh>
+      ))}
+      <mesh position={CONE.apex}>
+        <octahedronGeometry args={[0.07, 0]} />
+        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+      </mesh>
+      <mesh position={[0, 0.07, 0]}>
+        <coneGeometry args={[0.33, 0.57, 32, 1, true]} />
+        <meshPhysicalMaterial color="#cfe8ff" transmission={0.6} roughness={0.1} transparent opacity={0.22} depthWrite={false} side={THREE.DoubleSide} />
+      </mesh>
+    </group>
+  )
+}
+
+/** A Petal Rose (0-6): three loops on one stem point — a graph with its spanning tree felled, a wedge of circles. */
+const ROSE = [0, 1, 2].map((k) => {
+  const a0 = (k / 3) * Math.PI * 2 + Math.PI / 2
+  return wireTube(
+    Array.from({ length: 25 }, (_, i) => {
+      const u = (i / 24) * Math.PI * 2
+      // a teardrop petal leaving the centre and coming back
+      const r = 0.38 * Math.sin(u / 2) ** 2
+      const a = a0 + Math.sin(u) * 0.45
+      return [Math.cos(a) * r, Math.sin(a) * r]
+    }),
+    0.028,
+  )
+})
+function PetalRose() {
+  const COL = ['#ff7a8a', '#7fd8ff', '#b9f27a']
+  return (
+    <group>
+      {ROSE.map((g, i) => (
+        <mesh key={i} geometry={g}>
+          <meshStandardMaterial color={COL[i]} emissive={COL[i]} emissiveIntensity={1.2} toneMapped={false} />
+        </mesh>
+      ))}
+      <mesh>
+        <sphereGeometry args={[0.06, 10, 8]} />
+        <meshBasicMaterial color="#fff2c4" toneMapped={false} />
+      </mesh>
+      <mesh position={[0, -0.32, 0]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.56, 6]} />
+        <meshStandardMaterial color="#6fae5a" emissive="#3a7a2a" emissiveIntensity={0.6} />
+      </mesh>
+    </group>
+  )
+}
+
+const MODELS = { hourglass: Hourglass, lens: Lens, tile: Tile, cone: ConeCrystal, rose: PetalRose }
+
+/** One reward. kind = a reef stage (a Spine Shard of that shape), 'hourglass' (a Tide Hourglass) or 'lens' (a Mirror Lens). */
 export function Star({ pos, state, kind = 'walkway' }) {
   const g = useRef()
   const takenAt = useRef(null) // scene-clock time it was collected
-  const tubes = useMemo(() => (kind === 'hourglass' ? [] : spineGeometry(kind)), [kind])
+  const Model = MODELS[kind]
+  const tubes = useMemo(() => (MODELS[kind] ? [] : spineGeometry(kind)), [kind])
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
     if (!g.current) return
@@ -101,7 +250,7 @@ export function Star({ pos, state, kind = 'walkway' }) {
   })
   return (
     <group ref={g}>
-      {kind === 'hourglass' && <Hourglass />}
+      {Model && <Model />}
       {tubes.map((geo, i) => (
         <mesh key={i} geometry={geo}>
           <meshStandardMaterial color="#ffc861" emissive="#ff9a2a" emissiveIntensity={1.2} metalness={0.5} roughness={0.25} toneMapped={false} />

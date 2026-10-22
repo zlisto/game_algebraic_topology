@@ -12,7 +12,7 @@ export const HOLD_EPS = 0.001
 export function makeGate(captions, acked, held) {
   return (t0, t1) => {
     for (const c of captions) {
-      if (acked.has(c.t)) continue
+      if (c.hold === false || acked.has(c.t)) continue // narration plays straight through
       const stop = c.end - HOLD_EPS
       if (t1 >= stop && t0 <= stop + 1e-6 && t0 >= c.t - 0.5) {
         held.current = c.t

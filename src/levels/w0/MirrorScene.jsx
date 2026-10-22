@@ -7,8 +7,12 @@ import Seascape from '../../world/Seascape'
 import { LAND } from '../../theme/palette'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { LiveLine, Post } from './FlatsScenery'
-import { DevAdvance, FollowCamera, SiteReef } from './OverworldScene'
+import { DevAdvance, SiteReef } from './OverworldScene'
+import ChaseCamera from './ChaseCamera'
+import EmmyFollower from './EmmyFollower'
+import { Star, WarpPortal } from './StarPortal'
 import ReefGame from './ReefGame'
+import CountNull from '../../characters/CountNull'
 import { grabPin, ribbonLength, ribbonPieces, stepRibbon } from './ribbon'
 
 /**
@@ -228,8 +232,14 @@ export default function MirrorScene({
   onEnemies,
   onHearts,
   onSpooling,
+  camYawRef,
+  talkingRef,
+  rewards = [],
+  portal,
+  nullAt,
 }) {
   const loopSites = sites.filter((s) => s.loop)
+  const nullScript = useMemo(() => () => ({ gesture: 0.5 + Math.sin(Date.now() / 900) * 0.3, crown: 0.6, crownY: 0 }), [])
   return (
     <>
       <color attach="background" args={['#050913']} />
@@ -242,9 +252,9 @@ export default function MirrorScene({
       <MirrorSea channel={layout.channel} />
 
       {layout.causeways.map((c, i) => (
-        <CausewaySlab key={i} a={c.a} b={c.b} />
+        <CausewaySlab key={i} a={c.a} b={c.b} width={layout.causewayWidth} />
       ))}
-      {gateOpen && <CausewaySlab a={layout.gate.exit.a} b={layout.gate.exit.b} />}
+      {gateOpen && <CausewaySlab a={layout.gate.exit.a} b={layout.gate.exit.b} width={layout.causewayWidth} />}
       {sites.map((s) => (
         <Plinth key={`p${s.id}`} site={s} />
       ))}
@@ -271,9 +281,18 @@ export default function MirrorScene({
       ))}
       <LoopSystem loopsRef={loopsRef} stateRef={stateRef} />
       <MirrorGate pos={layout.gate.pos} lit={gateLit} open={gateOpen} />
+      {nullAt && (
+        <group position={[nullAt[0], 0, nullAt[1]]} rotation={[0, -2.2, 0]} scale={0.6}>
+          <CountNull script={nullScript} />
+          <pointLight position={[0, 2, 0]} intensity={6} distance={8} color="#a259ff" />
+        </group>
+      )}
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -290,7 +309,12 @@ export default function MirrorScene({
         onHearts={onHearts}
         onSpooling={onSpooling}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      {rewards.map((r) => (
+        <Star key={r.id} {...r} />
+      ))}
+      {portal && <WarpPortal {...portal} />}
+      <EmmyFollower stateRef={stateRef} talkingRef={talkingRef} camYawRef={camYawRef} walkable={walkable} />
+      <ChaseCamera stateRef={stateRef} yawRef={camYawRef} overheadRef={frameRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.65} luminanceSmoothing={0.2} />

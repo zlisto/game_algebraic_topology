@@ -29,6 +29,8 @@ import {
 } from '../audio/chip'
 import CellsLesson, { CellsLessonOverlay } from '../movies/CellsLesson'
 import MathText from './MathText'
+import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
+import { landNear, useWarpLevel } from './warpLevel'
 
 /**
  * World 0 · Level 4 "Some Assembly Required" — the Skeleton Foundry's Assembly Hall.
@@ -47,6 +49,8 @@ const TYPE_CPS = 45
 const FOLD_SECONDS = 2.6
 const SITES = buildSites(layout)
 const SITE = Object.fromEntries(SITES.map((s) => [s.id, s]))
+/** where each station's reward waits once it's done: on the station, beside its machine */
+const REWARD_AT = Object.fromEntries(SITES.filter((s) => s.stage === 'station').map((s) => [s.id, landNear(s, Math.abs(s.pos[0]) < 1 && s.pos[1] < 0 ? [s.pos[0], s.pos[1] - 2.6] : [s.pos[0] + 2.6 * (Math.sign(s.pos[0]) || 1), s.pos[1] + 2.2])]))
 const TRACKS = Object.fromEntries(SITES.filter((s) => s.tracks).map((s) => [s.id, s.tracks.map((t) => makeTrack(t, s.pos))]))
 const PORTRAIT_CROP = {
   gyroid: ['400%', '63%', '9%'],
@@ -128,6 +132,11 @@ function WordPolygon({ word, size = 120 }) {
   )
 }
 
+const END_CARD = {
+  learned: "Every space we pressed was built the same way: one point, then edges, then disks glued along their rims by a word. Crush a disk’s rim to the point and you get a sphere. Glue it along a b a⁻¹ b⁻¹ and it’s a torus; along a a, the projective plane; along a b a⁻¹ b, the Klein bottle. And χ = V − E + F counts what you built: 2, 0, 1, 0.",
+  ahead: "The Cone Zone, up on the cliff: machines that make new spaces from old ones. Cone a space and it becomes contractible; suspend it and it climbs a dimension. Wedges and products too. Null’s Coners will try to plug every pedestal.",
+}
+
 export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-4')
   const skipTo = Math.max(0, STATION_ORDER.indexOf(startAt))
@@ -162,6 +171,9 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const [toast, setToast] = useState(null)
   const [here, setHere] = useState({ site: null, pos: checkpoint })
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking up the level from the landing
+  const camYawRef = useRef(Math.atan2(layout.start[0] - layout.exit.a[0], layout.start[1] - layout.exit.a[1]))
+  const talkingRef = useRef(false)
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
   const ribbonApi = useRef(null)
@@ -492,13 +504,8 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       else if (e.code === 'KeyQ') setTool((w) => (w === 'lash' ? 'smith' : 'lash'))
       else if (e.code === 'KeyR') setWord([])
     }
-    const wheel = (e) => Math.abs(e.deltaY) > 4 && setTool((w) => (w === 'lash' ? 'smith' : 'lash'))
     window.addEventListener('keydown', key)
-    window.addEventListener('wheel', wheel, { passive: true })
-    return () => {
-      window.removeEventListener('keydown', key)
-      window.removeEventListener('wheel', wheel)
-    }
+    return () => window.removeEventListener('keydown', key)
   }, [])
 
   // ---------- talking to Emmy: walk up to her and press E (or the button) for advice
@@ -581,7 +588,22 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   }, [])
 
   // ---------- game layer
-  const playEnabled = (phase === 'play' || phase === 'clear') && !lesson && !chiOpen && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = talking
+  const warp = useWarpLevel({
+    ids: STATION_ORDER,
+    done,
+    posOf: (id) => REWARD_AT[id],
+    stateRef,
+    exitOpen,
+    portalAt: layout.exit.b,
+    hearts,
+    flash,
+    stopMusic,
+    onClear: () => setLevelClear(true),
+    noun: { icon: '▣', one: 'Blueprint Tile', many: 'Blueprint Tiles', kind: 'tile' },
+  })
+  const playEnabled = (phase === 'play' || phase === 'clear') && !lesson && !chiOpen && !levelClear && !paused && !warp.warping
   const gameKey = `foundry:${knockouts}`
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, exitOpen ? [[layout.exit.a, layout.exit.b]] : []), [exitOpen])
   const game = useMemo(() => {
@@ -595,9 +617,8 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey])
   frameRef.current = current && here.site === current && met[current] ? { center: SITE[current].pos, size: 12.5 } : null
-  useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
-  if (import.meta.env.DEV) window.__lvl4 = { here, done, goalIdx, complexes, word, phase, enemies, setTool, current, goal, trackers: trackers.current, progressRef, working, TRACKS } // dev
+  if (import.meta.env.DEV) window.__lvl4 = { warp, clear: () => setLevelClear(true), proveAll: () => (setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true]))), setExitOpen(true)), rewardAt: REWARD_AT, here, done, goalIdx, complexes, word, phase, enemies, setTool, current, goal, trackers: trackers.current, progressRef, working, TRACKS } // dev
 
   const scene = (
     <FoundryScene
@@ -626,11 +647,15 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
       onAction={onAction}
       onEnemies={(by) => setEnemies(by)}
       onHearts={setHearts}
+      camYawRef={camYawRef}
+      talkingRef={talkingRef}
+      stars={warp.stars}
+      portal={warp.portal}
     />
   )
 
   const nDone = STATION_ORDER.filter((id) => done[id]).length
-  const objective = exitOpen ? 'Walk through the forge door to the Cone Zone' : current ? `Presses ${nDone}/4 · next: ${SITE[current].name}` : ''
+  const objective = warp.objective(current ? `Presses ${nDone}/4 · next: ${SITE[current].name}` : '')
   const atStation = current && here.site === current && met[current]
   const target = goal?.type === 'disk' ? parseWord(goal.word) : null
   const V = cx.point ? 1 : 0
@@ -786,7 +811,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
 
         {toast && !line && <div className="toast">{toast}</div>}
 
-        {!levelClear && !line && !chiOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" />}
+        {!levelClear && !line && !chiOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Skeleton Foundry" face={warp.face} marks={warp.marks} markIcon="▣" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
         {canTalk && (
           <button type="button" className="btn talk-btn" onClick={(e) => (talkToEmmy(), e.currentTarget.blur())}>
@@ -821,40 +846,37 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
           kicker="World 0 · Level 4 · Lesson"
           name="Built from Cells"
           embedded
-          onDone={() => (setLesson(false), startForgeMusic())}
-          onSkip={() => (setLesson(false), startForgeMusic())}
+          onDone={() => (setLesson(false), warp.portalOpen ? null : startForgeMusic())}
+          onSkip={() => (setLesson(false), warp.portalOpen ? null : startForgeMusic())}
         />
       )}
 
+      {warp.warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'Some Assembly Required'}
+          progress={`▣ ${warp.count} of ${warp.total} Blueprint Tiles`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level4', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 · Level 4 clear</span>
-            <h2>{levelMeta?.title || 'Some Assembly Required'}</h2>
-            <p className="def">{DEFINITION04.text}</p>
-            <p className="cite">
-              {DEFINITION04.cite}{' '}
-              <a href={DEFINITION04.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Beyond the forge door: the Cone Zone. Next: 0-5 · Cone Zone.</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn" onClick={() => onGo('movie0b')} title="A sealed side door off the Assembly Hall">
-                Bonus ▸ 0-B
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                Continue ▸ 0-5
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 · Level 4 clear"
+          title={levelMeta?.title || 'Some Assembly Required'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION04}
+          onStay={() => (setLevelClear(false), warp.stay(layout.exit.a))}
+          onNext={onNext}
+          nextLabel="On to the Cone Zone ▸"
+          extra={
+            <button type="button" className="btn" onClick={() => onGo('movie0b')} title="A sealed side door off the Assembly Hall">
+              Bonus ▸ 0-B
+            </button>
+          }
+        />
       )}
     </div>
   )

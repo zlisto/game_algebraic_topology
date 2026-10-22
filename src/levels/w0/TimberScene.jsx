@@ -7,7 +7,8 @@ import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { LiveLine } from './FlatsScenery'
 import { edgePath, felledAt } from './graphs'
-import { DevAdvance, FollowCamera } from './OverworldScene'
+import { DevAdvance } from './OverworldScene'
+import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
 import { EmmyBubble } from './FoundryScene'
 import Seascape from '../../world/Seascape'
@@ -251,6 +252,10 @@ export default function TimberScene({
   gameKey,
   stateRef,
   frameRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   spawnRef,
   ribbonApi,
   playEnabled,
@@ -316,6 +321,9 @@ export default function TimberScene({
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -334,7 +342,7 @@ export default function TimberScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

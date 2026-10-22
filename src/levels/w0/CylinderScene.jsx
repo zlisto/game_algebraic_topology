@@ -6,7 +6,8 @@ import * as THREE from 'three'
 import Emmy from '../../characters/Emmy'
 import { LiveLine } from './FlatsScenery'
 import { allCells, canFill, edgeAt, faceRim, inA, vertAt } from './hep'
-import { DevAdvance, FollowCamera } from './OverworldScene'
+import { DevAdvance } from './OverworldScene'
+import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
 import { Gear } from '../../world/Dressing'
 
@@ -311,7 +312,7 @@ export function Glass() {
   )
 }
 
-export default function CylinderScene({ cx, filled, fillKs, refusedRef, exitOpen, emmyAt, emmyTalking, walkable, game, gameKey, stateRef, frameRef, playEnabled, onAction, onEnemies, onHearts }) {
+export default function CylinderScene({ cx, filled, fillKs, refusedRef, exitOpen, emmyAt, emmyTalking, walkable, game, gameKey, stateRef, frameRef, camYawRef, playEnabled, onAction, onEnemies, onHearts }) {
   const emmyScript = useMemo(
     () => () => {
       const at = emmyAt.current
@@ -339,6 +340,7 @@ export default function CylinderScene({ cx, filled, fillKs, refusedRef, exitOpen
       </group>
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -357,7 +359,7 @@ export default function CylinderScene({ cx, filled, fillKs, refusedRef, exitOpen
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} frameRef={frameRef} walkable={walkable} follower={false} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.8} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

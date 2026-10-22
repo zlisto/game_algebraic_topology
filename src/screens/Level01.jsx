@@ -8,6 +8,7 @@ import { DEFINITION, HINTS, RULES, STAGES } from '../levels/w0/stages01'
 import { SITE, SITES, gateSegments, layout, makeWalkable, siteAt, worldToMap } from '../world/reef'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, setWarpHum, sfxCorrect, sfxWarpOpen, sfxWrong, startReefMusic, stopReefMusic, stopWarpHum, textBlip, unlockAudio } from '../audio/chip'
 import { WarpIcon } from './LevelChrome'
+import { stepBack } from './warpLevel'
 import MathText from './MathText'
 
 /**
@@ -866,7 +867,7 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
               </p>
             </details>
             <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
+              <button type="button" className="btn" onClick={() => (setLevelClear(false), setWarping(false), stepBack(stateRef, layout.gate.b, layout.gate.a))}>
                 Keep exploring
               </button>
               <button type="button" className="btn primary" onClick={onNext}>

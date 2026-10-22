@@ -8,7 +8,10 @@ import ReefScenery from '../world/ReefScenery'
 import Gyroid from '../characters/Gyroid'
 import CountNull, { CROWN_Y } from '../characters/CountNull'
 import {
+  ANCHOR,
   INTRO_START,
+  loopScript,
+  POINT_AT,
   NULL_POS,
   NULL_ROT_Y,
   RING,
@@ -29,6 +32,25 @@ import {
 const STONE = new THREE.Color(LAND.stone)
 const ROUTE = new THREE.Color(LAND.causeway) // causeway glow
 const VIOLET = new THREE.Color('#8a3cff')
+const WHITE = new THREE.Color('#ffffff')
+const LILAC = new THREE.Color('#b99cff')
+const easeOutQ = (x) => 1 - (1 - x) ** 3
+/** a soft white disc, transparent at the edge: the flash */
+const GLOW = (() => {
+  const c = document.createElement('canvas')
+  c.width = c.height = 128
+  const g = c.getContext('2d')
+  const r = g.createRadialGradient(64, 64, 0, 64, 64, 64)
+  r.addColorStop(0, 'rgba(255,255,255,1)')
+  r.addColorStop(0.18, 'rgba(240,225,255,0.85)')
+  r.addColorStop(0.45, 'rgba(180,140,255,0.25)')
+  r.addColorStop(1, 'rgba(120,80,255,0)')
+  g.fillStyle = r
+  g.fillRect(0, 0, 128, 128)
+  const tex = new THREE.CanvasTexture(c)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+})()
 
 // ---------------------------------------------------------------- islands
 
@@ -38,6 +60,8 @@ function RingIsland() {
   const mat = useRef()
   const flash = useRef()
   const beacons = useRef()
+  const windows = useRef()
+  const glow = useRef()
   const SEG_U = 96
   const SEG_V = 32
   const geo = useMemo(() => new THREE.TorusGeometry(1, 0.3, SEG_V, SEG_U), [])
@@ -66,9 +90,18 @@ function RingIsland() {
     group.current.position.y = s.corrupt * 1.5 // lifted out of the sea as Null's beam takes it, so the ball reads whole
     group.current.visible = s.shrink > 0.001
     group.current.rotation.y = t * 0.05
-    mat.current.color.copy(STONE).lerp(VIOLET, s.corrupt * 0.6)
-    mat.current.emissive.copy(STONE).lerp(VIOLET, s.corrupt)
-    mat.current.emissiveIntensity = 0.35 + s.corrupt * 0.9 + Math.sin(t * 20) * 0.2 * s.corrupt
+    // lit, not glowing: keep the emissive low so the ball shows its shading — until it's a point, which burns white
+    mat.current.color.copy(STONE).lerp(LILAC, s.corrupt * 0.6).lerp(WHITE, s.point)
+    mat.current.emissive.copy(STONE).lerp(VIOLET, s.corrupt).lerp(WHITE, s.point)
+    mat.current.emissiveIntensity = 0.12 + s.corrupt * 0.1 + Math.max(0, Math.sin(t * 20)) * 0.12 * s.corrupt + s.point * 6
+    glow.current.intensity = s.corrupt * 14 * (1 - s.point * 0.3) * (t < POINT_AT ? 1 : 0)
+    windows.current.children.forEach((w, i) => {
+      const a = (i / windows.current.children.length) * Math.PI * 2 + 0.2
+      const rr = s.R + (i % 2 ? 0.32 : -0.32) * s.r
+      w.position.set(Math.cos(a) * rr, s.r * 0.53, Math.sin(a) * rr)
+      w.rotation.y = -a
+      w.visible = s.corrupt < 0.5 && (i * 7) % 5 !== 0 // a few windows dark, the rest lit: people live here
+    })
 
     beacons.current.children.forEach((b, i) => {
       const a = (i / 8) * Math.PI * 2
@@ -76,9 +109,10 @@ function RingIsland() {
       b.scale.setScalar(1 - s.corrupt)
     })
 
+    // a small, fast white flash where the point was
     const f = s.flash
     flash.current.visible = f > 0 && f < 1
-    flash.current.scale.setScalar(0.2 + f * 9)
+    flash.current.scale.setScalar(1 + easeOutQ(f) * 9)
     flash.current.position.y = 1.5
     flash.current.material.opacity = (1 - f) ** 2
   })
@@ -89,6 +123,15 @@ function RingIsland() {
         <mesh geometry={geo}>
           <meshStandardMaterial ref={mat} color={LAND.stone} roughness={0.55} metalness={0.15} emissive={LAND.stone} emissiveIntensity={0.25} />
         </mesh>
+        <pointLight ref={glow} color="#f0e4ff" intensity={0} distance={14} position={[-4.5, 4, 0.5]} />
+        <group ref={windows}>
+          {Array.from({ length: 22 }, (_, i) => (
+            <mesh key={i}>
+              <boxGeometry args={[0.16, 0.12, 0.05]} />
+              <meshBasicMaterial color="#ffb860" toneMapped={false} />
+            </mesh>
+          ))}
+        </group>
         <group ref={beacons}>
           {Array.from({ length: 8 }, (_, i) => (
             <mesh key={i}>
@@ -98,10 +141,9 @@ function RingIsland() {
           ))}
         </group>
       </group>
-      <mesh ref={flash}>
-        <sphereGeometry args={[1, 32, 16]} />
-        <meshBasicMaterial color="#d9b8ff" transparent opacity={0} toneMapped={false} depthWrite={false} blending={THREE.AdditiveBlending} />
-      </mesh>
+      <sprite ref={flash}>
+        <spriteMaterial map={GLOW} color="#f4e8ff" transparent opacity={0} toneMapped={false} depthWrite={false} blending={THREE.AdditiveBlending} />
+      </sprite>
     </group>
   )
 }
@@ -120,11 +162,13 @@ function Causeway({ a, b, lift = 2.5, fromRing = false }) {
   useFrame(({ clock }) => {
     if (!fromRing) return
     const t = clock.elapsedTime
-    const f = seg(t, 19.6, 22.5)
-    ref.current.position.y = -9 * f * f
-    ref.current.rotation.z = f * 0.25
+    // the ring is torn up out of the sea: its causeways jolt, snap at the ring end and fall
+    const jolt = t > 14.8 && t < 15.3 ? Math.sin(t * 90) * 0.06 : 0
+    const f = seg(t, 15.2, 17.6)
+    ref.current.position.y = -7 * f * f + jolt
+    ref.current.rotation.z = f * 0.3
     mat.current.opacity = 1 - f
-    mat.current.emissive.copy(ROUTE).lerp(VIOLET, seg(t, 15, 18))
+    mat.current.emissive.copy(ROUTE).lerp(VIOLET, seg(t, 14.4, 15.2))
   })
   return (
     <mesh ref={ref} geometry={geo}>
@@ -206,6 +250,11 @@ function Walkway() {
 // ---------------------------------------------------------------- Null's spire + beam
 
 function Spire() {
+  const spikes = useRef([])
+  useFrame(({ clock }) => {
+    const on = clock.elapsedTime >= 0 ? 1.2 : 0 // lit once Null is home
+    for (const m of spikes.current) if (m) m.emissiveIntensity = on
+  })
   return (
     <group position={[NULL_POS[0], 0, NULL_POS[2]]}>
       <mesh position={[0, (NULL_POS[1] - 7) / 2 - 0.15, 0]}>
@@ -221,7 +270,7 @@ function Spire() {
         return (
           <mesh key={i} position={[Math.cos(a) * 1.05, NULL_POS[1] + 0.35, Math.sin(a) * 1.05]} rotation={[Math.sin(a) * 0.3, 0, -Math.cos(a) * 0.3]}>
             <coneGeometry args={[0.07, 0.8, 4]} />
-            <meshStandardMaterial color="#0d0a12" emissive="#a259ff" emissiveIntensity={1.2} toneMapped={false} />
+            <meshStandardMaterial ref={(m) => (spikes.current[i] = m)} color="#0d0a12" emissive="#a259ff" emissiveIntensity={0} toneMapped={false} />
           </mesh>
         )
       })}
@@ -232,7 +281,7 @@ function Spire() {
 function CollapseBeam() {
   const ref = useRef()
   const from = useMemo(() => new THREE.Vector3(NULL_POS[0], NULL_POS[1] + CROWN_Y + 0.03, NULL_POS[2]), [])
-  const to = useMemo(() => new THREE.Vector3(RING[0], RING[1] + 0.3, RING[2]), [])
+  const to = useMemo(() => new THREE.Vector3(RING[0], RING[1] + 1.5, RING[2]), []) // the ball's centre once it's lifted
   const { mid, quat, len } = useMemo(() => {
     const d = to.clone().sub(from)
     return {
@@ -256,6 +305,101 @@ function CollapseBeam() {
   )
 }
 
+/** thin spiral arms of a whirlpool, drawn in the xy-plane */
+const ARMS = [0, 1, 2, 3].map((j) => {
+  const pts = Array.from({ length: 40 }, (_, i) => {
+    const u = i / 39
+    const a = j * (Math.PI / 2) + u * Math.PI * 1.6
+    const r = 0.3 + u * 3.2
+    return new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0)
+  })
+  return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, 0.05, 4, false)
+})
+
+/** Where the Ringed Isle stood: a slow violet whirlpool, and the snapped stumps of its causeways. */
+function EmptySite() {
+  const g = useRef()
+  const swirl = useRef()
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime
+    const k = seg(t, 21, 24)
+    g.current.visible = k > 0
+    swirl.current.rotation.z = -t * 0.6
+    for (const m of swirl.current.children) m.material.opacity = 0.45 * k
+  })
+  return (
+    <group ref={g} position={[RING[0], -0.44, RING[2]]}>
+      <group ref={swirl} rotation={[-Math.PI / 2, 0, 0]}>
+        {ARMS.map((geo, i) => (
+          <mesh key={i} geometry={geo}>
+            <meshBasicMaterial color="#9a5cff" transparent opacity={0} toneMapped={false} depthWrite={false} blending={THREE.AdditiveBlending} />
+          </mesh>
+        ))}
+      </group>
+      {[
+        [-1.4, 2.6],
+        [-2.9, 0.4],
+        [-0.9, -2.8],
+        [2.9, -0.6],
+      ].map(([x, z], i) => (
+        <mesh key={i} position={[x * 1.35, 0.2, z * 1.35]} rotation={[0.5, Math.atan2(x, z), 0.3]}>
+          <cylinderGeometry args={[0.1, 0.14, 0.9, 6]} />
+          <meshStandardMaterial color={LAND.causewayCore} emissive="#6a3aa0" emissiveIntensity={0.6} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
+/** "Every loop I walk starts here": a loop that leaves the anchor on the spine, rounds the gap where the walkway fell, and comes back. */
+function BasedLoop() {
+  const tube = useRef()
+  const pin = useRef()
+  const geo = useMemo(() => {
+    const L = 5.4
+    const Wd = 2.4
+    const pts = Array.from({ length: 97 }, (_, i) => {
+      const th = (i / 96) * Math.PI * 2
+      return new THREE.Vector3(ANCHOR[0] - L * Math.sin(th / 2) ** 2, WALK_Y + 0.12, ANCHOR[1] + Wd * Math.sin(th) * Math.sin(th / 2))
+    })
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 160, 0.035, 6, true)
+  }, [])
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime
+    const s = loopScript(t)
+    tube.current.visible = s.draw > 0
+    geo.setDrawRange(0, Math.floor(geo.index.count * s.draw / 3) * 3)
+    tube.current.material.emissiveIntensity = 2 + s.pin * 1.5 + Math.sin(t * 5) * 0.3
+    pin.current.visible = s.draw > 0
+    pin.current.scale.setScalar(0.6 + s.pin * 0.8)
+  })
+  return (
+    <group>
+      <mesh ref={tube} geometry={geo}>
+        <meshStandardMaterial color="#ffcf7a" emissive="#ffb347" emissiveIntensity={2} toneMapped={false} />
+      </mesh>
+      {/* the anchor: the basepoint every loop starts and ends at */}
+      <mesh ref={pin} position={[ANCHOR[0], WALK_Y + 0.25, ANCHOR[1]]}>
+        <octahedronGeometry args={[0.16, 0]} />
+        <meshStandardMaterial color="#fff2c4" emissive="#ffd27a" emissiveIntensity={3} toneMapped={false} />
+      </mesh>
+    </group>
+  )
+}
+
+/** Count Null, who is not on his spire until the narrator turns to find him. */
+function NullOnSpire() {
+  const ref = useRef()
+  useFrame(({ clock }) => {
+    ref.current.visible = clock.elapsedTime >= 0
+  })
+  return (
+    <group ref={ref} position={NULL_POS} rotation={[0, NULL_ROT_Y, 0]}>
+      <CountNull script={nullScript} />
+    </group>
+  )
+}
+
 // ---------------------------------------------------------------- camera
 
 /**
@@ -263,7 +407,7 @@ function CollapseBeam() {
  * clock.elapsedTime, which every other useFrame in the scene reads.
  * Priority -1 runs it before them each frame.
  */
-function Director({ onTick, gate }) {
+function Director({ onTick, gate, audioWall }) {
   const { camera, clock } = useThree()
   const look = useMemo(() => new THREE.Vector3(), [])
   // dev: ?t=20 jumps to story time 20; add &pause to hold that frame
@@ -273,14 +417,18 @@ function Director({ onTick, gate }) {
     if (wall.current === null) wall.current = wallAt(params.has('t') ? Number(params.get('t')) : INTRO_START)
     else if (!params.has('pause')) {
       // captions hold the movie until clicked through (gate returns the time to stop at)
-      const next = wall.current + Math.min(dt, 0.1)
+      let next = wall.current + Math.min(dt, 0.1)
+      // the score runs on the audio clock: if the picture fell behind it (a slow frame), catch up
+      const heard = audioWall?.()
+      if (heard != null && heard > next) next = Math.min(heard, wall.current + 0.5)
+      else if (heard != null && heard < next - 0.04) next = Math.max(wall.current, wall.current + Math.min(dt, 0.1) * 0.6) // music behind: slow the picture to let it catch up
       const stop = gate ? gate(storyAt(wall.current), storyAt(next)) : null
       wall.current = stop === null ? next : Math.max(wall.current, wallAt(stop))
     }
     const t = storyAt(wall.current)
     clock.elapsedTime = t
     const { pos, target } = cameraAt(t)
-    const shake = seg(t, 19.8, 20.2) * (1 - seg(t, 20.2, 21.2)) * 0.25
+    const shake = seg(t, POINT_AT, POINT_AT + 0.15) * (1 - seg(t, POINT_AT + 0.15, POINT_AT + 1)) * 0.25
     camera.position.set(
       pos[0] + (Math.random() - 0.5) * shake,
       pos[1] + (Math.random() - 0.5) * shake,
@@ -295,7 +443,7 @@ function Director({ onTick, gate }) {
 
 // ---------------------------------------------------------------- scene
 
-export default function IntroWorld({ onTick, gate }) {
+export default function IntroWorld({ onTick, gate, audioWall }) {
   return (
     <>
       <color attach="background" args={['#060912']} />
@@ -320,13 +468,13 @@ export default function IntroWorld({ onTick, gate }) {
       <Walkway />
       <Spire />
       <CollapseBeam />
+      <EmptySite />
+      <BasedLoop />
 
-      <group position={NULL_POS} rotation={[0, NULL_ROT_Y, 0]}>
-        <CountNull script={nullScript} />
-      </group>
+      <NullOnSpire />
       <Gyroid script={gyroidScript} />
 
-      <Director onTick={onTick} gate={gate} />
+      <Director onTick={onTick} gate={gate} audioWall={audioWall} />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={1.1} luminanceThreshold={0.6} luminanceSmoothing={0.2} />
         <Vignette offset={0.25} darkness={0.75} />

@@ -6,7 +6,8 @@ import * as THREE from 'three'
 import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { EmmyBubble, ForgeDoor } from './FoundryScene'
-import { DevAdvance, FollowCamera } from './OverworldScene'
+import { DevAdvance } from './OverworldScene'
+import OverworldKit from './OverworldKit'
 import ReefGame from './ReefGame'
 import Seascape from '../../world/Seascape'
 import { Clouds } from '../../world/Dressing'
@@ -234,6 +235,10 @@ export default function ConeScene({
   gameKey,
   stateRef,
   frameRef,
+  camYawRef,
+  talkingRef,
+  stars,
+  portal,
   spawnRef,
   ribbonApi,
   playEnabled,
@@ -291,6 +296,9 @@ export default function ConeScene({
 
       <ReefGame
         key={gameKey}
+        camYawRef={camYawRef}
+        elixirs
+        purge={!!portal?.open}
         stage={game}
         shape={walkable}
         playEnabled={playEnabled}
@@ -309,7 +317,7 @@ export default function ConeScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      <OverworldKit stateRef={stateRef} camYawRef={camYawRef} talkingRef={talkingRef} frameRef={frameRef} walkable={walkable} stars={stars} portal={portal} exitFrom={layout.exit.a} follower={false} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

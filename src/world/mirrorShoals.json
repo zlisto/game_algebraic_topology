@@ -1,5 +1,5 @@
 {
-  "note": "Mirror Shoals (World 0 \u00b7 Level 3) in level-local units: x east, z south. A glassy channel runs north\u2013south down x = 0; reefs sit on either side, joined by causeways that cross it. Sites are reefs (shapes in site-local units, as in retractReef.json).",
+  "note": "Mirror Shoals (World 0 · Level 3) in level-local units: x east, z south. A glassy channel runs north–south down x = 0; reefs sit on either side, joined by causeways that cross it. Sites are reefs (shapes in site-local units, as in retractReef.json).",
   "bounds": {
     "minX": -20,
     "maxX": 20,
@@ -10,7 +10,7 @@
     "x0": -2.6,
     "x1": 2.6
   },
-  "causewayWidth": 1.3,
+  "causewayWidth": 2.4,
   "start": [
     0,
     13
@@ -232,6 +232,11 @@
           "mirror",
           1.8,
           1.9
+        ],
+        [
+          "projective",
+          0.0,
+          -1.2
         ]
       ]
     },
@@ -340,6 +345,11 @@
           "mirror",
           2.6,
           1.4
+        ],
+        [
+          "klein",
+          0.0,
+          1.2
         ]
       ]
     },
@@ -409,6 +419,11 @@
           "torus",
           0,
           1
+        ],
+        [
+          "klein",
+          0.0,
+          -1.0
         ]
       ]
     }

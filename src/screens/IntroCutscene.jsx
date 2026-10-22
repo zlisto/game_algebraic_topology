@@ -102,7 +102,8 @@ export default function IntroCutscene({ concept, onSkipIntro, onIntroDone }) {
     },
     [onIntroDone],
   )
-  const scene = useMemo(() => <IntroWorld onTick={onTick} gate={gate} />, [onTick, gate])
+  const audioWall = useCallback(() => score.current?.wallNow?.() ?? null, [])
+  const scene = useMemo(() => <IntroWorld onTick={onTick} gate={gate} audioWall={audioWall} />, [onTick, gate, audioWall])
 
   // the pre-composed score is timed to the movie, so it pauses while a line waits —
   // and a soft chord in the same key carries the music until the player moves on

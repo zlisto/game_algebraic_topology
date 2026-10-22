@@ -63,7 +63,7 @@ export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
 }
 
 /** Emmy sums up the level: what we learned, what lies ahead; the formal definition tucked beneath. */
-export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay, onNext, nextLabel }) {
+export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay, onNext, nextLabel, extra }) {
   return (
     <div className="win-banner exit">
       <div className="win-card wide">
@@ -99,6 +99,7 @@ export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay,
           <button type="button" className="btn" onClick={onStay}>
             Keep exploring
           </button>
+          {extra}
           <button type="button" className="btn primary" onClick={onNext}>
             {nextLabel}
           </button>

@@ -28,6 +28,8 @@ import {
 } from '../audio/chip'
 import TimberLesson, { TimberLessonOverlay } from '../movies/TimberLesson'
 import MathText from './MathText'
+import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
+import { landNear, useWarpLevel } from './warpLevel'
 
 /**
  * World 0 · Level 6 "Timber!" — the Timber Yard.
@@ -44,6 +46,8 @@ const TYPE_CPS = 45
 const FELL_SECONDS = 2.4
 const SITES = buildSites(layout)
 const SITE = Object.fromEntries(SITES.map((s) => [s.id, s]))
+/** where each station's reward waits once it's done: on the station, beside its machine */
+const REWARD_AT = Object.fromEntries(SITES.filter((s) => s.stage === 'station').map((s) => [s.id, landNear(s, Math.abs(s.pos[0]) < 1 && s.pos[1] < 0 ? [s.pos[0], s.pos[1] - 2.6] : [s.pos[0] + 2.6 * (Math.sign(s.pos[0]) || 1), s.pos[1] + 2.2])]))
 const PORTRAIT_CROP = {
   gyroid: ['400%', '63%', '9%'],
   'count-null': ['600%', '50%', '26%'],
@@ -81,7 +85,12 @@ function Portrait({ id, name }) {
   )
 }
 
-export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
+const END_CARD = {
+  learned: "A tree is contractible, so felling one onto a platform loses nothing. Fell a spanning tree and every connected graph becomes a rose: loops on one point, as many as 1 − χ. A walkway that already closes a loop can’t be felled; that loop is a petal. Two tangles with the same χ fell to the same rose.",
+  ahead: "Across the bridge: the Hollow Throne, Count Null’s castle. Everything we’ve proved in this world, he’ll try to fold. Bring every trick: spines, movies, mirrors, cells, cones and trees.",
+}
+
+export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt }) {
   const levelMeta = concept?.worlds?.[0]?.levels?.find((l) => l.id === '0-6')
   const skipTo = Math.max(0, STATION_ORDER.indexOf(startAt))
 
@@ -126,6 +135,9 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
   const [here, setHere] = useState({ site: null, pos: checkpoint })
   const [seen, setSeen] = useState({})
   const stateRef = useRef(null)
+  // chase camera: it starts behind Gyroid, looking up the level from the landing
+  const camYawRef = useRef(Math.atan2(layout.start[0] - layout.exit.a[0], layout.start[1] - layout.exit.a[1]))
+  const talkingRef = useRef(false)
   const frameRef = useRef(null)
   const spawnRef = useRef(null)
   const ribbonApi = useRef(null)
@@ -608,7 +620,22 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
   }, [])
 
   // ---------- game layer
-  const playEnabled = phase === 'play' && !lesson && !askOpen && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  talkingRef.current = talking
+  const warp = useWarpLevel({
+    ids: STATION_ORDER,
+    done,
+    posOf: (id) => REWARD_AT[id],
+    stateRef,
+    exitOpen,
+    portalAt: layout.exit.b,
+    hearts,
+    flash,
+    stopMusic,
+    onClear: () => setLevelClear(true),
+    noun: { icon: '✿', one: 'Petal Rose', many: 'Petal Roses', kind: 'rose' },
+  })
+  const playEnabled = phase === 'play' && !lesson && !askOpen && !levelClear && !paused && !warp.warping
   const gameKey = `timber:${knockouts}`
   const walkable = useMemo(() => makeSiteWalkable(layout, SITES, exitOpen ? [[layout.exit.a, layout.exit.b]] : []), [exitOpen])
   const game = useMemo(() => {
@@ -624,9 +651,8 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
   // zoom in on the deck being worked — close enough to read, with the whole tangle still in view
   const FRAME = { one_edge: 8.0, spanning_tree: 8.8, wrong_cut: 8.8, census: 12.6 }
   frameRef.current = current && here.site === current && met[current] ? { center: [SITE[current].pos[0] + (current === 'census' ? 0.6 : 1.0), SITE[current].pos[1] + 0.3], size: FRAME[current], follow: 0.12 } : null
-  useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.6 && z < layout.exit.gate[1] - 0.8, () => setLevelClear(true))
 
-  if (import.meta.env.DEV) window.__lvl6 = { here, done, goalIdx, yard, phase, enemies, setTool, current, goal, SITE, originOf, visibleGraphs } // dev
+  if (import.meta.env.DEV) window.__lvl6 = { warp, clear: () => setLevelClear(true), proveAll: () => (setDone(Object.fromEntries(STATION_ORDER.map((id) => [id, true]))), setExitOpen(true)), rewardAt: REWARD_AT, here, done, goalIdx, yard, phase, enemies, setTool, current, goal, SITE, originOf, visibleGraphs } // dev
 
   const scene = (
     <TimberScene
@@ -654,11 +680,15 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
       onSpoolClick={onSpoolClick}
       onEnemies={(by) => setEnemies(by)}
       onHearts={setHearts}
+      camYawRef={camYawRef}
+      talkingRef={talkingRef}
+      stars={warp.stars}
+      portal={warp.portal}
     />
   )
 
   const nDone = STATION_ORDER.filter((id) => done[id]).length
-  const objective = exitOpen ? 'Walk across the bridge to the Hollow Throne' : current ? `Decks ${nDone}/4 · next: ${SITE[current].name}` : ''
+  const objective = warp.objective(current ? `Decks ${nDone}/4 · next: ${SITE[current].name}` : '')
   const atStation = current && here.site === current && met[current]
   const stepText = (() => {
     if (!goal) return ''
@@ -789,7 +819,7 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
           </button>
         )}
 
-        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" />}
+        {!levelClear && !line && !askOpen && <LevelMap layout={layout} sites={SITES} done={done} next={current || (exitOpen ? 'exit' : null)} pos={here.pos} title="Timber Yard" face={warp.face} marks={warp.marks} markIcon="✿" portal={exitOpen ? { pos: layout.exit.b, open: warp.portalOpen } : null} />}
 
         {!talking && !levelClear && !askOpen && (
           <div className="controls">
@@ -817,37 +847,32 @@ export default function Level06({ concept, onBackToTitle, onNext, startAt }) {
           kicker="World 0 · Level 6 · Lesson"
           name="Felling Trees"
           embedded
-          onDone={() => (setLesson(false), startTimberMusic())}
-          onSkip={() => (setLesson(false), startTimberMusic())}
+          onDone={() => (setLesson(false), warp.portalOpen ? null : startTimberMusic())}
+          onSkip={() => (setLesson(false), warp.portalOpen ? null : startTimberMusic())}
         />
       )}
 
+      {warp.warping && !levelClear && <div className="warp-flash" />}
+      {paused && (
+        <PauseMenu
+          title={levelMeta?.title || 'Timber!'}
+          progress={`✿ ${warp.count} of ${warp.total} Petal Roses`}
+          onResume={() => setPaused(false)}
+          onRestart={() => onGo?.('level6', { restart: Date.now() })}
+          onTitle={onBackToTitle}
+        />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 · Level 6 clear</span>
-            <h2>{levelMeta?.title || 'Timber!'}</h2>
-            <p className="def">{DEFINITION06.text}</p>
-            <p className="cite">
-              {DEFINITION06.cite}{' '}
-              <a href={DEFINITION06.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <p className="next-up">Across the bridge: the Hollow Throne, Count Null’s castle.</p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn primary" onClick={onNext}>
-                Continue ▸ The Hollow Throne
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 · Level 6 clear"
+          title={levelMeta?.title || 'Timber!'}
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION06}
+          onStay={() => (setLevelClear(false), warp.stay(layout.exit.a))}
+          onNext={onNext}
+          nextLabel="On to the Hollow Throne ▸"
+        />
       )}
     </div>
   )

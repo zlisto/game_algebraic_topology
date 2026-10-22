@@ -8,6 +8,7 @@ import { DEFINITION0B, FLOORS, HINTS0B, OPENING } from '../levels/w0/stages0B'
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, sfxCorrect, sfxFill, sfxRefuse, startMusicBox, stopMusic, textBlip, unlockAudio } from '../audio/chip'
 import HepLesson, { HepLessonOverlay } from '../movies/HepLesson'
 import MathText from './MathText'
+import { EmmyEndCard, PauseMenu, usePause } from './LevelChrome'
 
 /**
  * World 0 · Bonus "Extension Cord" — the Cylinder Works, a quiet puzzle room off the
@@ -17,6 +18,12 @@ import MathText from './MathText'
  */
 
 const TYPE_CPS = 45
+const END_CARD = {
+  learned:
+    'You were told how the floor’s marked cells move, and you extended that motion to every cell of the room, one column at a time, each only once its whole rim was decided. That’s the homotopy extension property: for a cell complex and a subcomplex, any motion of the part extends to a motion of the whole.',
+  ahead:
+    'Back out to the main road and up the cliff to the Cone Zone. This trick is quietly why collapsing a contractible piece never changes a space’s homotopy type. We’ll lean on it there, and in the Timber Yard.',
+}
 const FILL_SECONDS = 1.1
 const START = [0, 7.4]
 const PORTRAIT_CROP = {
@@ -61,6 +68,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
   const [complete, setComplete] = useState(false)
   const stateRef = useRef(null)
   const frameRef = useRef({ center: [0, 0], size: 12.5 })
+  const camYawRef = useRef(0) // the camera looks in from the door (+z)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
   const emmyAt = useRef({ x: -5.2, z: 3.4, rotY: 2.2, walk: 0 })
@@ -198,7 +206,8 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const playEnabled = phase === 'play' && !lesson && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  const playEnabled = phase === 'play' && !lesson && !levelClear && !paused
   const game = useMemo(() => ({ mode: 'overworld', bySite: true, start: START, enemies: [] }), [])
   useExitTrigger(exitOpen, stateRef, (x, z) => z > 9.4, () => setLevelClear(true))
 
@@ -221,6 +230,7 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
           gameKey="cylinder"
           stateRef={stateRef}
           frameRef={frameRef}
+          camYawRef={camYawRef}
           playEnabled={playEnabled}
           onAction={onAction}
           onEnemies={() => {}}
@@ -304,31 +314,20 @@ export default function Level0B({ onBackToTitle, onGo, startAt }) {
         />
       )}
 
+      {paused && (
+        <PauseMenu title="Extension Cord" onResume={() => setPaused(false)} onRestart={() => onGo?.('level0b', { restart: Date.now() })} onTitle={onBackToTitle} />
+      )}
       {levelClear && (
-        <div className="win-banner exit">
-          <div className="win-card wide">
-            <span className="lvl-kicker">World 0 · Bonus clear</span>
-            <h2>Extension Cord</h2>
-            <p className="def">{DEFINITION0B.text}</p>
-            <p className="cite">
-              {DEFINITION0B.cite}{' '}
-              <a href={DEFINITION0B.url} target="_blank" rel="noreferrer">
-                Read the book
-              </a>
-            </p>
-            <div className="btn-row">
-              <button type="button" className="btn" onClick={() => setLevelClear(false)}>
-                Keep exploring
-              </button>
-              <button type="button" className="btn" onClick={onBackToTitle}>
-                Back to title
-              </button>
-              <button type="button" className="btn primary" onClick={() => onGo('movie05')}>
-                Continue ▸ 0-5
-              </button>
-            </div>
-          </div>
-        </div>
+        <EmmyEndCard
+          kicker="World 0 · Bonus clear"
+          title="Extension Cord"
+          learned={END_CARD.learned}
+          ahead={END_CARD.ahead}
+          definition={DEFINITION0B}
+          onStay={() => setLevelClear(false)}
+          onNext={() => onGo('movie05')}
+          nextLabel="Continue ▸ 0-5"
+        />
       )}
     </div>
   )

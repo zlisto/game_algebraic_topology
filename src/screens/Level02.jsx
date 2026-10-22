@@ -48,6 +48,7 @@ import {
   unlockAudio,
 } from '../audio/chip'
 import MathText from './MathText'
+import { stepBack } from './warpLevel'
 import { EmmyEndCard, PauseMenu, ViewCone, WarpIcon, usePause } from './LevelChrome'
 import { setWarpHum, sfxWarpOpen, stopWarpHum } from '../audio/chip'
 
@@ -1031,7 +1032,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
           learned={END_CARD.learned}
           ahead={END_CARD.ahead}
           definition={DEFINITION02}
-          onStay={() => setLevelClear(false)}
+          onStay={() => (setLevelClear(false), setWarping(false), stepBack(stateRef, layout.exit.b, layout.exit.a))}
           onNext={onNext}
           nextLabel="On to Mirror Shoals ▸"
         />

@@ -3,7 +3,7 @@
  * cued to the shot list in data/introScript.js (times in story seconds; the
  * scheduler maps them through the intro's pacing, so slowed scenes stretch).
  *
- *  -30–0   prelude       slow D minor pads, sparse celesta, Gyroid's figure
+ *  -18–0   prelude       slow D minor pads, sparse celesta, Gyroid's figure
  *   0–6    wonder        D minor pads + celesta arpeggios
  *   6–13   Count Null    sub drone, dissonant pads, timpani, his motif D–E♭–D–A
  *   13–21  the collapse  pulsing bass, riser, boom on the flash, eerie tail
@@ -13,7 +13,7 @@
  *   40–46  title         main theme, resolves to D major
  */
 
-import { wallAt } from '../data/introScript'
+import { POINT_AT, gyroidTimeAt, wallAt } from '../data/introScript'
 
 const NOTE = { C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5, 'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11 }
 const hz = (name) => {
@@ -256,6 +256,36 @@ export function createIntroScore() {
     s.stop(a + dur + 0.05)
   }
 
+  /** the collapse beam firing: a falling, buzzing sweep */
+  function zap(t) {
+    if (!live(t, 1.2)) return
+    const a = at(t)
+    const o = ctx.createOscillator()
+    o.type = 'sawtooth'
+    o.frequency.setValueAtTime(1400, a)
+    o.frequency.exponentialRampToValueAtTime(90, a + 0.9)
+    const g = ctx.createGain()
+    o.connect(g)
+    out(g, 0.5)
+    g.gain.setValueAtTime(0.0001, Math.max(ctx.currentTime, a))
+    g.gain.exponentialRampToValueAtTime(0.09, a + 0.03)
+    g.gain.exponentialRampToValueAtTime(0.0001, a + 1.1)
+    o.start(a)
+    o.stop(a + 1.2)
+    hiss(t, 0.6, 0.12, 2500, 'bandpass', 0.4)
+  }
+  /** stone cracking */
+  const crack = (t, vel) => {
+    hiss(t, 0.12, vel, 3200, 'bandpass', 0.3)
+    drum(t + 0.02, { from: 160, to: 55, len: 0.4, vel: vel * 0.9, wet: 0.3 })
+  }
+  /** the anchor biting: a bright metallic clank */
+  const clank = (t) => {
+    drum(t, { from: 1180, to: 1120, len: 0.7, vel: 0.12, wet: 0.6, noiseAmt: 0.08, noiseFreq: 4000 })
+    drum(t, { from: 1760, to: 1700, len: 0.5, vel: 0.06, wet: 0.6 })
+    drum(t, { from: 110, to: 60, len: 0.3, vel: 0.3, wet: 0.2 })
+  }
+
   const drone = (t, dur, notes, vel = 0.1) => pad(t, notes, dur, { vel, cutoff: 280, attack: 1.5, release: 2, wet: 0.4 })
 
   /** play [note, beats] pairs from time t */
@@ -277,15 +307,15 @@ export function createIntroScore() {
       ['G1', ['G2', 'D3', 'F3', 'Bb3']],
       ['A1', ['A2', 'E3', 'G3', 'C#4']],
     ]
-    for (let i = 0; i < 6; i++) {
-      const t0 = -30 + i * 5
+    for (let i = 0; i < 4; i++) {
+      const t0 = -18 + i * 4.5
       const [root, chord] = prelude[i % 4]
-      pad(t0, chord, 5.4, { vel: 0.035, cutoff: 1200, attack: 2, release: 2 })
-      bass(t0, root, 4.8, 0.04, 260)
+      pad(t0, chord, 4.9, { vel: 0.035, cutoff: 1200, attack: 1.6, release: 2 })
+      bass(t0, root, 4.4, 0.04, 260)
       ;[0.9, 2.4, 3.6].forEach((dt, j) => celesta(t0 + dt, chord[(j + i) % chord.length].replace(/\d/, (o) => String(Number(o) + 2)), 0.05))
     }
     // Gyroid's figure, as the camera finds them on the reef
-    phrase(-9.4, [['A4', 1], ['D5', 1], ['E5', 0.5], ['F5', 1.5], ['E5', 1], ['C#5', 1], ['A4', 3]], (t, n, d) => lead(t, n, d * 0.95, 0.035, 1800))
+    phrase(-6.4, [['A4', 1], ['D5', 1], ['E5', 0.5], ['F5', 1.5], ['E5', 1], ['C#5', 1], ['A4', 3]], (t, n, d) => lead(t, n, d * 0.95, 0.035, 1800))
 
     // A · wonder (0–6)
     pad(0, ['D3', 'A3', 'E4', 'F4'], 3.4, { vel: 0.045, cutoff: 1500, attack: 1.6 })
@@ -304,6 +334,8 @@ export function createIntroScore() {
     timp(9.6, 'D2', 0.55)
     timp(9.8, 'A1', 0.4)
     pad(9.6, ['Bb1', 'E3', 'G3', 'Db4'], 3.6, { vel: 0.05, cutoff: 1000, attack: 0.6 })
+    // his motif enters under his first words, then answers itself an octave down
+    phrase(6.7, [['D4', 1.2], ['Eb4', 1.2], ['D4', 0.9], ['A3', 3]], (t, n, d) => lead(t, n, d, 0.045, 900))
     phrase(9.8, [['D3', 1.2], ['Eb3', 1.2], ['D3', 0.9], ['A2', 3]], (t, n, d) => lead(t, n, d, 0.06, 900))
 
     // C · the collapse (13–21): D – Bb – Gm – A, building into the boom
@@ -314,18 +346,25 @@ export function createIntroScore() {
       ['A1', ['A2', 'C#3', 'E3', 'G3']],
     ]
     timp(13.6, 'D2', 0.6)
+    zap(14.0) // the beam fires
     roots.forEach(([root, chord], i) => {
       const t0 = 13.6 + i * BAR
-      const tEnd = Math.min(t0 + BAR, 19.85)
+      const tEnd = Math.min(t0 + BAR, POINT_AT - 0.05)
       pad(t0, chord, tEnd - t0, { vel: 0.035 + i * 0.01, cutoff: 900 + i * 500, attack: 0.3, release: 0.4 })
       for (let t = t0; t < tEnd - 0.01; t += BEAT / 2) bass(t, root, BEAT / 2 - 0.02, 0.06 + i * 0.025, 500 + i * 200)
-      if (i >= 1) for (let b = 0; b < 4 && t0 + b * BEAT < 19.8; b++) kick(t0 + b * BEAT, 0.25 + i * 0.1)
-      if (i >= 2) for (let b = 0; b < 8 && t0 + b * BEAT / 2 < 19.8; b++) hat(t0 + b * BEAT / 2 + BEAT / 4, 0.03)
+      if (i >= 1) for (let b = 0; b < 4 && t0 + b * BEAT < POINT_AT - 0.1; b++) kick(t0 + b * BEAT, 0.25 + i * 0.1)
+      if (i >= 2) for (let b = 0; b < 8 && t0 + b * BEAT / 2 < POINT_AT - 0.1; b++) hat(t0 + b * BEAT / 2 + BEAT / 4, 0.03)
     })
-    riser(16.4, 3.5, 0.22)
-    boom(19.95)
-    pad(20.3, ['A4', 'Bb4'], 1.2, { vel: 0.015, cutoff: 3000, type: 'sine', attack: 0.4 })
-    celesta(20.7, 'D6', 0.05)
+    crack(15.1, 0.5) // the causeways snap
+    crack(15.4, 0.35)
+    crack(16.1, 0.3)
+    crack(16.8, 0.28)
+    crack(17.4, 0.25)
+    riser(16.9, 2.9, 0.22) // ends at 19.8: the point hangs in near-silence
+    // the point hangs: a thin high tone, then the boom on the flash
+    pad(19.7, ['D6'], POINT_AT - 19.7, { vel: 0.02, cutoff: 6000, type: 'sine', attack: 0.3, release: 0.05 })
+    boom(POINT_AT)
+    pad(POINT_AT + 0.3, ['A4', 'Bb4'], 0.8, { vel: 0.015, cutoff: 3000, type: 'sine', attack: 0.3 })
 
     // D · the run (21–28): Dm – Bb – C – A at 140 bpm
     const run = [
@@ -346,6 +385,8 @@ export function createIntroScore() {
         hat(t0 + b * BEAT + BEAT / 2, 0.035)
       }
     })
+    // slabs crack and fall behind Gyroid
+    for (let x = -11.5; x < 2.6; x += 2) crack(gyroidTimeAt(x) + 0.6, 0.22)
     phrase(R0 + BEAT, [
       ['D4', 1], ['F4', 0.5], ['A4', 1.5], ['G4', 0.5], ['F4', 0.5],
       ['D4', 1], ['F4', 0.5], ['Bb4', 1.5], ['A4', 1],
@@ -362,6 +403,7 @@ export function createIntroScore() {
     bass(30.8, 'D2', 3, 0.08, 400)
     pad(30.8, ['D3', 'F#3', 'A3', 'D4', 'F#4', 'A4'], 3.2, { vel: 0.065, cutoff: 2600, attack: 0.35, release: 1.6 })
     ;['D5', 'F#5', 'A5', 'D6', 'F#6', 'A6'].forEach((n, i) => celesta(30.85 + i * 0.09, n, 0.08))
+    clank(32.5) // the loop drops onto the spine
     lead(30.9, 'A4', 0.45, 0.05)
     lead(31.35, 'D5', 2.4, 0.055)
 
@@ -382,7 +424,8 @@ export function createIntroScore() {
     for (let i = 0; i < 6; i++) timp(42.8 + i * 0.07, 'A1', 0.12 + i * 0.03)
     timp(43.2, 'D2', 0.6)
     phrase(40.1, [['F4', 1], ['Bb4', 1], ['D5', 1.75], ['C5', 1], ['E5', 1], ['G5', 1.75], ['F#5', 6]], (t, n, d) => lead(t, n, d * 0.97, 0.055))
-    for (let i = 0, t = 43.3; t < 45.5; i++, t += BEAT * 0.75) celesta(t, ['D5', 'F#5', 'A5', 'D6'][i % 4], 0.05)
+    // Gyroid's figure returns, in the major
+    phrase(43.3, [['A5', 1], ['D6', 1], ['E6', 0.5], ['F#6', 1.5], ['E6', 1], ['C#6', 1]], (t, n) => celesta(t, n, 0.06))
   }
 
   return {
@@ -393,8 +436,12 @@ export function createIntroScore() {
       origin = ctx.currentTime + 0.05 - wallAt(fromT)
       compose()
       // fade out across the title card
-      master.gain.setValueAtTime(master.gain.value, at(45))
-      master.gain.linearRampToValueAtTime(0, at(46.8))
+      master.gain.setValueAtTime(master.gain.value, at(44.6))
+      master.gain.linearRampToValueAtTime(0, at(45.9))
+    },
+    /** real seconds into the intro by the audio clock (null if the clock isn't running) */
+    wallNow() {
+      return ctx.state === 'running' ? ctx.currentTime - origin : null
     },
     resume() {
       if (ctx.state === 'suspended') ctx.resume()
@@ -415,11 +462,13 @@ export function createIntroScore() {
 
 /** The chord under each part of the intro (story seconds), for the bed that plays while a caption waits. */
 const HOLD_CHORDS = [
-  [6, ['D3', 'A3', 'F4']], // wonder: D minor
+  [6, ['D3', 'A3', 'F4']], // prelude and wonder: D minor
   [21, ['D2', 'A2', 'Eb3']], // Count Null and the collapse: his low, uneasy drone
   [28, ['D3', 'A3', 'F4']], // the run: D minor
-  [34, ['F3', 'A3', 'C4']], // the spines hold: F major
-  [Infinity, ['D3', 'F#3', 'A3']], // Null watches, then the title: D major
+  [31.5, ['F3', 'A3', 'C4']], // the spines hold: F major
+  [34.2, ['D3', 'F#3', 'A3']], // anchor set: D major
+  [40, ['D2', 'A2', 'Eb3']], // Null watches: his drone again
+  [Infinity, ['D3', 'F#3', 'A3']], // the title: D major
 ]
 
 /**

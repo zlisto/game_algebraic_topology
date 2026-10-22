@@ -6,7 +6,10 @@
  *
  * sites: buildSites(layout) · done: { id: true } · next: a site id, or 'exit' · pos: [x, z]
  */
-export default function LevelMap({ layout, sites, done, next, pos, title }) {
+import { ViewCone, WarpIcon } from './LevelChrome'
+
+/** Open-overworld extras: face (the view cone), marks (rewards waiting) with markIcon, portal ({ pos, open }). */
+export default function LevelMap({ layout, sites, done, next, pos, title, face, marks = [], markIcon = '★', portal }) {
   // fit the level's extent into the map
   const pts = []
   for (const s of sites) {
@@ -25,11 +28,13 @@ export default function LevelMap({ layout, sites, done, next, pos, title }) {
   const ox = (W - (maxX - minX) * k) / 2
   const oz = (H - (maxZ - minZ) * k) / 2
   const P = ([x, z]) => [ox + (x - minX) * k, oz + (z - minZ) * k]
-  const target = next === 'exit' ? layout.exit?.gate : sites.find((s) => s.id === next)?.pos
+  // with the portal still sealed, point at the nearest reward left to collect
+  const nearestMark = [...marks].sort((a, b) => Math.hypot(a[0] - pos[0], a[1] - pos[1]) - Math.hypot(b[0] - pos[0], b[1] - pos[1]))[0]
+  const target = next === 'exit' ? (portal ? (!portal.open && nearestMark ? nearestMark : portal.pos) : layout.exit?.gate) : sites.find((s) => s.id === next)?.pos
   const [gx, gz] = P(pos)
   const [tx, tz] = target ? P(target) : [gx, gz]
   return (
-    <svg className="minimap level-map" viewBox={`0 0 ${W} ${H}`} aria-label={`${title || 'Level'} map`}>
+    <svg className={`minimap level-map${portal !== undefined ? ' big' : ''}`} viewBox={`0 0 ${W} ${H}`} aria-label={`${title || 'Level'} map`}>
       <rect width={W} height={H} rx="4" fill="#0b1220" opacity="0.92" />
       {layout.causeways.map((c, i) => {
         const [x1, y1] = P(c.a)
@@ -53,12 +58,25 @@ export default function LevelMap({ layout, sites, done, next, pos, title }) {
         const [x, y] = P(s.pos)
         return <circle key={s.id} cx={x} cy={y} r={Math.max(1.6, a.r * k)} fill={fill} stroke={stroke} strokeWidth="0.6" opacity={done[s.id] ? 0.75 : 1} />
       })}
+      {marks.map((m, i) => {
+        const [x, y] = P(m)
+        return (
+          <text key={`m${i}`} x={x} y={y + 2} fontSize="6.5" textAnchor="middle" fill="#ffffff" stroke="#0b1220" strokeWidth="0.9" paintOrder="stroke" className="map-pulse">
+            {markIcon}
+          </text>
+        )
+      })}
+      {portal && (() => {
+        const [x, y] = P(portal.pos)
+        return <WarpIcon x={x} y={y} open={portal.open} />
+      })()}
+      {face !== undefined && <ViewCone x={gx} y={gz} face={face} id="levelmapcone" />}
       {target && (
         <>
           <line x1={gx} y1={gz} x2={tx} y2={tz} stroke="#7fe8dc" strokeWidth="0.6" strokeDasharray="1.6 1.4" opacity="0.8" />
           <circle cx={tx} cy={tz} r="4" fill="none" stroke="#7fe8dc" strokeWidth="0.9" className="map-pulse" />
           <text x={tx} y={tz - 5.2} textAnchor="middle" fill="#7fe8dc" fontSize="4" fontWeight="800">
-            {next === 'exit' ? 'EXIT' : 'NEXT'}
+            {next === 'exit' ? (portal && !portal.open ? markIcon : 'EXIT') : 'NEXT'}
           </text>
         </>
       )}
