@@ -9,10 +9,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['any_tri', 'pieces', 'bend', 'same']
 
 export const OPENING = [
+  N('Bend my shallows any way you like, Emmy. Everything bends to me in the end.'),
   E('The Singular Shallows. Each deck here is a space — the stone ring — with a pond in the middle that isn’t part of it.'),
   E('In the Tile Yard, simplices were straight tiles fitted together. Here a simplex can be any map into the space: bent, looped, even squashed to a point.'),
   G('That sounds like it could get messy.'),

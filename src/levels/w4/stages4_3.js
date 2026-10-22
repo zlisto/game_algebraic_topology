@@ -10,10 +10,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['match', 'weak', 'nomap', 'sort']
 
 export const OPENING = [
+  N('Same groups, Emmy. Same shape. You always needed a map for everything.'),
   E('Weak Spot. Two rooms face each other, each with meters for $π₁$, $π₂$, $π₃$.'),
   E('A map $f$ between them sends couriers meter to meter. If every courier arrives intact — $f_*$ an isomorphism on every $πₙ$ — then $f$ is a weak equivalence.'),
   G('And that’s as good as the real thing?'),

@@ -122,7 +122,7 @@ export const STATIONS = {
     arrive: [
       E('The Blueprint Wall — every place the Foundry ever made, written as cells.'),
       E('This one: one point, edges $a$ and $b$, and a disk along $a b a⁻¹ b$. Like the torus — but the last $b$ goes forwards.'),
-      N('Forge all you like, Boundary. My Unglues will pull it apart faster.'),
+      N('Still forging, Emmy? We built these presses together. My Unglues will take it apart faster than you ever could.'),
     ],
     goals: [
       { type: 'point', done: [] },

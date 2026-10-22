@@ -63,7 +63,7 @@ export const STATIONS = {
         done: [
           G('Wild wiggles — and the lift still ends on floor +1.'),
           E('That’s homotopy lifting: sliding a loop slides its lift, and the lift’s end can’t jump between floors. The winding number doesn’t change.'),
-          E('Null can’t slide a $+1$ into a $0$. Unwind is next — west, past the Helix.'),
+          E('Null can’t slide a $+1$ into a $0$ — and neither can his Crown. Unwind is next — west, past the Helix.'),
         ],
       },
     ],
@@ -107,7 +107,7 @@ export const STATIONS = {
         n: 3,
         done: [
           E('Every gate opened for its integer, and laps added like integers do. Loops on the circle up to sliding are exactly the integers: $π₁(S¹) ≅ ℤ$.'),
-          G('The road keeps climbing. I can read the floors now.'),
+          G('I can read the floors now. Haven winds once, Null. I can prove it.'),
           E('The exit ring is open to the north.'),
         ],
       },

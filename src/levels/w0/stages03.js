@@ -63,12 +63,12 @@ export const SITES03 = {
   },
   dumbbell: {
     arrive: [
-      N('Same shape, same shape. Then any loop will do, courier — give my dumbbell a ring for a spine.'),
+      N('Same shape, same shape — what does it matter, courier? Any loop will do. Give my dumbbell a ring for a spine.'),
       E('Beacons around the left lagoon. Fine — let’s see what happens.'),
     ],
     doomed: [
       E('It leaks: the right lagoon has no loop around it, so its water floods the slide. Every hole needs a loop of spine around it.'),
-      N('Details.'),
+      N('Details. People drown in details.'),
       E('Add what’s missing: a loop around the right lagoon and a bar joining the two — through the new beacons.'),
     ],
     spines: [
@@ -91,7 +91,7 @@ export const SITES03 = {
       E('Because we haven’t proved it different — not yet. But the gate is satisfied.'),
       E('…There’s the Foundry. I know that light.'),
       G('You’ve been here before.'),
-      E('A long time ago. Come on.'),
+      E('A long time ago. With him. Come on.'),
     ],
     early: [E('The gate can wait — finish the Dumbbell first.')],
   },

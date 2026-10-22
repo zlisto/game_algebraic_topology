@@ -12,6 +12,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['read_edge', 'balanced', 'from_points', 'around_hole']
 
 export const OPENING = [
+  E('Null’s twins are somewhere in these gardens. Counting can’t separate them. Reading might.'),
   E('Mirror Pools — World 3. Here we turn homology inside out.'),
   E('A chain is a sum of simplices. A cochain is a reading: it assigns a number to each simplex, and so to each chain. Hatcher writes $Cⁿ(X; G) = $ Hom$(Cₙ(X), G)$.'),
   G('So instead of building things out of edges, we put numbers on them?'),

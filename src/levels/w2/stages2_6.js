@@ -10,10 +10,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['hollow', 'wrap', 'antipode', 'hairy']
 
 export const OPENING = [
+  N('Spin your dial, courier. My sphere is a point. The Crown says so.'),
   E('The Dynamo Gate. A map from a sphere to itself sends its one hole, $Hₙ(Sⁿ) ≅ ℤ$, to itself — and all it can do is multiply by a whole number.'),
   E('That number is the map’s degree. On a circle, it’s how many times the map winds round, counting backward turns as minus.'),
   G('So the Dial reads degrees?'),
@@ -93,7 +95,7 @@ export const STATIONS = {
         options: ['the identity — but their degrees, $−1$ and $1$, differ', 'a constant map — but degree $0$ is impossible', 'a reflection, which is impossible'],
         answer: 'the identity — but their degrees, $−1$ and $1$, differ',
         wrong: [E('A combing lets you slide each point along its hair round to its opposite. What would that make the antipodal map homotopic to?')],
-        right: [E('That’s Theorem 2.28: $Sⁿ$ can be combed only when $n$ is odd. The gate’s open — south of the last one.')],
+        right: [E('That’s Theorem 2.28: $Sⁿ$ can be combed only when $n$ is odd. And Null’s sphere has its hole back — it’s on the Chart. The gate’s open, south of the last one.')],
       },
     ],
   },

@@ -136,7 +136,7 @@ export const STATIONS = {
     arrive: [
       E('The Recipe Board. Every operation, and only three plain pedestals: a point, two points, a disk.'),
       E('The board wants spaces you can’t pick up — you’ll have to make them, then feed what you make back in. The shelf holds two results.'),
-      N('And my Coners will plug whatever you leave lying around.'),
+      N('And my Coners will plug whatever you leave lying around. A plugged hole never hurt anyone.'),
       E('First recipe: a sphere. Try the QUOTIENT — it collapses the disk’s whole rim to one point.'),
     ],
     goals: [

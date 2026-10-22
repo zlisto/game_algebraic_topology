@@ -8,10 +8,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['settle', 'table']
 
 export const OPENING = [
+  N('Rest, courier. It’s the last calm you’ll get.'),
   E('Stable Ground. Up here, suspending changes nothing — the numbers settle.'),
   G('First calm place in four worlds.'),
   E('The wall shows Hatcher’s table: stem $k$ in each row, $πₙ₊ₖ(Sⁿ)$ for $n = 2$ to $6$ across. Sling on 4.'),

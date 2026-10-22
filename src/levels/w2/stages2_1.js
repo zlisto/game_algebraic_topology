@@ -16,6 +16,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['two_tri', 'torus_glue', 'flip_arrow', 'wrong_order']
 
 export const OPENING = [
+  E('The grey is already in the Delta, Gyroid. Null’s sphere is folding, and no loop can prove it shouldn’t. So we learn to count with triangles.'),
   E('The Tile Yard. Out here every space is built from triangles — simplices — glued along their edges.'),
   G('Glued how? Can I just stick any edge to any edge?'),
   E('Only edge to edge with the arrows matching: an edge’s first vertex goes onto the other edge’s first vertex. Hatcher calls the result a Δ-complex.'),

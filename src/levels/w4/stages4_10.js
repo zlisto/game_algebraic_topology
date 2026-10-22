@@ -8,10 +8,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['lift', 'fibre', 'loops']
 
 export const OPENING = [
+  N('Lift whatever you like. Everything you lift, I fold.'),
   E('Fibration Station. A fibration $p: E → B$ is a map with one promise: any homotopy downstairs lifts upstairs, once you say where it starts.'),
   E('That one promise — the homotopy lifting property — is what gives the long exact sequence.'),
   G('Lifts, then. Which way is up?'),

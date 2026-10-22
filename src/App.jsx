@@ -22,6 +22,7 @@ import CellsLesson, { CellsLessonOverlay } from './movies/CellsLesson'
 import MirrorMovie from './movies/MirrorMovie'
 import MirrorLesson, { MirrorLessonOverlay } from './movies/MirrorLesson'
 import LevelMovie from './screens/LevelMovie'
+import { makeWorldIntro } from './movies/WorldIntro'
 import TidewarpMovie from './movies/TidewarpMovie'
 import TidewarpLesson, { LessonOverlay } from './movies/TidewarpLesson'
 import Level1_1 from './screens/w1/Level1_1'
@@ -348,6 +349,18 @@ function Lesson0B({ onNext }) {
   )
 }
 
+/** The movie between provinces (video `world-N-intro`): the story carried from one world to the next. */
+const worldIntro = (n, name, startMusic) => {
+  const Scene = makeWorldIntro(n)
+  return function WorldIntroMovie({ onNext }) {
+    return <LevelMovie videoId={`world-${n}-intro`} Scene={Scene} kicker={`World ${n}`} name={name} startMusic={startMusic} onDone={onNext} onSkip={onNext} />
+  }
+}
+const World1 = worldIntro(1, 'Into Bouquet Bastion', startBastionMusic)
+const World2 = worldIntro(2, 'Into Chain Delta', startDeltaMusic)
+const World3 = worldIntro(3, 'Into the Cup Product Gardens', startGardensMusic)
+const World4 = worldIntro(4, 'Up the Postnikov Spire', startReachMusic)
+
 /** World 0 · Castle's intro movie. */
 function MovieCastle0({ onNext }) {
   return <LevelMovie videoId="castle-0-intro" Scene={CastleIntro} kicker="World 0 · Castle" name="The Hollow Throne" startMusic={startNullMusic} onDone={onNext} onSkip={onNext} />
@@ -521,6 +534,7 @@ const SCREENS = {
   moviec0: MovieCastle0,
   castle0: LevelCastle,
   outroc0: OutroCastle0,
+  world1: World1, world2: World2, world3: World3, world4: World4,
   'movie1-1': Movie1_1,
   'lesson1-1': Lesson1_1,
   'level1-1': Level1_1,
@@ -640,14 +654,14 @@ const W1_CHAIN = Object.fromEntries(
   Array.from({ length: 10 }, (_, i) => i + 1).flatMap((k) => [
     [`movie1-${k}`, `lesson1-${k}`],
     [`lesson1-${k}`, `level1-${k}`],
-    ...(k < 10 ? [[`level1-${k}`, `movie1-${k + 1}`]] : [[`level1-${k}`, 'movie2-1']]),
+    ...(k < 10 ? [[`level1-${k}`, `movie1-${k + 1}`]] : [[`level1-${k}`, 'world2']]),
   ]),
 )
 const W2_CHAIN = Object.fromEntries(
   Array.from({ length: 10 }, (_, i) => i + 1).flatMap((k) => [
     [`movie2-${k}`, `lesson2-${k}`],
     [`lesson2-${k}`, `level2-${k}`],
-    ...(k < 10 ? [[`level2-${k}`, `movie2-${k + 1}`]] : [[`level2-${k}`, 'movie3-1']]),
+    ...(k < 10 ? [[`level2-${k}`, `movie2-${k + 1}`]] : [[`level2-${k}`, 'world3']]),
   ]),
 )
 const W3_CHAIN = Object.fromEntries(
@@ -657,8 +671,8 @@ const W3_CHAIN = Object.fromEntries(
     ...(k < 9 ? [[`level3-${k}`, `movie3-${k + 1}`]] : [[`level3-9`, 'moviec3']]),
   ]),
 )
-Object.assign(W3_CHAIN, { moviec3: 'castle3', castle3: 'outroc3', outroc3: 'movie4-1' })
-const NEXT = { ...W1_CHAIN, ...W4_CHAIN, ...W2_CHAIN, ...W3_CHAIN, castle0: 'movie1-1', outroc0: 'movie1-1', level1: 'movie02', movie02: 'lesson02', lesson02: 'level2', level2: 'movie03', movie03: 'lesson03', lesson03: 'level3', level3: 'movie04', movie04: 'lesson04', lesson04: 'level4', level4: 'movie05', movie05: 'lesson05', lesson05: 'level5', level5: 'movie06', movie06: 'lesson06', lesson06: 'level6', movie0b: 'lesson0b', lesson0b: 'level0b', level6: 'moviec0', moviec0: 'castle0' }
+Object.assign(W3_CHAIN, { moviec3: 'castle3', castle3: 'outroc3', outroc3: 'world4' })
+const NEXT = { ...W1_CHAIN, ...W4_CHAIN, ...W2_CHAIN, ...W3_CHAIN, castle0: 'world1', outroc0: 'world1', world1: 'movie1-1', world2: 'movie2-1', world3: 'movie3-1', world4: 'movie4-1', level1: 'movie02', movie02: 'lesson02', lesson02: 'level2', level2: 'movie03', movie03: 'lesson03', lesson03: 'level3', level3: 'movie04', movie04: 'lesson04', lesson04: 'level4', level4: 'movie05', movie05: 'lesson05', lesson05: 'level5', level5: 'movie06', movie06: 'lesson06', lesson06: 'level6', movie0b: 'lesson0b', lesson0b: 'level0b', level6: 'moviec0', moviec0: 'castle0' }
 
 export default function App() {
   const [screen, setScreen] = useState(

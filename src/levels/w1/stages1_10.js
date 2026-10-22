@@ -97,7 +97,7 @@ export const STATIONS = {
       {
         type: 'walk',
         loopId: 'half',
-        done: [E('You walked half the rim: door to opposite door. The north gate is open.')],
+        done: [E('You walked half the rim: door to opposite door. The Bastion goes on the Chart. The north gate is open — and Null’s trail runs straight through it.')],
       },
     ],
     early: [E('The sphere hall is north — after the quotient forge.')],

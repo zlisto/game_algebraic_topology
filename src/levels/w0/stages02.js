@@ -91,7 +91,7 @@ export const ZONES = {
   },
   nulls_snap: {
     arrive: [
-      N('Such patience, courier. Bending, pinning, re-tying… Watch: I deform the whole flats onto my post in a single snap.'),
+      N('Such patience, courier. Bending, pinning, re-tying — just like her. Watch: I deform the whole flats onto my post in a single snap.'),
       N('Every space retracts to a point.'),
       E('Sending everything to one point in one go — that’s a retraction, sure. A deformation has to be the whole movie, and every frame has to stay on the flats.'),
       E('His movie breaks somewhere. Scrub it with the Tide Glass (3, then Z / X) and mark the frame where it tears: press E or the button.'),
@@ -123,8 +123,8 @@ export const ZONES = {
     wrong: [E('That frame flows smoothly into the next — look at the faint ghosts on either side. Keep scrubbing.')],
     wave: [E('Snappers and spawn — keep moving, keep lashing!')],
     done: [
-      N('Bend your little ribbons, then. But that loop round my pool — you will never shrink it.'),
-      E('About that, he’s right. Some loops won’t shrink — and a place’s holes are exactly what stop them.'),
+      N('Bend your little ribbons, then. But that loop round my pool — you will never shrink it. And you will never prove why.'),
+      E('About the shrinking, he’s right: a place’s holes are exactly what stop a loop. About the proving, he’s wrong. Give me one more world.'),
       E('The tide’s going out. Look — the way to Mirror Shoals.'),
     ],
   },

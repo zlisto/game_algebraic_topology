@@ -17,7 +17,7 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['retractor', 'still_point', 'roots', 'antipodes']
 
 export const OPENING = [
-  N('Squash the basin onto its rim. Filling is optional.'),
+  N('Squash the basin onto its rim, courier. The way I squashed your home.'),
   E('Null’s Retractor wants to push the whole basin — a disk — onto its rim circle, without moving the rim. You have the tools to show it can’t.'),
   E('The Retractor deck is just ahead.'),
 ]
@@ -45,7 +45,7 @@ export const STATIONS = {
         done: [
           E('There. Every pushed-out loop still wound once — and the last one is a single point, which winds zero. A winding number can’t jump from $1$ to $0$ along a slide. The Retractor tore.'),
           G('So there’s no way to squash the disk onto its rim, holding the rim still.'),
-          E('No retraction $D² → S¹$. Now — drones! Lash them (1) before they drag you off.'),
+          E('No retraction $D² → S¹$ — so a ring is not a point. Not probably: proved. Now — drones! Lash them (1) before they drag you off.'),
         ],
       },
       { type: 'guard', done: [E('Deck clear. The Still Point is west.')] },
@@ -101,10 +101,10 @@ export const STATIONS = {
         type: 'pair',
         done: [
           E('Opposite stations, identical readings: $f(x) = f(−x)$. That’s the Borsuk–Ulam theorem — no map from the sphere to the plane can keep all opposite points apart.'),
-          E('The basin is clear. The exit gate is open to the north.'),
+          E('The basin is clear. Gyroid — look south. Something on the horizon just lit up. The exit gate is open to the north.'),
         ],
       },
-      { type: 'exit', done: [E('On to Torus Terraces — maps that push loops forward.')] },
+      { type: 'exit', done: [E('That’s Haven’s beacon. Go on — the Torus Terraces are north, and we have a world to put back.')] },
     ],
     early: [E('Match antipodes after the root pool.')],
   },

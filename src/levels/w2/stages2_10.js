@@ -9,11 +9,13 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 const C = (text) => ({ speaker: 'The Commutator', portrait: 'commutator', text })
 
 export const STATION_ORDER = ['totals', 'dissolve', 'survive', 'hold']
 
 export const OPENING = [
+  N('Forget the order, courier, and you forget my marshal’s patrols. He won’t forget you.'),
   E('The Abelian Ford. Every loop is a loop — but now we ask what it looks like to homology.'),
   E('A loop in the figure-eight is a word: $a$, $b$, and their inverses. In $π₁$, order matters; you can only cancel a letter against its inverse right next to it.'),
   G('And in homology?'),

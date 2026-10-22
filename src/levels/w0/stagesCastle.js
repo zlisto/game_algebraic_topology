@@ -21,7 +21,7 @@ export const BEACON_OFFSET = [0, -2.1]
 export const NULL_AT = [0, -7.3]
 
 export const OPENING = [
-  N('Welcome to the top of my spire, courier. Three trials. Each round, I show you three things happening on my floor.'),
+  N('Welcome to the top of my spire, courier. That speck on the sea is Haven. Three trials. Each round, I show you three things happening on my floor.'),
   N('Some are honest. Some are my forgeries. Lash the beacon over a forgery — and spare the honest ones, or my Crown will cut you.'),
 ]
 
@@ -59,7 +59,7 @@ export const TRIALS = [
   },
   {
     name: 'Simplifications',
-    intro: [N('Trial two. Collapses. I squash things to make them simpler — the way your Emmy taught you. Or the way I prefer.')],
+    intro: [N('Trial two. Collapses. I squash things to make them simpler — the way Emmy taught me, long ago. Or the way I prefer.')],
     rounds: [
       ['tree', 'loopfell', 'cone'],
       ['cone', 'contract', 'tree'],
@@ -73,7 +73,7 @@ export const TRIALS = [
       tree: 'That was a tree being felled — walkways with two different ends. Legal: nothing lost.',
       contract: 'A disk shrinking to its middle point. A disk has no hole to lose. Legal.',
     },
-    done: [N('You learn quickly. Too quickly.'), N('One more test. And then my Crown will finish this.')],
+    done: [N('You learn quickly. Too quickly.'), N('One more test. Then we talk about your home.')],
   },
   {
     name: 'Same shape?',
@@ -113,8 +113,8 @@ export const PUNISH = [
 ]
 
 export const RING = [
-  N('Every trick of mine, exposed. Well done.'),
-  N('Now — this ring. It is a point. Prove that it isn’t.'),
+  N('Every trick of mine, exposed. Well done. Now — your home.'),
+  N('Haven Ring. It is a point. Prove that it isn’t.'),
   G('χ! A ring has one point and one edge: χ = 0. A point has χ = 1.'),
   N('And who proved your χ can’t change when you rebuild a space differently? Your Emmy? You? She said so herself: not yet.'),
   G('Then — every slide I try stops at the hole. It won’t shrink.'),

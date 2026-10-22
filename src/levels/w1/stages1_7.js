@@ -10,7 +10,7 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['circle_press', 'torus_press', 'half_turn', 'two_pieces']
 
 export const OPENING = [
-  N('Another disk? You think crushing a loop makes you clever.'),
+  N('Another disk, Emmy? You always did think crushing a loop made you clever.'),
   E('It makes a relation. Glue a disk along a loop, and that word slides across the disk to nothing.'),
   E('The Cell-Smith (2) presses disks. The Van Kampen Clasp (5) joins what two pieces agree on. First press — straight ahead.'),
 ]

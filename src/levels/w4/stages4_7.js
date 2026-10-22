@@ -91,7 +91,7 @@ export const STATIONS = {
         options: ['No — it generates $π₃(S²) ≅ ℤ$', 'Yes — $S³$ is bigger than $S²$', 'Only up to sign'],
         answer: 'No — it generates $π₃(S²) ≅ ℤ$',
         wrong: [E('Cellular approximation only kills $πₖ(Sⁿ)$ for $k < n$. Here $k > n$.')],
-        right: [E('Null’s claim falls. The gate’s open.')],
+        right: [E('Null’s claim falls — and the Gardens stay on the Chart for good. The gate’s open.')],
       },
     ],
   },

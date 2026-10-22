@@ -12,6 +12,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['cut_deep', 'collapse', 'ladder', 'edge']
 
 export const OPENING = [
+  E('One more step and we can prove his sphere is hollow. Stay sharp — he knows it too.'),
   E('Excision Cut. Each deck holds a pair: a disk $X$, and $A$, the blue collar round its rim.'),
   E('Relative homology $Hₙ(X, A)$ ignores everything in $A$. So — can we just cut pieces of $A$ away and lose nothing?'),
   G('That sounds too good to be true.'),

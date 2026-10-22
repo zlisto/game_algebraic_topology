@@ -10,10 +10,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['square_it', 'climb_powers', 'stops_top', 'antipodes']
 
 export const OPENING = [
+  N('Climb your little fountains. Everything stops somewhere, courier. Everything.'),
   E('The Polynomial Garden. In some spaces one cohomology class makes all the others, just by multiplying it by itself.'),
   E('Each fountain has a tier for every degree. Cast $α$ onto the highest lit tier with the Cup Caster (9), and the next power lights.'),
   G('How high does it go?'),

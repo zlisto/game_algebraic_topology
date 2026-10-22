@@ -77,7 +77,7 @@ export const STATIONS = {
     blueprint: 'The wrong cut',
     arrive: [
       E('The Wrong Cut. One of these walkways starts and ends at the same platform — a loop already.'),
-      N('Shrink it. Go on — it’s just one more walkway.'),
+      N('Shrink it. Go on, courier — it’s just one more walkway. One less road to get lost on.'),
       E('Mark a tree, fell it — and see what happens if you try to mark that loop.'),
     ],
     goals: [
@@ -124,7 +124,7 @@ export const STATIONS = {
       },
       {
         type: 'bridge',
-        done: [E('There it is: the bridge to the Hollow Throne. Null is waiting at the other end. Walk north across it when you’re ready.')],
+        done: [E('There it is: the bridge to the Hollow Throne. Null is waiting at the other end — and from up there, he can see Haven. Walk north across it when you’re ready.')],
       },
     ],
     early: [E('The Census Deck is last.')],

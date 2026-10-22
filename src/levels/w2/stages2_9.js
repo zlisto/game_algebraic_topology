@@ -10,10 +10,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['even', 'rp2', 'frogs', 'sort']
 
 export const OPENING = [
+  N('Even and odd. Such small numbers, for such a small courier.'),
   E('The Mod Mill grinds every coefficient down to even or odd: $0$ or $1$, with $1 + 1 = 0$. That’s homology with coefficients in $ℤ₂$.'),
   G('So there’s no minus sign any more?'),
   E('$−1 = 1$ in $ℤ₂$. Orientations stop mattering — and that changes which holes you can see.'),

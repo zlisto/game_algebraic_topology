@@ -14,9 +14,9 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['same_holes', 'cast_torus', 'cast_bouquet', 'nulls_answer']
 
 export const OPENING = [
-  N('Two islands, little topologists. The torus, and a bouquet: two rings and a ball, all tied at one point. Count their holes. They’re the same place.'),
-  G('Are they?'),
-  E('Let’s find out. Cup Caster on 9.'),
+  N('Two islands, little topologists. The torus, and a bouquet: two rings and a ball, tied at one point. Count their holes — they’re the same place. So I’ll fold the torus, and nothing will be lost.'),
+  G('There are people on that torus.'),
+  E('Then we prove they’re not the same. Cup Caster on 9.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -89,7 +89,7 @@ export const STATIONS = {
         options: ['No — their cup products differ', 'Yes — same groups', 'Only in degree 1'],
         answer: 'No — their cup products differ',
         wrong: [E('Look at the two lanterns.')],
-        right: [E('Cohomology is a ring, not just a list of groups. The gate’s open.')],
+        right: [E('Cohomology is a ring, not just a list of groups. The torus goes on the Chart — he can’t touch it now. The gate’s open.')],
       },
     ],
   },

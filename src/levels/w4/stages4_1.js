@@ -13,7 +13,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['pinned', 'stack', 'pass', 'dim1']
 
 export const OPENING = [
-  E('World 4 — the Spire. Here we go back to homotopy, but in every dimension.'),
+  E('The Spire — and the Crown at the top of it. Here we go back to homotopy, but in every dimension.'),
   E('A loop was a map of an interval with both ends at the base point. Now take a square, a cube, any $Iⁿ$ — with its whole boundary sent to the base point $x₀$.'),
   G('A square with its edge squashed to a point… that’s a sphere!'),
   E('A map of $Sⁿ$, exactly. Their homotopy classes form $πₙ(X, x₀)$. Tide Glass on 3.'),

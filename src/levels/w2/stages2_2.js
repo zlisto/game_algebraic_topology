@@ -15,6 +15,7 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['first_cut', 'shared', 'nothing', 'missing']
 
 export const OPENING = [
+  E('Every hole we can count is a hole the Crown can’t take. So we count everything.'),
   E('Cancel Marsh. Out here we don’t just build with triangles — we add them up.'),
   G('Add triangles? Like, one triangle plus one triangle?'),
   E('Exactly. A chain is a sum of simplices with whole-number coefficients — $2[v₀v₁] − [v₁v₂]$, say. And the Boundary Blade takes any chain to its boundary.'),

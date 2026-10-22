@@ -142,92 +142,92 @@
           "t": -29.4,
           "end": -22.6,
           "speaker": "Narrator",
-          "text": "Beyond the edge of every map lies the Winding World: islands shaped like rings and loops, strung together by glowing causeways."
+          "text": "Beyond the edge of every map lies the Winding World — ring-shaped islands, strung together by glowing causeways."
         },
         {
           "t": -22.4,
           "end": -17.2,
           "speaker": "Narrator",
-          "text": "Here the land is soft. It stretches, bends and drifts with the tides — and nothing is lost, so long as nothing tears."
+          "text": "The land here is soft. It stretches and drifts with the tide, and nothing is lost — so long as nothing tears."
         },
         {
           "t": -16.8,
           "end": -10.2,
           "speaker": "Narrator",
-          "text": "What the land truly guards are its holes. Stretch a ring as far as you like and it stays a ring — and every route around it holds."
+          "text": "Every island is held together by its holes. A road that winds around a hole is somebody’s road home."
         },
         {
           "t": -9.8,
           "end": -4.6,
           "speaker": "Narrator",
-          "text": "Gyroid, a courier born of the surfaces themselves, runs messages along those routes, an anchor spool always at the hip."
+          "text": "Gyroid ran those roads: a courier from Haven Ring, the guild island — today with a sealed parcel at the hip."
         },
         {
           "t": -4.4,
           "end": -0.2,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One delivery for Emmy Boundary, out on Retract Reef. Easy run today."
+          "text": "One delivery for Emmy Boundary, out on Retract Reef. Back to Haven by supper."
         },
         {
           "t": 0.4,
           "end": 5.8,
           "speaker": "Narrator",
-          "text": "But high on a spire of black glass, someone had been counting those holes — and he meant to be rid of every one."
+          "text": "But high on a spire of black glass, someone had been counting the holes — and calling them wounds."
         },
         {
           "t": 6.6,
           "end": 9.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "So many loops. So many… holes."
+          "text": "Every hole is a place to fall through. Every road that winds away is a road someone doesn’t come home on."
         },
         {
           "t": 9.8,
           "end": 13,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Enough. I will simplify every province — down to a single perfect point."
+          "text": "No more. I will fold this world down to a single point — and nothing will ever be lost again."
         },
         {
           "t": 13.6,
           "end": 17,
           "speaker": "Narrator",
-          "text": "But the Null Crown does not simplify. It erases."
+          "text": "The Null Crown woke. It does not simplify. It erases."
         },
         {
           "t": 17,
           "end": 21,
           "speaker": "Narrator",
-          "text": "A ring becomes a ball. A ball becomes a point. Every route that wound through it — gone."
+          "text": "A ring became a ball. A ball became a point. Every road that wound through it — and everyone on those roads — folded into silence."
         },
         {
           "t": 21.4,
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Gyroid! The reef is going — stay on the amber spines! Whatever keeps its shape, we can save!"
+          "text": "Courier! The reef’s folding — get to the amber spines! Whatever keeps its shape, the Crown can’t swallow!"
         },
         {
           "t": 28.3,
           "end": 30.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The walkways fell… but the spines held. Bend it, don’t break it."
+          "text": "The walkways went… but the spines held. Bend it, don’t break it."
         },
         {
           "t": 30.8,
           "end": 33.9,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Anchor set!"
+          "text": "Anchor set! I’m still here!"
         },
         {
           "t": 34.5,
           "end": 39.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A courier who keeps holes. How… quaint. Run along, little loop."
+          "text": "A courier who keeps holes. Run, little loop. I’ll fold your road home last."
         }
       ],
       "title_card": {
@@ -294,42 +294,42 @@
           "t": 0.6,
           "end": 5.6,
           "speaker": "Narrator",
-          "text": "By morning the walkways had fallen into the sea. But the amber spines were still there."
+          "text": "By morning, Retract Reef was half gone. The walkways lay grey and flat in the sea. Only the amber spines still glowed."
         },
         {
           "t": 6.4,
           "end": 10.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "You must be my courier. You kept the spines. Good — that's all we need."
+          "text": "You’re my courier. You kept to the spines — that’s why you’re alive. Hold on to that parcel, and don’t open it."
         },
         {
           "t": 10.6,
           "end": 13.2,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "All we need? The whole reef is gone."
+          "text": "Alive on what? The whole reef folded. There were people on those walkways."
         },
         {
           "t": 13.6,
           "end": 18.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A thick walkway and its spine are the same shape. Slide every point onto the spine — slowly, no jumps — and nothing that matters is lost."
+          "text": "And the Crown will come back for the rest — unless this reef still has a shape. Slide every point onto its spine, no tearing, and nothing that matters is lost."
         },
         {
           "t": 18.6,
           "end": 21,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Just never move the spine itself."
+          "text": "Just never move the spine itself. That’s our anchor."
         },
         {
           "t": 21.4,
           "end": 24.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Null's spawn first. Spheres are slippery — every loop slides off. One lash."
+          "text": "Null’s spawn are already crawling over what’s left. Spheres first — no hole to hold them together. One lash."
         },
         {
           "t": 24.6,
@@ -343,7 +343,7 @@
           "end": 31.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A torus holds two loops it can't shed. Two lashes."
+          "text": "A torus holds two loops it won’t let go of. Two lashes. Respect anything with holes, Gyroid — even his."
         }
       ],
       "title_card": {
@@ -410,56 +410,56 @@
           "t": 0.6,
           "end": 5,
           "speaker": "Narrator",
-          "text": "The Spool bridged the broken causeway. Beyond it, the tide had its own ideas."
+          "text": "The Spool bridged the broken causeway. Beyond it lay the Tidewarp Flats — and the tide had its own ideas."
         },
         {
           "t": 6.4,
           "end": 10.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Tidewarp Flats. Every hour the tide reshapes every path out here — continuously, one moment flowing into the next."
+          "text": "Every hour the tide reshapes every path out here — smoothly, one moment flowing into the next."
         },
         {
           "t": 11,
           "end": 13.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That whole movie of shapes is a homotopy."
+          "text": "That whole movie of shapes is a homotopy. It’s how this land changes without dying."
         },
         {
           "t": 14.4,
           "end": 18.4,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Why wait for the tide? I can send every path to one point. Instantly."
+          "text": "Why wait for the tide, Emmy? My Crown sends every path to one point. One snap."
         },
         {
           "t": 18.6,
           "end": 21,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Every space retracts to a point, courier."
+          "text": "Every space retracts to a point. You taught me that, remember?"
         },
         {
           "t": 21.4,
           "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A retraction can be one snap. A deformation is the whole movie — every frame in between — and with a pool in the way, no such movie exists."
+          "text": "I taught you a retraction can be one snap. A deformation is the whole movie, every frame — and with a pool in the way, that movie doesn’t exist."
         },
         {
           "t": 25.8,
           "end": 28.2,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And these posts never move while the tide works?"
+          "text": "He knows you. Emmy — how does he know you?"
         },
         {
           "t": 28.2,
           "end": 31.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That's a homotopy $rel$ those posts: they stay still the whole time."
+          "text": "Watch the posts, Gyroid. They never move while the tide works. That’s a homotopy $rel$ the posts."
         }
       ],
       "title_card": {
@@ -533,49 +533,49 @@
           "end": 11.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "I know these. The figure-eight and the theta — both were spines of Twin Lagoons."
+          "text": "I know these two. The figure-eight and the theta — Haven couriers used to race between them."
         },
         {
           "t": 11.6,
           "end": 14,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "But they don't look alike at all."
+          "text": "But they don’t look anything alike."
         },
         {
           "t": 14.4,
           "end": 19.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Looks aren't the test. Send each one into the other, then back. If every round trip slides home…"
+          "text": "Looks are how Null fools people. Send each one into the other, then back. If every round trip slides home…"
         },
         {
           "t": 19.4,
           "end": 22.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…they're the same shape. Homotopy equivalent."
+          "text": "…they’re the same shape. Homotopy equivalent. That’s a fact he can’t fold away."
         },
         {
           "t": 23.4,
           "end": 27.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Mirror Gate opens for anyone who can show it. Past it is the Foundry."
+          "text": "Past the Mirror Gate is the Foundry. If we’re going to stop the Crown, it starts there."
         },
         {
           "t": 27.6,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "You sound like you've been through it before."
+          "text": "You’ve been there before."
         },
         {
           "t": 30,
           "end": 33.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…Let's just get it open."
+          "text": "…I built it, Gyroid. Let’s get the gate open."
         }
       ],
       "title_card": {
@@ -642,49 +642,49 @@
           "t": 0.6,
           "end": 5.4,
           "speaker": "Narrator",
-          "text": "The Mirror Gate opened onto the Skeleton Foundry — where the world's places were built."
+          "text": "Behind the Mirror Gate: the Skeleton Foundry, where the world’s places were first put together."
         },
         {
           "t": 7.4,
           "end": 11,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Emmy. That mark on the press — it's the same as the patches on your coat."
+          "text": "That mark on the press — it’s on your coat. And on Null’s Crown."
         },
         {
           "t": 14.2,
           "end": 18.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "I built these. I thought simpler routes would make the couriers' lives easier."
+          "text": "Null and I built these presses together. We wanted simpler roads, so couriers would stop getting lost."
         },
         {
           "t": 18.8,
           "end": 22,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Null's people turned them into something that erases."
+          "text": "Then he lost someone on a road that wound away and never came back. After that he didn’t want simpler roads. He wanted no roads at all."
         },
         {
           "t": 22.4,
           "end": 26.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So we build things back. Points first. Then edges, glued at their ends. Then disks, glued along loops."
+          "text": "So we build. Points first. Then edges, glued at their ends. Then disks, glued along loops."
         },
         {
           "t": 26.8,
           "end": 31,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Glue a square's edges a, b, a⁻¹, b⁻¹ and you get a torus. Watch the arrows."
+          "text": "Glue a square’s edges a, b, a⁻¹, b⁻¹ and you get a torus — two holes he can’t pretend away. Watch the arrows."
         },
         {
           "t": 31.4,
           "end": 35.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Cell-Smith. Let's put this place back together."
+          "text": "The Cell-Smith. Then we build faster than he folds."
         }
       ],
       "title_card": {
@@ -759,42 +759,42 @@
           "end": 10.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Coning it. Every point of the ring joined to one tip. It fills the hole — the ring becomes a cone, and a cone has nothing left to wind around."
+          "text": "Coning it. Every point of the ring joined to one tip. The hole fills, and the ring becomes a cone — nothing left to wind around. Nothing left to live in."
         },
         {
           "t": 10.6,
           "end": 13.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Not erased. Completed. Isn't it tidier?"
+          "text": "Not erased, Emmy. Completed. You always did like things tidy."
         },
         {
           "t": 14.4,
           "end": 18.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Learn the operations, and you'll know a plug when you see one."
+          "text": "Learn the operations, Gyroid. Then you’ll know a plug when you see one."
         },
         {
           "t": 18.8,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One tip: a cone. A tip above and below: a suspension. Two loops at one point: a wedge. A circle swept around a circle: a torus."
+          "text": "One tip: a cone. A tip above and below: a suspension. Two loops at one point: a wedge. A circle swept round a circle: a torus."
         },
         {
           "t": 24.2,
           "end": 27.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And the torus I built in the Hall — it's the same as the swept one?"
+          "text": "And the torus I built in the Foundry — it’s the same as the swept one?"
         },
         {
           "t": 27.6,
           "end": 31.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Prove it. Count their cells."
+          "text": "Prove it. Count their cells. Null always hated counting."
         }
       ],
       "title_card": {
@@ -861,14 +861,14 @@
           "t": 0.6,
           "end": 5,
           "speaker": "Narrator",
-          "text": "The Timber Yard: walkways grown into a tangle no courier could follow."
+          "text": "The Timber Yard: walkways grown into a tangle no courier could follow — and beyond it, the bridge to Null’s Throne."
         },
         {
           "t": 7.2,
           "end": 11.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Find a tree — walkways that branch but never close a loop. Any edge with two different ends can shrink to a point."
+          "text": "Find a tree — walkways that branch but never close a loop. A walkway with two different ends can shrink to a point. Safely."
         },
         {
           "t": 12,
@@ -882,35 +882,35 @@
           "end": 19.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "That spawn just shrank one of the loops. Isn't that the same move?"
+          "text": "That spawn just shrank one of the loops. Isn’t that the same move?"
         },
         {
           "t": 19.8,
           "end": 22,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "No — that's Null's move. A loop has one end. Shrink it and a hole dies."
+          "text": "No. That’s Null’s move. A loop has one end. Shrink it and a hole dies — and whoever lived in it."
         },
         {
           "t": 22.4,
           "end": 26.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Count platforms minus walkways. Felling the tree never changes that number. That number is the Euler characteristic, χ."
+          "text": "Count platforms minus walkways. Felling a tree never changes that number. It’s the Euler characteristic, χ. You’ll want it at the Throne."
         },
         {
           "t": 26.8,
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Clear the yard. Then we forge the bridge to the Throne."
+          "text": "Clear the yard. Then we forge the bridge — and you go and face him."
         },
         {
           "t": 30,
           "end": 33.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Timber!"
+          "text": "Timber. And then Null."
         }
       ],
       "title_card": {
@@ -971,42 +971,42 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Emmy, this door just answered the gauntlet."
+          "text": "Emmy, this door just answered my gauntlet."
         },
         {
           "t": 5,
           "end": 8.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "My first machine. I'd forgotten I sealed it."
+          "text": "My first machine. Null and I sealed it the night we stopped speaking."
         },
         {
           "t": 9.2,
           "end": 13.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The floor is where everything starts. The side band is a motion we've already chosen for the edge."
+          "text": "The floor is where everything starts. The side band is a motion someone has already chosen for the edge."
         },
         {
           "t": 14.2,
           "end": 19.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The question: can you extend that motion through the whole piece, without changing the start?"
+          "text": "The question: can that motion carry through the whole piece without changing the start?"
         },
         {
           "t": 19.6,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For anything built from cells, yes — one cell at a time. That's the homotopy extension property."
+          "text": "For anything built from cells, yes — one cell at a time. The homotopy extension property. He never believed it would matter."
         },
         {
           "t": 24,
           "end": 27.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Optional, you said?"
+          "text": "Optional, you said. You keep saying that about the things that hurt."
         }
       ],
       "title_card": {
@@ -1072,49 +1072,49 @@
           "t": 0.6,
           "end": 5,
           "speaker": "Narrator",
-          "text": "The Winding Way was whole again as far as the next province — and Null's trail ran straight along it."
+          "text": "The Winding Way still held as far as the next province. Null’s trail ran straight along it — and behind him, the grey spread."
         },
         {
           "t": 8.4,
           "end": 13,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Bouquet Bastion. Two loop districts, one beacon. Every road here comes home."
+          "text": "Bouquet Bastion. Loop districts, one beacon in the middle. Every road here leaves and comes home."
         },
         {
           "t": 16.4,
           "end": 20.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Those guards — they always walk the same order. Red, violet, red back, violet back."
+          "text": "Those guards always walk the same order. Red, violet, red back, violet back."
         },
         {
           "t": 20.6,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Commutator's patrols. He thinks order is everything. Here he might be right."
+          "text": "The Commutator’s patrols. Null’s marshal. He thinks order is everything — and here, he might be right."
         },
         {
           "t": 24.4,
           "end": 29,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Count your loops, courier. You'll find they all come to nothing in the end."
+          "text": "Count your loops, courier. Every one of them comes to nothing in the end. Ask Haven."
         },
         {
           "t": 29.4,
           "end": 33.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Bending couldn't prove the ring was a ring. Counting loops can. That's what we learn here."
+          "text": "Bending couldn’t prove the ring was a ring. Counting loops can. Learn to count them, and we take Haven back."
         },
         {
           "t": 34.4,
           "end": 37.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then let's start counting."
+          "text": "Then I’m counting. Every single one."
         }
       ],
       "title_card": {
@@ -1212,81 +1212,81 @@
           "t": 0.4,
           "end": 4.2,
           "speaker": "Narrator",
-          "text": "The Commutator's ribbons went slack. Bouquet Bastion could keep its noncommuting routes — for now."
+          "text": "The Commutator’s ribbons went slack. Bouquet Bastion kept its roads — and its proof went on the Chart."
         },
         {
           "t": 4.4,
           "end": 6.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "He ran. Toward the sphere."
+          "text": "Null ran. Toward the sphere. And the grey went with him."
         },
         {
           "t": 7.2,
           "end": 10.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Draw any loop you like. Watch it shrink. There is nothing here to save."
+          "text": "Draw any loop you like on my sphere, courier. Watch it shrink. Your number reads zero. There is nothing here to save."
         },
         {
           "t": 10.8,
           "end": 13.8,
           "speaker": "Narrator",
-          "text": "Loops had been their sharpest tool. On a sphere, that tool goes blind."
+          "text": "Loops had been their sharpest weapon. On a sphere, every one goes blind — and the Crown began to fold the Delta."
         },
         {
           "t": 14.2,
           "end": 18.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then we stop counting paths — and start counting what they enclose. Down into the delta."
+          "text": "Then we stop counting paths and start counting what they enclose. Down into the delta. Fast."
         },
         {
           "t": 18.6,
           "end": 21.8,
           "speaker": "Narrator",
-          "text": "Chain Delta: wetlands tiled with oriented triangles, and a hole at the heart that refuses to fill."
+          "text": "Chain Delta: wetlands tiled with oriented triangles, and a hollow at its heart that refuses to fill."
         },
         {
           "t": 22.2,
           "end": 26.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Shared edges cancel. Face plus face — the seam disappears. That's a boundary."
+          "text": "Shared edges cancel. Face plus face — the seam disappears. That’s a boundary."
         },
         {
           "t": 26.6,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "But this ring around the missing center… nothing tiles it shut. It cycles. It stays."
+          "text": "But this ring round the missing middle… nothing tiles it shut. It stays."
         },
         {
           "t": 30.2,
           "end": 34.2,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A torus. A wedge of two circles and a sphere. Different costumes — same census."
+          "text": "A torus. A wedge of two circles and a sphere. Different costumes — the same census."
         },
         {
           "t": 34.4,
           "end": 37.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "If the counts agree, the places agree. I have already simplified them."
+          "text": "If the counts agree, the places agree. I’ll fold whichever one you love less."
         },
         {
           "t": 38.2,
           "end": 42.6,
           "speaker": "Narrator",
-          "text": "Homology would teach Gyroid to hear holes loops cannot feel — and, later, to catch the lie in Null's twin tally."
+          "text": "Homology would teach Gyroid to hear holes that loops cannot feel — and lay a trap in Null’s own arithmetic."
         },
         {
           "t": 42.8,
           "end": 46.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Tile carefully. Glue by the arrows. If the edges don't match, the land won't hold."
+          "text": "Tile carefully. Glue by the arrows. If the edges don’t match, the land won’t hold — and neither will we."
         }
       ],
       "title_card": {
@@ -1352,42 +1352,42 @@
           "t": 0.6,
           "end": 4.8,
           "speaker": "Narrator",
-          "text": "Beyond the delta lay gardens where no one walked the paths — they read them."
+          "text": "Beyond the delta lay gardens where no one walked the paths — they read them. And at their heart stood two islands Null called twins."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A reading gives every edge a value. Read a triangle by its edges, and we see holes from the other side."
+          "text": "A torus, and a wedge of two circles and a sphere. Same holes in every dimension. Our counts can’t tell them apart."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Two lanterns made a third. Readings multiply?"
+          "text": "Then he folds the torus and swears nothing changed. Emmy — there are people on that torus."
         },
         {
           "t": 20.8,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And that's what Null's two islands can't fake."
+          "text": "Then we read deeper. A reading gives every edge a value — and readings multiply. That’s what his twins can’t fake."
         },
         {
           "t": 24.4,
           "end": 29.4,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A three-sphere onto a two-sphere — your meters see nothing. Every such map is trivial."
+          "text": "Multiply all you like. And mark this: a three-sphere onto a two-sphere — every such map is trivial. Your readings will never see one."
         },
         {
           "t": 29.6,
           "end": 33.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And who's the station master? He stands like a fencer."
+          "text": "And who’s the station master? He stands like a fencer."
         }
       ],
       "title_card": {
@@ -1453,35 +1453,35 @@
           "t": 0.6,
           "end": 4.8,
           "speaker": "Narrator",
-          "text": "The last province was not land at all, but a tower — and every floor had more dimensions than the last."
+          "text": "The last province was not land at all, but a tower — every floor with more dimensions than the last. At its top, the Crown burned."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Up here, loops become spheres. Holes of every dimension, wrapping each other."
+          "text": "Up here, loops become spheres. Holes of every dimension, wrapped round each other."
         },
         {
           "t": 18.4,
           "end": 23,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "He's pulling the whole Winding Way in. Everything we restored."
+          "text": "He’s pulling the whole Winding Way in. Haven, the Bastion, the Delta — I can see them going grey from here."
         },
         {
           "t": 28.4,
           "end": 33.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Give me the groups and I'll rebuild any space. These twists? Ornament."
+          "text": "Give me the groups and I’ll rebuild any space, Emmy. These twists of yours? Ornament. When I fold the Way, I’ll leave the ornaments out."
         },
         {
           "t": 33.8,
           "end": 37.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Those twists hold the tower together. Let's go up and prove it."
+          "text": "Those twists are what hold the world together. Up we go, Gyroid. And this time, Null, I finish what we started."
         }
       ],
       "title_card": {
@@ -1562,14 +1562,14 @@
           "end": 12.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "I only wanted it simple. A point is so… simple."
+          "text": "I only wanted no one to fall, Emmy. A point has nowhere to fall."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Keep the torus. Look at its hole for a while. It's not going anywhere."
+          "text": "A point has nowhere to go, either. Keep the torus. Look at its hole for a while — it’s somebody’s road home."
         },
         {
           "t": 18.4,
@@ -1582,21 +1582,21 @@
           "end": 34.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The ring's back. Same hole. We never had to erase anything."
+          "text": "One delivery for Emmy Boundary. Your Chart. Every province inked."
         },
         {
           "t": 34.8,
           "end": 39.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "In order, I hope."
+          "text": "In order, I trust."
         },
         {
           "t": 42.4,
           "end": 48.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Shapes change, Gyroid. What can't be undone is what makes them themselves."
+          "text": "Shapes change, Gyroid. What can’t be undone is what makes them themselves."
         }
       ],
       "title_card": {
@@ -1663,41 +1663,41 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The bridge holds. Go — I'll keep the Foundry lit behind you."
+          "text": "The bridge holds. Go — I’ll keep the Foundry lit behind you. And Gyroid: whatever he offers, he doesn’t get the parcel."
         },
         {
           "t": 7.4,
           "end": 11.4,
           "speaker": "Narrator",
-          "text": "The Hollow Throne: a spire of black glass, and at its top, the one who started the collapse."
+          "text": "The Hollow Throne: a spire of black glass. From its top you can see every province — and the grey where the Crown has already fed."
         },
         {
           "t": 13.6,
           "end": 18,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "The courier who keeps holes. You've learned to bend my reef without breaking it. Impressive."
+          "text": "The courier who keeps holes. Look down there — Haven Ring. Your guild. Your road home. Still standing."
         },
         {
           "t": 18.2,
           "end": 21.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "But bending is cheap. Can you tell a true simplification from a false one?"
+          "text": "For now. Bending is cheap, courier. Can you tell a true simplification from a false one?"
         },
         {
           "t": 22.4,
           "end": 26.4,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Three trials. Fail one, and your precious reef becomes a point."
+          "text": "Three trials. Fail one, and Haven becomes a point."
         },
         {
           "t": 26.6,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then I won't fail."
+          "text": "Then I won’t fail."
         }
       ],
       "title_card": {
@@ -1764,48 +1764,48 @@
           "end": 4.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Every trick of mine, exposed. Well done. Now — this ring."
+          "text": "Every forgery exposed. You’re quicker than she ever was. So — your home."
         },
         {
           "t": 5,
           "end": 8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "It is a point. Prove it isn't."
+          "text": "Haven Ring. I say it is a point. Prove it isn’t."
         },
         {
           "t": 8.6,
           "end": 12.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Every slide I try stops at the hole. It won't shrink."
+          "text": "Every slide I try stops at the hole. It won’t shrink! It won’t!"
         },
         {
           "t": 13,
           "end": 16,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Won't — or can't? You don't know. Nobody here knows."
+          "text": "Won’t — or can’t? You don’t know. Nobody here knows. And the Crown only spares what someone can prove."
         },
         {
           "t": 16.4,
           "end": 20.4,
           "speaker": "Narrator",
-          "text": "And with that, Null stepped off the spire and was gone up the broken Winding Way."
+          "text": "Far off on the sea, Haven Ring went grey and folded without a sound — guild hall, beacon, every road. Null stepped off the spire and was gone up the broken Winding Way."
         },
         {
           "t": 24.4,
           "end": 28.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "He's right about one thing. Bending can't prove a hole is there. We need something that counts it."
+          "text": "Gyroid… I’m so sorry. Bending can’t prove a hole is there. We need a number that can’t change — something the Crown has to respect."
         },
         {
           "t": 28.8,
           "end": 31.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then we follow him, and find it."
+          "text": "Then we find it. And then I’m bringing Haven back."
         }
       ],
       "title_card": {
@@ -1872,28 +1872,28 @@
           "t": 0.6,
           "end": 4.6,
           "speaker": "Narrator",
-          "text": "In Bouquet Bastion, couriers kept a ledger — not of parcels, but of routes."
+          "text": "In Bouquet Bastion, couriers kept a ledger — not of parcels, but of routes. Haven kept one too, once."
         },
         {
           "t": 7.4,
           "end": 11.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Two routes are the same delivery if one slides into the other — and both ends stay at their gates the whole time."
+          "text": "Two routes are the same delivery if one slides into the other while both ends stay at their gates."
         },
         {
           "t": 15.4,
           "end": 19.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Left of the hedge and right of the hedge won't slide together."
+          "text": "Left of the hedge and right of the hedge won’t slide together. I can feel it."
         },
         {
           "t": 19.6,
           "end": 22.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Not by any slide we can find. Sort them, and keep that hedge in mind."
+          "text": "Feeling isn’t proof — that’s what cost us Haven. Sort them, and keep that hedge in mind. It’s the first hole we’ll prove."
         },
         {
           "t": 23.2,
@@ -1968,7 +1968,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A route that leaves the beacon and comes back is a loop. Loops are what we’ll count."
+          "text": "A route that leaves the beacon and comes home is a loop. Loops are what we’ll count."
         },
         {
           "t": 7.4,
@@ -1989,14 +1989,14 @@
           "end": 23,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every loop has an undo. That’s part of what makes them a group."
+          "text": "Every loop has an undo. That’s what makes them a group — and a group is something Null can’t argue with."
         },
         {
           "t": 23.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And those hooded things are running it the wrong way round."
+          "text": "And those hooded things are running it the wrong way round. On purpose."
         }
       ],
       "title_card": {
@@ -2077,21 +2077,21 @@
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "However I wiggle, I still end up on the same floor."
+          "text": "However I wiggle, I end up on the same floor."
         },
         {
           "t": 20.8,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Sliding can’t change it. That number belongs to the loop."
+          "text": "Sliding can’t change it. That number belongs to the loop. Gyroid — that’s it. That’s a number the Crown has to respect."
         },
         {
           "t": 24.4,
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Winders. Unwind their turns first — then lash."
+          "text": "Winders. They’ve stolen turns of the road. Unwind them first — then lash."
         }
       ],
       "title_card": {
@@ -2158,14 +2158,14 @@
           "t": 0.6,
           "end": 4.8,
           "speaker": "Narrator",
-          "text": "Null's Retractor had one job: squash the whole basin onto its rim."
+          "text": "Null had left a machine in the basin: the Retractor, built to squash a disk onto its rim — the same trick he used on Haven."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A basin is just its edge with filling. Squeeze out the filling."
+          "text": "A basin is just its edge, with filling. Squeeze out the filling. Squeeze out the hole. Simple."
         },
         {
           "t": 16.4,
@@ -2179,14 +2179,14 @@
           "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So the Retractor would have to turn nothing back into one lap. It can’t — and that settles the ring, too."
+          "text": "So the Retractor would have to turn nothing back into one lap. It can’t — winding numbers don’t jump. Prove it here, and you’ve proved the ring."
         },
         {
           "t": 26.4,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "A ring winds once. A point winds zero. They were never the same."
+          "text": "A ring winds once. A point winds zero. Haven was never a point."
         }
       ],
       "title_card": {
@@ -2254,35 +2254,35 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Torus Terraces. Every map here carries loops from one place to another."
+          "text": "Gyroid. Look back — on the horizon."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The projector maps my loop onto that island — and it winds twice there."
+          "text": "Haven. It’s got its hole back. The beacon’s lit — they’re home!"
         },
         {
           "t": 15.4,
           "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On a torus, a loop needs two numbers — and the order you take them in doesn’t matter."
+          "text": "Open the parcel now. It’s my Chart: every province, every hole. A place we prove gets inked on it — and the Crown can’t take back what’s inked."
         },
         {
           "t": 19.8,
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "$a$ then $b$, $b$ then $a$ — the same square on the grid."
+          "text": "So that’s why he wanted it. Then let’s ink the whole world."
         },
         {
           "t": 24,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Hey — get off that projector!"
+          "text": "Starting with — hey! Get off that projector!"
         }
       ],
       "title_card": {
@@ -2363,21 +2363,21 @@
           "end": 20.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The patrol runs $a$, $b$, $a$ back, $b$ back. Nothing cancels."
+          "text": "The Commutator’s patrol runs $a$, $b$, $a$ back, $b$ back. Nothing cancels."
         },
         {
           "t": 20.6,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And it never will. Here, the order of the letters matters."
+          "text": "And it never will. Here, order matters. That’s his whole power — a word that won’t undo."
         },
         {
           "t": 24.4,
           "end": 27.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "It’s coming for you. Lash it from its last letter first."
+          "text": "It’s coming for you. Unravel it from its last letter first."
         }
       ],
       "title_card": {
@@ -2445,7 +2445,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Glue a disk onto a loop, and the loop can slide across it and vanish."
+          "text": "Glue a disk onto a loop, and the loop can slide across it and vanish. Same press as the Foundry."
         },
         {
           "t": 7.4,
@@ -2459,21 +2459,21 @@
           "end": 20,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Glue one along $a$, $b$, $a$ back, $b$ back — and the figure-eight becomes a torus. Now $a$ then $b$ is $b$ then $a$."
+          "text": "Glue one along $a$, $b$, $a$ back, $b$ back — the Commutator’s own word — and the figure-eight becomes a torus. Now $a$ then $b$ is $b$ then $a$."
         },
         {
           "t": 20.2,
           "end": 23.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Commutator's word just died."
+          "text": "His patrol word just died."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Unless they unglue it."
+          "text": "On a torus. Out here he still has the figure-eight. Careful."
         }
       ],
       "title_card": {
@@ -2547,7 +2547,7 @@
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Gyroid! I’m up on sheet two. Find a route whose lift ends up here!"
+          "text": "Gyroid! The sheets shifted — I’m stuck up on sheet two! Find a route whose lift ends here!"
         },
         {
           "t": 16.4,
@@ -2561,14 +2561,14 @@
           "end": 25.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then find a cover where $a$ then $b$ closes and $b$ then $a$ doesn’t — and you’ve proved they’re different."
+          "text": "Then find a cover where $a$ then $b$ closes and $b$ then $a$ doesn’t. That proves his order — not just feels it."
         },
         {
           "t": 26.4,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Hold on. I'm coming up."
+          "text": "Hold on. I’m coming up."
         }
       ],
       "title_card": {
@@ -2636,14 +2636,14 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Tell the Stacks which loops should close, and they'll build you a cover for it."
+          "text": "Tell the Stacks which loops should close, and they’ll build you a cover for it. Null used to love this place."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Twice around closes, once doesn't — two sheets."
+          "text": "Twice around closes, once doesn’t — two sheets."
         },
         {
           "t": 15.4,
@@ -2664,7 +2664,7 @@
           "end": 25.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So does the plane over a torus."
+          "text": "So does the plane over a torus. Up here, every road ends somewhere. Nothing is lost. That’s what he forgot."
         }
       ],
       "title_card": {
@@ -2731,14 +2731,14 @@
           "t": 0.6,
           "end": 4.6,
           "speaker": "Narrator",
-          "text": "In the Deck Halls, whole floors moved together — and nothing changed."
+          "text": "In the Deck Halls, whole floors moved together — and nothing changed. The Commutator’s last post in the Bastion."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A shuffle that carries the whole cover onto itself is a symmetry of the cover. They form a group too."
+          "text": "A shuffle that carries the whole cover onto itself is a symmetry of the cover. Those form a group too."
         },
         {
           "t": 15.4,
@@ -2752,14 +2752,14 @@
           "end": 23.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…and you get the projective plane. The sphere covers it twice: every point down there is two points up here."
+          "text": "…and you get the projective plane — the sphere covers it twice. And Null? He’s gone ahead, to a sphere of his own."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One lash, every floor."
+          "text": "One lash, every floor. Then after him."
         }
       ],
       "title_card": {
@@ -3145,7 +3145,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "To count holes of every size, we need places built from pieces we can count."
+          "text": "To prove a sphere has a hole, we need places built from pieces we can count. Every piece."
         },
         {
           "t": 5.8,
@@ -3166,7 +3166,7 @@
           "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Flip one arrow and it's a Klein bottle. Same pieces, different gluing."
+          "text": "Flip one arrow and it’s a Klein bottle. Same pieces, different gluing. Null counts pieces — never gluing."
         },
         {
           "t": 20.0,
@@ -3241,7 +3241,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "My namesake. The Boundary Blade cuts anything down to its edge."
+          "text": "The Boundary Blade. My namesake. It cuts anything down to its edge."
         },
         {
           "t": 8.4,
@@ -3269,7 +3269,7 @@
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But a loop that isn't the edge of anything — that's a hole."
+          "text": "But a loop that isn’t the edge of anything — that’s a hole. That’s what we’re hunting."
         }
       ],
       "title_card": {
@@ -3351,14 +3351,14 @@
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And deforming the place doesn't change the count."
+          "text": "And bending the place doesn’t change the count?"
         },
         {
           "t": 20.8,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Squeeze a place without tearing it, and its holes stay the same."
+          "text": "Squeeze it without tearing and its holes stay the same. Not even the Crown can bend a count away."
         }
       ],
       "title_card": {
@@ -3433,7 +3433,7 @@
           "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "What one sluice sends is exactly what the next one drains. That's exact."
+          "text": "What one sluice sends is exactly what the next one drains. That’s exact. Null could learn something here."
         },
         {
           "t": 16.4,
@@ -3447,7 +3447,7 @@
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s how a place’s holes and a part’s holes pin each other down."
+          "text": "That’s how a place’s holes and its parts’ holes pin each other down. One more step, and we pin down a sphere."
         }
       ],
       "title_card": {
@@ -3515,7 +3515,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cut out what's deep inside the part, and nothing about the pair changes."
+          "text": "Cut out what’s deep inside the part, and nothing about the pair changes."
         },
         {
           "t": 8.4,
@@ -3529,14 +3529,14 @@
           "end": 21,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And a disk with its rim squashed is a sphere. Climb, and every sphere has exactly one hole."
+          "text": "And a disk with its rim squashed is a sphere. Climb, and every sphere has exactly one hole — in its own dimension."
         },
         {
           "t": 21.2,
           "end": 25.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One hole, in its own dimension. Null's sphere included."
+          "text": "One hole. Null’s sphere included. He was lying to us."
         }
       ],
       "title_card": {
@@ -3604,21 +3604,21 @@
           "end": 4.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Loops couldn’t see it. The Dial can: a sphere has a hole, Null."
+          "text": "Loops couldn’t see it. The Dial can. Your sphere has a hole, Null."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A number on a dial. Spin it however you like."
+          "text": "A needle on a dial. Spin it however you like, courier. The Crown doesn’t read dials."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Degree Dial counts how many times a map wraps a sphere round itself."
+          "text": "It reads proofs. The Degree Dial counts how many times a map wraps a sphere round itself — and a number like that can’t be folded."
         },
         {
           "t": 20.8,
@@ -3632,7 +3632,7 @@
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And wind can't cover a sphere without a calm spot. Try it."
+          "text": "And wind can’t cover a sphere without a calm spot. Prove it, and the Delta goes on the Chart."
         }
       ],
       "title_card": {
@@ -3700,7 +3700,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Built cell by cell, a place gives up its holes with almost no work."
+          "text": "Built cell by cell, a place gives up its holes with almost no work. The Foundry way."
         },
         {
           "t": 8.4,
@@ -3714,14 +3714,14 @@
           "end": 20.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The projective plane's disk wraps its edge twice. Go around twice and it's filled."
+          "text": "The projective plane’s disk wraps its edge twice. Go round twice and it’s filled."
         },
         {
           "t": 20.8,
           "end": 24,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Once, it's a hole. Twice, it's not. Weird."
+          "text": "Once, it’s a hole. Twice, it’s not. Weird. Null would hate this place."
         }
       ],
       "title_card": {
@@ -3782,21 +3782,21 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Two patches and their overlap tell you the whole place's holes."
+          "text": "Two patches and their overlap tell you the whole place’s holes."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Like Van Kampen at the Glue Works — but for holes."
+          "text": "Like the Clasp at the Glue Works — but for holes."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Mind the overlap. That's where the surprises are."
+          "text": "Mind the overlap. That’s where the surprises hide — and where Null hides his."
         }
       ],
       "title_card": {
@@ -3871,7 +3871,7 @@
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Its top hole only shows when arrows don’t matter — it has no consistent way round."
+          "text": "Its top hole only shows when arrows don’t matter. Null’s census missed it. His counts are never the whole story."
         },
         {
           "t": 18.4,
@@ -3939,21 +3939,21 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Commutator's patrols followed us."
+          "text": "The Commutator’s patrols followed us down."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Here only totals count. a, b, a back, b back totals nothing."
+          "text": "Here only totals count. $a$, $b$, $a$ back, $b$ back totals nothing."
         },
         {
           "t": 18.4,
           "end": 22.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "So your counting forgets order. I'll remember that."
+          "text": "So your counting forgets order. I’ll remember that, courier. So will my master."
         },
         {
           "t": 22.8,
@@ -4311,7 +4311,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In World 2 we cut things down to their edges. Here we read them."
+          "text": "In the Delta we cut things down to their edges. Here we read them."
         },
         {
           "t": 8.4,
@@ -4325,14 +4325,14 @@
           "end": 20.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A reading that's balanced everywhere but can't come from points sees a hole."
+          "text": "A reading that balances everywhere but can’t come from points sees a hole — from the other side."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "My reflection just waved."
+          "text": "My reflection just waved. I didn’t."
         }
       ],
       "title_card": {
@@ -4393,7 +4393,7 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Readings mostly match the holes we counted in World 2. Mostly."
+          "text": "Readings mostly match the holes we counted in the Delta. Mostly."
         },
         {
           "t": 8.4,
@@ -4407,7 +4407,7 @@
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Twisted holes show up one floor higher in readings. Plan for it."
+          "text": "Twisted holes show up one floor higher in readings. Null never plans for that. We will."
         }
       ],
       "title_card": {
@@ -4475,14 +4475,14 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Read a triangle's front edge with one reading and its back edge with another."
+          "text": "Read a triangle’s front edge with one reading and its back edge with another."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Cup Caster does it for you. Two readings in, one out."
+          "text": "The Cup Caster does it for you: two readings in, one out. This is the weapon for his twins."
         },
         {
           "t": 16.4,
@@ -4564,7 +4564,7 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Null's twins. Same holes in every dimension."
+          "text": "The twins. The torus is already going grey at the edges."
         },
         {
           "t": 8.4,
@@ -4585,14 +4585,14 @@
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Different products, different places. Null was wrong."
+          "text": "Different products, different places. Light it, Gyroid — put the torus on the Chart."
         },
         {
           "t": 24.4,
           "end": 27.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One lit, one dark. Not the same place."
+          "text": "One lit, one dark. Not the same place. Not yours, Null."
         }
       ],
       "title_card": {
@@ -4660,7 +4660,7 @@
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Circle times circle — that’s the torus again."
+          "text": "Circle times circle — the torus again. Still standing. Good."
         }
       ],
       "title_card": {
@@ -4735,7 +4735,7 @@
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That stopping point is why some maps can’t exist — the heart of Borsuk–Ulam."
+          "text": "That stopping point is why some maps can’t exist. There are things not even the Crown can make."
         }
       ],
       "title_card": {
@@ -4810,14 +4810,14 @@
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then this cliff can't be oriented. Like the Möbius band."
+          "text": "Then this cliff can’t be oriented. Like the Möbius band."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The two choices make a cover — the Sheet Compass sees it."
+          "text": "The two choices make a cover. The Sheet Compass sees it — the same one that found me on sheet two."
         }
       ],
       "title_card": {
@@ -4892,14 +4892,14 @@
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Dimension k on this side, n minus k on that one."
+          "text": "Dimension $k$ on this side, $n − k$ on that one."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "If the place is twisted, count mod 2 and the mirror still works."
+          "text": "Twisted? Count mod 2 and the mirror still works. A real manifold always has its twins. Remember that at the station."
         }
       ],
       "title_card": {
@@ -4974,7 +4974,7 @@
           "end": 21.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Time to visit that station."
+          "text": "The station’s lights just came on. He’s waiting for us."
         }
       ],
       "title_card": {
@@ -5034,28 +5034,28 @@
           "end": 4.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "Welcome to the torus, courier. Count my holes — you'll find them all in order."
+          "text": "Welcome to my station, courier. A torus, a ℂP², a manifold — I am whatever your counts say I am."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Commutator. You don't give up."
+          "text": "The Commutator. And Null hiding behind you, as usual."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "Your counting forgot order once. It will forget again."
+          "text": "Your counting forgot order once. It will forget again — and then my master folds whatever I’m wearing."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "We don't just count anymore. We multiply."
+          "text": "We don’t just count any more. We multiply."
         }
       ],
       "title_card": {
@@ -5115,28 +5115,28 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "No top lantern, no twin across the seam. Your station was never a torus."
+          "text": "Three disguises, three products. Your station was never any of them."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "Then I'll find somewhere your lanterns can't reach."
+          "text": "Master — give me one more chance, I can still —"
         },
         {
           "t": 16.4,
           "end": 21,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Climb my Spire, courier. Up here, shapes have more than holes."
+          "text": "You failed me, marshal. Go and be folded with the rest. — Climb my Spire, courier. Up there, shapes have more than holes."
         },
         {
           "t": 21.2,
           "end": 27.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then we climb. Every floor."
+          "text": "He just threw away his own marshal. Emmy — he doesn’t care who’s left. We climb."
         }
       ],
       "title_card": {
@@ -5204,21 +5204,21 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "That’s $π₂$: spheres, not loops."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "In a square there's room to slide past each other."
+          "text": "In a square there’s room to slide past each other."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So up here, order never matters. The Commutator has no power on these floors."
+          "text": "So up here, order never matters. The Commutator’s power stops at the first floor."
         }
       ],
       "title_card": {
@@ -5286,14 +5286,14 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "Every floor of his Spire is made of cells. That’s a weakness."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So a circle on a sphere snaps to a point. Small spheres can't wrap big ones."
+          "text": "So a circle on a sphere snaps to a point. Small spheres can’t wrap big ones."
         }
       ],
       "title_card": {
@@ -5361,21 +5361,21 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "That’s Whitehead’s theorem — and it needs a map."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And if there's no map? Just matching numbers?"
+          "text": "And if there’s no map? Just matching numbers?"
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then we know nothing. Remember that when Null talks."
+          "text": "Then we know nothing. Remember that when Null talks about his groups."
         }
       ],
       "title_card": {
@@ -5443,21 +5443,21 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "Your Sling from the Cone Zone — I’ve upgraded it. It lifts whole maps up a dimension."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Your Sling from the Cone Zone — I've upgraded it. It lifts whole maps up a dimension."
+          "text": "I built the first one for him, you know. Before."
         },
         {
           "t": 12.799999999999999,
           "end": 16.1,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "I can feel the floors shifting under my boots."
+          "text": "I can feel the floors shifting under my boots. He’s folding the tower from the top down."
         },
         {
           "t": 18.4,
@@ -5525,7 +5525,7 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "These are the bricks Null builds with. Learn them, and you’ll see what he leaves out."
         },
         {
           "t": 10.4,
@@ -5593,14 +5593,14 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "At the first floor where anything happens, they agree. In dimension one, up to order."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "At the first floor where anything happens, they agree. In dimension one, up to order."
+          "text": "So every count from the Delta told the truth about spheres. Hold on to that."
         }
       ],
       "title_card": {
@@ -5675,7 +5675,7 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "Null swore no map from a three-sphere to a two-sphere could ever matter."
         },
         {
           "t": 8.4,
@@ -5696,21 +5696,21 @@
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And every two circles link. You can't pull that apart."
+          "text": "And every two circles link. You can’t pull that apart."
         },
         {
           "t": 20.8,
           "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So the map from three-sphere to sphere isn't trivial. Null's claim falls."
+          "text": "So the map from the three-sphere to the sphere isn’t trivial. His claim falls — and the Gardens stay on the Chart for good."
         },
         {
           "t": 26.4,
           "end": 29.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "One map. A curiosity."
+          "text": "One map. A curiosity. You’re running out of floors, courier."
         }
       ],
       "title_card": {
@@ -5771,14 +5771,14 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "The stable groups — the same however high you climb."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "First calm place in four worlds."
+          "text": "First calm place in four worlds. I hate that I don’t trust it."
         }
       ],
       "title_card": {
@@ -5839,14 +5839,14 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Keep watching — the Spire itself is the proof."
+          "text": "Every cohomology class is a map. Turn the map, and the reading turns with it."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Lanterns were maps all along."
+          "text": "Lanterns were maps all along. So the Chart is made of maps too."
         }
       ],
       "title_card": {
@@ -5914,7 +5914,7 @@
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Whatever moves down there, something up here moves with it."
+          "text": "Whatever moves down there, something up here moves with it. Like the grey, following us up."
         }
       ],
       "title_card": {
@@ -5975,21 +5975,21 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One floor for each homotopy group."
+          "text": "One floor for each homotopy group — and a twist between every pair."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Same floors, no twist — and it's a different tower."
+          "text": "Same floors, no twist — and it’s a different tower."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That's what Null threw away. He's going to get it wrong."
+          "text": "That’s what Null threw away. He means to rebuild the world without its twists — and it won’t be our world."
         }
       ],
       "title_card": {
@@ -6050,7 +6050,7 @@
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A cell that won’t fill is telling us something."
+          "text": "The machine Null and I sealed. Every cell, in order. I never thought I’d need it against him."
         },
         {
           "t": 8.4,
@@ -6071,7 +6071,7 @@
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then I change what's below and try again."
+          "text": "Then I change what’s below and try again. Then the Crown."
         }
       ],
       "title_card": {
@@ -6138,28 +6138,28 @@
           "end": 4.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Every hole you saved, courier. I'm folding them all to a point."
+          "text": "Every hole you saved, courier, I’m taking back. The whole Way, folded to one point. Quiet. Safe. Nobody lost, ever again."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "You threw away the twists. Your tower can't stand."
+          "text": "You threw away the twists. Your tower can’t stand — and Haven was never yours to keep safe."
         },
         {
           "t": 18.4,
           "end": 23,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "Order matters, Null. So does structure. I won't be folded."
+          "text": "Order matters, Null. So does structure. I won’t be folded."
         },
         {
           "t": 23.2,
           "end": 27.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every tool, Gyroid. Every world."
+          "text": "Every tool, Gyroid. Every world. Let’s end this."
         }
       ],
       "title_card": {

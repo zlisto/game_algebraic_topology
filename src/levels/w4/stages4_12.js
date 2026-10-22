@@ -83,7 +83,7 @@ export const STATIONS = {
         options: ['$Hⁿ⁺¹(W, A; πₙX) = 0$ for all $n$', '$πₙ(X) ≠ 0$ for some $n$', '$W = A$ only'],
         answer: '$Hⁿ⁺¹(W, A; πₙX) = 0$ for all $n$',
         wrong: [E('What was written on the doors that opened?')],
-        right: [E('Homotopy, read through cohomology. The Spire is climbed. The gate is open.')],
+        right: [E('Homotopy, read through cohomology. The Spire is climbed. Above us — the Crown. Ready, Gyroid?')],
       },
     ],
   },

@@ -10,10 +10,12 @@
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
+const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 
 export const STATION_ORDER = ['stack', 'twist', 'untwist', 'rebuild']
 
 export const OPENING = [
+  N('My tower has every group, Emmy. I only left out the twists. They were ornament.'),
   E('The Twist. A Postnikov tower builds a space one homotopy group at a time: floor $Xₙ$ has the space’s $π₁, …, πₙ$ and nothing higher.'),
   E('Each floor sits over the last with fibre $K(πₙ, n)$ — but the floors can be glued with a twist. The twists are cohomology classes: the k-invariants.'),
   G('A tower of Eilenberg–MacLane spaces, held together by cohomology.'),
@@ -83,7 +85,7 @@ export const STATIONS = {
         options: ['$Hⁿ⁺²(Xₙ; πₙ₊₁X)$', '$πₙ(Xₙ)$', '$Hⁿ(X; ℤ)$'],
         answer: '$Hⁿ⁺²(Xₙ; πₙ₊₁X)$',
         wrong: [E('It’s a map $Xₙ → K(πₙ₊₁X, n + 2)$. What does Theorem 4.57 make that?')],
-        right: [E('A map to $K(G, m)$ is a class in $Hᵐ$. The tower is built. Gate’s open.')],
+        right: [E('A map to $K(G, m)$ is a class in $Hᵐ$. The tower stands — twists and all. The gate’s open; the Crown is close.')],
       },
     ],
   },
