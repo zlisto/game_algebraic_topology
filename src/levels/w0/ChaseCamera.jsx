@@ -83,7 +83,8 @@ export default function ChaseCamera({ stateRef, yawRef, overhead: overheadProp, 
 
     if (overhead) {
       // square up to the nearest quarter turn: W / A / S / D then run straight along the reef
-      const square = Math.round(yawRef.current / (Math.PI / 2)) * (Math.PI / 2)
+      // a station may fix its heading (overhead.yaw); otherwise square up to the nearest quarter turn
+      const square = overhead.yaw ?? Math.round(yawRef.current / (Math.PI / 2)) * (Math.PI / 2)
       yawRef.current = wrap(yawRef.current + wrap(square - yawRef.current) * Math.min(1, dt * 6))
     }
     const yaw = yawRef.current

@@ -156,6 +156,13 @@ export default function LevelShell({
   const [bag, setBag] = useState({})
   const stateRef = useRef(null)
   const frameRef = useRef(null)
+  // the chase camera starts behind Gyroid, looking from the landing toward the first station
+  const camYawRef = useRef(
+    (() => {
+      const first = SITE[stationOrder[0]]
+      return first ? Math.atan2(layout.start[0] - first.pos[0], layout.start[1] - first.pos[1]) : 0
+    })(),
+  )
   const spawnRef = useRef(null)
   const toastTimer = useRef(null)
   const afterTalk = useRef(null)
@@ -387,9 +394,11 @@ export default function LevelShell({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameKey, checkpoint, done, SITES])
 
-  if (current && here.site === current && met[current] && SITE[current]) {
+  // top view only for the puzzle itself: not during the arrival dialogue, and not while the station's guards are still up (fights use the chase camera)
+  if (current && here.site === current && met[current] && SITE[current] && !talking && !(enemies[current] > 0)) {
     const r = SITE[current].def?.add?.[0]?.r || 5.4
-    frameRef.current = { center: [SITE[current].pos[0] + 1, SITE[current].pos[1] + 0.3], size: r > 5.4 ? 8.8 : 8.2, follow: 0.12 }
+    // a fixed heading (looking north) so every station reads the same way up, whichever way Gyroid walked in
+    frameRef.current = { center: [SITE[current].pos[0] + 1, SITE[current].pos[1] + 0.3], size: r > 5.4 ? 9.7 : 9.0, follow: 0.3, yaw: SITE[current].def?.camYaw ?? 0 }
   } else frameRef.current = null
 
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.5 && Math.abs(z - layout.exit.gate[1]) < 2.2, () => setLevelClear(true))
@@ -466,6 +475,7 @@ export default function LevelShell({
           gameKey={gameKey}
           stateRef={stateRef}
           frameRef={frameRef}
+          camYawRef={camYawRef}
           spawnRef={spawnRef}
           playEnabled={playEnabled}
           tool={tool}

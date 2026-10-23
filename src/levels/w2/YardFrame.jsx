@@ -6,7 +6,8 @@ import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import ChaseCamera from '../w0/ChaseCamera'
 import { EmmyBubble } from '../w0/FoundryScene'
 import ReefGame from '../w0/ReefGame'
 import { ACTION_TOOLS } from '../w0/worldTools'
@@ -89,7 +90,10 @@ export default function YardFrame({
   layout, sites, walkable, game, gameKey, stateRef, frameRef, spawnRef, playEnabled, tool, onAction,
   emmyAt, emmyTalking, showEmmyBubble, exitOpen, current, done, bag, setEnemies, setHearts,
   sky = {}, deckColor, station,
+  camYawRef,
 }) {
+  const ownYaw = useRef(0)
+  const yaw = camYawRef || ownYaw // the chase camera's heading (shared with movement)
   const stations = sites.filter((s) => s.stage === 'station')
   const emmyScript = () => ({
     pos: [emmyAt.current.x / S, 0, emmyAt.current.z / S],
@@ -126,6 +130,7 @@ export default function YardFrame({
       </group>
       <EmmyBubble emmyAt={emmyAt} show={!!showEmmyBubble} />
       <ReefGame
+        camYawRef={yaw}
         key={gameKey}
         stage={game}
         shape={walkable}
@@ -146,7 +151,8 @@ export default function YardFrame({
         onHearts={setHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      {/* Mario 64-style chase camera for walking and fights; the top view only while a station's puzzle is worked (frameRef) */}
+      <ChaseCamera stateRef={stateRef} yawRef={yaw} overheadRef={frameRef} />
       <DevAdvance />
       <EffectComposer multisampling={4}>
         <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.62} luminanceSmoothing={0.2} />

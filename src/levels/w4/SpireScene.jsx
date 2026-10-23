@@ -5,7 +5,8 @@ import { useRef } from 'react'
 import Emmy from '../../characters/Emmy'
 import { CausewaySlab } from '../../world/ReefScenery'
 import { Clouds, FloatingRocks } from '../../world/Dressing'
-import { DevAdvance, FollowCamera } from '../w0/OverworldScene'
+import { DevAdvance } from '../w0/OverworldScene'
+import ChaseCamera from '../w0/ChaseCamera'
 import { EmmyBubble } from '../w0/FoundryScene'
 import ReefGame from '../w0/ReefGame'
 
@@ -101,7 +102,10 @@ export default function SpireScene({
   emmyNear,
   accent = '#c9a0ff',
   gameKey,
+  camYawRef,
 }) {
+  const ownYaw = useRef(0)
+  const yaw = camYawRef || ownYaw // the chase camera's heading (shared with movement)
   const emmyScript = () => ({
     pos: [emmyAt.current.x / S, 0, emmyAt.current.z / S],
     rotY: emmyAt.current.rotY,
@@ -131,6 +135,7 @@ export default function SpireScene({
       </group>
       <EmmyBubble emmyAt={emmyAt} show={!!emmyNear} />
       <ReefGame
+        camYawRef={yaw}
         key={gameKey}
         stage={game}
         shape={walkable}
@@ -150,7 +155,8 @@ export default function SpireScene({
         onHearts={onHearts}
         onSpooling={() => {}}
       />
-      <FollowCamera stateRef={stateRef} frameRef={frameRef} />
+      {/* Mario 64-style chase camera for walking and fights; the top view only while a station's puzzle is worked (frameRef) */}
+      <ChaseCamera stateRef={stateRef} yawRef={yaw} overheadRef={frameRef} />
       <DevAdvance />
       <EffectComposer multisampling={0}>
         <Bloom luminanceThreshold={0.28} intensity={0.8} />
