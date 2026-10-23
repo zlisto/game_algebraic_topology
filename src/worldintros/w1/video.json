@@ -1,0 +1,33 @@
+{
+  "id": "world-1-intro-v2",
+  "title": "Bouquet Bastion",
+  "plays": "After castle-0's outro (A Ring Is a Ring), before World 1 · Level 1 (Fixed Endpoints)",
+  "world": 1,
+  "story_start": 0,
+  "story_end": 58,
+  "pace": [[0, null, 0.9]],
+  "synopsis": "The morning after Haven folded, Gyroid and Emmy follow Null's violet trail up the Winding Way to Wayfall Landing. Bouquet Bastion opens below: Endpoint Gardens, the Winding Road's helix, two loop districts tied at the Basepoint Beacon, the Commutator's patrols walking his word, and his Keep. Null comes down out of the sky, enormous, and promises to fold the Bastion gently; the violet district goes grey under the Crown's shadow. Gyroid answers with a vow; Emmy points them to Endpoint Gardens.",
+  "scenes": [
+    { "id": "A", "start": 0, "end": 10.8, "title": "Null's trail", "description": "Dawn. The Winding Way runs north as a viaduct over the sea; a violet ribbon (Null's trail) shimmers above it. Gyroid and Emmy walk it." },
+    { "id": "B", "start": 10.8, "end": 13, "title": "Wayfall Landing", "description": "They reach the headland at the Way's end; the camera rises over them and Bouquet Bastion spreads out below." },
+    { "id": "C", "start": 13, "end": 25.6, "title": "The Bastion", "description": "Fly-over: Endpoint Gardens (gatehouses, hedge bed, gold routes); the Winding Road's helix; two loop districts, red and violet, tied at the amber Basepoint Beacon; a file of ribbon patrols walking red, violet, red back, violet back; the Commutator on his Keep's balcony, baton raised." },
+    { "id": "D", "start": 25.6, "end": 41.6, "title": "Count Null", "description": "The sky turns violet and Null comes down out of the clouds behind the Keep, enormous. The Commutator kneels. While Null speaks, the violet district's lamps go grey under the Crown's shadow, then return as Null folds himself to a point and is gone." },
+    { "id": "E", "start": 41.6, "end": 51.4, "title": "Ready to roll", "description": "Gyroid answers. Emmy points down to Endpoint Gardens; Gyroid readies his spool." },
+    { "id": "F", "start": 51.4, "end": 58, "title": "Title", "description": "The camera rises over the Bastion at dawn. Title card: World 1 · Bouquet Bastion." }
+  ],
+  "captions": [
+    { "t": 0.6, "end": 5.0, "speaker": "Narrator", "hold": false, "text": "North of Retract Reef the Winding Way ran on across the sea, and Null’s trail glowed above it, violet and still warm." },
+    { "t": 5.3, "end": 7.9, "speaker": "Gyroid", "portrait": "gyroid", "text": "He’s not even hiding. He wants us to see." },
+    { "t": 8.1, "end": 10.7, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "He wants to be followed. He never runs without a reason." },
+    { "t": 13.0, "end": 17.1, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Bouquet Bastion. Every road leaves the beacon and comes home to it. Every one." },
+    { "t": 17.3, "end": 20.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven’s roads came home like that. Every one." },
+    { "t": 21.0, "end": 25.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The Commutator’s patrols. Red loop, violet loop, red back, violet back. Always that order, never another." },
+    { "t": 27.2, "end": 31.0, "speaker": "Count Null", "portrait": "count-null", "text": "Gyroid. You walked all night. You must be so tired." },
+    { "t": 31.3, "end": 35.5, "speaker": "Count Null", "portrait": "count-null", "text": "Count the loops here, if it comforts you. Every count will come to nothing, the way Haven’s did." },
+    { "t": 35.8, "end": 40.0, "speaker": "Count Null", "portrait": "count-null", "text": "Then I’ll fold the Bastion gently. Beacon, gardens, every lamp on every ring. No one gets lost on a point." },
+    { "t": 41.7, "end": 45.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "You folded Haven because I couldn’t prove it. I’m going to learn how. Then that Crown is mine." },
+    { "t": 45.3, "end": 49.1, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Then we start small. Endpoint Gardens: two gates, a hundred paths. Learn which ones are really the same." },
+    { "t": 49.4, "end": 51.2, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then let’s roll." }
+  ],
+  "title_card": { "t": 51.6, "end": 57.6 }
+}
