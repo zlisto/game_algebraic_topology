@@ -5,7 +5,7 @@
   "world": 4,
   "status": "scripted",
   "story_start": 0,
-  "story_end": 54,
+  "story_end": 57,
   "pace": [[0, null, 0.85]],
   "synopsis": "The viaduct ends high over the sea, facing the Postnikov Spire. Gyroid and Emmy look up its floors: the Cube Hall, the Grid Gallery, the Hopf Ring, Hurewicz Hall, the Twist, the Obstruction Course, and the Crown on top. Null rises out of the sea beside his tower, taller than it, and makes his claim: give him the groups and he can rebuild any space; the twists are ornament, and he will fold them first. Gyroid answers with the outro's challenge; the Chart lights a path to the first floor.",
   "scenes": [
@@ -13,13 +13,14 @@
     { "id": "B", "start": 7, "end": 13, "title": "Looking up", "description": "Over their shoulders: the Spire's floors climbing into the clouds." },
     { "id": "C", "start": 13, "end": 27.5, "title": "The floors", "description": "The camera spirals up the Spire past each terrace: the Cube Hall's sliding cubes, the Grid Gallery, the linked rings of the Hopf Ring, Hurewicz Hall's wrapped sphere, the Twist's twisted towers, the Obstruction Course's blocked cell, then the summit and the Crown." },
     { "id": "D", "start": 27.5, "end": 41, "title": "Null rises", "description": "The Crown flares; the dawn on the horizon goes out. Count Null rises out of the sea beside his Spire, taller than it, and speaks." },
-    { "id": "E", "start": 41, "end": 47.5, "title": "Ready", "description": "Behind the pair, Null looming over the Spire. Gold Chart slabs light one by one, a path down to the Cube Hall." },
-    { "id": "F", "start": 47.5, "end": 54, "title": "Title", "description": "They run onto the Chart path; the camera cranes back over the Spire and Null. Title: World 4 · The Postnikov Spire." }
+    { "id": "E", "start": 41, "end": 47.6, "title": "Ready", "description": "Behind the pair, Null looming over the Spire. Gold Chart slabs light one by one, a path down to the Cube Hall." },
+    { "id": "E2", "start": 47.6, "end": 51.6, "title": "Looking up", "description": "A wide from behind the pair: the lit path, the Spire, Null beside it. No captions." },
+    { "id": "F", "start": 51.6, "end": 57, "title": "Title", "description": "They run onto the Chart path; the camera cranes back over the Spire and Null. Title: World 4 · The Postnikov Spire." }
   ],
   "captions": [
-    { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "All night they ran the viaduct north, until it ended in the air. Ahead stood the Postnikov Spire. At its top, the Crown burned." },
-    { "t": 7.4, "end": 9.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "That’s where he went. Straight up into the Crown." },
-    { "t": 9.8, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Every floor up there wraps one dimension higher. Loops down here. Spheres above. Then spheres wrapped round spheres." },
+    { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "From the broken station they ran the viaduct north, until it ended in the air. Ahead stood the Postnikov Spire. At its top, the Crown burned." },
+    { "t": 7.4, "end": 9.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "He climbed his own tower. He’s waiting at the top." },
+    { "t": 9.8, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Each floor wraps one dimension higher. Loops down here. Spheres up there. And at the top, spheres wrapped round spheres." },
     { "t": 14.0, "end": 16.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The Cube Hall. Squares and cubes with their whole edge pinned to one point. Every one of them is a sphere in disguise." },
     { "t": 18.0, "end": 20.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "And those rings, higher up. Every one is linked through every other. Not one comes loose." },
     { "t": 22.2, "end": 25.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Near the top, the floors are twisted. Something holds them together that no single floor shows." },
@@ -29,5 +30,5 @@
     { "t": 41.2, "end": 44.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "You said every map S³ → S² is trivial. I’m going to find one that isn’t. Then I’m coming for that Crown." },
     { "t": 44.2, "end": 47.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Bend it, don’t break it, and prove it. First floor, Gyroid: the Cube Hall." }
   ],
-  "title_card": { "t": 48, "end": 54 }
+  "title_card": { "t": 52, "end": 57 }
 }

@@ -40,6 +40,7 @@ const RUN = [51.2, 53.9]
 const AT_QUAY = 51
 // where Null's raised palm is (his group's frame, scale NS; the outro's ring sits here too)
 const PALM = [0.45, 2.45, 0.55]
+const PALM_SUN = [0.95, 2.5, 0.75] // at sunrise he holds it out at arm's length, clear of his hood
 const nullPos = (t) => [NP[0], NP[1], NP[2] - 0.5 * smooth(seg(t, BREAK_AT, BREAK_AT + 0.4))]
 const SUN_YAW = (() => {
   const d = sunDir(66)
@@ -50,9 +51,13 @@ const nullYaw = (t) => (t > 65.5 ? SUN_YAW : 0)
 const RING_W = (() => {
   const c = Math.cos(SUN_YAW)
   const sn = Math.sin(SUN_YAW)
-  const [px, py, pz] = PALM.map((v) => v * NS)
+  const [px, py, pz] = PALM_SUN.map((v) => v * NS)
   return [NP[0] + px * c + pz * sn, NP[1] + py, NP[2] - 0.5 - px * sn + pz * c]
 })()
+// over Null's shoulder, looking down the line to the sun: the sun sits in the ring's hole
+const SUN_D = sunDir(66)
+const ringCam = (d) => [RING_W[0] - SUN_D.x * d, RING_W[1] - SUN_D.y * d, RING_W[2] - SUN_D.z * d]
+const ringLook = [RING_W[0] + SUN_D.x * 10, RING_W[1] + SUN_D.y * 10, RING_W[2] + SUN_D.z * 10]
 const gyroAt = (t) => {
   if (t < AT_QUAY) return G_A
   const k = smooth(seg(t, RUN[0], RUN[1]))
@@ -304,7 +309,7 @@ function Chart({ tRef }) {
 // ---------------------------------------------------------------- fireworks over Haven
 
 const FW_COLORS = ['#ffd27a', '#3ecfbf', '#ff8a6a', '#c8a8ff', '#ffffff', '#7fe8dc']
-export const BURSTS = Array.from({ length: 26 }, (_, i) => {
+export const BURSTS = Array.from({ length: 32 }, (_, i) => {
   const r = (k) => {
     const x = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453
     return x - Math.floor(x)
@@ -324,13 +329,13 @@ const SUN_XZ = [Math.sin(SUN_YAW), Math.cos(SUN_YAW)]
 const P = (id) => PLACE[id].at
 // [start, end, [from pos, from look], [to pos, to look]] — positions may be functions of t (tracking shots)
 const SHOTS = [
-  [0, 3.8, [[N[0] + 2.9, TOPY + 1.6, N[2] + 5.6], [N[0] - 0.4, TOPY + 1.5, N[2] + 1.4]], [[N[0] + 2.5, TOPY + 1.6, N[2] + 5.0], [N[0] - 0.4, TOPY + 1.55, N[2] + 1.4]]],
+  [0, 3.8, [[N[0] + 2.2, TOPY + 1.9, N[2] + 9.0], [N[0] - 0.2, TOPY + 0.95, N[2] + 1.5]], [[N[0] + 2.0, TOPY + 1.9, N[2] + 8.2], [N[0] - 0.2, TOPY + 1.0, N[2] + 1.5]]],
   [3.8, 5.0, [[N[0] + 1.3, TOPY + 2.6, N[2] + 2.8], CROWN_AT], [[N[0] + 0.9, TOPY + 2.6, N[2] + 2.0], CROWN_AT]],
-  [5.0, 7.0, [[N[0] + 2.4, TOPY + 2.6, N[2] + 7.5], [N[0], TOPY + 2.8, N[2]]], [[N[0] + 3.4, TOPY + 2.4, N[2] + 10.5], [N[0], TOPY + 2.4, N[2] - 1]]],
+  [5.0, 7.0, [[N[0] + 3.2, TOPY + 2.4, N[2] + 10], [N[0], TOPY + 1.6, N[2] + 0.5]], [[N[0] + 4.4, TOPY + 2.5, N[2] + 13.5], [N[0], TOPY + 1.6, N[2]]]],
   [7.0, 13.6, [[N[0] + 1.0, TOPY + 1.55, N[2] + 2.6], [N[0], TOPY + 1.95, N[2] - 0.5]], [[N[0] + 0.7, TOPY + 1.6, N[2] + 2.1], [N[0], TOPY + 2.0, N[2] - 0.5]]],
   [13.6, 16.6, [towardNull(E_A, 2.3, 1.25), [E_A[0], TOPY + 1.1, E_A[2]]], [towardNull(E_A, 2.0, 1.2), [E_A[0], TOPY + 1.12, E_A[2]]]],
-  [16.6, 20.8, [[MID_GN[0] + 4.2, TOPY + 2.5, MID_GN[2] + 0.6], [MID_GN[0], TOPY + 1.15, MID_GN[2]]], [[MID_GN[0] + 3.6, TOPY + 2.4, MID_GN[2] + 0.2], [MID_GN[0], TOPY + 1.2, MID_GN[2]]]],
-  [20.8, 23.0, [towardNull(C_A, 2.9, 1.25), [C_A[0], TOPY + 1.1, C_A[2]]], [towardNull(C_A, 2.5, 1.2), [C_A[0], TOPY + 1.15, C_A[2]]]],
+  [16.6, 20.8, [[MID_GN[0] + 6.5, TOPY + 2.2, MID_GN[2] + 0.6], [MID_GN[0], TOPY + 1.6, MID_GN[2]]], [[MID_GN[0] + 6.0, TOPY + 2.1, MID_GN[2] + 0.2], [MID_GN[0], TOPY + 1.6, MID_GN[2]]]],
+  [20.8, 23.0, [[C_A[0] + 2.3, TOPY + 1.15, C_A[2] + 0.1], [C_A[0], TOPY + 0.62, C_A[2]]], [[C_A[0] + 2.0, TOPY + 1.1, C_A[2] + 0.3], [C_A[0], TOPY + 0.66, C_A[2]]]],
   [23.0, 25.0, [towardNull(E_A, 2.6, 1.45), [E_A[0], TOPY + 0.8, E_A[2]]], [towardNull(E_A, 2.3, 1.4), [E_A[0], TOPY + 0.82, E_A[2]]]],
   [25.0, 28.8, [[N[0] + 2.0, TOPY + 7.5, N[2] - 8], [0, 0, -30]], [[N[0] + 1.0, TOPY + 13, N[2] - 14], [0, 0, -5]]],
   [28.8, 31.4, [[13, 7, 23], [-3, 0.5, 6]], [[9, 5.5, 19], [-2, 0.8, 3]]],
@@ -345,8 +350,9 @@ const SHOTS = [
   [59.4, 61.4, [add(G_Q, [-2.1, 1.05, 1.2]), add(G_Q, [0, 0.72, 0])], [add(G_Q, [-1.85, 1.05, 1.05]), add(G_Q, [0, 0.74, 0])]],
   [61.4, 63.4, [add(E_Q, [2.1, 1.05, 1.2]), add(E_Q, [0, 0.74, 0])], [add(E_Q, [1.85, 1.05, 1.05]), add(E_Q, [0, 0.76, 0])]],
   [63.4, 66.2, [[QUAY[0] + 1.6, QY + 2.0, QUAY[1] + 5.6], [QUAY[0] - 0.6, QY + 1.0, QUAY[1] - 0.9]], [[QUAY[0] + 2.4, QY + 2.4, QUAY[1] + 6.4], [QUAY[0] - 0.8, QY + 1.2, QUAY[1] - 1.0]]],
-  [66.2, 70.0, [[RING_W[0] + SUN_XZ[0] * 3.0 - SUN_XZ[1] * 1.4, RING_W[1] + 0.35, RING_W[2] + SUN_XZ[1] * 3.0 + SUN_XZ[0] * 1.4], [RING_W[0], RING_W[1] - 0.4, RING_W[2]]], [[RING_W[0] + SUN_XZ[0] * 1.5 - SUN_XZ[1] * 0.6, RING_W[1] + 0.2, RING_W[2] + SUN_XZ[1] * 1.5 + SUN_XZ[0] * 0.6], [RING_W[0], RING_W[1] - 0.22, RING_W[2]]]],
-  [70.0, 81, [[QUAY[0] + 6, QY + 2.5, QUAY[1] + 9], [HAVEN[0], 2, HAVEN[1] - 4]], [[2, 34, 62], [-24, 6, -2]]],
+  [66.2, 70.0, [ringCam(3.4), ringLook], [ringCam(2.1), ringLook]],
+  [70.0, 76.5, [[QUAY[0] + 6, QY + 2.5, QUAY[1] + 9], [HAVEN[0], 2, HAVEN[1] - 4]], [[2, 34, 62], [-24, 6, -2]]],
+  [76.5, 86, [[2, 34, 62], [-24, 6, -2]], [[-6, 37, 66], [-27, 6, -5]]],
 ]
 const pick = (v, t) => (typeof v === 'function' ? v(t) : v)
 function MovieCamera({ tRef }) {
@@ -413,6 +419,9 @@ export default function EndingMovie({ tRef }) {
     nullG.current.position.set(...nullPos(t))
     nullG.current.rotation.set(0.13 * smooth(seg(t, 6, 7.4)) * (1 - seg(t, 65.6, 66.4)), nullYaw(t), 0)
     held.current.visible = t >= GIFT[1]
+    held.current.rotation.set(t > 65.5 ? -SUN_D.y : 0, 0, 0)
+    held.current.scale.setScalar(t > 65.5 ? 1.5 : 1)
+    held.current.position.set(...(t > 65.5 ? PALM_SUN : PALM))
   })
   const nullScript = () => {
     const t = tRef.current
@@ -468,7 +477,7 @@ export default function EndingMovie({ tRef }) {
         <CountNull script={nullScript} />
         {/* Gyroid's ring, kept in his palm */}
         <group ref={held} position={PALM}>
-          <mesh rotation={[Math.PI / 2 - 0.4, 0, 0]}>
+          <mesh rotation={[0, 0, 0]}>
             <torusGeometry args={[0.13 / NS, 0.03 / NS, 10, 36]} />
             <meshStandardMaterial color="#ffd27a" emissive="#ffb347" emissiveIntensity={2} toneMapped={false} />
           </mesh>

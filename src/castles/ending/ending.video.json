@@ -5,7 +5,7 @@
   "world": null,
   "status": "built",
   "story_start": 0,
-  "story_end": 80,
+  "story_end": 84,
   "pace": [[0, null, 0.85]],
   "synopsis": "On the Postnikov Spire every place Null took is proved on the Chart, and the Crown has nothing left to fold: it cracks and shatters. Null, unmasked by grief, tells them who he lost. Gyroid gives him a ring to keep; the Commutator lays down his blade; Emmy chooses to finish what she and Null started. The Crown's shards catch fire and fly to every folded point, and the world blooms back: Retract Reef's walkways and the Ringed Isle, Haven Ring, Bouquet Bastion, the Delta's sphere, the torus and its twin, the Cup Product Gardens, and the Spire relit. At dawn on Haven's quay Gyroid makes his last delivery: Emmy's Chart. Null, alone at sunrise, looks through the ring's hole. Fireworks; title.",
   "scenes": [
@@ -27,7 +27,7 @@
     { "t": 20.8, "end": 23.0, "speaker": "The Commutator", "portrait": "commutator", "text": "I kept your order for years, Count. It was never order. It was erasing." },
     { "t": 23.2, "end": 25.0, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Then let’s finish what we started. Properly, this time." },
     { "t": 25.4, "end": 30.0, "speaker": "Narrator", "hold": false, "text": "Tonight, on the Spire, the Crown had folded the whole Way at once. Now its law ran backwards: every place on the Chart came home." },
-    { "t": 35.0, "end": 36.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven. Twice now. The lights are on. They’re home." },
+    { "t": 35.0, "end": 36.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven! Every lamp’s lit. They’re home." },
     { "t": 47.4, "end": 51.0, "speaker": "Narrator", "hold": false, "text": "Every shape a little different. Every hole exactly where it had been." },
     { "t": 54.2, "end": 56.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "One delivery for Emmy Boundary." },
     { "t": 56.6, "end": 59.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "My Chart. Every place on it, proved." },
@@ -36,5 +36,5 @@
     { "t": 63.4, "end": 65.6, "speaker": "The Commutator", "portrait": "commutator", "text": "Delivered, signed, and in order. Well run, courier." },
     { "t": 66.4, "end": 69.6, "speaker": "Count Null", "portrait": "count-null", "text": "It has a hole. Somebody’s road home." }
   ],
-  "title_card": { "t": 71.5, "end": 79.4 }
+  "title_card": { "t": 77.5, "end": 83.4 }
 }

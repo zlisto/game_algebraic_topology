@@ -60,13 +60,13 @@ const PATH_A = [0, DECK, END_Z - 1.6]
 const PATH_B = [0, FLOORS[0].y, RING_R + PAD_R - 0.4]
 const PATH_N = 18
 const pathAt = (u) => mix3(PATH_A, PATH_B, u)
-const PATH_LIT = [44.4, 47.2]
-const RUN = [48.2, 54] // they run down the path
+const PATH_LIT = [47.8, 50.8]
+const RUN = [51.6, 57] // they run down the path
 
 // Count Null, rising out of the sea beside his Spire
 const NULL_BASE = [-30, 4, -34]
 const NULL_ROT = 0.32
-const NULL_SCALE = 14
+const NULL_SCALE = 20
 const RISE = [27.6, 30.2]
 const nullFace = (along, up) => {
   // a point `along` units in front of Null's face, `up` above his feet
@@ -79,29 +79,43 @@ const HEAD = nullFace(1.5, 2.7 * NULL_SCALE) // ≈ the mask
 
 const SHOTS = [
   // [t0, t1, [from pos, from look], [to pos, to look]] ('fly' = the spiral up the floors)
-  [0, 7, [[18, 7, 104], [0, 24, 0]], [[7, 15.5, 74], [0, 27, 0]]],
-  [7, 13, [[2.5, 12.2, 66.6], [-1.5, 16.6, 18]], [[2.2, 12.2, 65.8], [-1.5, 17.4, 18]]],
+  [0, 7, [[18, 7, 104], [0, 20, 0]], [[7, 15.5, 74], [0, 22, 0]]],
+  // over the pair's shoulders, Gyroid off-centre so the Spire stays clear
+  [7, 13, [[2.6, 12.35, 64.0], [-3, 23.6, 15.6]], [[2.4, 12.35, 63.6], [-3, 24.2, 15.6]]],
   [13, 27.5, 'fly'],
-  [27.5, 29.9, [[22, 16, 96], [-12, 28, -14]], [[19, 18, 90], [-14, 30, -18]]],
-  [29.9, 33.4, [nullFace(70, 38), [HEAD[0], 36.5, HEAD[2]]], [nullFace(64, 37), [HEAD[0], 37, HEAD[2]]]],
+  [27.5, 29.9, [[22, 16, 96], [-12, 38, -14]], [[19, 18, 90], [-14, 42, -18]]],
+  // a wide with the Spire beside him: his size against his own tower
+  [29.9, 33.4, [[30, 20, 112], [-12, 44, -20]], [[26, 21, 106], [-13, 45, -22]]],
   // from the water at his feet, looking up
-  [33.4, 37, [[-27, 6, 11], [HEAD[0], 35, HEAD[2]]], [[-25.6, 7, 8.4], [HEAD[0], 35.5, HEAD[2]]]],
-  [37, 41, [nullFace(58, 40), [HEAD[0], 41.5, HEAD[2]]], [nullFace(50, 41), [HEAD[0], 42.5, HEAD[2]]]],
-  // behind the pair: Null and his Spire ahead of them
-  [41, 44.2, [[2.0, 12.25, 66.8], [-6.6, 18.0, 17.8]], [[1.8, 12.3, 66.0], [-6.6, 18.4, 17.8]]],
-  // from down the Chart path, looking back up at them as the slabs light towards us
-  [44.2, 48, [[2.4, 11.6, 50.5], [0, 13.6, 59.5]], [[2.0, 11.4, 49.2], [0, 13.5, 59.5]]],
-  [48, 54, [[4, 16, 74], [-8, 26, -6]], [[8, 26, 100], [-9, 30, -8]]],
+  [33.4, 37, [[-27, 6, 11], [HEAD[0], 50, HEAD[2]]], [[-25.6, 7, 8.4], [HEAD[0], 51, HEAD[2]]]],
+  [37, 41, [nullFace(82, 56), [HEAD[0], 58, HEAD[2]]], [nullFace(72, 57), [HEAD[0], 59, HEAD[2]]]],
+  // behind the pair, low: Null's head and crown in the top third, the Spire beside him
+  [41, 44.2, [[1.6, 12.15, 64.4], [-6.6, 27.6, 17.8]], [[1.4, 12.15, 63.8], [-6.6, 28, 17.8]]],
+  // over Emmy's shoulder this time: Null and the Spire still ahead of them
+  [44.2, 47.6, [[-1.6, 12.15, 64.2], [-3.2, 27.6, 17.8]], [[-1.4, 12.15, 63.6], [-3.2, 28, 17.8]]],
+  // the closing wide from behind the pair: the whole Spire, Null and the Crown, the Chart path lighting
+  [47.6, 51.6, [[3.5, 17, 96], [-6, 30, 0]], [[4.5, 18.5, 104], [-7, 31.5, -2]]],
+  // they set off down the Chart path; crane back under the title card
+  [51.6, 57, [[4.5, 18.5, 104], [-7, 31.5, -2]], [[8, 26, 124], [-9, 34, -8]]],
 ]
 
 /** The spiral up the Spire: one key per floor, then the summit. */
 const FLY = [
-  ...FLOORS.map((f, i) => ({ t: 13.8 + i * 2.05, th: f.th + 0.55, r: 23, h: f.y + 6.2, look: [...padAt(f)].map((v, k) => (k === 1 ? v - 0.6 : v)) })),
-  { t: 26.6, th: Math.PI * 2 + 0.05, r: 30, h: TOP + 9, look: [0, TOP + 5.5, -7.3] },
+  ...FLOORS.map((f) => ({ th: f.th - 0.5, r: 26, h: f.y + 7, look: [...padAt(f)].map((v, k) => (k === 1 ? v + 1.8 : v)) })),
+  { th: Math.PI * 2 + 0.05, r: 30, h: TOP + 9, look: [0, TOP + 5.5, -7.3] },
+]
+// [arrive, leave] at each floor: the camera dwells on a floor for the whole of the line that names it
+// (a held caption stops the clock at the line's end, so the dwell must reach past it)
+const DWELL = [[13.6, 16.9], [17.35, 17.35], [17.8, 20.9], [21.35, 21.35], [21.8, 25.5], [26.0, 26.0], [27.2, 27.5]]
+const FLY_KEYS = [
+  { ...FLY[0], t: 13, r: 30, h: FLY[0].h + 3 },
+  ...FLY.flatMap((k, i) => {
+    const [a, b] = DWELL[i]
+    return b > a ? [{ ...k, t: a }, { ...k, t: b, r: k.r - 1.5, h: k.h - 0.4 }] : [{ ...k, t: a }]
+  }),
 ]
 function flyCam(t) {
-  const first = { ...FLY[0], t: 13, r: 30, h: FLY[0].h + 3 }
-  const keys = [first, ...FLY]
+  const keys = FLY_KEYS
   let i = keys.findIndex((k) => k.t > t)
   if (i < 0) i = keys.length - 1
   if (i === 0) i = 1
@@ -300,13 +314,14 @@ function Viaduct() {
         </group>
       ))}
       {[-1.62, 1.62].map((x) => (
-        <mesh key={x} position={[x, DECK + 0.35, END_Z + 2 + len / 2]}>
-          <boxGeometry args={[0.1, 0.1, len]} />
+        // the rails start behind every close camera, so they never cut across the frame
+        <mesh key={x} position={[x, DECK + 0.35, END_Z + 10 + (len - 10) / 2]}>
+          <boxGeometry args={[0.1, 0.1, len - 10]} />
           <meshBasicMaterial color="#b07aff" toneMapped={false} transparent opacity={0.7} />
         </mesh>
       ))}
       {/* lamps down the deck */}
-      {Array.from({ length: 10 }, (_, i) => END_Z + 4 + i * 9).map((z, i) => (
+      {Array.from({ length: 10 }, (_, i) => END_Z + 10 + i * 9).map((z, i) => (
         <group key={z} position={[i % 2 ? 1.55 : -1.55, DECK, z]}>
           <mesh position={[0, 0.8, 0]}>
             <cylinderGeometry args={[0.05, 0.07, 1.6, 6]} />
@@ -394,14 +409,14 @@ export default function SpireIntroScene({ tRef }) {
     const up = smooth(seg(t, RISE[0], RISE[1]))
     nullG.current.visible = t > RISE[0]
     const lit = smooth(seg(t, RISE[0] + 0.6, RISE[1]))
-    if (nullLights.current[0]) nullLights.current[0].intensity = 1600 * lit
-    if (nullLights.current[1]) nullLights.current[1].intensity = 900 * lit
-    nullG.current.position.y = mix(-52, NULL_BASE[1], up) + (t > RISE[1] ? Math.sin((t - RISE[1]) * 0.8) * 0.5 : 0)
+    if (nullLights.current[0]) nullLights.current[0].intensity = 3200 * lit
+    if (nullLights.current[1]) nullLights.current[1].intensity = 1800 * lit
+    nullG.current.position.y = mix(-76, NULL_BASE[1], up) + (t > RISE[1] ? Math.sin((t - RISE[1]) * 0.8) * 0.5 : 0)
   })
   const nullScript = () => {
     const t = tRef.current
     const talk = within(t, N_TALK)
-    return { gesture: talk ? (t > 37 ? 1 : 0.75) : 0.2, crown: talk ? 1 : 0.6, crownY: 0.05 }
+    return { gesture: talk ? (t > 37 ? 1 : 0.75) : 0.2, crown: talk ? 1 : 0.6, crownY: 0 }
   }
   const gyroScript = () => {
     const t = tRef.current
@@ -431,7 +446,7 @@ export default function SpireIntroScene({ tRef }) {
       <fog attach="fog" args={['#0d0920', 90, 260]} />
       <Dawn tRef={tRef} />
       <group position={[0, TOP, 0]}>
-        <Summit furyRef={furyRef} dimRef={dimRef} rocksCenter={[0, -4, 0]} rocksRadius={[17, 27]} />
+        <Summit furyRef={furyRef} dimRef={dimRef} rocksCenter={[0, -4, 0]} rocksRadius={[12, 16]} />
         <Crown stateRef={crownRef} scale={1.4} />
         <Flash position={[0, 6.4, -7.3]} kRef={flare} size={60} color="#d0a0ff" />
       </group>
@@ -448,12 +463,12 @@ export default function SpireIntroScene({ tRef }) {
         <group scale={NULL_SCALE}>
           <CountNull script={nullScript} />
         </group>
-        <Flash position={[0, 30, -14]} kRef={() => 0.6} size={95} color="#7a3aff" />
+        <Flash position={[0, 43, -20]} kRef={() => 0.6} size={135} color="#7a3aff" />
       </group>
       {/* his light stays in the scene (intensity 0 until he rises), so nothing recompiles mid-shot */}
       <group position={[NULL_BASE[0], 0, NULL_BASE[2]]} rotation={[0, NULL_ROT, 0]}>
-        <pointLight ref={(l) => (nullLights.current[0] = l)} position={[0, 44, 22]} color="#d8c0ff" intensity={0} distance={0} decay={2} />
-        <pointLight ref={(l) => (nullLights.current[1] = l)} position={[0, 22, 26]} color="#a259ff" intensity={0} distance={0} decay={2} />
+        <pointLight ref={(l) => (nullLights.current[0] = l)} position={[0, 62, 30]} color="#d8c0ff" intensity={0} distance={0} decay={2} />
+        <pointLight ref={(l) => (nullLights.current[1] = l)} position={[0, 30, 36]} color="#a259ff" intensity={0} distance={0} decay={2} />
       </group>
 
       <Emmy scale={S} script={emmyScript} />

@@ -239,8 +239,10 @@ function Bloom({ tRef, t0, at, base = [at[0], 0, at[2]], children, dur = 1.6 }) 
  * A ring island coming home: the reverse of the Crown's fold. point → ball (it swells out of the
  * point) → the hole opens and the ball flattens back into a ring → its windows and beacons relight.
  */
-function RingHome({ tRef, t0, pos, R = 3, r = 0.7, windows = 22, beacons = 8, size = 1, lift = 3 }) {
+function RingHome({ tRef, t0, pos, R = 3, r = 0.7, windows = 22, beacons = 8, size = 1, lift = 3, tint = LAND.stone }) {
   const group = useRef()
+  const lamp = useRef()
+  const tintC = useMemo(() => new THREE.Color(tint), [tint])
   const mat = useRef()
   const win = useRef()
   const bea = useRef()
@@ -279,9 +281,11 @@ function RingHome({ tRef, t0, pos, R = 3, r = 0.7, windows = 22, beacons = 8, si
       n.needsUpdate = true
       geo.computeBoundingSphere()
     }
-    mat.current.color.copy(WHITE).lerp(STONE, warm)
-    mat.current.emissive.copy(GOLD).lerp(STONE, warm)
-    mat.current.emissiveIntensity = mix(0.9, 0.2, warm)
+    // white-hot as it swells, then it takes back its own colour, and its lamps warm the water
+    mat.current.color.copy(WHITE).lerp(tintC, warm)
+    mat.current.emissive.copy(GOLD).lerp(tintC, warm)
+    mat.current.emissiveIntensity = mix(0.9, 0.25, warm)
+    lamp.current.intensity = 14 * smooth(seg(t, t0 + 1.2, t0 + 2.2))
     // the lights come back on, one window at a time: people live here again
     const n = win.current.children.length
     win.current.children.forEach((m, i) => {
@@ -289,7 +293,7 @@ function RingHome({ tRef, t0, pos, R = 3, r = 0.7, windows = 22, beacons = 8, si
       const rr2 = R + (i % 2 ? 0.32 : -0.32) * r
       m.position.set(Math.cos(a) * rr2, r * 0.53, Math.sin(a) * rr2)
       m.rotation.y = -a
-      m.visible = t > t0 + 1.9 + ((i * 7) % n) * 0.06
+      m.visible = t > t0 + 1.4 + ((i * 7) % n) * 0.025
     })
     bea.current.children.forEach((b, i) => {
       const a = (i / beacons) * Math.PI * 2
@@ -305,11 +309,12 @@ function RingHome({ tRef, t0, pos, R = 3, r = 0.7, windows = 22, beacons = 8, si
       <group ref={win}>
         {Array.from({ length: windows }, (_, i) => (
           <mesh key={i}>
-            <boxGeometry args={[0.16, 0.12, 0.05]} />
-            <meshBasicMaterial color="#ffb860" toneMapped={false} />
+            <boxGeometry args={[0.24, 0.18, 0.06]} />
+            <meshBasicMaterial color="#ffc070" toneMapped={false} />
           </mesh>
         ))}
       </group>
+      <pointLight ref={lamp} position={[0, 1.6, 0]} color="#ffb870" intensity={0} distance={R * 4.5} />
       <group ref={bea}>
         {Array.from({ length: beacons }, (_, i) => (
           <mesh key={i}>
@@ -535,19 +540,28 @@ function TorusAndTwin({ tRef, t0 }) {
   const twinAt = [at[0] + 12, 3, at[2] + 7]
   return (
     <>
-      <RingHome tRef={tRef} t0={t0} pos={[at[0], 0, at[2]]} R={4} r={1.3} windows={26} beacons={10} lift={3} />
+      <RingHome tRef={tRef} t0={t0} pos={[at[0], 0, at[2]]} R={4} r={1.3} windows={30} beacons={10} lift={3} tint="#6f86b8" />
       <HangingPoint tRef={tRef} at={twinAt} t0={t0 + 0.5} />
       <Bloom tRef={tRef} t0={t0 + 0.5} at={twinAt} base={[twinAt[0], 0, twinAt[2]]}>
         {[-1, 1].map((sd) => (
-          <mesh key={sd} position={[sd * 2.4, 0, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, 0.55]}>
-            <torusGeometry args={[2.4, 0.42, 12, 56]} />
-            <Stone color="#5d6680" />
-          </mesh>
+          <group key={sd}>
+            <mesh position={[sd * 2.4, 0, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, 0.55]}>
+              <torusGeometry args={[2.4, 0.42, 12, 56]} />
+              <meshStandardMaterial color={sd < 0 ? '#3f9c95' : '#c0674e'} roughness={0.5} emissive={sd < 0 ? '#0e3a36' : '#3a1408'} emissiveIntensity={0.6} />
+            </mesh>
+            {[0.6, 1.6, 2.6, 3.6, 4.6].map((a) => (
+              <mesh key={a} position={[sd * 2.4 + Math.cos(a) * 2.4 * sd, 0.35, Math.sin(a) * 2.4]}>
+                <sphereGeometry args={[0.13, 10, 8]} />
+                <meshStandardMaterial color="#ffe0a0" emissive="#ffb347" emissiveIntensity={2.4} toneMapped={false} />
+              </mesh>
+            ))}
+          </group>
         ))}
         <mesh position={[0, 1.6, 0]}>
           <sphereGeometry args={[1.6, 32, 20]} />
-          <Stone color="#8a92ad" />
+          <meshStandardMaterial color="#e3c98a" roughness={0.4} emissive="#4a3410" emissiveIntensity={0.5} />
         </mesh>
+        <pointLight position={[0, 4, 2]} color="#ffcf8a" intensity={10} distance={14} />
         {/* the wedge point: both circles and the sphere meet only here */}
         <mesh position={[0, 0.05, 0]}>
           <octahedronGeometry args={[0.2, 0]} />
@@ -821,7 +835,7 @@ export function Fireworks({ getT, bursts }) {
         pos[k * 3] = b.at[0] + d[0] * s
         pos[k * 3 + 1] = b.at[1] + d[1] * s - (on ? 1.2 * dt * dt : 0)
         pos[k * 3 + 2] = b.at[2] + d[2] * s
-        const f = on ? (1 - dt / 2.6) ** 1.5 * (i % 5 === 0 ? 1.4 : 1) : 0
+        const f = on ? 2.4 * (1 - dt / 2.6) ** 1.5 * (i % 5 === 0 ? 1.5 : 1) : 0
         col[k * 3] = c.r * f
         col[k * 3 + 1] = c.g * f
         col[k * 3 + 2] = c.b * f
@@ -837,7 +851,7 @@ export function Fireworks({ getT, bursts }) {
         <bufferAttribute attach="attributes-position" array={pos} count={pos.length / 3} itemSize={3} />
         <bufferAttribute attach="attributes-color" array={col} count={col.length / 3} itemSize={3} />
       </bufferGeometry>
-      <pointsMaterial map={GLOW} size={1.8} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} sizeAttenuation />
+      <pointsMaterial map={GLOW} size={2.6} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} sizeAttenuation />
     </points>
   )
 }
@@ -857,8 +871,8 @@ export default function WorldSet({ tRef }) {
       {/* Retract Reef — the same layout the intro and the level use */}
       <ReefScenery y={0.3} staticSites skipSites={['the_walkway']} ruin={false} throne />
       <Walkway tRef={tRef} t0={PLACE.reef.t0 - 0.6} />
-      <RingHome tRef={tRef} t0={PLACE.reef.t0} pos={[0, 0, 0]} R={3} r={0.7} />
-      <RingHome tRef={tRef} t0={PLACE.haven.t0} pos={[HAVEN[0], -0.1, HAVEN[1]]} R={5} r={1.25} windows={34} beacons={10} lift={3} />
+      <RingHome tRef={tRef} t0={PLACE.reef.t0} pos={[0, 0, 0]} R={3} r={0.7} tint="#5f6b8a" />
+      <RingHome tRef={tRef} t0={PLACE.haven.t0} pos={[HAVEN[0], -0.1, HAVEN[1]]} R={5} r={1.25} windows={44} beacons={12} lift={3} tint="#a8805a" />
       {/* Haven's guild beacon, tall on the ring's far side */}
       <Bloom tRef={tRef} t0={PLACE.haven.t0 + 2} at={[HAVEN[0] - 5, 3, HAVEN[1] - 1]} base={[HAVEN[0] - 5, 0, HAVEN[1] - 1]} dur={0.9}>
         <mesh position={[0, 1.4, 0]}>
