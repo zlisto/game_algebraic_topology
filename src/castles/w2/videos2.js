@@ -65,7 +65,7 @@ export const OUTRO_VIDEO = {
   captions: [
     C(0.6, 3.6, 'Gyroid', 'It’s seized! A ball can’t be squeezed onto its skin!'),
     C(3.8, 6.8, 'Emmy Boundary', 'ℤ → 0 → ℤ can’t be the identity. The Delta stays, Null. It’s going on the Chart.'),
-    C(7.6, 11.2, 'Count Null', 'Then let us count something else. I brought twins, courier.'),
+    C(7.6, 11.2, 'Count Null', 'Then let us count together, courier. I brought twins.'),
     C(11.4, 14.8, 'Count Null', 'A torus. And two rings and a ball, tied at one point. Count them.'),
     C(15.4, 19, 'Gyroid', 'H₀ is ℤ. H₁ is ℤ². H₂ is ℤ… on both of them.'),
     C(19.2, 22.8, 'Emmy Boundary', 'Same groups in every degree. Our counts can’t tell them apart.'),
@@ -76,7 +76,7 @@ export const OUTRO_VIDEO = {
     NARR(38.2, 41.8, '…and stopped. Null had closed his hand.'),
     C(42.6, 45.6, 'Gyroid', 'STOP! Let them go!'),
     C(45.8, 49.2, 'Emmy Boundary', 'Null, please. Whatever you lost on that road, these people didn’t take it from you.'),
-    C(49.6, 53.2, 'Count Null', 'This is mercy, Emmy. I’ll finish it slowly, in the Gardens, where you can watch. Bring me a difference I can’t count away.'),
+    C(49.6, 53.2, 'Count Null', 'This is mercy, Emmy. In the Gardens I’ll finish it slowly, so you can watch. Unless you find a difference I can’t count away. You won’t.'),
     NARR(53.4, 56, 'And Null went north with both twins, toward the Cup Product Gardens.'),
     C(56.4, 60.4, 'Emmy Boundary', 'Counting holes isn’t enough. Read the chains backwards and the readings multiply. That’s what his twins can’t fake.'),
     C(60.6, 64, 'Gyroid', 'Then we read them. And that torus comes home lit, every window.'),

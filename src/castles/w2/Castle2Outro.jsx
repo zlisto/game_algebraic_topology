@@ -101,6 +101,7 @@ function TorusIsland({ tRef }) {
   const mat = useRef()
   const windows = useRef()
   const houses = useRef()
+  const last = useRef()
   const glow = useRef()
   const SEG_U = 72
   const SEG_V = 24
@@ -133,7 +134,7 @@ function TorusIsland({ tRef }) {
     windows.current.children.forEach((w, i) => {
       const a = (i / n) * Math.PI * 2
       const rr = s.R + (i % 2 ? 0.45 : -0.45) * TUBE
-      w.position.set(Math.cos(a) * rr, TUBE * 0.5, Math.sin(a) * rr)
+      w.position.set(Math.cos(a) * rr, TUBE * 0.84, Math.sin(a) * rr)
       w.rotation.y = -a
       // the lights go out one by one as the violet takes them; one stays lit
       w.visible = i === 0 || s.corrupt < (i % 9) / 9 + 0.04
@@ -141,11 +142,17 @@ function TorusIsland({ tRef }) {
     houses.current.children.forEach((h, i) => {
       const a = (i / houses.current.children.length) * Math.PI * 2 + 0.2
       const sink = Math.max(0.25, 1 - s.corrupt * 0.9)
-      h.position.set(Math.cos(a) * s.R, TUBE * 0.55 + 0.22 * sink - 0.05, Math.sin(a) * s.R)
+      h.position.set(Math.cos(a) * s.R, TUBE * 0.9 * 0.85 + 0.17 * sink, Math.sin(a) * s.R)
       h.rotation.y = -a
       h.scale.set(1, sink, 1)
     })
     glow.current.intensity = 6 * (1 - s.corrupt) + s.halt * 40
+    // the one window left lit: bigger, and casting a warm light on the grey around it
+    const w0 = windows.current.children[0]
+    w0.scale.setScalar(1 + s.corrupt * 2.2)
+    last.current.position.copy(w0.position)
+    last.current.position.y += 0.25
+    last.current.intensity = s.corrupt * 9
   })
   return (
     <group ref={group}>
@@ -160,20 +167,27 @@ function TorusIsland({ tRef }) {
       <group ref={windows}>
         {Array.from({ length: 36 }, (_, i) => (
           <mesh key={i}>
-            <boxGeometry args={[0.1, 0.08, 0.04]} />
+            <boxGeometry args={[0.12, 0.1, 0.05]} />
             <meshBasicMaterial color="#ffb860" toneMapped={false} />
           </mesh>
         ))}
       </group>
       <group ref={houses}>
-        {Array.from({ length: 16 }, (_, i) => (
-          <mesh key={i}>
-            <boxGeometry args={[0.2, 0.28, 0.18]} />
-            <meshStandardMaterial color="#5a5048" roughness={0.7} emissive="#ffb860" emissiveIntensity={0.25} />
-          </mesh>
+        {Array.from({ length: 14 }, (_, i) => (
+          <group key={i}>
+            <mesh>
+              <boxGeometry args={[0.36, 0.34, 0.3]} />
+              <meshStandardMaterial color="#d8c8a8" roughness={0.7} emissive="#ffb860" emissiveIntensity={0.15} />
+            </mesh>
+            <mesh position={[0, 0.3, 0]} rotation={[0, Math.PI / 4, 0]}>
+              <coneGeometry args={[0.3, 0.28, 4]} />
+              <meshStandardMaterial color="#a8443a" roughness={0.7} />
+            </mesh>
+          </group>
         ))}
       </group>
       <pointLight ref={glow} position={[0, 2.5, 0]} color="#ffb860" intensity={6} distance={14} />
+      <pointLight ref={last} color="#ffb050" intensity={0} distance={3.5} decay={1.5} />
     </group>
   )
 }
@@ -252,7 +266,7 @@ function Meters({ tRef }) {
         [TT, 'the torus T'],
         [TB, 'S¹ ∨ S¹ ∨ S²'],
       ].map(([p, name]) => (
-        <Html key={name} position={[p[0], 7.2, p[1]]} center zIndexRange={[6, 0]} style={{ pointerEvents: 'none' }}>
+        <Html key={name} position={[p[0] * 0.7, 7.2, p[1] * 0.7]} center zIndexRange={[40, 30]} style={{ pointerEvents: 'none' }}>
           <div style={METER}>
             <div style={{ fontWeight: 800, color: '#ffd27a', marginBottom: 2 }}>{name}</div>
             {ROWS.map(([, row], i) => (
@@ -332,14 +346,15 @@ function DawnSky({ tRef }) {
 }
 
 const SHOTS = [
-  [0, 7, [[5.5, 2.2, 3.5], [0, 6.0, -15.5]], [[4.6, 2.4, 1.5], [0, 6.2, -15.5]]],
-  [7, 15, [[0, 16, 21], [0, 0, -14]], [[0, 15, 19], [0, 0.5, -14]]],
-  [15, 23, [[0, 13.5, 16], [0, 1.5, -16]], [[0, 13, 15], [0, 1.5, -16]]],
+  [0, 7, [[3, 7.5, 12], [0, 5.5, -15.5]], [[2.5, 7.5, 9.5], [0, 5.8, -15.5]]],
+  [7, 15, [[0, 19, 28], [0, 0, -15]], [[0, 18, 26], [0, 0.5, -16]]],
+  [15, 23, [[0, 18, 26], [0, 1.5, -16]], [[0, 17.5, 25], [0, 1.5, -16]]],
   [23, 26.4, [[0.9, 2.5, -3.6], [NULL_AT[0], 2.1, NULL_AT[1]]], [[0.6, 2.4, -4.3], [NULL_AT[0], 2.2, NULL_AT[1]]]],
   [26.4, 29, [[GY[0] + 0.3, 1.35, GY[1] - 1.9], [GY[0], 1.05, GY[1]]], [[GY[0] + 0.2, 1.3, GY[1] - 1.6], [GY[0], 1.05, GY[1]]]],
   [29, 31.4, [[0.6, 2.4, -4.3], [NULL_AT[0], 2.2, NULL_AT[1]]], [[0.4, 2.3, -4.7], [NULL_AT[0], 2.2, NULL_AT[1]]]],
-  [31.4, 34, [[NULL_AT[0] - 0.6, 5.6, NULL_AT[1] + 3.6], [TT[0], 0, TT[1]]], [[NULL_AT[0] - 1.0, 5.9, NULL_AT[1] + 3.0], [TT[0], 0.4, TT[1]]]],
-  [34, 42, [[TT[0] - 8, 10, TT[1] + 15], [TT[0] + 0.5, -2.2, TT[1] - 2]], [[TT[0] - 6.5, 9, TT[1] + 12.5], [TT[0] + 0.5, -2.2, TT[1] - 2]]],
+  // H1: from inside the hall, high, Null's crown and the beam's whole flight to the torus
+  [31.4, 34, [[2.4, 11, 4.5], [-6, 0, -12]], [[2, 11.4, 3.6], [-6.4, 0, -12.4]]],
+  [34, 42, [[TT[0] + 2.8, 3.6, TT[1] + 7.0], [TT[0], -1.2, TT[1] - 2.2]], [[TT[0] + 2.4, 3.3, TT[1] + 6.2], [TT[0], -1.2, TT[1] - 2.2]]],
   // H3: behind Gyroid and Emmy at the rim, the halted torus beyond them
   [42, 45.8, [[G_EDGE[0] - TO_T[0] * 5.2, 3.0, G_EDGE[1] - TO_T[1] * 5.2], [G_EDGE[0] + TO_T[0] * 9, -1.0, G_EDGE[1] + TO_T[1] * 9]], [[G_EDGE[0] - TO_T[0] * 4.4, 2.8, G_EDGE[1] - TO_T[1] * 4.4], [G_EDGE[0] + TO_T[0] * 9, -1.0, G_EDGE[1] + TO_T[1] * 9]]],
   [45.8, 49.4, [[EM2[0] + EM_FACE[0] * 1.9 + 0.3, 1.4, EM2[1] + EM_FACE[1] * 1.9], [EM2[0], 1.05, EM2[1]]], [[EM2[0] + EM_FACE[0] * 1.6 + 0.2, 1.35, EM2[1] + EM_FACE[1] * 1.6], [EM2[0], 1.05, EM2[1]]]],
@@ -362,9 +377,10 @@ function MovieCamera({ tRef }) {
       const n = nullAt(t)
       const kk = away(t)
       const tp = [mix(TT[0], TT_FAR[0], kk), islandY(t), mix(TT[1], TT_FAR[1], kk)]
-      camera.position.set(n[0] + 3.0, n[1] + 1.6, n[2] + 5.0)
-      look.set(...mix3(n, tp, 0.55))
-      look.y += 0.8
+      const bp = [mix(TB[0], TB_FAR[0], kk), islandY(t), mix(TB[1], TB_FAR[1], kk)]
+      camera.position.set(n[0] + 5, n[1] + 3.4, n[2] + 11)
+      // Null, both twins and the ribbon between them: aim at their middle (no upward offset, so his crown stays in)
+      look.set((n[0] * 2 + tp[0] + bp[0]) / 4, (n[1] * 2 + tp[1] + bp[1]) / 4, (n[2] * 2 + tp[2] + bp[2]) / 4)
       camera.lookAt(look)
       return
     }
@@ -390,7 +406,7 @@ export default function Castle2Outro({ tRef }) {
     const k = away(t)
     nullG.current.position.set(...nullAt(t))
     nullG.current.rotation.y = t > 31.4 && t < 49.4 ? NULL_FACE_T : t >= 53.4 ? Math.PI : 0
-    nullG.current.visible = t < 56.2
+    nullG.current.visible = t < 56.2 && !(t >= 34 && t < 42)
     nullLight.current.intensity = t > 53 && t < 56.2 ? 14 : 0
     dawn.current.intensity = seg(t, 56, 60) * 2.2
     sun.current.visible = t > 56

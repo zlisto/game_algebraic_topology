@@ -6,7 +6,7 @@ import CountNull from '../../characters/CountNull'
 import Emmy from '../../characters/Emmy'
 import Gyroid from '../../characters/Gyroid'
 import { Causeway } from '../../castles/w1/Causeway'
-import { Delta } from '../../castles/w1/DeltaSet'
+import { Sparkles, Stars } from '@react-three/drei'
 import { Flash, GLOW, ShotCamera, mix3, seg, smooth } from '../../castles/w1/fx'
 import { Retractor } from '../../castles/w2/Castle2Scene'
 import { LETTER_COLORS } from '../../levels/w0/Hologram'
@@ -16,7 +16,7 @@ import { Band, MESSY, Post } from '../../levels/w2/DynamoGateScene'
 import { MovieDeck, MovieTiles } from '../../movies/w2/TileMovieKit'
 import { CausewaySlab } from '../../world/ReefScenery'
 import Seascape from '../../world/Seascape'
-import { Gear } from '../../world/Dressing'
+import { Clouds, FloatingRocks, Gear } from '../../world/Dressing'
 
 /**
  * World 2 intro, "Chain Delta" (script.js):
@@ -27,7 +27,7 @@ import { Gear } from '../../world/Dressing'
  *   D 30.6–46.2 Count Null rises over the Retractor, huge; the Crown touches the whirl and the grey
  *               creeps out over the water; he threatens, then vanishes
  *   E 46.2–52   "The Tile Yard first, to the west." "Then let's roll."
- *   F 52–58     title over the whole Delta
+ *   F 52–57     the pair from behind, looking out over the Delta; G 57–63 the title card
  * Everything in the Delta is the real World 2 kit: the 2-1 tiles, the 2-6 post and band, the 2-7
  * rim square and its hologram, the 2-9 digon, and the castle's Retractor.
  */
@@ -57,26 +57,26 @@ const beamOn = (t) => seg(t, 34.8, 35.6) * (1 - seg(t, 44.8, 45.4))
 const HEAD = TERR_Y + 1.15 // the pair's eye line on the parapet
 const SHOTS = [
   // A: low over the whirl, rising and turning to find the pair on the gate
-  [0, 5.4, [[7, 1.6, -7], [0, 0.4, 0]], [[3.2, 5.0, 4.6], [0, HEAD - 0.1, 12.2]]],
-  // B: front two-shot, then over their shoulders out across the Delta
-  [5.4, 8.8, [[1.5, HEAD + 0.2, 7.6], [0, HEAD - 0.15, 12.2]], [[1.0, HEAD + 0.15, 8.0], [0, HEAD - 0.15, 12.2]]],
-  [8.8, 14.5, [[2.6, 6.6, 19.6], [-3, 0.5, -12]], [[1.6, 7.0, 20.6], [-5, 0.5, -14]]],
-  // C: the flyover
-  [14.5, 18.6, [[-11, 6.5, 3], [SITES.tile[0], 1.4, SITES.tile[1]]], [[-27, 6.0, 2.5], [SITES.tile[0], 1.4, SITES.tile[1]]]],
-  [18.6, 25.2, [[11, 5.5, -6], [SITES.dynamo[0], 2.2, SITES.dynamo[1]]], [[28, 7.0, -9], [SITES.dynamo[0], 2.2, SITES.dynamo[1]]]],
-  [25.2, 27.6, [[-6, 11, -20], [SITES.cell[0], 1.2, SITES.cell[1]]], [[10, 11, -26], [SITES.mill[0], 2.0, SITES.mill[1]]]],
-  [27.6, 29.5, [[8, 8, -38], [SITES.ford[0], 0.5, SITES.ford[1]]], [[0, 6, -38], [SITES.ford[0], 0.5, SITES.ford[1]]]],
-  [29.5, 31.2, [[0, 6, -38], [0, 5, -70]], [[0, 6.5, -40], [0, 9, -78]]],
+  [0, 5.4, [[7, 1.6, -7], [0, 0.4, 0]], [[2.4, HEAD + 0.6, 6.0], [0, HEAD - 0.6, 12.2]]],
+  // B: front two-shot (heads in the upper half, clear of the caption), then over their shoulders
+  [5.4, 8.8, [[1.1, HEAD + 0.15, 8.8], [0, HEAD - 0.6, 12.2]], [[0.9, HEAD + 0.1, 9.2], [0, HEAD - 0.6, 12.2]]],
+  [8.8, 14.5, [[0.3, 5, 20], [-2, -5.6, -30]], [[0.1, 5.2, 21], [-3, -5.6, -30]]], // through the gate, under its lintel, between its pylons
+  // C: the flyover; each site is aimed below its deck so the deck sits above the caption box
+  [14.5, 18.6, [[-12, 8.5, 5], [SITES.tile[0], -1, SITES.tile[1]]], [[-27, 8, 4.5], [SITES.tile[0], -1, SITES.tile[1]]]],
+  [18.6, 25.2, [[7, 7, 4.6], [SITES.dynamo[0], 3.6, SITES.dynamo[1] - 1]], [[35, 7.5, 2], [SITES.dynamo[0], 3.6, SITES.dynamo[1] - 1]]], // post, band, pylons and coil all in frame
+  [25.2, 27.6, [[-6, 13, -20], [SITES.cell[0], -3, SITES.cell[1]]], [[10, 13, -26], [SITES.mill[0], -2, SITES.mill[1]]]],
+  [27.6, 29.5, [[8, 9, -38], [SITES.ford[0], -2.5, SITES.ford[1]]], [[0, 8, -38], [SITES.ford[0], -2.5, SITES.ford[1]]]],
+  [29.5, 31.2, [[0, 8, -38], [0, 3, -70]], [[0, 8.5, -40], [0, 8, -78]]],
   // D: Null
-  [31.2, 35.2, [[0, 8, -22], [0, 18, -74]], [[0, 9, -26], [0, 19, -74]]],
+  [31.2, 35.2, [[0, 6, -6], [0, 15, -74]], [[0, 6.5, -10], [0, 15, -74]]], // Null over the Retractor, the water below him for scale
   [35.2, 39.5, [[16, 21, 30], [-3, 0, -4]], [[12, 23, 30], [-4, 0, -6]]],
-  [39.5, 41.5, [[1.9, HEAD, 8.9], [G_AT[0], HEAD - 0.05, G_AT[1]]], [[1.8, HEAD, 9.2], [G_AT[0], HEAD - 0.05, G_AT[1]]]],
-  [41.5, 46.2, [[2.5, NULL_FACE, -52], [0, NULL_FACE + 1.4, -74]], [[1.6, NULL_FACE, -53.5], [0, NULL_FACE + 1.4, -74]]],
+  [39.5, 41.5, [[1.8, HEAD + 0.1, 9.4], [G_AT[0], HEAD - 0.55, G_AT[1]]], [[1.7, HEAD + 0.1, 9.6], [G_AT[0], HEAD - 0.55, G_AT[1]]]],
+  [41.5, 46.2, [[11, NULL_FACE + 0.6, -42.5], [0, NULL_FACE - 1.2, -74]], [[9.5, NULL_FACE + 0.4, -44.5], [0, NULL_FACE - 1.2, -74]]],
   // E: ready
-  [46.2, 49.7, [[1.2, HEAD + 0.2, 7.6], [-0.1, HEAD - 0.15, 12.2]], [[0.9, HEAD + 0.15, 8.1], [-0.1, HEAD - 0.15, 12.2]]],
-  [49.7, 52, [[1.8, 6.4, 19.6], [-10, 0.5, -6]], [[1.4, 6.8, 20.4], [-12, 0.5, -6]]],
-  // F: title
-  [52, 70, [[0, 24, 38], [0, 0, -22]], [[0, 32, 50], [0, 0, -24]]],
+  [46.2, 49.7, [[1.0, HEAD + 0.15, 8.8], [-0.1, HEAD - 0.6, 12.2]], [[0.8, HEAD + 0.1, 9.2], [-0.1, HEAD - 0.6, 12.2]]],
+  [49.7, 52, [[3.3, 5, 15.0], [SITES.tile[0], -0.5, SITES.tile[1]]], [[3.6, 5.2, 15.3], [SITES.tile[0], -0.5, SITES.tile[1]]]], // behind them on the line to the Tile Yard
+  // F: the pair from behind, looking out over the whole Delta (52–57), then the title card (57–63)
+  [52, 70, [[0, 5, 20], [-2, -5.6, -30]], [[0, 5.6, 23], [-2, -6, -34]]],
 ]
 const shake = (t) => (t > 30.9 && t < 32.2 ? 0.08 * (1 - seg(t, 30.9, 32.2)) : 0) + (t > 45.4 && t < 46.2 ? 0.05 : 0)
 
@@ -275,7 +275,7 @@ function TriangleWetlands() {
       const c = new THREE.Color()
       tiles.forEach(([x, z, rot, k], i) => {
         d.position.set(x, 0.06, z)
-        d.rotation.set(-Math.PI / 2, 0, rot + Math.PI / 2)
+        d.rotation.set(-Math.PI / 2, 0, rot - Math.PI / 2) // apex toward +z for an up tile, as the lattice expects
         d.scale.setScalar(1)
         d.updateMatrix()
         seam.current.setMatrixAt(i, d.matrix)
@@ -296,7 +296,7 @@ function TriangleWetlands() {
     <>
       <instancedMesh ref={seam} args={[null, null, tiles.length]}>
         <circleGeometry args={[r, 3]} />
-        <meshBasicMaterial color="#d8a040" toneMapped={false} transparent opacity={0.55} />
+        <meshBasicMaterial color="#d8a040" toneMapped={false} transparent opacity={0.35} />
       </instancedMesh>
       <instancedMesh ref={fill} args={[null, null, tiles.length]}>
         <circleGeometry args={[r, 3]} />
@@ -535,7 +535,7 @@ export default function ChainDeltaIntro({ tRef }) {
     const t = tRef.current
     const k = smooth(seg(t, 50.0, 51.2))
     const [x, , z] = mix3([G_AT[0], 0, G_AT[1]], [G_AT[0] - 0.5, 0, G_AT[1] - 0.9], k)
-    const turn = t > 39.4 && t < 41.6 ? 0.25 : t > 46 ? -0.35 : 0
+    const turn = t > 39.4 && t < 41.6 ? 0.25 : t > 46 && t < 50 ? -0.35 : t >= 50 ? 0.4 : 0 // at the end he faces west, toward the Tile Yard
     return {
       pos: [x / S, TERR_Y / S, z / S],
       rotY: Math.PI + turn,
@@ -548,14 +548,23 @@ export default function ChainDeltaIntro({ tRef }) {
   }
   const emmyScript = () => {
     const t = tRef.current
-    const talk = (t > 8.9 && t < 12.6) || (t > 14.6 && t < 18.4) || (t > 21.4 && t < 25) || (t > 46.4 && t < 49.6)
+    const talk = (t > 8.9 && t < 12.6) || (t > 14.6 && t < 18.4) || (t > 21.4 && t < 25) || (t > 25.4 && t < 29.4) || (t > 46.4 && t < 49.6)
     const point = (t > 9.6 && t < 12.6) || (t > 47.2 && t < 49.6)
     return { pos: [E_AT[0] / S, TERR_Y / S, E_AT[1] / S], rotY: Math.PI + (t > 46.2 ? -0.5 : 0.15), walk: 0, bow: 0, gesture: point ? 1 : talk ? 0.45 : 0.1, talk: talk ? 1 : 0 }
   }
   const avoid = useMemo(() => (x, z) => Object.values(SITES).some(([sx, sz]) => Math.hypot(x - sx, z - sz) < 8) || Math.hypot(x - TERR[0], z - TERR[1]) < 6, [])
   return (
     <>
-      <Delta y={0} sky="#3a2a48" fog={[55, 210]} seascape={false} />
+      {/* the Delta's air (as in the World 1 castle's Delta set, with the rocks kept off Null's sightlines) */}
+      <color attach="background" args={['#3a2a48']} />
+      <fog attach="fog" args={['#3a2a48', 55, 210]} />
+      <ambientLight intensity={0.35} />
+      <hemisphereLight args={['#c8b0ff', '#0a1418', 0.5]} />
+      <directionalLight position={[-30, 40, 20]} intensity={0.8} color="#ffd8c0" />
+      <Stars radius={140} depth={50} count={2200} factor={3} fade speed={0.3} />
+      <Clouds y={34} area={[0, -20, 160, 160]} count={16} color="#e8b8c8" opacity={0.2} seed={12} speed={0.2} />
+      <FloatingRocks center={[0, -2, 10]} radius={[30, 46]} count={22} seed={19} ySpread={[-6, -2]} color="#2a2236" glow="#a259ff" />
+      <Sparkles count={120} scale={[60, 16, 60]} position={[0, 6, -20]} size={3} speed={0.3} color="#d0a8ff" />
       <DawnSky />
       <Seascape y={0} depth={2.6} area={[0, -30, 170, 200]} seed={53} life={0.5} lanterns={18} avoid={avoid} palette={{ water: '#1c4450', deep: '#081a20', sand: '#33483e', weed: '#2a5038', coral: ['#c58bff', '#7fe8dc', '#ffd27a'] }} />
       <directionalLight position={[-60, 18, -120]} intensity={1.1} color="#ffb08a" />
@@ -588,6 +597,8 @@ export default function ChainDeltaIntro({ tRef }) {
       <Retractor stateRef={engine} position={[SITES.retractor[0], 0.4, SITES.retractor[1]]} />
       <pointLight position={[SITES.retractor[0], 9, SITES.retractor[1] + 6]} color="#a259ff" intensity={60} distance={30} />
       <GiantNull tRef={tRef} />
+      {/* a cold key light on his front, so the mask reads against the dawn */}
+      <pointLight position={[4, NULL_FACE + 2, NULL_AT[2] + 14]} color="#d8c8ff" intensity={420} distance={45} />
       <CrownBeam tRef={tRef} />
       <Flash tRef={tRef} position={[NULL_AT[0], NULL_AT[1] + 2 * NULL_S, NULL_AT[2]]} flash={(t) => seg(t, 30.9, 31.9)} size={40} />
       <Flash tRef={tRef} position={[NULL_AT[0], NULL_AT[1] + 2 * NULL_S, NULL_AT[2]]} flash={(t) => seg(t, 45.6, 46.4)} size={30} color="#c8a0ff" />
