@@ -35,7 +35,7 @@
       "world": 3,
       "status": "scripted",
       "story_start": 0,
-      "story_end": 61,
+      "story_end": 65,
       "pace": [[0, null, 0.85]],
       "synopsis": "Unmasked, the Commutator begs for one more chance. Null descends and shows a map S³ → S² that every cohomology class reads as zero, and calls it trivial. Then he discards his marshal: the Crown folds the Façade to a point and reaches for the Commutator; Gyroid drags him clear as his loops go dark. Null rises up the Postnikov Spire with a threat: every map S³ → S² is trivial; prove one isn't, or the sky is next. At dawn, resolve: homotopy groups.",
       "scenes": [
@@ -47,7 +47,7 @@
         { "id": "H3", "start": 33, "end": 41, "title": "Reactions", "description": "The Commutator stares at his dark loops. Gyroid, quiet and hard. Emmy, stricken: these were her presses." },
         { "id": "C2", "start": 41, "end": 47, "title": "Null rises", "description": "Null rises on a violet ribbon toward the Postnikov Spire on the horizon, the Crown glowing at its top." },
         { "id": "D", "start": 47, "end": 55, "title": "Resolve", "description": "Dawn over the broken station. They look at the Spire." },
-        { "id": "E", "start": 55, "end": 61, "title": "World 3 complete", "description": "Card: World 3 complete — Cup Product Gardens restored." }
+        { "id": "E", "start": 55, "end": 65, "title": "World 3 complete", "description": "Card: World 3 complete — Cup Product Gardens restored." }
       ],
       "captions": [
         { "t": 0.6, "end": 3.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Three trials. Three rings. Your station was never any of the things it claimed." },
@@ -56,7 +56,7 @@
         { "t": 13.4, "end": 16.6, "speaker": "Count Null", "portrait": "count-null", "text": "Take any map from S³ to S². Read it with your rings. Every one of them." },
         { "t": 16.8, "end": 19.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "It pulls H²(S²) back into H²(S³)… and that’s zero. Every class reads zero." },
         { "t": 19.6, "end": 22.4, "speaker": "Count Null", "portrait": "count-null", "text": "Then it is nothing. Every map S³ → S² is trivial. A point in a sphere’s clothing. Like him." },
-        { "t": 22.6, "end": 25.8, "speaker": "Count Null", "portrait": "count-null", "text": "I have no use for a marshal who loses." },
+        { "t": 22.6, "end": 25.8, "speaker": "Count Null", "portrait": "count-null", "text": "Rest now, marshal. You’ll never be lost again." },
         { "t": 26.2, "end": 29.6, "speaker": "Narrator", "hold": false, "text": "The Crown took the Façade first. Its hole closed. The ring became a ball. The ball became a point." },
         { "t": 29.8, "end": 32.8, "speaker": "Narrator", "hold": false, "text": "Then it reached for the marshal who had served it." },
         { "t": 33.2, "end": 35.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Got you. He’d have folded you with the floor." },
@@ -64,10 +64,10 @@
         { "t": 38.2, "end": 41, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "That’s what my presses do now. To anyone who stops being useful to him." },
         { "t": 41.4, "end": 44.6, "speaker": "Count Null", "portrait": "count-null", "text": "Climb my Spire, courier. Up there, every map S³ → S² is trivial. Prove one isn’t, or the sky is next." },
         { "t": 44.8, "end": 47, "speaker": "Narrator", "hold": false, "text": "And Count Null rose on a ribbon of violet, up the Postnikov Spire." },
-        { "t": 47.6, "end": 51.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "f* sends every class to zero: pulling back can’t see that map. So we stop reading the spaces and count the maps themselves: homotopy groups." },
+        { "t": 47.6, "end": 51.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "f* kills every class. Pulling back can’t see this map. So we count the maps themselves: homotopy groups." },
         { "t": 51.6, "end": 55, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we climb. Bend it, don’t break it, and prove it. All the way to the top." }
       ],
-      "title_card": { "t": 55, "end": 61 }
+      "title_card": { "t": 59, "end": 65 }
     }
   ]
 }

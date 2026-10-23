@@ -132,7 +132,7 @@ function FoldingFacade({ tRef }) {
   return (
     <group position={[FAC_C[0], 0, FAC_C[2]]}>
       {/* a key light, so the folding stone reads as a lit solid, not a flat disc */}
-      <pointLight position={[7, FAC_C[1] + 6, 9]} intensity={2.6} decay={0} distance={45} color="#fff2e0" />
+      <pointLight position={[7, FAC_C[1] + 6, 9]} intensity={3.4} decay={0} distance={45} color="#fff2e0" />
       <group ref={group} position={[0, FAC_C[1], 0]}>
         <mesh geometry={geo}>
           <meshStandardMaterial ref={mat} color="#3a3446" roughness={0.35} metalness={0.3} emissive="#3a3446" emissiveIntensity={0.1} />
@@ -315,24 +315,24 @@ function Readings({ tRef }) {
 
 const SHOTS = [
   [0, 6, [[3.2, 2.1, -2.2], [0.7, 1.0, -6.4]], [[2.8, 1.9, -2.9], [0.7, 0.95, -6.5]]],
-  [6, 13, [[-3.2, 2.2, -1.2], [NULL_POS[0], 4.2, NULL_POS[1]]], [[-2.6, 2.0, -2.2], [NULL_POS[0], 1.9, NULL_POS[1]]]],
-  [13, 19.4, [[0.3, 7.5, 4.5], [0, 0.72, -2.85]], [[0.4, 7.2, 4.1], [0, 0.8, -2.9]]], // high: the props above, Gyroid and Emmy clear of the caption
-  [19.4, 22.6, [[-3.4, 2.2, -2.6], [NULL_POS[0], 2.0, NULL_POS[1]]], [[-3.0, 2.1, -3.0], [NULL_POS[0], 2.1, NULL_POS[1]]]],
+  [6, 13, [[-3.2, 2.2, -1.2], [NULL_POS[0], 4.2, NULL_POS[1]]], [[-2.6, 2.0, -2.2], [NULL_POS[0], 0.9, NULL_POS[1]]]],
+  [13, 19.4, [[0.3, 7.5, 4.5], [0, 2.0, -2.85]], [[0.4, 7.2, 4.1], [0, 2.0, -2.9]]], // high: the props above, Gyroid and Emmy clear of the caption
+  [19.4, 22.6, [[-4.6, 2.4, -1.6], [NULL_POS[0], 1.6, NULL_POS[1]]], [[-4.2, 2.3, -2.0], [NULL_POS[0], 1.6, NULL_POS[1]]]],
   // H1: over Null's shoulder, the Crown turning on the Façade
-  [22.6, 26.2, [[1.6, 1.5, -3.6], [-1.5, 5, -15]], [[1.9, 1.6, -3.2], [-1.4, 5.1, -15]]],
+  [22.6, 26.2, [[3, 4, 9.5], [-0.5, 5, -15]], [[2.6, 4, 8.5], [-0.5, 5.2, -15]]], // the whole stone ring, Null small before it
   // H2: past Null to the Façade as it folds
-  [26.2, 30.6, [[2.4, 1.8, -2.6], [-1.2, 5.2, -15]], [[2.9, 2.0, -2.0], [-1.0, 5.0, -15]]],
+  [26.2, 30.6, [[2.5, 3.5, 2], [-0.5, 4.5, -15]], [[2.8, 3.6, 2.6], [-0.5, 4.8, -15]]],
   // H2b: Gyroid drags the marshal clear as the dais sinks
   [30.6, 33, [[6.5, 3.2, 1.6], [0.6, 1.6, -4.6]], [[6.0, 3.0, 1.6], [0.8, 1.6, -3.6]]],
   // H3: close on Gyroid and the Commutator
-  [33, 38.2, [[-0.4, 1.5, -0.4], [1.3, 0.95, -2.8]], [[-0.1, 1.4, -0.8], [1.3, 0.95, -2.8]]],
+  [33, 38.2, [[-0.98, 1.6, 0.42], [1.3, 1.3, -2.8]], [[-0.68, 1.5, 0.02], [1.3, 1.3, -2.8]]],
   // H4: Emmy
   [38.2, 41.2, [[-0.6, 1.45, 0.9], [E_HOME[0], 1.05, E_HOME[1]]], [[-0.8, 1.4, 0.6], [E_HOME[0], 1.05, E_HOME[1]]]],
   // C2: Null rises toward the Spire
   [41.2, 47.2, [[2.5, 2.6, 2.5], [NULL_POS[0], 2.5, NULL_POS[1]]], null],
   // D: dawn behind the three of them, the Spire ahead
   [47.2, 51.4, [[0.2, 1.7, 2.6], [9, 3, -60]], [[0.1, 1.9, 3.4], [10, 5, -60]]],
-  [51.4, 55, [[0.3, 1.7, 0.3], [8, -1.8, -24]], [[0.4, 1.7, 0.1], [8, -1.6, -24]]], // over Gyroid's shoulder, the Spire ahead of him
+  [51.4, 55, [[2.6, 1.7, 0.9], [4.8, -4, -24]], [[2.5, 1.7, 0.6], [4.8, -4, -24]]], // behind Gyroid's right shoulder (away from the marshal), the Spire ahead
   [55, 65, [[0, 5, 14], [12, 14, -60]], [[0, 7, 16], [14, 18, -60]]],
 ]
 function MovieCamera({ tRef }) {

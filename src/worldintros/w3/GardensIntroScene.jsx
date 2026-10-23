@@ -45,13 +45,16 @@ const CLIFF_Y = 3
 const TORUS = [-7, -58]
 const BOUQ = [8, -60]
 const NULL_AT = [0.5, -78]
-const NULL_SCALE = 6
+const NULL_SCALE = 10
 const NULL_FEET = -4
 const STATION_FAR = [42, -2, -92]
+// close-up cameras: south of each hero, so the lit Gardens (Mirror Pools for Emmy, Lantern Rows for Gyroid) fill the background
+const E_CAM = [E0[0] + 1.6, E0[1] + 2.1]
+const G_CAM = [G0[0] - 1.2, G0[1] + 2.3]
 
 // Null rises out of the mist behind the twins
 const nullRise = (t) => smooth(seg(t, 39.2, 41.4))
-const nullY = (t) => mix(-30, NULL_FEET, nullRise(t))
+const nullY = (t) => mix(-42, NULL_FEET, nullRise(t))
 
 const caps = VIDEO.captions
 const spans = (who) => caps.filter((c) => c.speaker === who).map((c) => [c.t, c.end])
@@ -68,28 +71,13 @@ function pathOf(home, t, lane) {
   let y = VY
   let moving = kin > 0 && kin < 1
   let face = Math.PI
-  // run: to the stair head, down the stair, out along the causeway toward the Mirror Pools
+  // the close: they step up to the stair head and turn toward the Mirror Pools, the first level
   if (t > 66.8) {
-    const a = seg(t, 66.8, 67.8)
-    const b = seg(t, 67.8, 70)
-    const c = seg(t, 70, 72.5)
-    const top = [lane * 0.5, -4.2]
-    const foot = [lane * 0.5, -9.6]
-    const out = [-4 + lane * 0.5, -11.4]
-    if (a < 1) {
-      x = mix(home[0], top[0], a)
-      z = mix(home[1], top[1], a)
-    } else if (b < 1) {
-      x = top[0]
-      z = mix(top[1], foot[1], b)
-      y = mix(VY, 0, b)
-    } else {
-      x = mix(foot[0], out[0], c)
-      z = mix(foot[1], out[1], c)
-      y = 0
-      face = Math.atan2(out[0] - foot[0], out[1] - foot[1])
-    }
-    moving = c < 1
+    const a = smooth(seg(t, 66.8, 68.6))
+    x = mix(home[0], lane * 0.7, a)
+    z = mix(home[1], -3.4, a)
+    moving = a > 0 && a < 1
+    face = Math.atan2(POOLS[0] - x, POOLS[1] - z)
   }
   return { pos: [x, y, z], moving, face }
 }
@@ -239,7 +227,7 @@ function Landmarks() {
       </group>
       <pointLight position={[CLIFFS[0], CLIFF_Y + 5, CLIFFS[1] + 4]} color="#ffd27a" intensity={14} distance={16} />
       <pointLight position={[FOUNT[0], 5, FOUNT[1] + 3]} color="#ffd27a" intensity={14} distance={14} />
-      <pointLight position={[POOLS[0], 4, POOLS[1] + 2]} color="#9cc8ff" intensity={12} distance={14} />
+      <pointLight position={[POOLS[0], 6, POOLS[1] + 2]} color="#9cc8ff" intensity={5} distance={14} />
     </group>
   )
 }
@@ -304,33 +292,36 @@ const SHOTS = [
   // A2: in front of the terrace as they walk through the gate
   [6.4, 9.5, [[0, VY + 2.0, -7.2], [0, VY + 1.0, 1.2]], [[0, VY + 1.8, -6.4], [0, VY + 0.9, 0.4]]],
   // B: behind their shoulders, through the gate, the Gardens below
-  [9.5, 16, [[0.3, VY + 2.3, 3.9], [-1.5, -2.5, -30]], [[0.2, VY + 2.1, 3.3], [-1, -2, -32]]],
+  [9.5, 16, [[0.3, VY + 2.6, 3.9], [-1.5, -5.5, -30]], [[0.2, VY + 2.5, 3.3], [-1, -5, -32]]],
   // C1: down over the Mirror Pools
-  [16, 20.8, [[-3, 11, -4], [POOLS[0], -3, POOLS[1] - 2]], [[-6, 8.5, -6], [POOLS[0], -3, POOLS[1] - 3]]],
+  [16, 20.8, [[-3, 13, -2], [POOLS[0], -6, POOLS[1] - 2]], [[-5, 11.5, -3.5], [POOLS[0], -6.5, POOLS[1] - 3]]],
   // C2: along the Lantern Rows
   [20.8, 25, [[2, 6, -6], [8, -1.5, -20]], [[6, 7, -12], [LANTERN_DECK[0], -1.5, LANTERN_DECK[1] - 2]]],
   // C3: from the fountain across to the Compass Cliffs
-  [25, 29.4, [[-12, 9, -22], [FOUNT[0], -1, FOUNT[1]]], [[8, 11, -28], [CLIFFS[0], 0, CLIFFS[1]]]],
+  [25, 27.2, [[-12, 8, -22], [FOUNT[0], -2, FOUNT[1] - 1]], [[-14, 7.5, -23], [FOUNT[0], -2, FOUNT[1] - 1]]],
+  [27.2, 29.4, [[11, 11, -29], [CLIFFS[0], -1, CLIFFS[1] - 1]], [[13, 10.5, -30], [CLIFFS[0], -1, CLIFFS[1] - 1]]],
   // C4: the station on the horizon
-  [29.4, 34.6, [[22, 8, -55], [STATION_FAR[0], 1, STATION_FAR[2]]], [[26, 7.5, -62], [STATION_FAR[0], 2, STATION_FAR[2]]]],
+  [29.4, 34.6, [[22, 8, -55], [STATION_FAR[0], -1.5, STATION_FAR[2]]], [[25, 7.5, -61], [STATION_FAR[0], -1, STATION_FAR[2]]]],
   // D: the Twin Islands
   [34.6, 39, [[-1, 8, -42], [TORUS[0] + 3, -1, TORUS[1]]], [[-2, 6, -46], [TORUS[0] + 3, -0.5, TORUS[1]]]],
   // E1: back on the terrace, behind them at head height; Null rises over the islands
-  [39, 44.2, [[1.0, VY + 1.5, 4.8], [0.6, 8, -75]], [[0.8, VY + 1.4, 4.2], [0.6, 8.5, -76]]],
-  // E2: Null, close
-  [44.2, 48.4, [[NULL_AT[0] + 2, 14, NULL_AT[1] + 23], [NULL_AT[0], 14.5, NULL_AT[1]]], [[NULL_AT[0] + 1, 14.2, NULL_AT[1] + 21], [NULL_AT[0], 14.6, NULL_AT[1]]]],
+  [39, 44.2, [[0.1, VY + 0.4, 2.3], [0.5, 13.5, -78]], [[0, VY + 0.4, 2.0], [0.5, 14, -78]]],
+  // E2: Null, close: head and crown clear of the caption and the letterbox
+  [44.2, 48.4, [[NULL_AT[0] + 3.8, 22.6, NULL_AT[1] + 45], [NULL_AT[0], 22.5, NULL_AT[1]]], [[NULL_AT[0] + 2.5, 22.6, NULL_AT[1] + 42.5], [NULL_AT[0], 22.5, NULL_AT[1]]]],
   // E3: the last window, the thread above it
   [48.4, 52.6, [[-2.3, 4.2, -50.2], [-5.9, 1.5, -56.8]], [[-3.0, 3.6, -51.6], [-5.9, 1.6, -56.8]]],
   // E4: Emmy, from the front
-  [52.6, 56.4, [[E0[0] + 0.5, VY + 1.32, E0[1] - 2.6], [E0[0], VY + 1.0, E0[1]]], [[E0[0] + 0.35, VY + 1.3, E0[1] - 2.3], [E0[0], VY + 1.0, E0[1]]]],
+  [52.6, 56.4, [[E_CAM[0], VY + 1.85, E_CAM[1]], [E0[0], VY + 0.9, E0[1]]], [[mix(E0[0], E_CAM[0], 0.9), VY + 1.8, mix(E0[1], E_CAM[1], 0.9)], [E0[0], VY + 0.9, E0[1]]]],
   // E5: Null again
-  [56.4, 59.4, [[NULL_AT[0] - 1.6, 13.8, NULL_AT[1] + 20], [NULL_AT[0], 14.5, NULL_AT[1]]], [[NULL_AT[0] - 1, 14, NULL_AT[1] + 19], [NULL_AT[0], 14.6, NULL_AT[1]]]],
+  [56.4, 59.4, [[NULL_AT[0] - 3.8, 22.5, NULL_AT[1] + 44], [NULL_AT[0], 22.5, NULL_AT[1]]], [[NULL_AT[0] - 2.5, 22.6, NULL_AT[1] + 42.5], [NULL_AT[0], 22.5, NULL_AT[1]]]],
   // F1: Gyroid, from the front
-  [59.4, 63, [[G0[0] - 0.4, VY + 1.32, G0[1] - 2.6], [G0[0], VY + 1.0, G0[1]]], [[G0[0] - 0.3, VY + 1.3, G0[1] - 2.3], [G0[0], VY + 1.0, G0[1]]]],
-  // F2: both of them, then they break for the stair
-  [63, 68, [[0, VY + 1.9, -6.2], [0, VY + 0.9, -0.6]], [[0, VY + 2.2, -6.8], [0, VY + 0.7, -1.6]]],
-  // F3: climb away over the Gardens for the title
-  [68, 80, [[1, VY + 3, -9], [-2, 0, -14]], [[0, 28, 22], [0, 0, -36]]],
+  [59.4, 63, [[G_CAM[0], VY + 1.85, G_CAM[1]], [G0[0], VY + 0.9, G0[1]]], [[mix(G0[0], G_CAM[0], 0.9), VY + 1.8, mix(G0[1], G_CAM[1], 0.9)], [G0[0], VY + 0.9, G0[1]]]],
+  // F2: both of them, from the front
+  [63, 66.8, [[0, VY + 2.9, -6.2], [0, VY + 0.3, -0.6]], [[0, VY + 3.0, -6.6], [0, VY + 0.25, -1.0]]],
+  // F3: from behind, as they step to the stair head and turn toward the Mirror Pools (plays out before the title)
+  [66.8, 71.6, [[3.6, VY + 2.3, 0.8], [-9, -1, -14]], [[2.9, VY + 2.0, 0.0], [POOLS[0], -1.5, POOLS[1]]]],
+  // title: hold over the Gardens
+  [71.6, 80, [[2.9, VY + 2.0, 0.0], [POOLS[0], -1.5, POOLS[1]]], [[3.4, VY + 3.2, 0.8], [POOLS[0], -2, POOLS[1]]]],
 ]
 
 export default function GardensIntroScene({ tRef }) {
@@ -340,11 +331,11 @@ export default function GardensIntroScene({ tRef }) {
     const t = tRef.current
     nullG.current.position.set(NULL_AT[0], nullY(t), NULL_AT[1])
     nullG.current.visible = t > 39
-    nullLight.current.intensity = nullRise(t) * 90
+    nullLight.current.intensity = nullRise(t) * 140
   })
   const nullScript = () => {
     const t = tRef.current
-    return { gesture: within(t, N_TALK) ? 0.9 : 0.2, crown: 1, crownY: 0.2 }
+    return { gesture: within(t, N_TALK) ? 0.9 : 0.2, crown: 1, crownY: 0 }
   }
   const gyro = () => {
     const t = tRef.current
@@ -353,7 +344,7 @@ export default function GardensIntroScene({ tRef }) {
     const lookTorus = t > 34.6 && t < 66.8
     return {
       pos: [p.pos[0] / S, p.pos[1] / S, p.pos[2] / S],
-      rotY: lookTorus ? Math.atan2(TORUS[0] - G0[0], TORUS[1] - G0[1]) : p.face,
+      rotY: t > 59.4 && t < 63 ? Math.atan2(G_CAM[0] - G0[0], G_CAM[1] - G0[1]) : lookTorus ? Math.atan2(TORUS[0] - G0[0], TORUS[1] - G0[1]) : p.face,
       run: p.moving ? 1 : 0,
       cast: talk ? 0.45 : 0.08,
       whip: 0,
@@ -367,7 +358,7 @@ export default function GardensIntroScene({ tRef }) {
     const talk = within(t, E_TALK)
     return {
       pos: [p.pos[0] / S, p.pos[1] / S, p.pos[2] / S],
-      rotY: p.face,
+      rotY: t > 52.6 && t < 56.4 ? Math.atan2(E_CAM[0] - E0[0], E_CAM[1] - E0[1]) : p.face,
       walk: p.moving ? 1 : 0,
       bow: 0,
       gesture: talk ? 0.6 : 0,
@@ -416,7 +407,7 @@ export default function GardensIntroScene({ tRef }) {
       <group ref={nullG} scale={NULL_SCALE} rotation={[0, Math.atan2(-NULL_AT[0], -NULL_AT[1]), 0]}>
         <CountNull script={nullScript} />
       </group>
-      <pointLight ref={nullLight} position={[NULL_AT[0], 15, NULL_AT[1] + 12]} color="#d8c0ff" intensity={0} distance={45} />
+      <pointLight ref={nullLight} position={[NULL_AT[0], 20, NULL_AT[1] + 14]} color="#d8c0ff" intensity={0} distance={60} />
       <CrownThread tRef={tRef} />
       <group scale={S}>
         <Gyroid script={gyro} />
