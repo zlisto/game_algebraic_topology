@@ -96,6 +96,7 @@ const DEBUG_ENTRIES = [
       { label: 'Outro movie', screen: 'outroc0' },
     ],
   },
+  { group: 'World 1 · World intro — Into Bouquet Bastion', items: [{ label: 'World 1 intro movie', screen: 'world1' }] },
   // World 1 · Bouquet Bastion: one group per level (intro movie, lesson, from the start, then each section via startAt)
   ...[
     [1, 'Endpoint Gardens', 'Fixed Endpoints', [['Open Lawn', 'open_lawn'], ['Hedge Beds', 'hedges'], ['Pace Garden', 'faster'], ['Triple Gate', 'chained']]],
@@ -129,6 +130,7 @@ const DEBUG_ENTRIES = [
       { label: 'Outro movie: Your Number Reads Zero', screen: 'outroc1' },
     ],
   },
+  { group: 'World 2 · World intro — Into Chain Delta', items: [{ label: 'World 2 intro movie', screen: 'world2' }] },
   // World 2 · Chain Delta
   ...[
     [1, 'Tile Yard', 'Tile and Error', [['Two Triangles', 'two_tri'], ['The Torus', 'torus_glue'], ['Flip an Arrow', 'flip_arrow'], ['Wrong Order', 'wrong_order']]],
@@ -162,6 +164,7 @@ const DEBUG_ENTRIES = [
       { label: 'Outro movie: The Twins', screen: 'outroc2' },
     ],
   },
+  { group: 'World 3 · World intro — Into the Cup Product Gardens', items: [{ label: 'World 3 intro movie', screen: 'world3' }] },
   // World 3 · Cup Product Gardens
   ...[
     [1, 'Mirror Pools', 'Reverse Engineering', [['Read an Edge', 'read_edge'], ['Balanced Readings', 'balanced'], ['Readings from Points', 'from_points'], ['Around the Hole', 'around_hole']]],
@@ -194,6 +197,7 @@ const DEBUG_ENTRIES = [
       { label: 'Outro movie: Null’s Last Lesson', screen: 'outroc3' },
     ],
   },
+  { group: 'World 4 · World intro — Up the Postnikov Spire', items: [{ label: 'World 4 intro movie', screen: 'world4' }] },
   // World 4 · Postnikov Spire
   ...[
     [1, 'Cube Hall', 'Cube Root', [['Pinned Cubes', 'pinned'], ['Stack', 'stack'], ['Pass Each Other', 'pass'], ['One Dimension Down', 'dim1']]],
