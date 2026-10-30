@@ -104,7 +104,7 @@ export default function Emmy({ script, scale = 1 }) {
               </mesh>
             </group>
           </group>
-          <group ref={head} position={[0, 0.72, 0]}>
+          <group ref={head} position={[0, 0.68, 0]}>
             <Part model="emmy" name="em_head" mats={{ lens: LENS }} />
           </group>
         </group>

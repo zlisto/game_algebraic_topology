@@ -147,7 +147,7 @@ function enemyHp(type, def) {
 }
 
 /** Models for the World 1 spawn (Worlds 2–4 append here too). */
-const SPAWN_VIEW = {
+export const SPAWN_VIEW = {
   hedge: HedgeSpawn,
   backtrack: BacktrackSpawn,
   winder: WinderSpawn,

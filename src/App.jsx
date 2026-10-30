@@ -1,3 +1,4 @@
+import ModelView from './dev/ModelView'
 import { useCallback, useEffect, useState } from 'react'
 import TitleScreen from './screens/TitleScreen'
 import IntroCutscene from './screens/IntroCutscene'
@@ -511,6 +512,7 @@ const Movie4_12 = w4Movie(12, ObstructionMovie, "Obstruction Course", startObstr
 const Lesson4_12 = w4Lesson(12, ObstructionLesson, ObstructionLessonOverlay, "Obstruction Theory", startObstructionMusic)
 
 const SCREENS = {
+  ...(import.meta.env.DEV ? { modelview: ModelView } : {}), // dev: ?screen=modelview&m=null
   title: TitleScreen,
   intro: IntroCutscene,
   level1: Level01,

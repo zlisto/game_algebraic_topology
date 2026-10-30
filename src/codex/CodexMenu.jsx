@@ -18,7 +18,7 @@ import { readCodex } from './store'
  *   Cells — the building blocks · Notes — each level's definition from the book and Emmy's summary
  */
 
-const VIEW = {
+export const VIEW = {
   sphere: SphereSpawn, torus: TorusSpawn, snapper: SnapperSpawn, mobius: MobiusSpawn, projective: ProjectiveSpawn,
   klein: KleinSpawn, bitorus: BitorusSpawn, earring: EarringSpawn, harpy: HarpySpawn, spider: SpiderSpawn,
   spectre: SpectreSpawn, colossus: ColossusSpawn, shard: ShardSpawn, mirror: MirrorSpawn, coner: ConerSpawn,
