@@ -93,7 +93,7 @@ export function Tiles({ samples, simRef, tRef, forgery, tornSet, saved = false }
   return (
     <instancedMesh ref={mesh} args={[null, null, samples.count]} key={samples.count}>
       <boxGeometry args={[size, TILE_H, size]} />
-      <meshStandardMaterial roughness={0.45} metalness={0.15} emissive={LAND.stoneEmissive} emissiveIntensity={0.5} />
+      <meshStandardMaterial roughness={0.8} metalness={0.02} emissive={LAND.stoneEmissive} emissiveIntensity={0.3} />
     </instancedMesh>
   )
 }

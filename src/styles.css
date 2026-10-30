@@ -1836,3 +1836,5 @@ button.item-btn:hover:not(:disabled) { border-color: #f2b544; }
 .button-hud .bh-btn { pointer-events: auto; cursor: pointer; font: inherit; padding: 0; }
 .button-hud .bh-btn:disabled { cursor: default; }
 .button-hud .bh-btn:hover:not(:disabled) { filter: brightness(1.25); }
+/* the talk prompt sits below the corner buttons */
+@media (min-width: 721px) { .screen:has(.button-hud) .ui-overlay:not(:has(.rules-panel)) .talk-prompt { top: 11.4rem; } }

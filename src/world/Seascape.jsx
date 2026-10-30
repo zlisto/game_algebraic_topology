@@ -246,7 +246,7 @@ function Water({ area, y, palette, calm }) {
   return (
     <>
       <mesh geometry={geo} position={[area[0], y, area[1]]}>
-        <meshStandardMaterial color={palette.water} transparent opacity={calm ? 0.62 : 0.42} roughness={0.12} metalness={0.35} emissive={palette.water} emissiveIntensity={0.18} depthWrite={false} />
+        <meshStandardMaterial color={palette.water} transparent opacity={palette.opacity ?? (calm ? 0.62 : 0.42)} roughness={palette.opacity ? 0.25 : 0.12} metalness={0.35} emissive={palette.water} emissiveIntensity={0.18} depthWrite={false} />
       </mesh>
       {/* the deep beyond the detailed patch */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[area[0], y - 0.05, area[1]]}>
