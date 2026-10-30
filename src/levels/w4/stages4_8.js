@@ -58,8 +58,8 @@ export const STATIONS = {
       act('Set all four stable values', [
         G('$ℤ$, $ℤ₂$, $ℤ₂$, $ℤ₂₄$.'),
         E('Stem $0$ is degree, $ℤ$. Stem $1$ is the Hopf map, slung up until it’s $ℤ₂$. Further out the stems get wild. Nobody knows them all.'),
-        G('First place in four worlds where nothing moves under my feet. I don’t know what to do with my hands.'),
-        E('Hold on to that feeling. You’ll want it at the top.'),
+        G('Nothing’s moved since we walked in. I keep waiting for it to.'),
+        E('Up here it won’t. Remember what that’s like. The top won’t be this kind.'),
       ]),
       {
         type: 'ask',

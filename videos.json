@@ -5789,7 +5789,7 @@
           "end": 8.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Null swore a three-sphere can’t really wrap a two-sphere. The Gardens hang on that."
+          "text": "Null swore no three-sphere can wrap a two-sphere."
         },
         {
           "t": 8.4,
@@ -6178,7 +6178,7 @@
           "end": 16.1,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And when one won’t?"
+          "text": "Blocked, though. Not beaten."
         },
         {
           "t": 18.4,
@@ -9168,7 +9168,7 @@
           "end": 36.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A loop can’t cover the disk, so it misses a point. Puncture there, push out to the rim, a single point: $π₁(S²) = 0$."
+          "text": "Made of straight pieces, the loop can’t cover the disk, so it misses a point. Puncture, push out to the rim: $π₁(S²) = 0$."
         },
         {
           "t": 36.4,
@@ -9960,10 +9960,10 @@
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A fibre bundle: every fibre the same, and locally a product. Theorem 4.41 gives it a long exact row of homotopy groups."
+          "text": "Fibre bundle: locally a product. Theorem 4.41 gives it a long exact row of homotopy groups."
         },
         {
           "t": 41.8,
@@ -10716,7 +10716,7 @@
           "end": 36.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "With $2$ and $0$ no twist works: the sum stays $2$. The obstruction is a class, $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$. Extend iff $ωₙ = 0$."
+          "text": "With $2$ and $0$ no twist works: the sum stays $2$. The obstruction is a class, $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$. Extend, after re-choosing below, iff $ωₙ = 0$."
         },
         {
           "t": 36.4,

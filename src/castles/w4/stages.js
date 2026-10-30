@@ -214,7 +214,7 @@ export const FACET_INTRO = (f) => [N(`Facet ${f + 1}. ${FACETS[f].law}`), E('Str
 export const SHOUT = [
   E('Same groups, different glue. $S²$’s first k-invariant isn’t zero, and the product’s is. You can’t rebuild a place from its groups, Null.'),
   N('They’re holes, Emmy! Every one of them is a road somebody didn’t come home on!'),
-  G('Tell me about her. Not the road. Her.'),
+  G('Tell me about Wren. Not the road. Her.'),
   N('…She swung the lantern from the bridge, so I’d know she was nearly home. Every night. I’d see it and put the kettle on.'),
   E('I know. I loved her too.'),
   N('Then help me close them.'),

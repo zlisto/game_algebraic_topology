@@ -53,7 +53,7 @@ export const STATIONS = {
     ],
     early: [E('Not yet. Finish the station before this one first.')],
     goals: [
-      act('Read all three; extend where ω = 0', [G('Degree $0$ fills in. Degree $2$ and $−1$ don’t.'), E('Proposition 4.72 says the next stage goes through exactly when the obstruction $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$ is zero. That’s for $X$ with $π₁$ acting trivially, like $S²$.')]),
+      act('Read all three; extend where ω = 0', [G('Degree $0$ fills in. Degree $2$ and $−1$ don’t.'), E('Proposition 4.72: if you may redo the map on the $n$-cells below, you get past this stage exactly when the class $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$ is $0$. That needs $π₁$ acting trivially, as on $S²$.')]),
       {
         type: 'ask',
         question: 'Proposition 4.72: the next stage extends exactly when…',
@@ -69,6 +69,7 @@ export const STATIONS = {
     arrive: [
       E('Two $3$-cells, $A$ and $B$, share a $2$-cell. You’re allowed to change the map on that $2$-cell. Twist it by $k ∈ π₂$, and $A$’s number goes up by $k$ while $B$’s goes down by $k$.'),
       E('A change like that, $+k$ here and $−k$ there, is a coboundary. Clear both cells if you can. If you can’t, declare the class nonzero.'),
+      E('Same move as in the Gardens: a cochain is the numbers on the cells, and its class is what’s left once you may add any coboundary.'),
     ],
     early: [E('Not yet. Two stations come first; the NEXT ring shows where.')],
     goals: [

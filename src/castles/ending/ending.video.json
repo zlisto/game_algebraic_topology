@@ -19,13 +19,13 @@
     { "id": "E", "start": 70, "end": 80, "title": "Winding World", "description": "Fireworks over Haven; the camera rises over the whole restored world; title card." }
   ],
   "captions": [
-    { "t": 0.4, "end": 6.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "It’s over, Null. Every place you folded is on the Chart. The Crown’s got nothing left to take." },
-    { "t": 7.0, "end": 10.4, "speaker": "Count Null", "portrait": "count-null", "text": "Twenty years I left the lamp lit. She never saw it from the bridge." },
+    { "t": 0.4, "end": 6.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "It’s finished, Null. There’s nothing left up here for it to take." },
+    { "t": 7.0, "end": 10.4, "speaker": "Count Null", "portrait": "count-null", "text": "I said I was done leaving lamps. I never put hers out." },
     { "t": 10.6, "end": 13.4, "speaker": "Count Null", "portrait": "count-null", "text": "I only wanted a world where nobody else had to fall." },
     { "t": 13.6, "end": 16.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Ansel. Come away from the edge. Please." },
-    { "t": 16.6, "end": 20.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "Here. Haven gives every post-runner one of these. She should have had one too." },
-    { "t": 20.8, "end": 23.0, "speaker": "The Commutator", "portrait": "commutator", "text": "It was never order, Count. Only erasing." },
-    { "t": 23.2, "end": 25.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "We’ll finish it properly. Together." },
+    { "t": 16.6, "end": 19.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Here. Every Haven runner gets one. She should have had one too." },
+    { "t": 20.0, "end": 22.8, "speaker": "The Commutator", "portrait": "commutator", "text": "I called it order, Count. It was only erasing." },
+    { "t": 23.0, "end": 25.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Tomorrow the presses go back to gravel." },
     { "t": 25.4, "end": 30.0, "speaker": "Narrator", "hold": false, "text": "That night on the Spire the Crown had folded the whole Way at once. Now its law ran backwards, and every place on the Chart came home." },
     { "t": 35.0, "end": 36.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven! Every lamp’s lit. They’re home." },
     { "t": 47.4, "end": 51.0, "speaker": "Narrator", "hold": false, "text": "Every shape a little different. Every hole exactly where it had been." },

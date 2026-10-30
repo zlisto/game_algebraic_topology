@@ -15,7 +15,7 @@ export const STATION_ORDER = ['lift', 'fibre', 'loops']
 export const OPENING = [
   N('Lift whatever you like, Gyroid. Carry it as high as you can. I’ll fold it gently when you set it down.'),
   G('He sounds tired.'),
-  E('He sounds like he’s been awake for twenty years. Come on.'),
+  E('He sounds like a man who stopped sleeping a long time ago. Come on.'),
   E('Fibration Station. A fibration is a map $p: E → B$ with one promise: if you move something downstairs in $B$ and say where it starts upstairs, the motion lifts to $E$.'),
   E('One consequence: over a connected $B$, every fibre, everything sitting over one point, looks the same up to homotopy. And that promise is what gives the long exact sequence.'),
   G('Lifts, then. Which way’s up?'),

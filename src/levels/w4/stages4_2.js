@@ -43,7 +43,7 @@ export const STATIONS = {
     blueprint: 'Slip Off',
     arrive: [
       E('Here’s $S²$ built from two cells: one 0-cell, and one 2-cell, a disk whose whole gold rim is glued to that single point.'),
-      E('A loop runs around inside the disk. A loop is thin; it can’t cover a whole disk. So there’s a point it misses. Puncture there, then push the loop straight out to the rim.'),
+      E('A loop can fill a disk, oddly, but nudge it into straight pieces first and it can’t. So there’s a point it misses. Puncture there, then push the loop out to the rim.'),
     ],
     early: [E('Not yet. Check the NEXT ring on your map.')],
     goals: [

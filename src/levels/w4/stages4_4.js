@@ -17,8 +17,8 @@ export const OPENING = [
   E('Your Suspension Sling from the Cone Zone. I’ve upgraded it. It used to lift a space; now it lifts a whole map.'),
   E('Suspending a sphere means coning it up to a north pole and down to a south pole. Do that to $Sⁿ$ and you get $Sⁿ⁺¹$, with the old sphere as its equator.'),
   E('And a map $f: Sⁱ → Sⁿ$ becomes $Σf: Sⁱ⁺¹ → Sⁿ⁺¹$: it does $f$ on every latitude and sends pole to pole.'),
-  G('You built the first Sling for Ansel, didn’t you.'),
-  E('…For his roads. Sling’s on 4, Degree Dial on 8. First station’s north-west; follow the NEXT ring. Three commons off it, east and north-east. One has beasts.'),
+  G('The first Sling. Did he ever use it?'),
+  E('…Every day, that first year. Sling’s on 4, Degree Dial on 8. First station’s north-west; follow the NEXT ring. Three commons off it, east and north-east. One has beasts.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -45,7 +45,7 @@ export const STATIONS = {
     arrive: [E('Pick any degree, then sling the map all the way up: from $π₁(S¹)$ to $π₂(S²)$ to $π₃(S³)$.')],
     early: [E('Not yet. Check the NEXT ring on your map.')],
     goals: [
-      act('Sling the map up to π₃(S³)', [G('Same degree all the way up.'), E('Freudenthal’s theorem: each of these lifts is onto at the bottom step, and an isomorphism from there on.'), E('And since the degree survives every lift, the bottom step can’t lose anything either. Every $πₙ(Sⁿ)$ is $ℤ$, and the degree tells you which element.')]),
+      act('Sling the map up to π₃(S³)', [G('Same degree all the way up.'), E('Freudenthal’s theorem: each of these lifts is onto at the bottom step, and an isomorphism from there on.'), E('And since the degree survives every lift, the bottom step can’t lose anything either. Every $πₙ(Sⁿ)$ is $ℤ$, and the degree tells you which element.'), E('Why nothing’s lost: degree reads every element of $πₙ(Sⁿ)$ as an integer, and each lift keeps it. Two maps of different degree can’t become one.')]),
       {
         type: 'ask',
         question: 'What is $πₙ(Sⁿ)$?',
@@ -80,7 +80,7 @@ export const STATIONS = {
     arrive: [E('The Hopf map $η$ is the generator of $π₃(S²) = ℤ$. It’s in stem $1$: the sphere you map from is one dimension up. Sling it up that stem: $π₄(S³)$, $π₅(S⁴)$, $π₆(S⁵)$.')],
     early: [E('Not yet. Check the NEXT ring on your map.')],
     goals: [
-      act('Sling η up to π₆(S⁵)', [G('$ℤ$, then $ℤ₂$, $ℤ₂$, $ℤ₂$.'), E('The first lift is only onto, since $i = 2n − 1$ there, so $ℤ$ gets folded down to $ℤ₂$: $2Ση = 0$. After that it’s in the stable range and stays $ℤ₂$.')]),
+      act('Sling η up to π₆(S⁵)', [G('$ℤ$, then $ℤ₂$, $ℤ₂$, $ℤ₂$.'), E('The first lift is only onto, since $i = 2n − 1$ there, so $ℤ$ gets folded down to $ℤ₂$: $2Ση = 0$. After that it’s in the stable range and stays $ℤ₂$.'), E('That it’s exactly $ℤ₂$ isn’t proved on this floor. We’re reading Hatcher’s table. Freudenthal only promises onto here, then isomorphisms.')]),
       {
         type: 'ask',
         question: 'The stable value of $πₙ₊₁(Sⁿ)$ is…',

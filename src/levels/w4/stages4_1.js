@@ -13,11 +13,11 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['pinned', 'stack', 'pass', 'dim1']
 
 export const OPENING = [
-  G('He built all of this. Floor after floor, for twenty years.'),
+  G('He built all of this. Every floor of it.'),
   E('Ansel never did anything by halves. Even grieving.'),
   G('…Okay. Then we climb it. What’s on this floor?'),
   E('Loops again, but in every dimension. A loop was an interval with both ends sent to the base point. Now take a square, a cube, any $Iⁿ$, and send its whole boundary to the base point $x₀$.'),
-  G('A square with its whole edge squashed to one point… that closes up into a ball. A sphere!'),
+  G('A square with its whole edge squashed to one point… that closes up on itself. A sphere!'),
   E('Right. So each of these is a map of $Sⁿ$ into the space. Count them up to sliding, and you get the group $πₙ(X, x₀)$.'),
   E('Tide Glass is 3. First station’s north-east; follow the NEXT ring on your map. Two commons hang off it, west and north-east, both with beasts. They’re optional.'),
 ]

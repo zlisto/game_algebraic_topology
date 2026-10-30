@@ -14,7 +14,7 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['circle', 'linked', 'seq', 'nulls_answer']
 
 export const OPENING = [
-  N('Still climbing, Gyroid. I told you at the Gardens: every map from the three-sphere to the two-sphere squashes flat. There’s nothing up here worth the climb.'),
+  N('Still climbing, Gyroid. I told you at the Façade: every map from the three-sphere to the two-sphere squashes flat. There’s nothing up here worth the climb.'),
   G('He said that about the sphere, too.'),
   E('The Hopf Ring. If he’s right, the Gardens go back on the block. If he’s wrong, they stay on the Chart for good.'),
   E('Here’s the map he means. Above every point of a little sphere $S²$ sits a whole circle, and all those circles together fill up $S³$.'),
@@ -37,6 +37,7 @@ export const STATIONS = {
         G('Four circles, all tangled up in each other.'),
         E('Every point of $S³$ lies on exactly one of them. Each circle is a fibre, and they all look the same.'),
         E('That makes it a fibre bundle: a circle over each point of $S²$, and over any small patch of $S²$ it’s just the patch times a circle.'),
+        E('Why a product over a patch? Where $z₂ ≠ 0$, a point of $S³$ is fixed by the ratio and the direction of $z₂$: one patch point, one circle point.'),
       ]),
       {
         type: 'ask',
@@ -105,7 +106,7 @@ export const STATIONS = {
     goals: [
       act('Light the fibres over two points', [
         N('…They’re linked.'),
-        N('Two rings that won’t come apart. I used to think that was the saddest thing I knew.'),
+        N('Two rings that won’t come apart. …She’d have liked that.'),
         E('The linking is what you see. The row you just filled in is the proof: $π₃(S²) ≅ ℤ$, and the Hopf map generates it. It isn’t trivial.'),
         G('So it’s not nothing. And neither are the Gardens.'),
       ]),

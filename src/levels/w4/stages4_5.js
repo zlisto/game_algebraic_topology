@@ -58,7 +58,7 @@ export const STATIONS = {
     goals: [
       act('Kill π₃, π₄ and π₅ in order', [
         G('Only $π₂ = ℤ$ left.'),
-        E('Keep going forever, one dimension at a time, and what you end with is $K(ℤ, 2)$. Hatcher shows that space is $ℂP∞$. We’re taking his word on that one, not building it here.'),
+        E('Keep going forever, one dimension at a time, and what you end with is $K(ℤ, 2)$.'), E('Why ℂP∞? The circle acts on $S∞$ with quotient $ℂP∞$, and $S∞$ shrinks to a point. At Fibration Station you’ll see that leaves only $π₂ = π₁(S¹) = ℤ$.'),
       ]),
       {
         type: 'ask',

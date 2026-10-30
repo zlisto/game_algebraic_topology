@@ -16,6 +16,7 @@ export const OPENING = [
   E('That’s a cohomology class. And here’s the surprise of this floor: a reading is the same thing as a map into the right $K(G, n)$.'),
   G('A reading’s a map. How does a map read anything?'),
   E('$K(G, n)$ comes with one basic reading of its own, called $ι$. On the circle, $ι$ just says “how many times round”. Map $X$ in with $f$, and read $ι$ along $f$: that’s the class $f*(ι)$ on $X$.'),
+  E('Slide $f$ to a homotopic $g$ and nothing changes: homotopic maps pull classes back the same way, as in the Gardens. So only $f$’s homotopy class matters.'),
   E('Cup Caster on 9. First station’s north-east; follow the NEXT ring on your map. The two commons, west and north-east of it, both have beasts. Skip them if you like.'),
 ]
 

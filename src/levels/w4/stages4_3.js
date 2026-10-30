@@ -66,7 +66,7 @@ export const STATIONS = {
     ],
     early: [E('Not this room yet. The NEXT ring on your map shows where to go.')],
     goals: [
-      act('Try to send a runner from every meter', [G('They’ve got nowhere to run. There’s no map between the rooms.'), E('Matching numbers aren’t enough. Homology tells them apart: $H₂(ℝP²) = 0$, but $H₂(S² × ℝP∞) = ℤ$. Not homotopy equivalent, so no map can match them up.')]),
+      act('Try to send a runner from every meter', [G('They’ve got nowhere to run. No map between these rooms carries the groups across.'), E('Matching numbers aren’t enough. Homology tells them apart: $H₂(ℝP²) = 0$, but $H₂(S² × ℝP∞) = ℤ$. Not homotopy equivalent, so no map can match them up.'), E('Why $ℤ$? $S²$ sits inside as $S² ×$ a point, and projecting back to $S²$ undoes that. So $H₂(S²) = ℤ$ survives inside.')]),
       {
         type: 'ask',
         question: 'What does Whitehead’s theorem need that these two lack?',

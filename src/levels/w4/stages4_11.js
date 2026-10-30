@@ -72,10 +72,11 @@ export const STATIONS = {
     arrive: [
       E('Two towers. $S²$, and $S³ × ℂP∞$. They have the same homotopy groups in every degree: Hatcher shows it in Example 4.51. Both towers start $K(ℤ, 2)$, then $K(ℤ, 3)$.'),
       E('The k-invariant $k₂$ is the twist that sets the $K(ℤ, 3)$ floor down on $X₂$. If $k₂ = 0$, $X₃$ is simply the product $K(ℤ, 2) × K(ℤ, 3)$. Set $k₂$ for each tower.'),
+      E('Here $k₂$ is a class in $H⁴(ℂP∞; ℤ) = ℤ$. For the product it’s $0$. For $S²$ it can’t be, or its $H₃$ would come out $ℤ$.'),
     ],
     early: [E('Not this one yet. Two stations come first; follow the NEXT ring.')],
     goals: [
-      act('Set k₂ for each tower', [G('Same groups. Different spaces.'), E('$S³ × ℂP∞$ has $k₂ = 0$: its $X₃$ is the product, and a product $K(ℤ, 2) × K(ℤ, 3)$ has $H₃ = ℤ$.'), E('But $S² → X₃$ keeps homology through degree $3$, and $H₃(S²) = 0$. So $S²$’s $X₃$ can’t be the product. Its $k₂$ isn’t $0$.')]),
+      act('Set k₂ for each tower', [G('Same groups. Different spaces.'), E('$S³ × ℂP∞$ has $k₂ = 0$: its $X₃$ is the product, and a product $K(ℤ, 2) × K(ℤ, 3)$ has $H₃ = ℤ$.'), E('But $S² → X₃$ keeps homology through degree $3$, and $H₃(S²) = 0$. So $S²$’s $X₃$ can’t be the product. Its $k₂$ isn’t $0$.'), E('Why? $X₃$ is $S²$ with cells of dimension $5$ and up glued on, and cells that big can’t change $H₃$. The product’s $H₃ = ℤ$ comes from $K(ℤ, 3)$: Hurewicz gives $H₃ = π₃$.')]),
       {
         type: 'ask',
         question: 'If every k-invariant of $X$ is $0$, then $X$ is…',
