@@ -460,33 +460,62 @@ export function createIntroScore() {
   }
 }
 
-/** The chord under each part of the intro (story seconds), for the bed that plays while a caption waits. */
-const HOLD_CHORDS = [
-  [6, ['D3', 'A3', 'F4']], // prelude and wonder: D minor
-  [21, ['D2', 'A2', 'Eb3']], // Count Null and the collapse: his low, uneasy drone
-  [28, ['D3', 'A3', 'F4']], // the run: D minor
-  [31.5, ['F3', 'A3', 'C4']], // the spines hold: F major
-  [34.2, ['D3', 'F#3', 'A3']], // anchor set: D major
-  [40, ['D2', 'A2', 'Eb3']], // Null watches: his drone again
-  [Infinity, ['D3', 'F#3', 'A3']], // the title: D major
-]
-
-/**
- * A soft sustained chord in its own audio context. The score itself is pre-timed to the movie,
- * so it must pause while a line waits; this keeps the room from going silent meanwhile.
+/*
+ * What plays while a caption waits for the player. The score itself is pre-timed to the picture, so it must
+ * pause on a hold; this keeps the music going meanwhile: a looping passage in the same key, tempo and mood as
+ * the part of the intro it stands in for (story seconds → section), crossfaded in and out.
+ *   chords: one per bar (4 beats at 140 bpm, or 2 bars each when `slow`); arp: chord-tone pattern per 8th note
  */
+const HOLD_SECTIONS = [
+  // prelude and wonder: D minor, celesta arpeggios over pads
+  [6, { chords: [['D3', 'F3', 'A3', 'D4'], ['Bb2', 'D3', 'F3', 'A3'], ['G2', 'Bb2', 'D3', 'F3'], ['A2', 'C#3', 'E3', 'A3']], arp: [0, 1, 2, 3, 2, 1, 3, 2], up: 24, slow: true, drums: 0 }],
+  // Count Null: his drone, the motif D–E♭–D–A low under it
+  [13, { chords: [['D2', 'A2', 'Eb3', 'D3'], ['D2', 'A2', 'Eb3', 'D3'], ['C2', 'G2', 'Eb3', 'C3'], ['D2', 'A2', 'Eb3', 'D3']], arp: [3, -1, 2, -1, 3, -1, 1, -1], up: 12, slow: true, drums: 1, dark: true }],
+  // the collapse: Dm–B♭–Gm(add E♭)–A7 over a pulsing bass
+  [21, { chords: [['D3', 'F3', 'A3', 'D4'], ['Bb2', 'D3', 'F3', 'Bb3'], ['G2', 'Bb2', 'D3', 'Eb3'], ['A2', 'C#3', 'E3', 'G3']], arp: [0, -1, 2, -1, 3, -1, 2, -1], up: 12, drums: 1, dark: true }],
+  // the run: driving D minor ostinato
+  [28, { chords: [['D3', 'F3', 'A3', 'D4'], ['Bb2', 'D3', 'F3', 'Bb3'], ['C3', 'E3', 'G3', 'C4'], ['A2', 'C#3', 'E3', 'A3']], arp: [0, 2, 1, 3, 0, 2, 1, 3], up: 12, drums: 2 }],
+  // the spines hold: F major, opening up
+  [30.8, { chords: [['F3', 'A3', 'C4', 'F4'], ['C3', 'E3', 'G3', 'C4'], ['D3', 'F3', 'A3', 'D4'], ['Bb2', 'D3', 'F3', 'Bb3']], arp: [0, 1, 2, 3, 2, 1, 2, 3], up: 24, slow: true, drums: 0 }],
+  // anchor set: D major
+  [34.2, { chords: [['D3', 'F#3', 'A3', 'D4'], ['G2', 'B2', 'D3', 'G3'], ['B2', 'D3', 'F#3', 'B3'], ['A2', 'C#3', 'E3', 'A3']], arp: [0, 1, 2, 3, 2, 1, 2, 3], up: 24, slow: true, drums: 0 }],
+  // Null watches: his drone again, with the music-box motif
+  [40, { chords: [['D2', 'A2', 'Eb3', 'D3'], ['D2', 'A2', 'Eb3', 'D3']], arp: [3, -1, 1, -1, 2, -1, 3, -1], up: 24, slow: true, drums: 0, dark: true }],
+  // the title: main theme colours, D major
+  [Infinity, { chords: [['Bb2', 'D3', 'F3', 'Bb3'], ['C3', 'E3', 'G3', 'C4'], ['D3', 'F#3', 'A3', 'D4'], ['D3', 'F#3', 'A3', 'D4']], arp: [0, 1, 2, 3, 2, 3, 1, 2], up: 24, drums: 1 }],
+]
+const LEVEL = 0.7 // the score's own master level
+const sectionAt = (t) => HOLD_SECTIONS.find(([until]) => t < until)[1]
+
 export function createHoldBed() {
   const AC = window.AudioContext || window.webkitAudioContext
   if (!AC) return null
   const ctx = new AC()
   const out = ctx.createGain()
   out.gain.value = 0
-  const lp = ctx.createBiquadFilter()
-  lp.type = 'lowpass'
-  lp.frequency.value = 900
-  lp.connect(out).connect(ctx.destination)
-  let voices = []
+  const comp = ctx.createDynamicsCompressor()
+  comp.threshold.value = -18
+  comp.ratio.value = 3
+  out.connect(comp).connect(ctx.destination)
+  // a little echo, like the score's reverb
+  const echo = ctx.createDelay(1)
+  echo.delayTime.value = BEAT * 0.75
+  const fb = ctx.createGain()
+  fb.gain.value = 0.3
+  const wet = ctx.createGain()
+  wet.gain.value = 0.35
+  echo.connect(fb).connect(echo)
+  echo.connect(wet).connect(out)
+  const noiseBuf = (() => {
+    const b = ctx.createBuffer(1, ctx.sampleRate * 0.2, ctx.sampleRate)
+    const d = b.getChannelData(0)
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1
+    return b
+  })()
+
   let muted = false
+  let loop = null // { id, sec, k, next }
+  let ending = 0 // the timer that stops the loop after a release
 
   const fadeTo = (v, secs) => {
     const now = ctx.currentTime
@@ -494,43 +523,129 @@ export function createHoldBed() {
     out.gain.setValueAtTime(out.gain.value, now)
     out.gain.linearRampToValueAtTime(muted ? 0 : v, now + secs)
   }
-  const clear = (when) => {
-    for (const o of voices) o.stop(when)
-    voices = []
+  let bus = out // the current loop's own gain (see play)
+  const tone = (t, f, dur, { type = 'triangle', vol = 0.05, cutoff = 1800, attack = 0.01, send = 0 } = {}) => {
+    const o = ctx.createOscillator()
+    o.type = type
+    o.frequency.value = f
+    const lp = ctx.createBiquadFilter()
+    lp.type = 'lowpass'
+    lp.frequency.value = cutoff
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0, t)
+    g.gain.linearRampToValueAtTime(vol, t + attack)
+    const tau = Math.min(0.4, dur * 0.12)
+    const rel = t + Math.max(attack, dur * 0.6)
+    g.gain.setTargetAtTime(0, rel, tau)
+    o.connect(lp).connect(g).connect(bus)
+    if (send) g.connect(echo)
+    o.start(t)
+    o.stop(rel + tau * 6) // decayed to nothing, so no click
+  }
+  const tick = (t, vol, freq, len) => {
+    const s = ctx.createBufferSource()
+    s.buffer = noiseBuf
+    const f = ctx.createBiquadFilter()
+    f.type = 'highpass'
+    f.frequency.value = freq
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(vol, t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len)
+    s.connect(f).connect(g).connect(bus)
+    s.start(t)
+    s.stop(t + len + 0.02)
+  }
+  const kick = (t, vol) => {
+    const o = ctx.createOscillator()
+    o.frequency.setValueAtTime(120, t)
+    o.frequency.exponentialRampToValueAtTime(42, t + 0.25)
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(vol, t)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3)
+    o.connect(g).connect(bus)
+    o.start(t)
+    o.stop(t + 0.35)
+  }
+
+  // one 8th note of the section's passage
+  function step(sec, k, t) {
+    const per = sec.slow ? 16 : 8 // 8ths per chord
+    const chord = sec.chords[Math.floor(k / per) % sec.chords.length]
+    const i = k % per
+    const e = BEAT / 2
+    if (i === 0) {
+      // pad: the whole chord, held for the bar(s)
+      for (const n of chord) for (const d of [-6, 6]) tone(t, hz(n) * 2 ** (d / 1200), e * per, { type: sec.dark ? 'sawtooth' : 'triangle', vol: sec.dark ? 0.012 : 0.022, cutoff: sec.dark ? 420 : 1200, attack: 0.4 })
+      // bass on the root
+      tone(t, hz(chord[0]) / (sec.dark ? 1 : 2), e * per * 0.9, { type: 'triangle', vol: 0.09, cutoff: 500, attack: 0.02 })
+    }
+    if (!sec.slow && i === 4) tone(t, hz(chord[0]) / (sec.dark ? 1 : 2), e * 3, { type: 'triangle', vol: 0.07, cutoff: 500 })
+    // the arpeggio
+    const a = sec.arp[k % sec.arp.length]
+    if (a >= 0) tone(t, hz(chord[a]) * 2 ** (sec.up / 12), e * 1.6, { type: sec.dark ? 'triangle' : 'sine', vol: sec.dark ? 0.035 : 0.045, cutoff: 3000, send: 1 })
+    // percussion
+    if (sec.drums === 2) {
+      if (k % 4 === 0) kick(t, 0.35)
+      if (k % 4 === 2) tick(t, 0.05, 1500, 0.12)
+      tick(t, 0.018, 7000, 0.04)
+    } else if (sec.drums === 1) {
+      if (k % 8 === 0) kick(t, sec.dark ? 0.3 : 0.2)
+      if (k % 2 === 1) tick(t, 0.012, 7000, 0.04)
+    }
+  }
+
+  const stopLoop = () => {
+    ending = 0
+    if (!loop) return
+    clearInterval(loop.id)
+    const g = loop.gain
+    const now = ctx.currentTime
+    g.gain.setValueAtTime(g.gain.value, now)
+    g.gain.linearRampToValueAtTime(0, now + 0.1)
+    setTimeout(() => g.disconnect(), 200)
+    loop = null
   }
 
   return {
-    /** fade in the chord for story time `t` */
+    /** start the passage for story time `t`, fading in fast so the music carries straight on */
     play(t) {
       if (ctx.state === 'suspended') ctx.resume()
-      const notes = HOLD_CHORDS.find(([until]) => t < until)[1]
-      clear(ctx.currentTime + 0.05)
-      for (const n of notes) {
-        for (const detune of [-5, 5]) {
-          const o = ctx.createOscillator()
-          o.type = 'triangle'
-          o.frequency.value = hz(n)
-          o.detune.value = detune
-          const g = ctx.createGain()
-          g.gain.value = 0.045
-          o.connect(g).connect(lp)
-          o.start()
-          voices.push(o)
+      clearTimeout(ending)
+      ending = 0
+      const sec = sectionAt(t)
+      if (!loop || loop.sec !== sec) {
+        stopLoop()
+        const l = { sec, k: 0, next: ctx.currentTime + 0.03, id: 0, gain: ctx.createGain() }
+        l.gain.connect(out)
+        const run = () => {
+          bus = l.gain
+          while (l.next < ctx.currentTime + 0.2) {
+            step(l.sec, l.k, l.next)
+            l.k++
+            l.next += BEAT / 2
+          }
         }
+        l.id = setInterval(run, 40)
+        run()
+        loop = l
       }
-      fadeTo(1, 0.8)
+      fadeTo(LEVEL, 0.25)
     },
-    /** fade out as the movie moves on */
+    /** fade out as the movie (and its score) carries on */
     release() {
-      fadeTo(0, 0.5)
-      clear(ctx.currentTime + 0.6)
+      fadeTo(0, 0.6)
+      clearTimeout(ending)
+      ending = setTimeout(stopLoop, 700)
     },
     setMuted(m) {
       muted = m
       if (m) fadeTo(0, 0.1)
+      else if (loop && !ending) fadeTo(LEVEL, 0.25) // unmuted mid-hold: bring the passage back in
     },
     stop() {
       fadeTo(0, 0.2)
+      clearTimeout(ending)
+      stopLoop()
       setTimeout(() => ctx.close().catch(() => {}), 300)
     },
   }
