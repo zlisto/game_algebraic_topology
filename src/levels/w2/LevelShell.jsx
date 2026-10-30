@@ -7,6 +7,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import LevelMovie from '../../screens/LevelMovie'
 import LevelMap from '../../screens/LevelMap'
 import MathText from '../../screens/MathText'
+import { PauseMenu, usePause } from '../../screens/LevelChrome'
+import { noteSeen } from '../../codex/store'
 import useDialogKeys from '../../screens/useDialogKeys'
 import { useExitTrigger } from '../../screens/exitTrigger'
 import { buildSites, makeSiteWalkable } from '../../world/sites'
@@ -403,7 +405,12 @@ export default function LevelShell({
 
   useExitTrigger(exitOpen, stateRef, (x, z) => Math.abs(x - layout.exit.gate[0]) < 1.5 && Math.abs(z - layout.exit.gate[1]) < 2.2, () => setLevelClear(true))
 
-  const playEnabled = !talking && !askOpen && !levelClear
+  const [paused, setPaused] = usePause(levelClear || lesson)
+  const playEnabled = !talking && !askOpen && !levelClear && !paused
+  useEffect(() => {
+    if (levelClear) noteSeen({ kicker: `${kicker} · clear`, title: levelMeta.title, definition })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [levelClear])
   const nDone = stationOrder.filter((id) => done[id]).length
   const objective = exitOpen
     ? 'Walk through the exit gate'
@@ -624,6 +631,7 @@ export default function LevelShell({
         />
       )}
 
+      {paused && <PauseMenu title={levelMeta.title} onResume={() => setPaused(false)} onTitle={onBackToTitle} />}
       {levelClear && (
         <div className="win-banner exit">
           <div className="win-card wide">

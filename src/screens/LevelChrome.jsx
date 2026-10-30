@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { duckMusic } from '../audio/chip'
 import MathText from './MathText'
+import CodexMenu from '../codex/CodexMenu'
+import { noteSeen } from '../codex/store'
 
 /**
  * Shared level chrome for the third-person overworld levels (0-1, 0-2, …): Esc pause and its menu,
@@ -39,6 +41,8 @@ export function usePause(disabled) {
 }
 
 export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
+  const [codex, setCodex] = useState(false)
+  if (codex) return <CodexMenu onClose={() => setCodex(false)} />
   return (
     <div className="win-banner pause">
       <div className="win-card">
@@ -49,9 +53,14 @@ export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
           <button type="button" className="btn primary" onClick={onResume}>
             Resume
           </button>
-          <button type="button" className="btn" onClick={onRestart}>
-            Restart level
+          <button type="button" className="btn" onClick={() => setCodex(true)}>
+            Codex · bestiary, relics, notes
           </button>
+          {onRestart && (
+            <button type="button" className="btn" onClick={onRestart}>
+              Restart level
+            </button>
+          )}
           <button type="button" className="btn" onClick={onTitle}>
             Title screen
           </button>
@@ -64,6 +73,11 @@ export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
 
 /** Emmy sums up the level: what we learned, what lies ahead; the formal definition tucked beneath. */
 export function EmmyEndCard({ kicker, title, learned, ahead, definition, onStay, onNext, nextLabel, extra, stayLabel = 'Keep exploring', defLabel = 'The definition (after Hatcher)' }) {
+  // the codex keeps a note of every level cleared: its definition from the book and Emmy's summary
+  useEffect(() => {
+    noteSeen({ kicker, title, learned, definition })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <div className="win-banner exit">
       <div className="win-card wide">

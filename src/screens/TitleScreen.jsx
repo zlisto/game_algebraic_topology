@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import CodexMenu from '../codex/CodexMenu'
 
 /** Level select: every movie, lesson and level, and each level's sections. Shown everywhere, including the live site. */
 const DEBUG_ENTRIES = [
@@ -313,6 +314,7 @@ export default function TitleScreen({ concept, onNewGame, onGo }) {
   const tagline = story.tagline || "Shape can change. Topology can't."
   const cover = `${import.meta.env.BASE_URL}assets/cover.jpg` // 117 KB (the 2 MB PNG took seconds to appear)
   const [picking, setPicking] = useState(false)
+  const [codex, setCodex] = useState(false)
 
   return (
     <div className="title-screen">
@@ -329,6 +331,9 @@ export default function TitleScreen({ concept, onNewGame, onGo }) {
           <button type="button" className="btn" disabled title="Coming soon">
             Continue
           </button>
+          <button type="button" className="btn" onClick={() => setCodex(true)} title="Bestiary, relics, cells and notes you've found">
+            Codex
+          </button>
           {SHOW_DEBUG && (
             <button type="button" className="btn ghost" onClick={() => setPicking(true)} title="Debug: jump to any level, movie or lesson">
               Level select
@@ -337,6 +342,7 @@ export default function TitleScreen({ concept, onNewGame, onGo }) {
         </div>
       </div>
       {picking && <LevelSelect onGo={onGo} onClose={() => setPicking(false)} />}
+      {codex && <CodexMenu onClose={() => setCodex(false)} />}
     </div>
   )
 }

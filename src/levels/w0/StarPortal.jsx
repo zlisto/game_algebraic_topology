@@ -1,6 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import { Sparkles } from '@react-three/drei'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
+import { relicGot } from '../../codex/store'
 import * as THREE from 'three'
 import { REWARDS_W1 } from '../w1/Rewards1'
 
@@ -229,6 +230,9 @@ const MODELS = { hourglass: Hourglass, lens: Lens, tile: Tile, cone: ConeCrystal
 
 /** One reward. kind = a reef stage (a Spine Shard of that shape), 'hourglass' (a Tide Hourglass) or 'lens' (a Mirror Lens). */
 export function Star({ pos, state, kind = 'walkway' }) {
+  useEffect(() => {
+    if (state === 'taken') relicGot(kind) // the codex's relics
+  }, [state, kind])
   const g = useRef()
   const takenAt = useRef(null) // scene-clock time it was collected
   const Model = MODELS[kind]

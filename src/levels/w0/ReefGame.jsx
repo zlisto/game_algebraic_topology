@@ -3,6 +3,7 @@ import { createElement, useEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
 import Lash from './Lash'
+import { beastMet } from '../../codex/store'
 import { sfxCrack, sfxHammer, sfxHit, sfxHurt, sfxPop, sfxRefuse, sfxRoot, sfxWhoosh } from '../../audio/chip'
 import {
   BacktrackSpawn,
@@ -741,6 +742,7 @@ export default function ReefGame({
             const kz = e.z + dz * kb
             if (enemyInside(kx, kz)) (e.x = kx), (e.z = kz)
             if (e.hp <= 0) {
+              beastMet(e.type) // the codex's bestiary
               e.alive = false
               e.dying = e.type === 'torus' ? 0.6 : 0.5
               if (e.linked) {

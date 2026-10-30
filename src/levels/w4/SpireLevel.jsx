@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { noteSeen } from '../../codex/store'
 import LevelMovie from '../../screens/LevelMovie'
 import LevelMap from '../../screens/LevelMap'
 import MathText from '../../screens/MathText'
@@ -101,6 +102,11 @@ export default function SpireLevel({
   const [askOpen, setAskOpen] = useState(false)
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
+  // the codex keeps a note of this level once it's cleared
+  useEffect(() => {
+    if (levelClear) noteSeen({ kicker: `World ${world} · Level ${levelNum} clear`, title: levelMeta.title || title, definition })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [levelClear])
   const [lesson, setLesson] = useState(false)
   const [muted, setMuted] = useState(readMuted)
   const [toast, setToast] = useState(null)

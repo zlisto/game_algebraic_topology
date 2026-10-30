@@ -9,6 +9,7 @@ import { SITE, SITES, gateSegments, layout, makeWalkable, siteAt, worldToMap } f
 import { dialogOpen, duckMusic, readMuted, setMuted as setAudioMuted, setWarpHum, sfxCorrect, sfxWarpOpen, sfxWrong, startReefMusic, stopReefMusic, stopWarpHum, textBlip, unlockAudio } from '../audio/chip'
 import { TalkPrompt, WarpIcon, useEmmyTalk } from './LevelChrome'
 import { stepBack } from './warpLevel'
+import { noteSeen } from '../codex/store'
 import MathText from './MathText'
 
 /**
@@ -171,6 +172,11 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
   const [forgeryIdx, setForgeryIdx] = useState(0)
   const [answer, setAnswer] = useState(null)
   const [levelClear, setLevelClear] = useState(false)
+  // the codex keeps a note of this level once it's cleared
+  useEffect(() => {
+    if (levelClear) noteSeen({ kicker: 'World 0 · Level 1 clear', title: levelMeta?.title || 'A Good Deformation', learned: END_CARD.learned, definition: DEFINITION })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [levelClear])
   const [stars, setStars] = useState({}) // site id → time collected (clock seconds)
   const [toast, setToast] = useState(null)
   const [warping, setWarping] = useState(false)

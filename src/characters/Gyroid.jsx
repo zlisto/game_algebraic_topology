@@ -1,9 +1,13 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
+import { Part, preloadModels } from './models'
+
+preloadModels('gyroid')
 
 /**
- * Gyroid — procedural rig modeled on assets/characters/gyroid.png:
+ * Gyroid — a jointed rig modeled on assets/characters/gyroid.png, its parts sculpted in Blender
+ * (tools/gyroid_blender.py → public/models/gyroid.glb, one part per joint):
  * teal perforated sea-glass armor, amber visor, swept blond hair,
  * coral scarf, brass anchor spool on the hip.
  *
@@ -12,40 +16,9 @@ import * as THREE from 'three'
  *   loop: 0..1 radius of the anchored loop; loopDrop: 0..1 loop settles to the ground
  */
 
-const ARMOR = { color: '#3fa7a0', metalness: 0.35, roughness: 0.32, emissive: '#06302c', emissiveIntensity: 0.6 }
-const SUIT = { color: '#173740', metalness: 0.2, roughness: 0.6 }
-const HOLE = { color: '#0b2226', roughness: 0.9 }
 
-function Armor(props) {
-  return <meshStandardMaterial {...ARMOR} {...props} />
-}
 
-function Holes({ spots, r = 0.035 }) {
-  return spots.map((p, i) => (
-    <mesh key={i} position={p} scale={[1, 1, 0.45]}>
-      <sphereGeometry args={[r, 10, 8]} />
-      <meshStandardMaterial {...HOLE} />
-    </mesh>
-  ))
-}
 
-function Limb({ length, radius, armor = true }) {
-  // capsule hanging down from the joint
-  return (
-    <group>
-      <mesh position={[0, -length / 2, 0]}>
-        <capsuleGeometry args={[radius * 0.82, length - radius * 1.6, 6, 12]} />
-        <meshStandardMaterial {...SUIT} />
-      </mesh>
-      {armor && (
-        <mesh position={[0, -length * 0.45, radius * 0.18]} scale={[1.05, 1, 0.9]}>
-          <capsuleGeometry args={[radius, length * 0.55, 6, 12]} />
-          <Armor />
-        </mesh>
-      )}
-    </group>
-  )
-}
 
 function Scarf({ runRef }) {
   const geo = useMemo(() => new THREE.PlaneGeometry(0.24, 1.1, 2, 24), [])
@@ -126,7 +99,8 @@ export default function Gyroid({ script, scale = 1 }) {
     thL: useRef(), thR: useRef(), knL: useRef(), knR: useRef(),
   }
   const spool = useRef()
-  const visor = useRef()
+  // the visor glows brighter as he casts (the game's own material, swapped in by name)
+  const visorMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#ffb04a', emissive: '#ff9c2a', emissiveIntensity: 1.6, metalness: 0.6, roughness: 0.15, toneMapped: false }), [])
   const runRef = useRef(0)
   const loopRef = useRef({ loop: 0, loopDrop: 0 })
   const cur = useRef({})
@@ -181,7 +155,7 @@ export default function Gyroid({ script, scale = 1 }) {
     const c = cur.current
     for (const key in tgt) c[key] = c[key] === undefined ? tgt[key] : lerp(c[key], tgt[key], k)
 
-    hips.current.position.y = 0.95 + c.bob - cast * 0.08
+    hips.current.position.y = 1.04 + c.bob - cast * 0.08
     hips.current.rotation.y = c.twist
     torso.current.rotation.x = c.lean
     torso.current.rotation.y = -c.twist * 1.4
@@ -197,7 +171,7 @@ export default function Gyroid({ script, scale = 1 }) {
     j.knL.current.rotation.x = c.knL
     j.knR.current.rotation.x = c.knR
     spool.current.rotation.x += dt * (1 + run * 6 + (s.loop > 0 && s.loop < 1 ? 25 : 0))
-    visor.current.emissiveIntensity = 1.6 + Math.sin(t * 3) * 0.2 + cast * 1.2
+    visorMat.emissiveIntensity = 1.6 + Math.sin(t * 3) * 0.2 + cast * 1.2
   })
 
   return (
@@ -209,32 +183,11 @@ export default function Gyroid({ script, scale = 1 }) {
         <meshBasicMaterial color="#000" transparent opacity={0.35} depthWrite={false} />
       </mesh>
 
-      <group ref={hips} position={[0, 0.95, 0]}>
-        {/* pelvis + belt + spool */}
-        <mesh scale={[1, 0.7, 0.75]}>
-          <sphereGeometry args={[0.2, 16, 12]} />
-          <meshStandardMaterial {...SUIT} />
-        </mesh>
-        <mesh position={[0, 0.06, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 0.78, 1]}>
-          <torusGeometry args={[0.2, 0.025, 8, 24]} />
-          <meshStandardMaterial color="#6b3d22" roughness={0.6} />
-        </mesh>
+      <group ref={hips} position={[0, 1.04, 0]}>
+        <Part model="gyroid" name="gy_hips" />
         <group position={[0.24, -0.02, 0.05]}>
           <group ref={spool} rotation={[0, 0, Math.PI / 2]}>
-            <mesh>
-              <cylinderGeometry args={[0.11, 0.11, 0.07, 20]} />
-              <meshStandardMaterial color="#c9973e" metalness={0.85} roughness={0.25} />
-            </mesh>
-            {[0, 1, 2, 3, 4].map((i) => (
-              <mesh key={i} position={[Math.cos(i * 1.256) * 0.06, 0.04, Math.sin(i * 1.256) * 0.06]}>
-                <cylinderGeometry args={[0.018, 0.018, 0.02, 8]} />
-                <meshStandardMaterial color="#3a2a10" />
-              </mesh>
-            ))}
-            <mesh>
-              <cylinderGeometry args={[0.035, 0.035, 0.09, 10]} />
-              <meshStandardMaterial color="#3ecfbf" emissive="#3ecfbf" emissiveIntensity={1.5} toneMapped={false} />
-            </mesh>
+            <Part model="gyroid" name="gy_spool" />
           </group>
         </group>
 
@@ -244,66 +197,22 @@ export default function Gyroid({ script, scale = 1 }) {
           ['R', -0.13, j.thR, j.knR],
         ].map(([side, x, th, kn]) => (
           <group key={side} ref={th} position={[x, -0.08, 0]}>
-            <Limb length={0.44} radius={0.115} />
-            <Holes spots={[[0.02, -0.18, 0.105], [-0.03, -0.3, 0.1]]} r={0.025} />
-            <group ref={kn} position={[0, -0.44, 0]}>
-              <mesh position={[0, 0, 0.06]} scale={[1, 1.1, 0.8]}>
-                <sphereGeometry args={[0.095, 12, 10]} />
-                <Armor />
-              </mesh>
-              <Limb length={0.42} radius={0.1} />
-              {/* boot */}
-              <mesh position={[0, -0.43, 0.05]} scale={[0.95, 0.6, 1.6]}>
-                <sphereGeometry args={[0.11, 14, 10]} />
-                <Armor />
-              </mesh>
+            <Part model="gyroid" name="gy_thigh" scale={[side === 'L' ? 1 : -1, 1, 1]} />
+            <group ref={kn} position={[0, -0.5, 0]}>
+              <Part model="gyroid" name="gy_shin" scale={[side === 'L' ? 1 : -1, 1, 1]} />
             </group>
           </group>
         ))}
 
         {/* torso */}
         <group ref={torso} position={[0, 0.08, 0]}>
-          <mesh position={[0, 0.17, 0]} scale={[1, 1.1, 0.75]}>
-            <sphereGeometry args={[0.19, 16, 12]} />
-            <meshStandardMaterial {...SUIT} />
-          </mesh>
-          <mesh position={[0, 0.36, 0.02]} scale={[1.3, 1.05, 0.85]}>
-            <sphereGeometry args={[0.23, 20, 14]} />
-            <Armor />
-          </mesh>
-          <Holes spots={[[0.1, 0.4, 0.17], [-0.12, 0.33, 0.16], [0.05, 0.25, 0.15], [-0.04, 0.45, 0.16]]} />
-          <Holes spots={[[0.08, 0.36, -0.15], [-0.1, 0.3, -0.14]]} />
-
+          <Part model="gyroid" name="gy_torso" />
           {/* neck, scarf, head */}
           <group position={[0, 0.55, 0]}>
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.1, 0.055, 10, 20]} />
-              <meshStandardMaterial color="#e0604f" roughness={0.7} />
-            </mesh>
+            <Part model="gyroid" name="gy_neck" />
             <Scarf runRef={runRef} />
-            <group ref={head} position={[0, 0.16, 0]}>
-              <mesh scale={[0.9, 1.05, 0.95]}>
-                <sphereGeometry args={[0.15, 20, 16]} />
-                <Armor />
-              </mesh>
-              {/* visor */}
-              <mesh position={[0, 0.0, 0.07]} scale={[0.88, 0.55, 0.85]}>
-                <sphereGeometry args={[0.145, 20, 12, 0, Math.PI, Math.PI * 0.25, Math.PI * 0.45]} />
-                <meshStandardMaterial ref={visor} color="#ffb04a" emissive="#ff9c2a" emissiveIntensity={1.6} metalness={0.6} roughness={0.15} toneMapped={false} />
-              </mesh>
-              {/* swept hair */}
-              {[
-                [0, 0.12, -0.02, -0.9],
-                [0.05, 0.11, -0.04, -1.1],
-                [-0.05, 0.11, -0.04, -1.1],
-                [0.02, 0.1, -0.08, -1.4],
-                [-0.03, 0.12, 0.03, -0.6],
-              ].map(([x, y, z, rx], i) => (
-                <mesh key={i} position={[x, y, z]} rotation={[rx, 0, x * 3]}>
-                  <coneGeometry args={[0.05, 0.2, 6]} />
-                  <meshStandardMaterial color="#d9c9a3" roughness={0.8} />
-                </mesh>
-              ))}
+            <group ref={head} position={[0, 0.14, 0]}>
+              <Part model="gyroid" name="gy_head" mats={{ visor: visorMat }} />
             </group>
           </group>
 
@@ -311,26 +220,20 @@ export default function Gyroid({ script, scale = 1 }) {
           {[
             ['L', 0.33, j.shL, j.elL],
             ['R', -0.33, j.shR, j.elR],
-          ].map(([side, x, sh, el]) => (
-            <group key={side} position={[x, 0.45, 0]}>
-              {/* pauldron */}
-              <mesh position={[x * 0.12, 0.03, 0]} scale={[1.1, 0.85, 1]}>
-                <sphereGeometry args={[0.14, 16, 12]} />
-                <Armor />
-              </mesh>
-              <Holes spots={[[x * 0.3, 0.08, 0.06], [x * 0.25, 0.02, 0.09]]} r={0.022} />
-              <group ref={sh}>
-                <Limb length={0.32} radius={0.085} />
-                <group ref={el} position={[0, -0.32, 0]}>
-                  <Limb length={0.3} radius={0.078} />
-                  <mesh position={[0, -0.33, 0.01]} scale={[0.8, 1.1, 0.6]}>
-                    <sphereGeometry args={[0.06, 12, 10]} />
-                    <Armor />
-                  </mesh>
+          ].map(([side, x, sh, el]) => {
+            const m = [side === 'L' ? 1 : -1, 1, 1]
+            return (
+              <group key={side} position={[x, 0.45, 0]}>
+                <Part model="gyroid" name="gy_pauldron" scale={m} />
+                <group ref={sh}>
+                  <Part model="gyroid" name="gy_upperarm" scale={m} />
+                  <group ref={el} position={[0, -0.32, 0]}>
+                    <Part model="gyroid" name="gy_forearm" scale={m} />
+                  </group>
                 </group>
               </group>
-            </group>
-          ))}
+            )
+          })}
         </group>
       </group>
     </group>
