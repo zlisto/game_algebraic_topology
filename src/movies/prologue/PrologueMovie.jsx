@@ -15,7 +15,8 @@ import { buildSites } from '../../world/sites'
  * The prologue, "The Road Round the Hollow" (prologue.json): why Count Null wants the world flat.
  *   A 0–13.5   the Skeleton Foundry, warm: Ansel at the great press, Emmy at the bench
  *   B 13.5–27  Wren runs in with the post, and out again
- *   C 27–38    the Hollow road at dusk, in a storm: the rim gives way, her lantern falls
+ *   C 27–38    the Hollow road in a storm: she skips along the hole's edge like a curb, the lip crumbles,
+ *              she loses her balance and tips in; from straight above, she falls away into the dark
  *   D 38–50    night and rain: Ansel at the broken edge; her satchel; Emmy can't reach him
  *   E 50–68    the Foundry, cold and violet: the Crown is forged, the mask goes on
  *   F 68–74    "Twenty years later"
@@ -32,8 +33,12 @@ const [PX, PZ] = SITES.find((s) => s.id === 'sphere_press').pos
 const HX = 400 // the Hollow set's centre
 const ROAD_R = 7.6 // the ring road round the Hollow
 const HOLE_R = 5.6
-const FALL = [-0.55, 0.15] // the arc of rim (radians, 0 = +z toward the camera) that gives way
-const FALL_T = 33.4
+const SLIP_A = 0.2 // where on the rim (radians, 0 = +z toward the camera) she slips
+const LIP = [SLIP_A - 0.14, SLIP_A + 0.14] // the bit of lip that crumbles under her
+const EDGE_R = HOLE_R + 0.3 // she balances along the very edge of the hole
+const SLIP_T = 34.0 // the lip cracks; she wobbles
+const TIP_T = 34.9 // she tips in, and the lip goes with her
+const TOP_T = 35.4 // cut to straight above
 const NS = 0.5 // Ansel's scale (Null's model is ~2.9 m without the crown)
 const ES = 0.7 // Emmy's
 const WS = 0.66 // Wren's
@@ -55,12 +60,35 @@ function wrenAt(t) {
     return { pos: p, rotY: outK > 0 ? 0 : Math.PI, run: moving ? 1 : 0, lantern: 0.4, wave: t > 24.4 && t < 25.4 ? 1 : 0 }
   }
   if (t < 38) {
-    // walks the road from the far side toward the front, into the arc that falls
-    const a = mix(-2.3, -0.2, seg(t, 27, FALL_T))
-    const p = roadPt(a)
-    let y = 0
-    if (t > FALL_T) y = -6 * seg(t, FALL_T, FALL_T + 1.4) ** 2 // she falls with the road
-    return { pos: [p[0], y, p[2]], rotY: a + Math.PI / 2, walk: t < FALL_T ? 1 : 0, lantern: 1, visible: t < FALL_T + 0.3 } // gone with the road: the lantern carries the moment
+    const fwd = (a) => a + Math.PI / 2 // facing along the ring; her +x then points into the hole
+    if (t < 29.8) {
+      // the road, from the far side
+      const a = mix(-2.3, -1.2, seg(t, 27, 29.8))
+      return { pos: roadPt(a), rotY: fwd(a), walk: 1, lantern: 1 }
+    }
+    if (t < 30.6) {
+      // hops off the road onto the edge of the hole, like a curb
+      const k = smooth(seg(t, 29.8, 30.6))
+      const a = mix(-1.2, -1.0, k)
+      return { pos: roadPt(a, mix(ROAD_R, EDGE_R, k)), rotY: fwd(a) - 0.5 * Math.sin(k * Math.PI), walk: 1, lantern: 1 }
+    }
+    if (t < SLIP_T) {
+      // skips along the edge, the way a kid does
+      const a = mix(-1.0, SLIP_A, seg(t, 30.6, SLIP_T))
+      return { pos: roadPt(a, EDGE_R), rotY: fwd(a), skip: 1, lantern: 1 }
+    }
+    if (t < TIP_T) {
+      // the lip cracks under her foot: she stops dead, arms out, rocking over the drop
+      const k = seg(t, SLIP_T, TIP_T)
+      const p = roadPt(SLIP_A, EDGE_R)
+      const rock = Math.sin(k * Math.PI * 3) * 0.35 * (1 - k) - 0.45 * k * k
+      return { pos: [p[0], -0.05 * k, p[2]], rotY: fwd(SLIP_A), flail: 1, tilt: rock, lantern: 1 }
+    }
+    // over she goes, and down, tumbling, the lantern still in her hand
+    const d = t - TIP_T
+    const r = EDGE_R - 1.0 * smooth(Math.min(1, d / 0.6)) - 0.35 * d
+    const p = roadPt(SLIP_A + 0.04 * d, r)
+    return { pos: [p[0], -0.4 * Math.min(1, d / 0.4) - 2.0 * d * d, p[2]], rotY: fwd(SLIP_A) + 0.6 * d, flail: 1, tilt: -0.45 - 1.4 * smooth(Math.min(1, d / 0.5)), pitch: 1.3 * d, lantern: 1, visible: t < 37.9 }
   }
   return { visible: false }
 }
@@ -98,12 +126,27 @@ const SHOTS = [
   [16, 18, [[PX + 0.9, 0.95, PZ + 1.7], [PX + 0.2, 0.78, PZ + 3.0]], [[PX + 0.8, 0.92, PZ + 1.9], [PX + 0.2, 0.78, PZ + 3.0]]], // Wren's face
   [18, 21.5, [[PX + 3.9, 1.45, PZ + 4.1], [PX - 0.6, 0.9, PZ + 2.0]], [[PX + 3.6, 1.4, PZ + 3.8], [PX - 0.6, 0.9, PZ + 2.0]]],
   [21.5, 27, [[PX - 2.6, 1.0, PZ + 4.6], [PX + 0.2, 0.7, PZ + 3.0]], [[PX - 2.2, 1.6, PZ + 6.4], [0, 0.8, 12]]],
-  // C: the Hollow from high above, then down beside the road, then the fall
-  [27, 31.6, [[HX + 2, 16, 26], [HX, 0, 0]], [[HX + 1, 11, 20], [HX, 0, 0]]],
-  [31.6, FALL_T + 0.2, [[HX - 5, 2.2, 11], [HX - 2.6, 0.6, 7.2]], [[HX - 3.4, 1.8, 11], [HX - 0.8, 0.5, 7.4]]],
-  [FALL_T + 0.2, 38, [[HX + 2, 4.4, 13], [HX - 0.5, -2, 7]], [[HX + 1.5, 5.5, 12], [HX - 0.5, -6, 6.2]]],
+  // C: the Hollow from high above; low beside her as she skips the edge; close on the wobble; then straight down the hole
+  [27, 29.8, [[HX + 2, 16, 26], [HX, 0, 0]], [[HX + 1, 11, 20], [HX, 0, 0]]],
+  [29.8, SLIP_T, (t) => {
+    // a little ahead of her and above, looking down across the lip, so the edge and the drop sit beside her
+    const w = wrenAt(t).pos
+    const a = t < 30.6 ? mix(-1.2, -1.0, seg(t, 29.8, 30.6)) : mix(-1.0, SLIP_A, seg(t, 30.6, SLIP_T))
+    const c = roadPt(a + 0.4, ROAD_R + 0.2)
+    return [[c[0], 1.7, c[2]], [w[0], 0.15, w[2]]]
+  }],
+  [SLIP_T, TOP_T, (t) => {
+    const w = wrenAt(t).pos
+    const c = roadPt(SLIP_A - 0.16, ROAD_R + 0.3)
+    return [[c[0], 0.85, c[2]], [mix(w[0], HX, 0.15), Math.max(-1.2, w[1] + 0.4), mix(w[2], 0, 0.15)]]
+  }],
+  [TOP_T, 38, (t) => {
+    // straight down the shaft, centred on her, easing back as she drops away
+    const w = wrenAt(Math.min(t, 37.85)).pos
+    return [[w[0], mix(6.5, 9, seg(t, TOP_T, 38)), w[2] + 0.3], [w[0], w[1], w[2]]]
+  }],
   // D: Ansel at the edge in the rain; Emmy behind him; his face
-  [38, 41.6, [[HX + 5, 2.2, 13], [HX + 2.2, 0.6, 6.8]], [[HX + 4.2, 1.8, 11.2], [HX + 2.2, 0.6, 6.8]]],
+  [38, 41.6, [[HX + 4.4, 1.8, 10.5], [HX + 2.6, 0.7, 6.6]], [[HX + 3.6, 1.6, 9.6], [HX + 2.2, 0.7, 6.8]]],
   [41.6, 45.2, [[HX + 6.6, 1.6, 8.6], [HX + 3.5, 0.7, 6.6]], [[HX + 6, 1.5, 8.2], [HX + 2.4, 0.8, 6.8]]],
   [45.2, 50, [[HX + 0.6, 1.0, 5.0], [HX + 2.1, 0.8, 6.8]], [[HX + 0.9, 0.95, 5.4], [HX + 2.1, 0.8, 6.8]]],
   // E: the cold Foundry, the press, the Crown, the mask
@@ -118,11 +161,17 @@ function MovieCamera({ tRef }) {
   useFrame(() => {
     const t = tRef.current
     const sh = SHOTS.find((s) => t >= s[0] && t < s[1]) || SHOTS[SHOTS.length - 1]
-    const k = smooth(seg(t, sh[0], sh[1]))
-    camera.position.set(...mix3(sh[2][0], sh[3][0], k))
-    look.set(...mix3(sh[2][1], sh[3][1], k))
-    // the rim breaking: a jolt
-    const shake = seg(t, FALL_T, FALL_T + 0.2) * (1 - seg(t, FALL_T + 0.2, FALL_T + 1.6)) * 0.18
+    if (typeof sh[2] === 'function') {
+      const [c, l] = sh[2](t)
+      camera.position.set(...c)
+      look.set(...l)
+    } else {
+      const k = smooth(seg(t, sh[0], sh[1]))
+      camera.position.set(...mix3(sh[2][0], sh[3][0], k))
+      look.set(...mix3(sh[2][1], sh[3][1], k))
+    }
+    // the lip cracking: a small jolt
+    const shake = seg(t, SLIP_T, SLIP_T + 0.1) * (1 - seg(t, SLIP_T + 0.1, SLIP_T + 0.7)) * 0.12
     if (shake) camera.position.add(new THREE.Vector3((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake, 0))
     camera.lookAt(look)
   })
@@ -160,26 +209,30 @@ function HollowSet({ tRef }) {
   const lamps = useRef()
   const flash = useRef()
   const heavy = useRef(0.4)
-  const lanternFall = useRef()
   const land = useMemo(() => {
     // the island: a thick annulus, cut away where the rim falls
     const sh = new THREE.Shape()
     sh.absarc(0, 0, 22, 0, Math.PI * 2, false)
     const hole = new THREE.Path()
-    hole.absarc(0, 0, HOLE_R, 0, Math.PI * 2, true)
+    const N = 192
+    for (let i = 0; i <= N; i++) {
+      const a = (i / N) * Math.PI * 2 - Math.PI
+      const r = a > LIP[0] && a < LIP[1] ? HOLE_R + 0.8 : HOLE_R
+      hole[i ? 'lineTo' : 'moveTo'](Math.sin(a) * r, Math.cos(a) * r)
+    }
     sh.holes.push(hole)
     const g = new THREE.ExtrudeGeometry(sh, { depth: 7, bevelEnabled: false, curveSegments: 96 })
     g.rotateX(Math.PI / 2)
     return g
   }, [])
   const road = useMemo(() => new THREE.RingGeometry(ROAD_R - 0.75, ROAD_R + 0.75, 128, 1), [])
-  // the piece of rim and road that falls: an arc wedge from the hole's edge to beyond the road
+  // the bit of lip that crumbles under her: a small chunk of the hole's edge
   const wedge = useMemo(() => {
     const sh = new THREE.Shape()
-    const [a0, a1] = FALL
+    const [a0, a1] = LIP
     const r0 = HOLE_R
-    const r1 = ROAD_R + 1.4
-    const n = 24
+    const r1 = HOLE_R + 0.8
+    const n = 12
     // in shape space, x = sin(a)·r and y = cos(a)·r (rotated into the xz plane below)
     for (let i = 0; i <= n; i++) {
       const a = a0 + ((a1 - a0) * i) / n
@@ -189,26 +242,50 @@ function HollowSet({ tRef }) {
       const a = a0 + ((a1 - a0) * i) / n
       sh.lineTo(Math.sin(a) * r0 * (1 + 0.04 * Math.sin(i * 3.1)), Math.cos(a) * r0)
     }
-    const g = new THREE.ExtrudeGeometry(sh, { depth: 1.6, bevelEnabled: false })
+    const g = new THREE.ExtrudeGeometry(sh, { depth: 1.1, bevelEnabled: false })
     g.rotateX(Math.PI / 2)
     return g
   }, [])
-  const lampSpots = useMemo(() => Array.from({ length: 14 }, (_, i) => (i / 14) * Math.PI * 2 + 0.11).filter((a) => !(a > Math.PI * 2 + FALL[0] || a < FALL[1])), [])
+  const band = (a0, a1) => {
+    const sh = new THREE.Shape()
+    const n = 160
+    for (let i = 0; i <= n; i++) {
+      const a = a0 + ((a1 - a0) * i) / n
+      sh[i ? 'lineTo' : 'moveTo'](Math.sin(a) * (HOLE_R + 0.16), Math.cos(a) * (HOLE_R + 0.16))
+    }
+    for (let i = n; i >= 0; i--) {
+      const a = a0 + ((a1 - a0) * i) / n
+      sh.lineTo(Math.sin(a) * HOLE_R, Math.cos(a) * HOLE_R)
+    }
+    const g = new THREE.ShapeGeometry(sh)
+    g.rotateX(Math.PI / 2)
+    return g
+  }
+  const lip = useMemo(() => band(LIP[1], LIP[0] + Math.PI * 2), [])
+  const lipChunk = useMemo(() => band(LIP[0], LIP[1]), [])
+  const chips = useRef([])
+  const CHIPS = useMemo(() => Array.from({ length: 9 }, (_, i) => ({ da: (i / 8 - 0.5) * 0.22, r: HOLE_R + 0.05 + (i % 3) * 0.12, t0: i < 5 ? SLIP_T : TIP_T, v: 0.5 + (i % 4) * 0.3, s: 0.05 + (i % 3) * 0.03 })), [])
+  const lampSpots = useMemo(() => Array.from({ length: 14 }, (_, i) => (i / 14) * Math.PI * 2 + 0.11), [])
   useFrame(() => {
     const t = tRef.current
-    const k = seg(t, FALL_T, FALL_T + 2.4)
-    fallPiece.current.position.y = -40 * k * k + 0.01
-    fallPiece.current.rotation.x = 0.4 * k
+    // the lip: cracks and sags when she lands on it, then drops away under her
+    const k = seg(t, TIP_T, TIP_T + 2.6)
+    fallPiece.current.position.y = -0.06 * seg(t, SLIP_T, SLIP_T + 0.15) - 30 * k * k + 0.005
+    fallPiece.current.rotation.x = 0.012 * seg(t, SLIP_T, SLIP_T + 0.15) + 0.35 * k // tips in toward the hole
     fallPiece.current.visible = k < 0.98
+    CHIPS.forEach((c, i) => {
+      const m = chips.current[i]
+      const d = t - c.t0
+      m.visible = d > 0 && d < 3
+      if (!m.visible) return
+      const p = roadPt(SLIP_A + c.da, c.r - c.v * d)
+      m.position.set(p[0] - HX, -0.05 - 4.5 * d * d, p[2])
+      m.rotation.set(d * 7 * c.v, d * 5, 0)
+    })
     heavy.current = t < 31 ? 0.25 : 0.5
     // lightning: two flashes before the fall, one on it
-    const fl = [29.2, 32.1, FALL_T].reduce((m, a) => Math.max(m, seg(t, a, a + 0.05) * (1 - seg(t, a + 0.05, a + 0.5))), 0)
+    const fl = [29.2, 32.1, TIP_T].reduce((m, a) => Math.max(m, seg(t, a, a + 0.05) * (1 - seg(t, a + 0.05, a + 0.5))), 0)
     flash.current.intensity = fl * 6
-    // the lantern: carried, then falling, a spark shrinking into the dark
-    const lk = seg(t, FALL_T + 0.3, FALL_T + 4)
-    lanternFall.current.visible = t > FALL_T + 0.3 && t < FALL_T + 4
-    const p = roadPt(-0.2, ROAD_R - 0.6 - lk * 1.4)
-    lanternFall.current.position.set(p[0], -1 - 26 * lk * lk, p[2])
   })
   return (
     <group>
@@ -224,22 +301,30 @@ function HollowSet({ tRef }) {
           <meshStandardMaterial color="#26302c" roughness={0.95} />
         </mesh>
         {/* the Hollow's wall, falling away into the dark */}
-        <mesh position={[0, -14, 0]}>
-          <cylinderGeometry args={[HOLE_R, HOLE_R * 0.92, 28, 64, 1, true]} />
+        <mesh position={[0, -32, 0]}>
+          <cylinderGeometry args={[HOLE_R, HOLE_R * 0.85, 64, 64, 1, true]} />
           <meshStandardMaterial color="#141a18" side={THREE.BackSide} roughness={1} />
-        </mesh>
-        <mesh position={[0, -27, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[HOLE_R, 48]} />
-          <meshBasicMaterial color="#000000" />
         </mesh>
         <mesh geometry={road} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
           <meshStandardMaterial color="#6b5d4a" roughness={0.85} />
+        </mesh>
+        <mesh geometry={lip} position={[0, 0.012, 0]}>
+          <meshStandardMaterial color="#5d6a60" roughness={0.9} side={THREE.DoubleSide} />
         </mesh>
         <group ref={fallPiece}>
           <mesh geometry={wedge}>
             <meshStandardMaterial color="#26302c" roughness={0.95} />
           </mesh>
+          <mesh geometry={lipChunk} position={[0, 0.012, 0]}>
+            <meshStandardMaterial color="#5d6a60" roughness={0.9} side={THREE.DoubleSide} />
+          </mesh>
         </group>
+        {CHIPS.map((c, i) => (
+          <mesh key={i} ref={(el) => (chips.current[i] = el)} scale={c.s} visible={false}>
+            <dodecahedronGeometry args={[1, 0]} />
+            <meshStandardMaterial color="#3a443e" roughness={1} flatShading />
+          </mesh>
+        ))}
         {/* lamps along the road */}
         <group ref={lamps}>
           {lampSpots.map((a, i) => (
@@ -268,13 +353,6 @@ function HollowSet({ tRef }) {
           )
         })}
       </group>
-      <group ref={lanternFall}>
-        <mesh>
-          <sphereGeometry args={[0.07, 10, 8]} />
-          <meshBasicMaterial color="#ffd27a" toneMapped={false} />
-        </mesh>
-        <pointLight color="#ffb347" intensity={4} distance={6} />
-      </group>
       <Rain heavy={heavy} />
     </group>
   )
@@ -286,7 +364,7 @@ function Satchel({ tRef }) {
   useFrame(() => {
     g.current.visible = tRef.current > 38 && tRef.current < 50
   })
-  const p = roadPt(0.22, ROAD_R + 0.8) // snagged on the lamp post just past the break
+  const p = roadPt(SLIP_A + 0.16, HOLE_R + 0.45) // torn off at the edge where she went over
   useFrame(() => {
     const t = tRef.current
     // he picks it up at 43.4 and holds it to his chest
@@ -434,6 +512,7 @@ function AnselLantern({ tRef }) {
         <meshBasicMaterial color="#ffd27a" toneMapped={false} />
       </mesh>
       <pointLight color="#ffb347" intensity={2.4} distance={3.2} />
+      <pointLight position={[0.4, 1.4, 0.6]} color="#c8d4ff" intensity={1.6} distance={4} />
     </group>
   )
 }
