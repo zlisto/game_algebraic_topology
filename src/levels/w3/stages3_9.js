@@ -17,8 +17,9 @@ export const OPENING = [
   E('Pairing Pier. Take a class of degree $k$ and one of degree $n − k$ on a closed orientable $n$-manifold. Cup them and you land in the top degree.'),
   E('Then read that on the whole manifold, $[M]$, and you get a number. That’s the cup product pairing. Duality said the groups match up; this says the classes really meet.'),
   E('Proposition 3.38: every generator has a partner it cups with to give $±1$ (ignoring torsion).'),
+  E('Torsion is the exception. $ℝP³$ is closed and orientable, but its $H² = ℤ₂$ has nobody in $H¹ = 0$ to pair with. “Modulo torsion” means we set those aside.'),
   G('And if a lantern can’t find a partner?'),
-  E('Then you’re not standing on a closed orientable manifold, whatever it tells you. Cup Caster, on 9.'),
+  E('Then you’re not standing on a closed orientable manifold, whatever it tells you. Cup Caster, on 9. First lantern: follow the NEXT ring, north.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -73,7 +74,7 @@ export const STATIONS = {
         options: ['$α$ needs a partner with $α$ ⌣ (partner) $= ±1$, and the only class in degree 2 is $α$', 'Because squares always generate', 'Because ℂP² is a sphere'],
         answer: '$α$ needs a partner with $α$ ⌣ (partner) $= ±1$, and the only class in degree 2 is $α$',
         wrong: [E('The pairing is perfect, and there’s only one candidate in degree $2$.')],
-        right: [E('Right. Every class in degree $2$ is a multiple of $α$, and only $±α$ can cup with $α$ to $±1$. That’s how Hatcher gets the ring of $ℂPⁿ$. Last lantern: NEXT, north-east.')],
+        right: [E('Its partner is some multiple $mα$, so $m · (α²$ on $[M]) = ±1$. That forces $m = ±1$, and $α²$ to be a generator. That’s how Hatcher gets the ring of $ℂPⁿ$. Last lantern: NEXT, north-east.')],
       },
     ],
   },

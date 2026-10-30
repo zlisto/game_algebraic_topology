@@ -20,7 +20,7 @@ export const OPENING = [
   E('…This is the Polynomial Garden. In some spaces one class makes all the others, just by being multiplied by itself, over and over.'),
   E('Each fountain has a tier for every degree. Cast $α$ onto the highest lit tier with the Cup Caster (9) and the next power lights: $α$, then $α ⌣ α = α²$, then $α³$.'),
   G('How high does it go?'),
-  E('That’s the whole question. First fountain’s just ahead.'),
+  E('That’s the whole question. First fountain: follow the NEXT ring, north-west.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -84,7 +84,8 @@ export const STATIONS = {
     blueprint: 'Antipodes',
     arrive: [
       E('Two fountains: $ℝP⁴$ and $ℝP²$. Suppose a map $f: ℝP⁴ → ℝP²$ pulled the generator back to the generator, $f*(α) = α$.'),
-      E('Pulling back respects cup products, so $f*(αᵏ) = αᵏ$ for every power. Climb both fountains together and see if that can hold. (This goes a step past the section: it’s how cohomology rings prove Borsuk–Ulam.)'),
+      E('Pulling back respects cup products, so $f*(αᵏ) = αᵏ$ for every power.'),
+      E('Climb both fountains together and see if that can hold. (This goes a step past the section: it’s how cohomology rings prove Borsuk–Ulam.)'),
     ],
     early: [E('Not this fountain yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [

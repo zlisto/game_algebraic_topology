@@ -17,7 +17,7 @@ export const OPENING = [
   E('To read a cochain on a path, add up the numbers along it, and subtract any edge you walk backwards. Hatcher writes $Cⁿ(X; G) = $ Hom$(Cₙ(X), G)$: a rule that turns chains into numbers.'),
   G('So the chain’s the road, and the cochain is a toll on every stretch of it. The whole trip costs the sum.'),
   E('That’s exactly it. Careful, though: something with lattice wings is circling the pools. A Coboundary Harpy. It reads your lashes like a cochain reads chains, and plain lashes feed it.'),
-  E('Press G to switch your lash to cochain stance (it glows cyan) and strike it on the dual. Three hits drive its $δα$ to $0$. The Reading Wand, on 0, sets the numbers. First pool’s just ahead.'),
+  E('Press G to switch your lash to cochain stance (it glows cyan) and strike it on the dual. Three hits drive its $δα$ to $0$. The Reading Wand, on 0, sets the numbers. First pool: follow the NEXT ring, north-west.'),
 ]
 
 export const STATIONS = {

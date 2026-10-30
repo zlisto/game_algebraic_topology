@@ -18,7 +18,9 @@ export const OPENING = [
   E('A cohomology class reads cycles, and it reads every boundary as $0$. So it gives a map from $Hₙ$ to the numbers: that’s the Hom$(Hₙ(X), G)$ part.'),
   E('The universal coefficient theorem says that’s almost all of it: $Hⁿ(X; G) ≅$ Hom$(Hₙ(X), G) ⊕$ Ext$(Hₙ₋₁(X), G)$.'),
   G('Hom I can follow. What’s Ext?'),
-  E('The bit Hom misses: the torsion from one floor down. With $ℤ$ coefficients, Ext$(ℤₘ, ℤ) = ℤₘ$ and Ext$(ℤ, ℤ) = 0$. So free parts stay on their floor and torsion climbs one up. Wand on 0.'),
+  E('The bit Hom misses: the torsion from one floor down. With $ℤ$ coefficients, Ext$(ℤₘ, ℤ) = ℤₘ$ and Ext$(ℤ, ℤ) = 0$. So free parts stay on their floor and torsion climbs one up.'),
+  E('Where Ext comes from: $ℤₘ$ is $ℤ$ divided by $m$, so a reading meets “times $m$”. Hom keeps readings killed by $m$; Ext is what’s left over, $G/mG$.'),
+  E('Reading Wand on 0. First terrace: follow the NEXT ring, north-west.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })

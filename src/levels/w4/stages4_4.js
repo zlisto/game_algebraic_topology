@@ -45,7 +45,7 @@ export const STATIONS = {
     arrive: [E('Pick any degree, then sling the map all the way up: from $π₁(S¹)$ to $π₂(S²)$ to $π₃(S³)$.')],
     early: [E('Not yet. Check the NEXT ring on your map.')],
     goals: [
-      act('Sling the map up to π₃(S³)', [G('Same degree all the way up.'), E('Freudenthal’s theorem says each of these lifts is onto at the bottom step and an isomorphism from there on. So nothing new appears and nothing is lost: every $πₙ(Sⁿ)$ is $ℤ$, and the degree tells you which element.')]),
+      act('Sling the map up to π₃(S³)', [G('Same degree all the way up.'), E('Freudenthal’s theorem: each of these lifts is onto at the bottom step, and an isomorphism from there on.'), E('And since the degree survives every lift, the bottom step can’t lose anything either. Every $πₙ(Sⁿ)$ is $ℤ$, and the degree tells you which element.')]),
       {
         type: 'ask',
         question: 'What is $πₙ(Sⁿ)$?',

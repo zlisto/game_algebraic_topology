@@ -151,7 +151,7 @@ export const TRIALS = [
       rp2: 'ℤ₂, ℤ₂, ℤ₂. Every closed manifold is ℤ₂-orientable, so duality holds mod 2. Honest.',
       pair_ok: '$⟨α ⌣ α, [ℂP²]⟩ = 1$: α is its own partner. The pairing is perfect. Honest.',
     },
-    done: [C('Enough! You want to see what I really am?'), C('Colossus, wake! Spectre, rise! And my own loops will finish you.'), E('A Poincaré Colossus: chain, then cochain, alternating. And a de Rham Spectre: run a full loop round it, then lash it while it’s exact. (De Rham forms go beyond our book; Hatcher only mentions them.)'), G('His loops are shaking. He’s more scared of the Crown than of us.')],
+    done: [C('Enough! You want to see what I really am?'), C('Colossus, wake! Spectre, rise! And my own loops will finish you.'), E('A Poincaré Colossus: chain, then cochain, alternating. And a de Rham Spectre: run a full loop round it, then lash it while it’s exact. (De Rham forms go beyond our book.)'), G('His loops are shaking. He’s more scared of the Crown than of us.')],
   },
 ]
 

@@ -4699,7 +4699,7 @@
           "end": 24.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Same groups, different products, so not the same place. Light it, Gyroid, and the torus goes on the Chart."
+          "text": "Different products, different places. Light it, Gyroid."
         },
         {
           "t": 24.4,
@@ -5074,7 +5074,7 @@
           "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On a closed orientable manifold, every class has a partner. Multiply the two and you reach the top."
+          "text": "On a closed orientable manifold, every class that isn’t torsion has a partner. Multiply the two and you reach the top."
         },
         {
           "t": 8.4,
@@ -5311,28 +5311,28 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A loop pins two ends at the beacon. A square pins its whole edge."
+          "text": "A loop pins its two ends to the beacon. This square pins its whole edge."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 8.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s $π₂$: spheres, not loops."
+          "text": "Squash that edge to a point: a sphere. That’s $π₂$."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "In a square there’s room to slide past each other."
+          "text": "And in a square there’s room to step round each other."
         },
         {
           "t": 12.8,
-          "end": 17.6,
+          "end": 18.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So up here, order never matters. The Commutator’s power stops at the first floor."
+          "text": "So up here, order stops mattering. The Commutator’s word does nothing on these floors."
         }
       ],
       "title_card": {
@@ -5393,21 +5393,21 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Any map can be slid onto the cells — dimension by dimension."
+          "text": "Any map can be slid onto the cells, one dimension at a time."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 8.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every floor of his Spire is made of cells. That’s a weakness."
+          "text": "And every floor of his Spire is made of cells. That helps us."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 14.3,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So a circle on a sphere snaps to a point. Small spheres can’t wrap big ones."
+          "text": "So a loop on a sphere slips off to a point. A small sphere can’t hold on to a big one."
         }
       ],
       "title_card": {
@@ -5468,14 +5468,14 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "If a map matches every group, the rooms are truly the same shape."
+          "text": "If a map matches every group, the two rooms really are the same shape."
         },
         {
           "t": 4.8,
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s Whitehead’s theorem — and it needs a map."
+          "text": "That’s Whitehead’s theorem. And it needs a map."
         },
         {
           "t": 8.4,
@@ -5486,10 +5486,10 @@
         },
         {
           "t": 12.8,
-          "end": 17.6,
+          "end": 18.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then we know nothing. Remember that when Null talks about his groups."
+          "text": "Then we know nothing. Remember that when Null starts talking about his groups."
         }
       ],
       "title_card": {
@@ -5554,31 +5554,31 @@
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 8.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Your Sling from the Cone Zone — I’ve upgraded it. It lifts whole maps up a dimension."
+          "text": "Your Sling from the Cone Zone, upgraded. It lifts whole maps now."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "I built the first one for him, you know. Before."
+          "text": "I built the first one for Ansel, you know. For his roads. Before."
         },
         {
           "t": 12.799999999999999,
-          "end": 16.1,
+          "end": 18.2,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "I can feel the floors shifting under my boots. He’s folding the tower from the top down."
+          "text": "The floors are shifting under my boots. He’s folding the tower from the top down."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And past a point, lifting changes nothing. Stable ground."
+          "text": "And past a certain height, lifting changes nothing. Stable ground."
         }
       ],
       "title_card": {
@@ -5632,21 +5632,21 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One non-zero homotopy group, in any dimension you like."
+          "text": "Spaces with exactly one kind of hole, in one dimension."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 10.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "These are the bricks Null builds with. Learn them, and you’ll see what he leaves out."
+          "text": "Every floor of Null’s Spire is one of these. Learn the bricks and you’ll see what he leaves out."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Fill everything above, keep one group. Got it."
+          "text": "So you keep one group and fill in everything above it. Got it."
         }
       ],
       "title_card": {
@@ -5700,21 +5700,21 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Homotopy on one meter, homology on the other."
+          "text": "Two meters on every row. Homotopy on one, homology on the other."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 10.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "At the first floor where anything happens, they agree. In dimension one, up to order."
+          "text": "At the first row where anything happens, they agree. In dimension one they agree once you forget order."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So every count from the Delta told the truth about spheres. Hold on to that."
+          "text": "So every count you took at the Delta told the truth about spheres. Hold on to that."
         }
       ],
       "title_card": {
@@ -5781,50 +5781,50 @@
           "t": 0.6,
           "end": 4.6,
           "speaker": "Emmy Boundary",
-          "text": "Around this floor runs a ring of circles, every one linked through every other.",
+          "text": "This terrace runs round a ring of circles, every one linked through every other.",
           "portrait": "emmy-boundary"
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 8.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Null swore no map from a three-sphere to a two-sphere could ever matter."
+          "text": "Null swore a three-sphere can’t really wrap a two-sphere. The Gardens hang on that."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A whole circle above each point of the sphere. Together they make a three-sphere."
+          "text": "Over each point of the sphere sits a whole circle. Together they fill a three-sphere."
         },
         {
           "t": 12.799999999999999,
           "end": 16.099999999999998,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Over every point, a whole circle."
+          "text": "Touch a point, get a circle."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And every two circles link. You can’t pull that apart."
+          "text": "And every two of them link. You can’t pull that apart."
         },
         {
           "t": 20.8,
-          "end": 25.6,
+          "end": 26.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So the map from the three-sphere to the sphere isn’t trivial. His claim falls — and the Gardens stay on the Chart for good."
+          "text": "That’s the picture. The proof is an exact sequence. Get both, and the Gardens stay on the Chart for good."
         },
         {
           "t": 26.4,
           "end": 29.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "One map. A curiosity. You’re running out of floors, courier."
+          "text": "One map. A curiosity, Gyroid. And you’re running out of floors."
         }
       ],
       "title_card": {
@@ -5878,21 +5878,21 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Up here nothing changes when you suspend. The numbers settle."
+          "text": "Up here, lifting a map a dimension stops changing anything. The numbers settle."
         },
         {
           "t": 4.8,
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The stable groups — the same however high you climb."
+          "text": "Each stem ends at a stable group, the same however high you climb."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "First calm place in four worlds. I hate that I don’t trust it."
+          "text": "First place in four worlds where nothing moves. I hate that I don’t trust it."
         }
       ],
       "title_card": {
@@ -5943,24 +5943,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 4.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every reading from the Gardens is a map into one of these floors."
+          "text": "Every lantern in the Gardens was a reading. Up here, every reading is a map."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 9.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every cohomology class is a map. Turn the map, and the reading turns with it."
+          "text": "Turn the lever and the map changes degree. The reading follows it."
         },
         {
           "t": 10.4,
           "end": 15.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Lanterns were maps all along. So the Chart is made of maps too."
+          "text": "Two windings round the torus, two numbers. So the Chart’s made of maps too."
         }
       ],
       "title_card": {
@@ -6011,24 +6011,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 4.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Sheetwater Viaduct lifted paths. This station lifts any deformation."
+          "text": "The Sheetwater Viaduct lifted paths. This station lifts whole homotopies."
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 9.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A loop down here, a climb up there."
+          "text": "One turn round the circle down here is one sheet’s climb up there."
         },
         {
           "t": 10.4,
-          "end": 15.6,
+          "end": 17.1,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Whatever moves down there, something up here moves with it. Like the grey, following us up."
+          "text": "Whatever moves down there drags something up here with it. Like that grey, following us up the Spire."
         }
       ],
       "title_card": {
@@ -6079,31 +6079,31 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 4.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each floor holds one group. The twists between them hold the place together."
+          "text": "Each floor of this tower holds one homotopy group. The twists between them hold it together."
         },
         {
           "t": 4.8,
           "end": 8.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One floor for each homotopy group — and a twist between every pair."
+          "text": "One floor per group, and a twist at every joint."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Same floors, no twist — and it’s a different tower."
+          "text": "Same floors, no twist, and it’s a different tower."
         },
         {
           "t": 12.8,
-          "end": 17.6,
+          "end": 18.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s what Null threw away. He means to rebuild the world without its twists — and it won’t be our world."
+          "text": "That’s what Null threw away. Same groups, no twists. It wouldn’t be our world."
         }
       ],
       "title_card": {
@@ -6157,35 +6157,35 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Extension Cord. Feels like years since the Cylinder Works."
+          "text": "Is that the Extension Cord? From the Cylinder Works?"
         },
         {
           "t": 4.8,
-          "end": 8.1,
+          "end": 8.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The machine Null and I sealed. Every cell, in order. I never thought I’d need it against him."
+          "text": "Ansel and I sealed it there. I never thought I’d use it against him."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 12.799999999999999,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Extend over each cell. When a cell blocks you, the block is a reading."
+          "text": "One cell at a time. When a cell won’t fill, what blocks it is a reading."
         },
         {
           "t": 12.799999999999999,
           "end": 16.1,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And when one won’t extend?"
+          "text": "And when one won’t?"
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Then I change what’s below and try again. Then the Crown."
+          "text": "Then I change what’s underneath and try again. And then the Crown."
         }
       ],
       "title_card": {
@@ -8971,87 +8971,87 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A loop is a map of an interval with both ends at the base point. Take a square instead, and send its whole edge to $x₀$."
+          "text": "A loop sends both ends of an interval to the base point. Now take a square, and send its whole edge to $x₀$."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Collapsing the edge makes a sphere, so this is a map $S² → X$. Their homotopy classes form $π₂(X, x₀)$ — and likewise $πₙ$ for cubes $Iⁿ$."
+          "text": "Crush the edge to a point and the square becomes a sphere: a map $S² → X$. These, up to sliding, form $π₂(X, x₀)$."
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "To add $f$ and $g$, squeeze $f$ into the left half and $g$ into the right. Reflect $f$ to get $−f$."
+          "text": "To add $f$ and $g$, squeeze $f$ into the left half and $g$ into the right, like running one loop and then the other. Flip $f$ to get $−f$."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Just like joining loops end to end!"
+          "text": "So it’s joining loops, with more room."
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now swap them: shrink both, slide one up and one down, move them past each other, and regrow."
+          "text": "Now swap them. Shrink both into small boxes, slide one up and one down, move them past each other, and grow them back."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Everything outside the boxes stays at $x₀$, so each step is a homotopy. $f + g ≃ g + f$: $πₙ$ is abelian for $n ≥ 2$."
+          "text": "Outside the boxes everything stays on $x₀$, so the edge stays pinned at every step. $f + g ≃ g + f$: $πₙ$ is abelian for $n ≥ 2$."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Try it on an interval — loops. Shrink them… and there’s nowhere to slide."
+          "text": "Try it on an interval, which is loops. Shrink them… and there’s no sideways to slide into."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s why $π₁$ can fail to be abelian, as in the figure-eight."
+          "text": "So $π₁$ can fail to be abelian. On the figure-eight, $ab$ and $ba$ are different loops."
         },
         {
           "t": 46.4,
-          "end": 52.4,
+          "end": 52.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "From dimension two up, order never matters. The Commutator has no power on these floors."
+          "text": "From dimension two up, order never matters. The Commutator’s word $aba⁻¹b⁻¹$ is just zero here."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Good. I’ve seen enough of him."
+          "text": "Wherever he went, he wouldn’t like it up here."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Hall: the Tide Glass (3) pins edges, places cubes, and steps through deformations."
+          "text": "In the Hall the Tide Glass (3) pins edges, places cubes, and steps through each slide."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Maps of spheres, added side by side: the higher homotopy groups."
+          "text": "Spheres mapped in and added side by side: the higher homotopy groups."
         }
       ],
       "title_card": {
@@ -9130,87 +9130,87 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The floor is a CW complex: points are 0-cells, grid lines 1-cells, squares 2-cells."
+          "text": "A CW complex: dots are 0-cells, lines 1-cells, squares 2-cells. Dots and lines make the 1-skeleton."
         },
         {
           "t": 6.8,
           "end": 11.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map can wander anywhere it likes — this path cuts straight across the squares."
+          "text": "A map can wander anywhere. This path cuts straight across the squares."
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cellular approximation slides it, keeping its ends fixed, until it lies in the 1-skeleton. Every map between CW complexes can be made cellular."
+          "text": "Cellular approximation slides it, ends held still, into the 1-skeleton. Any map of CW complexes can be made cellular."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Snapped to the grid — that’s Theorem 4.8."
+          "text": "Snapped to the grid. Theorem 4.8."
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now $S²$ as one 0-cell and one 2-cell. A loop runs around inside the 2-cell."
+          "text": "Now $S²$ as one 0-cell and one 2-cell: a disk with its whole rim glued to a point. A loop runs around inside the disk."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A 1-dimensional map can be made to miss a point of the 2-cell. Puncture there, push out to the rim — which is one point. So $π₁(S²) = 0$."
+          "text": "A loop can’t cover the disk, so it misses a point. Puncture there, push out to the rim, a single point: $π₁(S²) = 0$."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
           "text": "The same works whenever $k < n$: a $k$-sphere can be slid off a point of an $n$-cell."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So $πₖ(Sⁿ) = 0$ for $k < n$. For $k ≥ n$ the theorem gives nothing — $π₃(S²)$ isn’t $0$."
+          "text": "So $πₖ(Sⁿ) = 0$ for $k < n$. For $k ≥ n$ the theorem says nothing, and $π₃(S²)$ isn’t $0$."
         },
         {
           "t": 46.4,
-          "end": 52.4,
+          "end": 52.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The proof works up the skeleta: first move the 0-cells’ images into the 0-skeleton, then the 1-cells, and so on."
+          "text": "The proof climbs the skeleta: first the 0-cells land on dots, then the 1-cells on lines, and so on up."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Dots first, then lines. Never undoing what’s already tidy."
+          "text": "Dots first, then lines. Never undo what’s already tidy."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Gallery: the Cell-Smith (2) snaps paths, punctures cells, and marks groups."
+          "text": "In the Gallery the Cell Hammer (2) snaps paths, punctures cells, and marks groups."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every map snaps to the grid: cellular approximation."
+          "text": "Every map can be snapped to the grid: cellular approximation."
         }
       ],
       "title_card": {
@@ -9289,45 +9289,45 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map $f: X → Y$ induces maps $f_*$ on every homotopy group. If they’re all isomorphisms, $f$ is a weak homotopy equivalence."
+          "text": "A map $f: X → Y$ carries sphere-maps across, giving $f_*$ on each $πₙ$. All isomorphisms: a weak homotopy equivalence."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each courier carries one $πₙ$ across. Green means $f_*$ is an isomorphism there."
+          "text": "Each runner carries one $πₙ$ across. Green means $f_*$ is an isomorphism there."
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The circle in the punctured plane: every courier green. Whitehead’s theorem: between connected CW complexes, a weak equivalence is a homotopy equivalence."
+          "text": "The circle in the punctured plane: all green. Whitehead: for connected CW complexes, that makes it a homotopy equivalence."
         },
         {
           "t": 19.8,
-          "end": 23.4,
+          "end": 23.9,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And the punctured plane does shrink onto the circle."
+          "text": "And the punctured plane really does shrink onto the circle."
         },
         {
           "t": 24.4,
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$S²$ collapsed to a point: $π₁$ is fine, but $π₂ = ℤ$ goes to $0$."
+          "text": "$S²$ crushed to a point: $π₁$ is fine, but $π₂ = ℤ$ goes to $0$."
         },
         {
           "t": 30.2,
           "end": 35.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One red courier is enough. Not a weak equivalence — and $S²$ isn’t contractible."
+          "text": "One red runner is enough. It’s not a weak equivalence, and $S²$ isn’t contractible."
         },
         {
           "t": 36.4,
@@ -9338,17 +9338,17 @@
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But no map induces those isomorphisms, and their $H₂$ differ. They are not homotopy equivalent."
+          "text": "But their $H₂$ differ, so no map can induce those isomorphisms."
         },
         {
           "t": 46.4,
           "end": 52.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So the certificate is a map with every courier green — not just matching numbers."
+          "text": "So the certificate is a map with every runner green. Matching numbers aren’t enough."
         },
         {
           "t": 52.8,
@@ -9362,7 +9362,7 @@
           "end": 63.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "At the Weak Spot: the Reading Wand (0) sends couriers and marks pairs."
+          "text": "At the Weak Spot the Reading Wand (0) sends runners and marks pairs."
         },
         {
           "t": 64.4,
@@ -9448,38 +9448,38 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Suspension cones a space upward and downward. For a map $f: Sⁱ → Sⁿ$ it gives $Σf: Sⁱ⁺¹ → Sⁿ⁺¹$."
+          "text": "Suspension cones a sphere up to one pole and down to another. $f: Sⁱ → Sⁿ$ becomes $Σf: Sⁱ⁺¹ → Sⁿ⁺¹$, $f$ on every latitude."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 11.9,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So suspension is a homomorphism $πᵢ(Sⁿ) → πᵢ₊₁(Sⁿ⁺¹)$. The Sling does it."
+          "text": "So suspension gives a homomorphism $πᵢ(Sⁿ) → πᵢ₊₁(Sⁿ⁺¹)$. The Sling does it."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map of degree $2$ on $S¹$ suspends to degree $2$ on $S²$, then on $S³$. Degree survives."
+          "text": "A degree-$2$ map on $S¹$ suspends to degree $2$ on $S²$, then on $S³$. The degree survives every lift."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So every $πₙ(Sⁿ)$ is $ℤ$, read by degree!"
+          "text": "So every $πₙ(Sⁿ)$ is $ℤ$, read off by degree!"
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Freudenthal’s theorem: the suspension $πᵢ(Sⁿ) → πᵢ₊₁(Sⁿ⁺¹)$ is an isomorphism when $i < 2n − 1$…"
+          "text": "Freudenthal’s theorem: $πᵢ(Sⁿ) → πᵢ₊₁(Sⁿ⁺¹)$ is an isomorphism when $i < 2n − 1$, when the source sphere isn’t too big…"
         },
         {
           "t": 30.2,
@@ -9490,45 +9490,45 @@
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Fix the stem $k = i − n$. Once $n > k + 1$, every further suspension is an isomorphism."
+          "text": "Fix the stem $k = i − n$, the gap between the spheres. Once $n > k + 1$, every suspension is an isomorphism."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The groups stop changing: the stable homotopy groups of spheres."
+          "text": "The groups stop changing. Those are the stable homotopy groups of spheres."
         },
         {
           "t": 46.4,
-          "end": 52.4,
+          "end": 52.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Stem 1: the Hopf class $η$ in $π₃(S²) = ℤ$ suspends onto $π₄(S³) = ℤ₂$, and it’s $ℤ₂$ from then on."
+          "text": "Stem 1: the Hopf map $η$ in $π₃(S²) = ℤ$ suspends onto $π₄(S³) = ℤ₂$. That step is only onto. After it, $ℤ₂$ for good."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Stable ground — the first stem is $ℤ₂$."
+          "text": "Stable ground. The first stem settles at $ℤ₂$."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "At the Landing: the Sling (4) suspends; the Degree Dial (8) sets degrees and marks tiles."
+          "text": "At the Landing the Sling (4) suspends, and the Degree Dial (8) sets degrees and marks tiles."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Lift a map, and past a point nothing changes: Freudenthal suspension."
+          "text": "Lift a map high enough and nothing changes: Freudenthal suspension."
         }
       ],
       "title_card": {
@@ -9603,77 +9603,77 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Some spaces have exactly one non-zero homotopy group. If $πₙ = G$ and all the others vanish, the space is a $K(G, n)$."
+          "text": "Some spaces have just one non-zero homotopy group. If $πₙ = G$ and every other one is $0$, the space is a $K(G, n)$."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "They’re the building blocks of homotopy theory — and, as you’ll see, of cohomology too."
+          "text": "One kind of hole, in one dimension. They’re the bricks of homotopy theory, and of cohomology too, as you’ll see."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$S¹$ is a $K(ℤ, 1)$, the torus a $K(ℤ², 1)$, and $ℝP∞$ a $K(ℤ₂, 1)$: each has a contractible universal cover."
+          "text": "$S¹$ is a $K(ℤ, 1)$, the torus a $K(ℤ², 1)$, $ℝP∞$ a $K(ℤ₂, 1)$. Their universal covers, $ℝ$, $ℝ²$ and $S∞$, all shrink to a point."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "A contractible cover kills everything above $π₁$."
+          "text": "And a covering doesn’t change $πₙ$ for $n ≥ 2$. So nothing’s left above $π₁$."
         },
         {
           "t": 24.4,
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$S²$ isn’t one: $π₂(S²) = ℤ$, and much more above."
+          "text": "$S²$ isn’t one: $π₂(S²) = ℤ$, and there’s more above."
         },
         {
           "t": 30.2,
           "end": 35.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Nor is $ℝP²$: its universal cover is $S²$, so $π₂(ℝP²) = ℤ$."
+          "text": "Nor is $ℝP²$. Its universal cover is $S²$, so $π₂(ℝP²) = ℤ$ as well."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "To build $K(ℤ, 2)$, start with $S²$ and attach 4-cells to kill $π₃$."
+          "text": "To build $K(ℤ, 2)$, start from $S²$. To kill $π₃$, glue on a $4$-cell along a map $S³ → S²$ that generates it."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Attaching $(k+1)$-cells kills $πₖ$ without touching the groups below — but it can change the ones above."
+          "text": "New $(k+1)$-cells kill $πₖ$ and can’t touch the groups below. The ones above can change."
         },
         {
           "t": 46.4,
           "end": 52.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So kill them in order, $π₃$, $π₄$, $π₅$, … forever. What’s left is $K(ℤ, 2)$, which is $ℂP∞$."
+          "text": "So kill them in order, $π₃$, $π₄$, $π₅$, forever. What’s left is $K(ℤ, 2)$, which Hatcher shows is $ℂP∞$."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One group per floor — everything else filled in."
+          "text": "One group per floor, everything else filled in. That’s his Spire."
         },
         {
           "t": 58.4,
           "end": 63.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "At One Group: the Cell-Smith (2) marks spaces and attaches the killing cells."
+          "text": "At One Group: the Cell Hammer (2) marks spaces and attaches the cells that kill each group."
         },
         {
           "t": 64.4,
@@ -9759,38 +9759,38 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map $f: Sⁿ → X$ carries the fundamental class of $Sⁿ$ into $Hₙ(X)$. That gives the Hurewicz map $h: πₙ(X) → Hₙ(X)$."
+          "text": "Map a sphere in, $f: Sⁿ → X$, and count how it covers $X$, with signs: a class in $Hₙ(X)$. That’s the Hurewicz map, $h$."
         },
         {
           "t": 6.8,
           "end": 11.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A bridge from homotopy to homology. The question is when it holds."
+          "text": "A bridge from one kind of count to the other. The question is where it holds."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$S²$: $π₁ = H₁ = 0$, $π₂ = H₂ = ℤ$ — and then $π₃(S²) = ℤ$ while $H₃(S²) = 0$."
+          "text": "$S²$: $π₁ = H₁ = 0$, $π₂ = H₂ = ℤ$. Then $π₃(S²) = ℤ$, while $H₃(S²) = 0$."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "They agree at the first place anything happens."
+          "text": "They agree at the first row where anything happens."
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s the Hurewicz theorem. If $X$ is $(n−1)$-connected with $n ≥ 2$, the homology below $n$ vanishes too, and $πₙ ≅ Hₙ$."
+          "text": "Say every sphere of dimension below $n$ shrinks in $X$, and $n ≥ 2$. Hurewicz: homology below $n$ is zero too, and $πₙ ≅ Hₙ$."
         },
         {
           "t": 30.2,
@@ -9801,17 +9801,17 @@
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In degree 1 the bridge is abelianization: $π₁ → H₁$ is onto, and its kernel is the commutator subgroup."
+          "text": "In degree $1$ the bridge is onto, and it loses exactly the commutators: $aba⁻¹b⁻¹$ counts as $a + b − a − b = 0$."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For the figure-eight: the free group $F(a, b)$ goes onto $ℤ²$."
+          "text": "For the figure-eight, the free group on $a$ and $b$ goes onto $ℤ²$. $H₁$ is $π₁$ made abelian."
         },
         {
           "t": 46.4,
@@ -9825,7 +9825,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "$π₃(S²) = ℤ$, $H₃(S²) = 0$. Homotopy is wilder."
+          "text": "$π₃(S²) = ℤ$, $H₃(S²) = 0$. Homology can’t even see it."
         },
         {
           "t": 58.4,
@@ -9839,7 +9839,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Homotopy meets homology at the first floor: the Hurewicz theorem."
+          "text": "Where homotopy first shows up, homology agrees: the Hurewicz theorem."
         }
       ],
       "title_card": {
@@ -9918,24 +9918,24 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Hopf map sends $S³ ⊂ ℂ²$ to $S²$ by $(z₁, z₂) ↦ [z₁ : z₂]$. Over each point of $S²$ lies a whole circle."
+          "text": "Pairs $(z₁, z₂)$ of complex numbers with $|z₁|² + |z₂|² = 1$ make $S³$. The Hopf map keeps only the ratio $z₁ : z₂$, a point of $S²$."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "We draw $S³$ from the inside, by stereographic projection, so its circles show up in ordinary space."
+          "text": "Multiply both by the same unit complex number and the ratio stays put. So over each point of $S²$ lies a whole circle."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Touch a point of $S²$ and its fibre lights. Every point of $S³$ is on exactly one of these circles."
+          "text": "We draw $S³$ by stereographic projection. Touch a point of $S²$ and its circle lights. Every point of $S³$ is on exactly one."
         },
         {
           "t": 19.8,
@@ -9949,28 +9949,28 @@
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Look at any two fibres: they link — once, every time."
+          "text": "Look at any two fibres: they link, once, every time."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "You can’t pull linked circles apart without cutting. That’s a sign the map is not trivial."
+          "text": "Linked circles don’t come apart without cutting. That’s the picture that says the map isn’t trivial. The proof comes next."
         },
         {
           "t": 36.4,
           "end": 41.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A fibre bundle $F → E → B$ has a long exact sequence of homotopy groups: Theorem 4.41."
+          "text": "A fibre bundle: every fibre the same, and locally a product. Theorem 4.41 gives it a long exact row of homotopy groups."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For the Hopf bundle, $π₃(S¹)$ and $π₂(S¹)$ vanish — the circle’s universal cover is contractible."
+          "text": "Exact: what arrives at each group is just what the next map kills. Here $π₃(S¹) = π₂(S¹) = 0$."
         },
         {
           "t": 46.4,
@@ -9984,7 +9984,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "A map from a bigger sphere that won’t squash flat!"
+          "text": "A map from a bigger sphere that won’t squash flat."
         },
         {
           "t": 58.4,
@@ -10073,14 +10073,14 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Hatcher opens Chapter 4 with a table of $πᵢ(Sⁿ)$. Read it by stems: fix $k$ and look at $πₙ₊ₖ(Sⁿ)$ as $n$ grows."
+          "text": "Hatcher opens Chapter 4 with a table of $πᵢ(Sⁿ)$. Read it by stems: fix $k$ and watch $πₙ₊ₖ(Sⁿ)$ as $n$ grows."
         },
         {
           "t": 6.8,
           "end": 11.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each row of our wall is one stem."
+          "text": "Each row of our wall is one stem. One step right is one suspension."
         },
         {
           "t": 12.4,
@@ -10094,7 +10094,7 @@
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Each stem settles one step later than the one above it."
+          "text": "So each stem settles one step later than the one above it."
         },
         {
           "t": 24.4,
@@ -10119,24 +10119,24 @@
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Stem 0: $ℤ$, the degree. Stem 1: $ℤ₂$, the suspended Hopf map. Stem 2: $ℤ₂$."
+          "text": "Stem 0: $ℤ$, the degree. Stem 1: $ℤ₂$, the Hopf map slung up. Stem 2: $ℤ₂$."
         },
         {
           "t": 46.4,
           "end": 52.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And stem 3: $ℤ₂₄$. Further out they get wild — nobody knows them all."
+          "text": "Stem 3: $ℤ₂₄$. Further out they get wild. Nobody knows them all."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "First calm place in four worlds. I’ll take it."
+          "text": "Nothing moving under my feet. I’ll take it while it lasts."
         },
         {
           "t": 58.4,
@@ -10150,7 +10150,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Up here, the numbers settle: stable homotopy."
+          "text": "Up here the numbers settle: the stable homotopy groups."
         }
       ],
       "title_card": {
@@ -10222,52 +10222,52 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "An Eilenberg–MacLane space $K(G, n)$ has a single homotopy group: $πₙ = G$, and nothing else."
+          "text": "A $K(G, n)$ has a single homotopy group, $πₙ = G$, and nothing else. The circle is a $K(ℤ, 1)$."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 11.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Its cohomology has one special class, $ι ∈ Hⁿ(K(G, n); G)$."
+          "text": "Its one basic class is $ι ∈ Hⁿ(K(G, n); G)$. On the circle, $ι$ counts turns."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Any map $f: X → K(G, n)$ pulls $ι$ back to a class $f*(ι)$ on $X$. Homotopic maps give the same class."
+          "text": "Map $X$ in with $f$ and read $ι$ along it: that’s the class $f*(ι)$ on $X$. Homotopic maps give the same class."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So a map is a way to read a class off a space."
+          "text": "So a map into $K(G, n)$ is a way to read a class off $X$."
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Theorem 4.57: every class comes from a map, and from only one up to homotopy. Take $K(ℤ, 1) = S¹$."
+          "text": "Theorem 4.57: for a CW complex $X$, every class comes from a map, and from only one up to homotopy."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A circle map of degree $d$ pulls $ι$ back to $dα$. Degree $3$: $3α$. Degree $−2$: $−2α$."
+          "text": "A circle map of degree $d$ turns each lap into $d$ laps, so $ι$ pulls back to $dα$. Degree $3$: $3α$. Degree $−2$: $−2α$."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now map the torus to the circle. The map winds some number of times round each loop of the torus."
+          "text": "Now map the torus to the circle. Round each loop of the torus, the image winds a whole number of times."
         },
         {
           "t": 41.8,
@@ -10281,28 +10281,28 @@
           "end": 52.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…and once backwards round $b$ adds $−β$: the class $2α − β$. $[T², S¹] = H¹(T²) = ℤ²$."
+          "text": "…and once backwards round $b$ adds $−β$: the class $2α − β$. So $[T², S¹] = H¹(T²) = ℤ²$."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Two windings, two integers. The levers are the cohomology."
+          "text": "Two levers, two integers. Every setting is a class."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Classing Room: the Cup Caster (9) turns each lever. Make the maps the floor asks for."
+          "text": "In the Classing Room the Cup Caster (9) turns each lever. Make the maps each station asks for."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A cohomology class is a map into $K(G, n)$."
+          "text": "A class in $Hⁿ(X; G)$ is a map $X → K(G, n)$, up to homotopy."
         }
       ],
       "title_card": {
@@ -10374,59 +10374,59 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map $p: E → B$ is a fibration if it has the homotopy lifting property: a homotopy in $B$, plus a lift of where it starts, lifts to a homotopy in $E$."
+          "text": "$p: E → B$ is a fibration if homotopies lift: move something in $B$, say where it starts in $E$, and the motion lifts."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The helix over the circle is one. This loop winds twice; started on sheet $1$, its lift climbs to sheet $3$."
+          "text": "The helix over the circle is one. Each turn climbs a sheet: wind twice from sheet $1$ and you end on sheet $3$."
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For a covering the lift is unique once you choose the start. Wind backwards once from sheet $2$, and you come down to sheet $1$."
+          "text": "For a covering the lift is unique once you choose the start. Wind backwards once from sheet $2$ and you come down to sheet $1$."
         },
         {
           "t": 19.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Downstairs a loop. Upstairs, maybe not."
+          "text": "A loop down here. Up there it doesn’t even close."
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Not every map is a fibration. Send two points to the ends of a bar: over the middle there’s nothing to lift to."
+          "text": "Not every map is a fibration. Two points over the ends of a bar: over the middle there’s nothing to lift to."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Fix it with paths. $E_f$ is pairs $(a, γ)$, $γ$ a path from $f(a)$. Every fibre fills — and $E_f$ still retracts onto $A$."
+          "text": "Fix it with tethers: $E_f$ is pairs $(a, γ)$, $γ$ a path from $f(a)$. Every fibre fills, and $E_f$ still shrinks onto $A$."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Do it to a single base point, and $E_f$ is $PB$: paths from the base point. Its fibre is the loop space $ΩB$."
+          "text": "Tether just the base point and you get $PB$, paths from the base point. Its fibre is the loops: $ΩB$."
         },
         {
           "t": 41.8,
-          "end": 46.0,
+          "end": 46.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$PB$ shrinks to a point, so the long exact sequence gives $πₙ(ΩB) ≅ πₙ₊₁(B)$."
+          "text": "$PB$ shrinks to a point, so the exact sequence gives $πₙ(ΩB) ≅ πₙ₊₁(B)$."
         },
         {
           "t": 46.4,
@@ -10440,21 +10440,21 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Loops one floor down, spheres one floor up. Same groups."
+          "text": "The loops carry the sphere’s groups, one dimension down."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Fibration Station: the Sheet Compass (6) picks starts, strings tethers, and sets the loop-space groups."
+          "text": "Here the Sheet Compass (6) picks start sheets, strings tethers and sets the loop-space groups."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Homotopies lift. That’s a fibration."
+          "text": "A fibration: homotopies below lift, once you choose where they start."
         }
       ],
       "title_card": {
@@ -10526,10 +10526,10 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A Postnikov tower for $X$: spaces $Xₙ$ with $πᵢ(Xₙ) = πᵢ(X)$ for $i ≤ n$, and $0$ above. For $S²$: $π₂ = ℤ$, $π₃ = ℤ$, $π₄ = ℤ₂$."
+          "text": "A Postnikov tower: each $Xₙ$ keeps $X$’s groups up to $πₙ$, and nothing above. For $S²$: $π₂ = ℤ$, $π₃ = ℤ$, $π₄ = ℤ₂$."
         },
         {
           "t": 6.8,
@@ -10540,10 +10540,10 @@
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each step $Xₙ → Xₙ₋₁$ is a fibration, and the long exact sequence says its fibre is a $K(πₙX, n)$: $K(ℤ, 2)$, $K(ℤ, 3)$, $K(ℤ₂, 4)$."
+          "text": "Each step $Xₙ → Xₙ₋₁$ is a fibration that adds one group, so its fibre is a $K(πₙX, n)$: here $K(ℤ, 2)$, $K(ℤ, 3)$, $K(ℤ₂, 4)$."
         },
         {
           "t": 19.8,
@@ -10554,59 +10554,59 @@
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For $S²$ every step is principal: $Xₙ₊₁$ is the homotopy fibre of a map $kₙ: Xₙ → K(πₙ₊₁X, n + 2)$."
+          "text": "How is each floor set down? For $S²$, $Xₙ₊₁$ is the homotopy fibre of a map $kₙ: Xₙ → K(πₙ₊₁X, n + 2)$."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 35.9,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "By Theorem 4.57 that map is a class: the k-invariant $kₙ ∈ Hⁿ⁺²(Xₙ; πₙ₊₁X)$. Build from the bottom up."
+          "text": "By Theorem 4.57 that map is a class, the k-invariant $kₙ ∈ Hⁿ⁺²(Xₙ; πₙ₊₁X)$: the twist."
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "If every $kₙ$ is $0$, $X$ is just the product of its $K(πₙX, n)$’s. The k-invariants are the twist."
+          "text": "If every $kₙ$ is $0$, nothing is twisted, and $X$ is just the product of its $K(πₙX, n)$’s."
         },
         {
           "t": 41.8,
-          "end": 46.0,
+          "end": 46.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$S²$ and $S³ × ℂP∞$ have the same homotopy groups. $S³ × ℂP∞$ is the untwisted one: $k₂ = 0$."
+          "text": "$S²$ and $S³ × ℂP∞$ share their groups. $S³ × ℂP∞$ has $k₂ = 0$: its $X₃$ is $K(ℤ, 2) × K(ℤ, 3)$."
         },
         {
           "t": 46.4,
-          "end": 52.4,
+          "end": 52.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But $H₃(S²) = 0$, while the product $K(ℤ, 2) × K(ℤ, 3)$ has $H₃ = ℤ$. So $S²$’s $k₂$ is not $0$."
+          "text": "That product has $H₃ = ℤ$. $S²$’s $X₃$ has $S²$’s homology up to degree $3$, so $H₃ = 0$. $S²$’s $k₂$ isn’t $0$."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Same floors. One twisted, one not. Two different towers."
+          "text": "Same floors. One twisted, one not. Two different spaces."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Twist: Cell-Smith (2) kills groups and raises floors; Cup Caster (9) names fibres and sets the twist."
+          "text": "The Twist: Cell Hammer (2) kills groups and raises floors; Cup Caster (9) names fibres and sets twists."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Groups give the floors. k-invariants give the space."
+          "text": "A Postnikov tower: one Eilenberg–MacLane floor per group, glued by the k-invariants."
         }
       ],
       "title_card": {
@@ -10678,24 +10678,24 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The extension problem: a CW pair $(W, A)$ and a map $A → X$. Does it extend over $W$? Go one cell at a time."
+          "text": "The extension problem. A map is known on $A$. Can you fill it in over all of $W$? Go one cell at a time."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "An $(n+1)$-cell extends when its boundary map $Sⁿ → X$ is nullhomotopic — guaranteed if $πₙ(X) = 0$. That’s Lemma 4.7."
+          "text": "An $(n+1)$-cell fills when the map on its rim sphere $Sⁿ$ shrinks to a point. If $πₙ(X) = 0$, it always does: Lemma 4.7."
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Into $S²$, a $3$-cell’s boundary is an element of $π₂(S²) = ℤ$: a degree. Zero, and the cell fills. Not zero, and it’s blocked."
+          "text": "Into $S²$, a $3$-cell’s rim is a map $S² → S²$: a degree, in $π₂(S²) = ℤ$. Zero, and the cell fills. Not zero, and it’s blocked."
         },
         {
           "t": 19.8,
@@ -10713,10 +10713,10 @@
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "With $2$ and $0$, no twist works: the sum stays $2$. The obstruction is a class, $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$ — extend iff $ωₙ = 0$."
+          "text": "With $2$ and $0$ no twist works: the sum stays $2$. The obstruction is a class, $ωₙ ∈ Hⁿ⁺¹(W, A; πₙX)$. Extend iff $ωₙ = 0$."
         },
         {
           "t": 36.4,
@@ -10727,38 +10727,38 @@
         },
         {
           "t": 41.8,
-          "end": 46.0,
+          "end": 46.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$(D², S¹)$ into $S²$: the only group is $H²(D², S¹; π₁S²) = 0$. It extends."
+          "text": "$(D², S¹)$ into $S²$: one $2$-cell, so the only group is $H²(D², S¹; π₁S²)$, and $π₁S² = 0$. It extends."
         },
         {
           "t": 46.4,
-          "end": 52.4,
+          "end": 52.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Into $S¹$, $π₂$ and up vanish, and $H²(D³, S²; ℤ) = 0$: that extends too. $(D³, S²)$ into $S²$ meets $ℤ$ — no guarantee."
+          "text": "Into $S¹$, $π₂$ and up vanish, and $H²(D³, S²; ℤ) = 0$: that extends too. $(D³, S²)$ into $S²$ meets $H³ = ℤ$: no guarantee."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The top of the Spire. Every wall a reading."
+          "text": "Last floor. Every wall on it was a reading."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Obstruction Course: Cell-Smith (2) extends and opens; Cup Caster (9) reads obstructions and twists cells."
+          "text": "Obstruction Course: Cell Hammer (2) extends and opens doors; Cup Caster (9) reads obstructions and twists cells."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "What blocks an extension is a cohomology class."
+          "text": "What blocks an extension, cell by cell, is a cohomology class."
         }
       ],
       "title_card": {
@@ -11840,10 +11840,10 @@
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Over the Möbius band one trip round switches sheets, so $M̃$ is connected. Over an orientable $M$ it splits in two."
+          "text": "Over the Möbius band one lap switches sheets, so $M̃$ is one piece. Over an orientable $M$, two."
         },
         {
           "t": 46.4,

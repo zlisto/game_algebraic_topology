@@ -52,7 +52,7 @@
       "captions": [
         { "t": 0.6, "end": 3.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Three disguises, and not one of them multiplied right. Your station was never what it claimed." },
         { "t": 3.6, "end": 6.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Master. One more chance. I can still be anything you need." },
-        { "t": 7.6, "end": 13.2, "speaker": "Count Null", "portrait": "count-null", "text": "Hush, marshal. You did your best. It wasn’t enough. Gyroid, one more lesson before I go." },
+        { "t": 7.6, "end": 13.2, "speaker": "Count Null", "portrait": "count-null", "text": "Hush, marshal. You kept the trains on time. Gyroid, one more lesson before I go." },
         { "t": 13.4, "end": 16.6, "speaker": "Count Null", "portrait": "count-null", "text": "Take any map from S³ to S². Read it with your rings. Every one of them." },
         { "t": 16.8, "end": 19.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "It pulls H²(S²) back into H²(S³)… and that’s zero. Every class reads zero." },
         { "t": 19.6, "end": 22.4, "speaker": "Count Null", "portrait": "count-null", "text": "Then it is nothing. Every map S³ → S² is trivial. A point in a sphere’s clothing. Like him." },
@@ -61,10 +61,10 @@
         { "t": 29.8, "end": 32.8, "speaker": "Narrator", "hold": false, "text": "Then it reached for the marshal who had served it." },
         { "t": 33.2, "end": 35.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Got you. He’d have folded you with the floor." },
         { "t": 35.6, "end": 38, "speaker": "The Commutator", "portrait": "commutator", "text": "My loops… all four. He never once said my name." },
-        { "t": 38.2, "end": 41, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "That’s what my presses do now. To anyone who stops being useful to him." },
-        { "t": 41.4, "end": 44.8, "speaker": "Count Null", "portrait": "count-null", "text": "You went back for him. She would have too. …Climb my Spire, Gyroid. Prove one map S³ → S² isn’t trivial, or the sky goes next." },
+        { "t": 38.2, "end": 41, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "I built those presses for gravel." },
+        { "t": 41.4, "end": 44.8, "speaker": "Count Null", "portrait": "count-null", "text": "You went back for him. She would have too. …Prove one map S³ → S² isn’t trivial, Gyroid." },
         { "t": 44.8, "end": 47, "speaker": "Narrator", "hold": false, "text": "And Count Null rose on a ribbon of violet, up the Postnikov Spire." },
-        { "t": 47.6, "end": 51.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Every class pulls back to zero, so cohomology is blind to this map. We’ll have to count the maps themselves: homotopy groups." },
+        { "t": 47.6, "end": 51.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The rings of S³ and S² can’t see this map. We’ll have to count the maps themselves: homotopy groups." },
         { "t": 51.6, "end": 57.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we climb. And when I get to the top, I’m asking him about her myself." }
       ],
       "title_card": { "t": 59, "end": 65 }

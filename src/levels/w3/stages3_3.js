@@ -17,7 +17,7 @@ export const OPENING = [
   E('The Lantern Rows. This is what the twins can’t hide from. Two edge readings can be multiplied, and the answer is a reading on triangles: the cup product.'),
   E('Take a triangle $[v₀v₁v₂]$. Its front edge is $[v₀v₁]$, its back edge is $[v₁v₂]$. Then $(φ ⌣ ψ)[v₀v₁v₂] = φ[v₀v₁] · ψ[v₁v₂]$: first reading on the front, second on the back, multiply.'),
   G('Front edge, back edge, multiply. And the third edge?'),
-  E('Doesn’t get a say. The Cup Caster, on 9, does the multiplying for you.'),
+  E('Doesn’t get a say. The Cup Caster, on 9, does the multiplying for you. First row: follow the NEXT ring, west.'),
   E('Watch for the Cup Spider in the rows. It’s quick while it’s degree 1, and if two legs land on you it cups itself up to degree 2.'),
   E('Switch stance with G between every strike. The sign matters here: the same stance twice and the web snaps back at you.'),
 ]
@@ -78,7 +78,7 @@ export const STATIONS = {
         options: ['$0$', '$1$', '$2$'],
         answer: '$0$',
         wrong: [E('Swapping $α$ with itself changes nothing, but the swap rule says it flips the sign. So $α ⌣ α = −α ⌣ α$.')],
-        right: [E('Right: $2(α ⌣ α) = 0$ in $ℤ$. In general $α ⌣ β = (−1)ᵏˡ β ⌣ α$ (Theorem 3.11, a page ahead). Reverse a triangle’s corners and front and back trade places; that flip costs the sign.')],
+        right: [E('Right: $2(α ⌣ α) = 0$ in $ℤ$. In general $α ⌣ β = (−1)ᵏˡ β ⌣ α$ (Theorem 3.11, a page ahead).'), E('Reverse a triangle’s corners and front and back trade places; that flip costs the sign. Last row: follow the NEXT ring, east.')],
       },
     ],
   },

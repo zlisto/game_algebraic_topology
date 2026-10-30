@@ -16,7 +16,10 @@ export const OPENING = [
   E('The Product Parterre. A point of $X × Y$ is a pair: somewhere on $X$ and somewhere on $Y$. So how do you read a place like that?'),
   E('Read a class $a$ on the $X$ part, read a class $b$ on the $Y$ part, and cup the two. That’s the cross product $a × b$. If $a$ has degree $p$ and $b$ has degree $q$, $a × b$ has degree $p + q$.'),
   G('So the rows are $X$’s classes, the columns are $Y$’s, and every bed is one pair.'),
-  E('And the Künneth formula says that, when the coefficients behave, the beds are all there is: every class on $X × Y$ is built from them. Cup Caster on 9.'),
+  E('And the Künneth formula says that, when the coefficients behave, the beds are all there is: every class on $X × Y$ is built from them.'),
+  E('Built how? $H*(X) ⊗ H*(Y)$ is just bookkeeping: pick a basis on each side, and every pair of basis classes is one bed. Künneth says those beds are a basis for $X × Y$.'),
+  E('“Behave” means Hatcher’s condition: $Y$’s cohomology is free, plain copies of $ℤ$ with no $ℤ₂$s (circles, spheres, tori), or you work over a field like $ℤ₂$.'),
+  E('Cup Caster on 9. First bed: follow the NEXT ring, north-east.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -60,7 +63,7 @@ export const STATIONS = {
   torsion_soil: {
     blueprint: 'Torsion in the Soil',
     arrive: [
-      E('$ℝP² × ℝP²$. Over $ℤ$, torsion adds correction terms to Künneth. So read mod 2. $ℤ₂$ is a field, and over a field the formula holds as it stands.'),
+      E('$ℝP² × ℝP²$. Theorem 3.15 needs free cohomology, and over $ℤ$, $ℝP²$ has a $ℤ₂$. So read mod 2: $ℤ₂$ is a field, and over a field the formula holds as it stands.'),
       E('Mod 2, each $ℝP²$ has $1$, $a$ and $a²$, in degrees $0$, $1$, $2$. Pick every bed that lands in degree $2$, and nothing else.'),
     ],
     early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
@@ -81,7 +84,7 @@ export const STATIONS = {
     arrive: [E('Your turn to design. Choose $X$ and $Y$ with the levers so the bins read $1, 1, 1, 1$ in degrees $0$ to $3$.')],
     early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [
-      act('Choose X and Y so the bins read 1, 1, 1, 1', [G('$S¹ × S²$!'), E('Write each space’s ranks as a polynomial: $1 + t$ for the circle, $1 + t²$ for the sphere. Multiply: $(1 + t)(1 + t²) = 1 + t + t² + t³$.')]),
+      act('Choose X and Y so the bins read 1, 1, 1, 1', [G('$S¹ × S²$!'), E('Write each space’s ranks as a polynomial: $1 + t$ for the circle, $1 + t²$ for the sphere. Multiply: $(1 + t)(1 + t²) = 1 + t + t² + t³$.'), E('Why multiply? A bed of degree $p + q$ is a $tᵖ$ from $X$ times a $t$ to the power $q$ from $Y$, so counting beds by degree is exactly multiplying the polynomials.')]),
       {
         type: 'ask',
         question: 'If $X$ has ranks $1, 1$ and $Y$ has ranks $1, 0, 1$, what are the ranks of $X × Y$?',

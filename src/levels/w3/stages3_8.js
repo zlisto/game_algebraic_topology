@@ -18,7 +18,7 @@ export const OPENING = [
   E('Cohomology towers on this side, homology on that one. On a closed, orientable $n$-manifold they mirror each other: $Hᵏ(M) ≅ Hₙ₋ₖ(M)$. That’s Poincaré duality.'),
   E('Both words matter. Closed means no edge: a disk has $H⁰ = ℤ$ but nothing in $H₂$. Orientable means there’s a top class $[M]$, the whole surface added up with matching signs, and duality is built from it.'),
   E('The Poincaré Colossus guards the Seam: stone below, light above. Strike the stone in chain stance, then the light in cochain stance (G), back and forth. Six pairings and it falls.'),
-  E('Sheet Compass, on 6. First pair of towers is ahead.'),
+  E('Sheet Compass, on 6. First pair of towers: follow the NEXT ring, north-west.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -36,7 +36,7 @@ export const STATIONS = {
         options: ['$Hₙ₋ₖ$', '$Hₖ$', '$Hₖ₊ₙ$'],
         answer: '$Hₙ₋ₖ$',
         wrong: [E('Which tower did $H⁰$ pair with?')],
-        right: [E('Theorem 3.30. The map is “cap with $[M]$”: a $k$-cochain eats the first $k$ corners of each simplex of $[M]$ and leaves the rest. Next tower: follow the NEXT ring, east.')],
+        right: [E('Theorem 3.30. The map is “cap with $[M]$”: a $k$-cochain reads the front $k$-face of each simplex of $[M]$, corners $v₀…vₖ$, and leaves the back face $vₖ…vₙ$, scaled by that number.'), E('Next tower: follow the NEXT ring, east.')],
       },
     ],
   },

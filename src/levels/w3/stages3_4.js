@@ -17,7 +17,7 @@ export const OPENING = [
   N('Two islands, Gyroid. The torus, and a bouquet: two rings and a ball, tied at one point. Count their holes. Every count agrees.'),
   N('Same counts, same place. Fold one and nothing is lost. I’ll take the torus. It’s been tired for a long time.'),
   G('There are people on that torus. Somebody’s still got a light on.'),
-  E('Then we prove the islands are different, and counting won’t do it. Multiplying will. Cup Caster, on 9.'),
+  E('Then we prove the islands are different, and counting won’t do it. Multiplying will. Cup Caster, on 9. First island: follow the NEXT ring, north.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -71,7 +71,7 @@ export const STATIONS = {
         options: ['It retracts onto $S¹ ∨ S¹$, where $H² = 0$, and cup products are natural', 'Because the ball is too small', 'Because $α = β$'],
         answer: 'It retracts onto $S¹ ∨ S¹$, where $H² = 0$, and cup products are natural',
         wrong: [E('Squash the ball down to the point it hangs from. What’s left, and does it have any $H²$ at all?')],
-        right: [E('Exactly Hatcher’s argument. Squashing the ball is a retraction onto two rings. $α$, $β$ and their product all come from there, and two rings have no $H²$. Last island: NEXT, north-west.')],
+        right: [E('“Natural” means pulling back along a map keeps products: $r*(a ⌣ b) = r*a ⌣ r*b$.'), E('Exactly Hatcher’s argument. Squashing the ball is a retraction onto two rings. $α$, $β$ and their product all come from there, and two rings have no $H²$. Last island: NEXT, north-west.')],
       },
     ],
   },
