@@ -13,10 +13,10 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['row_col', 'sphere_sphere', 'torsion_soil', 'design_parterre']
 
 export const OPENING = [
-  E('The Product Parterre. Here we plant the cohomology of a product $X × Y$.'),
-  E('Take a class $a$ of degree $p$ on $X$ and a class $b$ of degree $q$ on $Y$. Their cross product $a × b$ is a class on $X × Y$ of degree $p + q$.'),
-  G('So every pair of classes makes a bed in the garden.'),
-  E('And the Künneth formula says — when the coefficients behave — that’s all of it. Cup Caster on 9.'),
+  E('The Product Parterre. A point of $X × Y$ is a pair: somewhere on $X$ and somewhere on $Y$. So how do you read a place like that?'),
+  E('Read a class $a$ on the $X$ part, read a class $b$ on the $Y$ part, and cup the two. That’s the cross product $a × b$. If $a$ has degree $p$ and $b$ has degree $q$, $a × b$ has degree $p + q$.'),
+  G('So the rows are $X$’s classes, the columns are $Y$’s, and every bed is one pair.'),
+  E('And the Künneth formula says that, when the coefficients behave, the beds are all there is: every class on $X × Y$ is built from them. Cup Caster on 9.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -25,78 +25,78 @@ export const STATIONS = {
   row_col: {
     blueprint: 'Rows and Columns',
     arrive: [
-      E('$S¹ × S¹$, the torus. Rows: $1$ and $α$ from the first circle. Columns: $1$ and $α$ from the second.'),
+      E('$S¹ × S¹$, the torus. Rows: $1$ and $α$ from the first circle. Columns: $1$ and $α$ from the second. Here $1$ is the degree-0 class, the reading that’s $1$ on every point.'),
       E('Click a bed, then the bin for its degree, $p + q$.'),
     ],
-    early: [E('Not yet — finish the earlier bed first. Follow NEXT on the map.')],
+    early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [
-      act('Put every bed in its degree bin', [G('$1$, $2$, $1$. That’s the torus!'), E('$H⁰ = ℤ$, $H¹ = ℤ²$, $H² = ℤ$ — and the top class is $α × α$, the cup of the two loop classes.')]),
+      act('Put every bed in its degree bin', [G('$1$, $2$, $1$. That’s the torus!'), E('$H⁰ = ℤ$, $H¹ = ℤ²$, $H² = ℤ$. The top bed is $α × α$: the first circle’s loop class times the second’s. It’s the $α ⌣ β$ you lit at the twins.')]),
       {
         type: 'ask',
         question: 'What is the degree of $a × b$, for $a$ of degree $p$ on $X$ and $b$ of degree $q$ on $Y$?',
         options: ['$p + q$', '$p · q$', 'max$(p, q)$'],
         answer: '$p + q$',
         wrong: [E('Which bin did $α × α$ go into?')],
-        right: [E('Next bed is south-east.')],
+        right: [E('Right. Next bed: follow the NEXT ring, north-west.')],
       },
     ],
   },
   sphere_sphere: {
     blueprint: 'Sphere Times Sphere',
     arrive: [E('$S² × S²$. Each sphere has $1$ in degree $0$ and $γ$ in degree $2$. Bin all four beds.')],
-    early: [E('Not yet — finish the earlier bed first. Follow NEXT on the map.')],
+    early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [
-      act('Put every bed in its degree bin', [G('$ℤ$, then two in degree $2$, then one in degree $4$.'), E('And $(γ × 1) ⌣ (1 × γ) = γ × γ$: the two degree-2 classes multiply to the top class.')]),
+      act('Put every bed in its degree bin', [G('$ℤ$, then two in degree $2$, then one in degree $4$.'), E('And the cross product remembers how to multiply: $(γ × 1) ⌣ (1 × γ) = γ × γ$. The two degree-2 classes multiply to the top class.')]),
       {
         type: 'ask',
         question: 'Is $S² × S²$ the same as $S² ∨ S² ∨ S⁴$, which has the same groups?',
         options: ['No — in $S² ∨ S² ∨ S⁴$ the degree-2 classes multiply to $0$', 'Yes', 'Only with ℤ₂ coefficients'],
         answer: 'No — in $S² ∨ S² ∨ S⁴$ the degree-2 classes multiply to $0$',
         wrong: [E('It’s the Twin Islands again, one dimension up.')],
-        right: [E('Same trick as the Twin Islands. Next bed is south-west.')],
+        right: [E('Same trick as the Twin Islands. Next bed: follow the NEXT ring, north-east.')],
       },
     ],
   },
   torsion_soil: {
     blueprint: 'Torsion in the Soil',
     arrive: [
-      E('$ℝP² × ℝP²$. Over $ℤ$, torsion makes Künneth messier — so use $ℤ₂$ coefficients, a field, where it holds cleanly. Each $ℝP²$ has $1$, $a$, $a²$.'),
-      E('Pick every bed that lands in degree $2$, then nothing else.'),
+      E('$ℝP² × ℝP²$. Over $ℤ$, torsion adds correction terms to Künneth. So read mod 2. $ℤ₂$ is a field, and over a field the formula holds as it stands.'),
+      E('Mod 2, each $ℝP²$ has $1$, $a$ and $a²$, in degrees $0$, $1$, $2$. Pick every bed that lands in degree $2$, and nothing else.'),
     ],
-    early: [E('Not yet — finish the earlier bed first. Follow NEXT on the map.')],
+    early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [
-      act('Pick exactly the beds of degree 2', [G('$a² × 1$, $a × a$, $1 × a²$.'), E('$H²(ℝP² × ℝP²; ℤ₂) = ℤ₂³$. In all: $1, 2, 3, 2, 1$.')]),
+      act('Pick exactly the beds of degree 2', [G('$a² × 1$, $a × a$, $1 × a²$.'), E('So $H²(ℝP² × ℝP²; ℤ₂) = ℤ₂³$. All the bins, degree $0$ to $4$: $1, 2, 3, 2, 1$.')]),
       {
         type: 'ask',
         question: 'Why switch to $ℤ₂$ coefficients here?',
         options: ['Over a field the Künneth isomorphism holds with no correction terms', 'ℤ₂ is smaller', 'ℝP² has no ℤ cohomology'],
         answer: 'Over a field the Künneth isomorphism holds with no correction terms',
         wrong: [E('ℤ₂ is a field. What does Theorem 3.15 ask of the coefficients?')],
-        right: [E('Right. Last bed is further on.')],
+        right: [E('Right. Last bed: follow the NEXT ring, north-west.')],
       },
     ],
   },
   design_parterre: {
     blueprint: 'Design a Parterre',
-    arrive: [E('Choose $X$ and $Y$ with the levers so the bins read $1, 1, 1, 1$ in degrees $0$ to $3$.')],
-    early: [E('Not yet — finish the earlier bed first. Follow NEXT on the map.')],
+    arrive: [E('Your turn to design. Choose $X$ and $Y$ with the levers so the bins read $1, 1, 1, 1$ in degrees $0$ to $3$.')],
+    early: [E('Not this bed yet. Finish the one before it: follow the NEXT ring on your map.')],
     goals: [
-      act('Choose X and Y so the bins read 1, 1, 1, 1', [G('$S¹ × S²$!'), E('$(1 + t)(1 + t²) = 1 + t + t² + t³$: ranks multiply like polynomials.')]),
+      act('Choose X and Y so the bins read 1, 1, 1, 1', [G('$S¹ × S²$!'), E('Write each space’s ranks as a polynomial: $1 + t$ for the circle, $1 + t²$ for the sphere. Multiply: $(1 + t)(1 + t²) = 1 + t + t² + t³$.')]),
       {
         type: 'ask',
         question: 'If $X$ has ranks $1, 1$ and $Y$ has ranks $1, 0, 1$, what are the ranks of $X × Y$?',
         options: ['$1, 1, 1, 1$', '$1, 1, 1$', '$2, 0, 2$'],
         answer: '$1, 1, 1, 1$',
         wrong: [E('Multiply $(1 + t)(1 + t²)$.')],
-        right: [E('Exactly what you built. The gate’s open.')],
+        right: [E('Exactly what you built. The gate’s open, north.')],
       },
     ],
   },
 }
 
 export const HINTS = {
-  knockout: E('Hearts back — your beds stay planted. Lash the spawn and carry on.'),
-  wrongSection: (name) => E(`The next bed is ${name} — follow NEXT on the map.`),
+  knockout: E('Hearts back. Your beds are still planted. Lash the spawn and carry on.'),
+  wrongSection: (name) => E(`Not this one. The next bed is ${name}: follow the NEXT ring on your map.`),
 }
 
 export const DEFINITION = {
@@ -111,10 +111,10 @@ export function emmyAdvice(state) {
   if (enemies?.[here.site]) return [E('Lash the violet spawn first (1).')]
   if (!current || here.site !== current) {
     const next = STATION_ORDER.find((id) => !done[id])
-    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('The parterre is planted. Walk to the gate.')]
+    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('The parterre is planted. Head north to the gate.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'torsion_soil') return [E('$a$ has degree $1$ and $a²$ degree $2$. Which pairs add to $2$?')]
+  if (current === 'torsion_soil') return [E('$a$ has degree $1$ and $a²$ degree $2$. Which pairs add up to $2$?')]
   if (current === 'design_parterre') return [E('One factor should give ranks $1, 1$ and the other $1, 0, 1$.')]
   return [E('Click a bed, then a bin. The bed $a × b$ goes in degree (degree of $a$) + (degree of $b$).')]
 }

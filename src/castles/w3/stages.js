@@ -24,10 +24,10 @@ export const BOSS_AT = [0, -7.3] // the Commutator's dais, under the Crown
 export const START = [0, 7.2]
 
 export const OPENING = [
-  C('Welcome to the Counterfeit Station, courier. Every train in Winding World stops here. And I am whatever your counts say I am.'),
-  N('Gyroid. My marshal will run three trials. Each round, three demonstrations on his floor. Some are honest. Some are his forgeries.'),
-  N('Lash the beacon over every forgery, and spare the honest ones, or my Crown will cut you. Fail him, and I fold the Cup Product Gardens. Every lantern. Every path.'),
-  E('He’s speaking through the Crown. Gyroid, we don’t just count any more. Read every number before you lash.'),
+  C('Welcome to the Counterfeit Station, post-runner. Every train in the Winding World stops here, and I am whatever your counts say I am. a b a⁻¹ b⁻¹. Order in all things.'),
+  N('Gyroid. My marshal has three trials for you. Each round he puts three demonstrations on his floor. Some are honest. Some are his forgeries.'),
+  N('Lash the beacon over every forgery and spare the honest ones. Lash an honest one and my Crown will cut you. Fail him, and I fold the Cup Product Gardens, gently. Every lantern. Every path.'),
+  E('He’s speaking through the Crown. Gyroid, counting is what fooled us at the twins. Read every number on a demonstration, and check his claim, before you lash anything.'),
 ]
 
 /**
@@ -75,9 +75,9 @@ export const TRIALS = [
     name: 'Coboundaries',
     blurb: 'δf on an edge is head minus tail. δ(δf) = 0 always. A δf sums to 0 round a loop.',
     intro: [
-      C('Trial one: coboundaries. A cochain f puts a number on each vertex. My δ writes numbers on the edges and faces. Do my numbers add up?'),
-      E('δf on an edge is head minus tail: $δf[v₀v₁] = f(v₁) − f(v₀)$. On a face, $δφ[v₀v₁v₂] = φ[v₁v₂] − φ[v₀v₂] + φ[v₀v₁]$, and δ of δ is always zero.'),
-      E('On a hollow triangle, add φ round the loop: $φ[v₀v₁] + φ[v₁v₂] − φ[v₀v₂]$. Every δf sums to 0 there. And if he shows you ℝP², remember: torsion in $H_1$ moves UP a degree in cohomology.'),
+      C('Trial one: coboundaries. My cochain f puts a number on each corner. My δ writes numbers on the edges and the faces. Do my numbers add up? Check them, if you can subtract.'),
+      E('Same as the Mirror Pools. $δf$ on an edge is head minus tail: $δf[v₀v₁] = f(v₁) − f(v₀)$. On a face, $δφ[v₀v₁v₂] = φ[v₁v₂] − φ[v₀v₂] + φ[v₀v₁]$, and $δ$ of $δ$ is always zero.'),
+      E('On a hollow triangle, add φ round the loop: $φ[v₀v₁] + φ[v₁v₂] − φ[v₀v₂]$. Every $δf$ adds to 0 there, like heights round a hill. And if he shows you ℝP²: torsion in $H₁$ climbs one degree in cohomology.'),
     ],
     rounds: [
       ['df_ok', 'df_bad', 'dd_ok'],
@@ -98,14 +98,14 @@ export const TRIALS = [
       h1_ok: 'Any δf sums to 0 round the loop, but φ sums to 1. So φ is no coboundary: a class in $H¹$ of the circle. Honest.',
       uct_ok: '$Hⁿ ≅ Hom(Hₙ, ℤ) ⊕ Ext(Hₙ₋₁, ℤ)$: $H¹ = 0$ and the ℤ₂ lands in $H²$. Honest.',
     },
-    done: [C('A clerk’s trick. Anyone can subtract.'), N('Then let him meet your guard, marshal.'), E('Coboundary Harpies! A chain lash feeds them. Press G for cochain stance, then strike.')],
+    done: [C('A clerk’s trick. Anyone can subtract.'), N('Then let him meet your guard, marshal.'), E('Coboundary Harpies! A plain chain lash feeds them. Press G for cochain stance, then strike.')],
   },
   {
     name: 'Products',
     blurb: 'Same groups, different rings. Watch whether the product lights, then read his claim.',
     intro: [
-      C('Trial two: products. My spaces wear the right groups, every one. Watch what their cup products do.'),
-      E('Watch each demonstration: does the product light, or stay dark? Then read his claim under it. Groups can match. Rings can’t lie.'),
+      C('Trial two: products. Every one of my spaces wears the right groups. Go on. Multiply them.'),
+      E('Watch each demonstration: does the product light, or stay dark? Then read his claim underneath. He can copy the groups. He can’t copy what they multiply to.'),
     ],
     rounds: [
       ['torus_ab', 'wedge_ab', 'cp2'],
@@ -123,15 +123,15 @@ export const TRIALS = [
       cp2: '$H*(ℂP²) = ℤ[α]/(α³)$: $α²$ generates $H⁴$ (Theorem 3.12). Honest.',
       rp3: '$H*(ℝPⁿ; ℤ₂) = ℤ₂[α]/(αⁿ⁺¹)$ with $|α| = 1$: ℝP³ climbs to $α³$ and stops (Theorem 3.12). Honest.',
     },
-    done: [C('Then I will wear something grander.'), N('Spiders, marshal. Make him mind his signs.'), E('Cup Spiders: $α ⌣ β = −β ⌣ α$. Alternate stances, chain then cochain, or the web snaps back. The Projectives need two lashes, fast.')],
+    done: [C('Then I will wear something grander.'), N('Spiders, marshal. Let him mind his signs.'), E('Cup Spiders: $α ⌣ β = −β ⌣ α$, so alternate stances, chain then cochain, or the web snaps back. The Projectives need two lashes, quickly.')],
   },
   {
     name: 'Manifolds',
     blurb: 'Carry the arrow round the core. On a closed orientable n-manifold, rank Hₖ = rank Hₙ₋ₖ, and every class of infinite order has a cup partner.',
     intro: [
-      C('Trial three: manifolds. Turn an arrow round my bands, read my towers, pair my classes. I am closed and orientable, duality and all.'),
-      E('Carry the little arrow round the core. If it comes home reversed, the band is non-orientable.'),
-      E('On a closed orientable n-manifold, Poincaré duality forces $rank Hₖ = rank Hₙ₋ₖ$, and every class of infinite order has a cup partner (over a field, every class). Mod 2, every closed manifold obeys duality.'),
+      C('Trial three: manifolds. Carry an arrow round my bands, read my towers, pair my classes. I am closed and orientable, duality and all.'),
+      E('Like the Compass Cliffs: carry the little arrow round the core. If it comes home reversed, the band is non-orientable.'),
+      E('On a closed orientable n-manifold, duality forces $rank Hₖ = rank Hₙ₋ₖ$, and every generator of the free part has a cup partner giving $±1$. Mod 2, every closed manifold obeys duality.'),
     ],
     rounds: [
       ['cyl', 'mob', 'pd_torus'],
@@ -151,7 +151,7 @@ export const TRIALS = [
       rp2: 'ℤ₂, ℤ₂, ℤ₂. Every closed manifold is ℤ₂-orientable, so duality holds mod 2. Honest.',
       pair_ok: '$⟨α ⌣ α, [ℂP²]⟩ = 1$: α is its own partner. The pairing is perfect. Honest.',
     },
-    done: [C('Enough! You want to see what I really am?'), C('Colossus, wake! Spectre, rise! And my own loops will finish you.'), E('A Poincaré Colossus: chain, then cochain, alternating. And a de Rham Spectre: run a full loop round it, then lash it while it’s exact. (De Rham forms go beyond our book; Hatcher only mentions them.)')],
+    done: [C('Enough! You want to see what I really am?'), C('Colossus, wake! Spectre, rise! And my own loops will finish you.'), E('A Poincaré Colossus: chain, then cochain, alternating. And a de Rham Spectre: run a full loop round it, then lash it while it’s exact. (De Rham forms go beyond our book; Hatcher only mentions them.)'), G('His loops are shaking. He’s more scared of the Crown than of us.')],
   },
 ]
 
@@ -169,7 +169,7 @@ export const PUNISH = [
 
 /** The final phase is the Commutator's turn: his taunts as his loops fling Crown shards at Gyroid. */
 export const COMMUTES = [
-  'The Commutator: “a b a⁻¹ b⁻¹! Order, courier!”',
+  'The Commutator: “a b a⁻¹ b⁻¹! Order, runner!”',
   'The Commutator: “Every loop answers to me!”',
   'The Commutator: “Round and back, and you’re nowhere!”',
   'The Commutator: “Stand still and be simplified!”',
@@ -177,14 +177,14 @@ export const COMMUTES = [
 
 /** After the final wave: the Commutator unmasked, and Null arriving. Then the outro. */
 export const FINALE = [
-  C('No. No, no. Every disguise… Master! Master, I can still—'),
+  C('No. No, no. Every disguise… Master! Master, I kept your station. Every board, every train. I can still—'),
   N('Hush, marshal.'),
-  N('Courier. Emmy. Stay where you are. I’m coming down. There is something I want you both to see.'),
+  N('Gyroid. Emmy. Stay where you are. I’m coming down. There’s something I want you both to see.'),
 ]
 
 export const HINTS_CASTLE = {
-  wrong: (why) => [C(`Ha! That one was honest. ${why}`), N('My Crown punishes the unjust. Shards.')],
-  knockout: (fight) => (fight ? E('Up, Gyroid! Shake it off. His guard has closed ranks again.') : E('Up, Gyroid! The round starts over. Read the numbers again.')),
+  wrong: (why) => [C(`Ha! That one was honest. ${why}`), N('Careful, Gyroid. The Crown doesn’t forgive carelessness.')],
+  knockout: (fight) => (fight ? E('Up, Gyroid! Shake it off. His guard has closed ranks again.') : E('Up, Gyroid. The round starts over. Read the numbers again, slowly.')),
 }
 
 export const DEFINITION_CASTLE = {

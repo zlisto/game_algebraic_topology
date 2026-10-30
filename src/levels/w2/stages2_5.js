@@ -29,7 +29,7 @@ export const STATIONS = {
     ],
     early: [E('Not this deck yet. Finish the earlier one first; NEXT on the map shows which.')],
     goals: [
-      { type: 'action', hint: 'Cut three holes deep inside the collar A', done: [G('Three holes, and the homology didn’t budge.'), E('Why the margin? Hatcher’s proof chops every chain into tiny pieces. Each piece either misses $Z$ or lies in $A$, where it counts as $0$ anyway. That only works if $A$ wraps all the way round $Z$.')] },
+      { type: 'action', hint: 'Cut three holes deep inside the collar A', done: [G('Three holes, and the homology didn’t budge.'), E('Why the margin? Hatcher subdivides every simplex, barycentric subdivision, until each piece lies in $X − Z$ or in the interior of $A$. Those two only cover $X$ if $A$ wraps all the way round $Z$.')] },
       {
         type: 'ask',
         question: 'When may excision cut $Z$ out of the pair $(X, A)$?',
@@ -44,6 +44,7 @@ export const STATIONS = {
     blueprint: 'Collapse',
     arrive: [
       E('A disk with its rim. If $A$ counts as $0$, why not crush all of $A$ to a single point? For a good pair like this one, that’s allowed: $Hₙ(X, A) ≅ H̃ₙ(X/A)$.'),
+      E('Good pair: $A$ is closed and has a thin collar round it in $X$ that shrinks back onto $A$. The rim of a disk has one.'),
       E('$X/A$ means $X$ with all of $A$ squeezed to one point. The tilde is reduced homology: the same groups, except $H̃₀$ counts pieces minus one. Crush the rim with the Suspension Sling (4).'),
     ],
     early: [E('Not this deck yet. Finish the earlier one first; NEXT on the map shows which.')],

@@ -13,11 +13,13 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['lift', 'fibre', 'loops']
 
 export const OPENING = [
-  N('Lift whatever you like. Everything you lift, I fold.'),
-  E('Fibration Station. A fibration $p: E → B$ is a map with one promise: any homotopy downstairs lifts upstairs, once you say where it starts.'),
-  E('That one promise — the homotopy lifting property — is what gives the long exact sequence.'),
-  G('Lifts, then. Which way is up?'),
-  E('Sheet Compass on 6.'),
+  N('Lift whatever you like, Gyroid. Carry it as high as you can. I’ll fold it gently when you set it down.'),
+  G('He sounds tired.'),
+  E('He sounds like he’s been awake for twenty years. Come on.'),
+  E('Fibration Station. A fibration is a map $p: E → B$ with one promise: if you move something downstairs in $B$ and say where it starts upstairs, the motion lifts to $E$.'),
+  E('One consequence: over a connected $B$, every fibre, everything sitting over one point, looks the same up to homotopy. And that promise is what gives the long exact sequence.'),
+  G('Lifts, then. Which way’s up?'),
+  E('Sheet Compass on 6. First station’s north-west; follow the NEXT ring. Three commons hang east and north-east of it. One of them has beasts.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -25,57 +27,67 @@ const act = (hint, done) => ({ type: 'action', hint, done })
 export const STATIONS = {
   lift: {
     blueprint: 'Lift',
-    arrive: [E('The helix $ℝ$ over the circle $S¹$ is a fibration — a covering, with discrete fibre. A loop downstairs lifts to a path upstairs, and the start you choose decides the end. Pick the start sheet whose lift ends on ★.')],
-    early: [E('Not yet — finish the floor above first. Follow NEXT on the map.')],
+    arrive: [
+      E('The helix $ℝ$ over the circle $S¹$. Every point of the circle has a whole stack of points above it, one per turn of the helix: the sheets. That’s a covering, the simplest kind of fibration.'),
+      E('A loop below lifts to a climb above. Each turn round the base climbs one sheet, so winding $w$ times from sheet $s$ ends on sheet $s + w$. Pick the start sheet whose lift ends on ★.'),
+    ],
+    early: [E('Not this one yet. The NEXT ring on your map shows where to go.')],
     goals: [
-      act('Choose start sheets so each lift ends on ★', [G('Start fixed, lift fixed.'), E('Homotopy lifting: the lift exists, and with a start point chosen it is unique — for a covering, at least.')]),
+      act('Choose start sheets so each lift ends on ★', [G('Start fixed, lift fixed.'), E('That’s homotopy lifting: the lift exists, and once you choose the start it’s unique, for a covering at least.')]),
       {
         type: 'ask',
         question: 'A loop winding $2$ times lifts from sheet $1$. Where does it end?',
         options: ['Sheet $3$', 'Sheet $1$', 'Sheet $2$'],
         answer: 'Sheet $3$',
-        wrong: [E('Each turn round the base climbs one sheet.')],
-        right: [E('Right. Now a map that isn’t a fibration.')],
+        wrong: [E('Each turn round the base climbs one sheet. Two turns from sheet $1$…')],
+        right: [E('Right. Now a map that isn’t a fibration. It’s east, on the NEXT ring.')],
       },
     ],
   },
   fibre: {
     blueprint: 'Make It Fibre',
-    arrive: [E('$f$ sends two points $p, q$ to the ends of a bar $B$. Over the middle the fibre is empty — no path from an end can lift. Tether each point: $E_f$ is pairs $(a, γ)$, with $γ$ a path in $B$ starting at $f(a)$.')],
-    early: [E('Not yet — finish the floor above first. Follow NEXT on the map.')],
+    arrive: [
+      E('$f$ sends two points, $p$ and $q$, to the two ends of a bar $B$. Over the middle of the bar there’s nothing at all. Start a path at one end, walk it inward, and there’s nowhere upstairs for it to go.'),
+      E('So give each point a tether. $E_f$ is pairs $(a, γ)$: a point $a$, and a path $γ$ in $B$ that starts at $f(a)$. Its map to $B$ reads off where the tether ends. Tether $p$ and $q$.'),
+    ],
+    early: [E('Not yet. The station before this one comes first; the NEXT ring shows it.')],
     goals: [
-      act('Tether p and q to make E_f', [G('Now every point of the bar has a fibre.'), E('$E_f → B$, $(a, γ) ↦ γ(1)$, is a fibration. Shrink every tether back to its start and $E_f$ retracts onto $A$.')]),
+      act('Tether p and q to make E_f', [G('Now every point of the bar has something over it.'), E('$E_f → B$, $(a, γ) ↦ γ(1)$, is a fibration. And reel every tether back to its start, and $E_f$ shrinks back onto $A$.')]),
       {
         type: 'ask',
         question: 'Why is $E_f$ as good as $A$?',
         options: ['$E_f$ deformation retracts onto $A$', '$E_f$ is a point', '$E_f = B$'],
         answer: '$E_f$ deformation retracts onto $A$',
-        wrong: [E('Shrink each tether back to where it starts. What’s left?')],
-        right: [E('So any map is a fibration, up to homotopy. Last floor.')],
+        wrong: [E('Reel each tether back to where it starts. What’s left?')],
+        right: [E('So any map at all is a fibration, once you swap $A$ for the homotopy-equivalent $E_f$. Proposition 4.64.'), E('Last station’s north-west, on the NEXT ring.')],
       },
     ],
   },
   loops: {
     blueprint: 'The Loop Space',
-    arrive: [E('Take $E_f$ for the inclusion of a point: paths in $B$ from the base point. That’s $PB$, it’s contractible, and its fibre is the loop space $ΩB$. The long exact sequence then says $πₙ(ΩB) ≅ πₙ₊₁(B)$. Fill in $ΩS²$.')],
-    early: [E('Not yet — finish the floor above first. Follow NEXT on the map.')],
+    arrive: [
+      E('Do the tether trick to the inclusion of just the base point. You get $PB$: every path in $B$ that starts at the base point. Reel them all in and $PB$ shrinks to a point.'),
+      E('The fibre over the base point is the paths that start and end there: the loops. That’s the loop space $ΩB$. So we have a fibration $ΩB → PB → B$.'),
+      E('In its long exact sequence every $PB$ term is $0$, so each step from $πₙ₊₁(B)$ to $πₙ(ΩB)$ passes straight through: an isomorphism. Fill in $ΩS²$.'),
+    ],
+    early: [E('Not yet. Two stations come before this one; the NEXT ring shows where.')],
     goals: [
-      act('Set π₁, π₂, π₃ of ΩS²', [G('Everything shifts down one.'), E('$πₙ(ΩS²) = πₙ₊₁(S²)$: $ℤ$, $ℤ$, $ℤ₂$.')]),
+      act('Set π₁, π₂, π₃ of ΩS²', [G('Everything slides down one.'), E('$πₙ(ΩS²) = πₙ₊₁(S²)$: $ℤ$, $ℤ$, $ℤ₂$. Read the loops, and you’ve read the sphere one floor higher.')]),
       {
         type: 'ask',
         question: 'Why does $ΩB → PB → B$ shift the groups by one?',
         options: ['$PB$ is contractible, so the boundary maps are isomorphisms', '$ΩB$ is contractible', '$B$ is a point'],
         answer: '$PB$ is contractible, so the boundary maps are isomorphisms',
         wrong: [E('Which space in the sequence has nothing in it?')],
-        right: [E('Fibrations, done. The gate is open.')],
+        right: [E('Right. Between two zeros, a map has to be an isomorphism.'), E('The gate’s north of here.')],
       },
     ],
   },
 }
 
 export const HINTS = {
-  knockout: E('Hearts back — your lifts stay put. Lash the spawn and carry on.'),
-  wrongSection: (name) => E(`The next floor is ${name} — follow NEXT on the map.`),
+  knockout: E('Hearts back. Your lifts are where you left them. Lash the spawn and keep going.'),
+  wrongSection: (name) => E(`${name} is next. Follow the NEXT ring on your map.`),
 }
 
 export const DEFINITION = {
@@ -90,10 +102,10 @@ export function emmyAdvice(state) {
   if (enemies?.[here.site]) return [E('Lash the violet spawn first (1).')]
   if (!current || here.site !== current) {
     const next = STATION_ORDER.find((id) => !done[id])
-    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('All lifted. Walk to the gate.')]
+    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Everything’s lifted. The gate’s north.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
   if (current === 'lift') return [E('Each turn of the base loop climbs one sheet; a negative winding climbs down. Count back from ★.')]
   if (current === 'fibre') return [E('Sheet Compass (6) on each pad, $p$ and $q$.')]
-  return [E('Each $ΩS²$ tile matches the $S²$ tile above it, one dimension up. Compass cycles the value.')]
+  return [E('Each $ΩS²$ tile matches the $S²$ tile one dimension up: $π₁(ΩS²)$ is $π₂(S²)$, and so on. The Compass cycles the value.')]
 }

@@ -61,8 +61,8 @@ export const EXHIBITS = {
 }
 
 export const OPENING = [
-  N('Welcome to my Retractor, courier. Emmy knows the plans. We drew the first press together, on one napkin.'),
-  E('We drew presses, Null. Not this.'),
+  N('Welcome to my Retractor, Gyroid. Emmy knows these plans. We drew the first press together, on the back of a post slip.'),
+  E('We drew presses. Not this.'),
   N('You count chains now, I hear. Then three trials of counting. Each round, three claims on my floor.'),
   N('Lash the beacon of every forgery. Spare the honest ones, or my Crown corrects you.'),
 ]
@@ -173,7 +173,7 @@ export const PUNISH = [
 ]
 
 export const FINAL_INTRO = [
-  N('Enough trials. You count very well, courier. So count this.'),
+  N('No more trials. You count well, Gyroid. So count this.'),
   N('My Retractor. A ball is only its skin, stuffed. I squeeze the stuffing out onto the skin, and the whole Delta folds flat with it.'),
   E('He wants a retraction r: B³ → S², the ball onto its own boundary. Gyroid, break the three chain anchors. Three lashes each. Each one you break, I’ll give you a line of the proof.'),
   G('Then let’s write it fast.'),
@@ -192,8 +192,8 @@ export const SEIZE = [
 ]
 
 export const HINTS_CASTLE = {
-  wrong: (why) => [N(`Ha! That one was honest. ${why}`), N('My Crown corrects the unjust. Shards!')],
-  knockout: E('Up, Gyroid! Shake it off. Your hearts are back, and Null has reset the floor.'),
+  wrong: (why) => [N(`No, Gyroid. That one was honest. ${why}`), N('The Crown will have to correct you. I’m sorry.')],
+  knockout: E('Up, Gyroid. Hearts are back. He’s reset the floor, so we go again.'),
   knockoutFight: E('Up, Gyroid! Hearts back. Everything you broke stays broken. Go again.'),
 }
 

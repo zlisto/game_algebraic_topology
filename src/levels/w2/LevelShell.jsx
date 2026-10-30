@@ -241,7 +241,7 @@ export default function LevelShell({
     setHearts(3)
     setKnockouts((k) => k + 1)
     setGameKey((k) => k + 1)
-    say([hints.knockout || E('Hearts back — progress stays. Lash the spawn and keep going.')])
+    say([hints.knockout || E('Hearts back. Your progress stays. Lash the spawn and keep going.')])
   }, [hearts, hints, say])
 
   useEffect(() => {

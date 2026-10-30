@@ -157,7 +157,7 @@
           "end": -0.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Courier run for Emmy Boundary, out on Retract Reef. Back to Haven Ring by supper."
+          "text": "Post for Emmy Boundary, out on Retract Reef. Drop it, run home, back at Haven by supper."
         },
         {
           "t": 0.4,
@@ -200,14 +200,14 @@
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
           "hold": false,
-          "text": "Courier, it’s Emmy, on the reef ahead! Run for the amber spines! Whatever winds round a hole, the Crown can’t fold!"
+          "text": "Gyroid! It’s Emmy, on the reef ahead! Get to the amber spines! Anything that winds round a hole, the Crown can’t fold!"
         },
         {
           "t": 28.3,
           "end": 30.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The walkways went… but the spines held. Bend it, don’t break it."
+          "text": "The walkways just… went. But the spines held. Emmy, the spines held!"
         },
         {
           "t": 30.8,
@@ -221,7 +221,7 @@
           "end": 39.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A courier who keeps holes. Run, little loop. I’ll fold your road home last."
+          "text": "Another child running the post. Go on, then. I’ll fold your road home last."
         }
       ],
       "title_card": {
@@ -295,7 +295,7 @@
           "end": 10.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "You’re my courier. You kept to the spines — that’s why you’re alive. Hold on to that parcel, and don’t open it."
+          "text": "You’re the one carrying my post. You kept to the spines, and that’s why you’re still here. Hold on to that parcel. Don’t open it."
         },
         {
           "t": 10.6,
@@ -527,7 +527,7 @@
           "end": 11.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "I know these two. The figure-eight and the theta — Haven couriers used to race between them."
+          "text": "I know these two. The figure-eight and the theta. Haven’s runners used to race between them after the post went out."
         },
         {
           "t": 11.6,
@@ -650,7 +650,7 @@
           "end": 18.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Null and I built these presses together. We wanted simpler roads, so couriers would stop getting lost."
+          "text": "Null and I built these presses together. We wanted simpler roads, so nobody carrying the post would ever get lost."
         },
         {
           "t": 18.8,
@@ -855,7 +855,7 @@
           "t": 0.6,
           "end": 5,
           "speaker": "Narrator",
-          "text": "The Timber Yard: walkways grown into a tangle no courier could follow — and beyond it, the bridge to Null’s Throne."
+          "text": "The Timber Yard: walkways grown into a tangle nobody could follow. Beyond it, the bridge to Null’s Throne."
         },
         {
           "t": 7.2,
@@ -1670,14 +1670,14 @@
           "end": 18,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "The courier who keeps holes. Look down there — Haven Ring. Your guild. Your road home. Still standing."
+          "text": "Gyroid. Look down there. Haven Ring. Your guild, your road home. Still standing."
         },
         {
           "t": 18.2,
           "end": 21.8,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "For now. Bending is cheap, courier. Can you tell a true simplification from a false one?"
+          "text": "For now. Anyone can bend a road. Can you tell a true simplification from a false one?"
         },
         {
           "t": 22.4,
@@ -1856,7 +1856,7 @@
           "end": 33.6,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "Prove it had a hole, courier. Then come and take it back."
+          "text": "Prove it had a hole, Gyroid. Then come and take it back."
         },
         {
           "t": 33.8,
@@ -3214,38 +3214,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 5.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "To prove a sphere has a hole, we need places built from pieces we can count. Every piece."
+          "text": "Loops can’t see a sphere’s hole. So we count what places are made of. Every piece."
         },
         {
           "t": 5.8,
-          "end": 9.8,
+          "end": 10.5,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Triangles, with arrows. Edges glue only when the arrows agree."
+          "text": "Triangles, with arrows on their edges. Two edges glue only when their arrows agree."
         },
         {
           "t": 11.2,
           "end": 15.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Two triangles… and it’s a torus."
+          "text": "Two triangles, and… that’s a torus."
         },
         {
           "t": 15.6,
           "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Flip one arrow and it’s a Klein bottle. Same pieces, different gluing. Null counts pieces — never gluing."
+          "text": "Turn one arrow and it’s a Klein bottle. Same pieces. Different gluing."
         },
         {
           "t": 20.0,
-          "end": 21.6,
+          "end": 21.7,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Keep those flippers off my arrows."
+          "text": "Flippers. Hands off my arrows."
         }
       ],
       "title_card": {
@@ -3310,38 +3310,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 6.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Boundary Blade. My namesake. It cuts anything down to its edge."
+          "text": "The Boundary Blade. He named it after me, years ago. It cuts any sum of triangles down to its edge."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The inside edges cancel — each one counted once plus, once minus."
+          "text": "The inside edges cancel. Each one gets walked once each way."
         },
         {
           "t": 16.4,
           "end": 20.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Cut the edge again and… nothing."
+          "text": "Cut that edge again and… nothing. Every corner’s back to zero."
         },
         {
           "t": 20.6,
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A boundary has no boundary. Always."
+          "text": "A boundary never has a boundary. Not ever."
         },
         {
           "t": 24.4,
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But a loop that isn’t the edge of anything — that’s a hole. That’s what we’re hunting."
+          "text": "A loop that isn’t the edge of anything: that’s a hole."
         }
       ],
       "title_card": {
@@ -3409,28 +3409,28 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "No tiles here. How do we count?"
+          "text": "No tiles anywhere. How do we count something this crumpled?"
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 14.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Any simplex will do — bent, folded, squashed to a point. The Blade still cuts it."
+          "text": "Any path will do: bent, wiggly, or one that never moves. The Blade only cares where it starts and ends."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And bending the place doesn’t change the count?"
+          "text": "And if I squash the whole ring thinner, the count stays?"
         },
         {
           "t": 20.8,
-          "end": 24,
+          "end": 26.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Squeeze it without tearing and its holes stay the same. Not even the Crown can bend a count away."
+          "text": "Squeeze without tearing and the count stays put. He can fold places. He can’t fold that number."
         }
       ],
       "title_card": {
@@ -3495,31 +3495,31 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 5.3,
           "speaker": "Emmy Boundary",
-          "text": "In the Chase Channels, nothing is lost between one lock and the next.",
+          "text": "The Chase Channels. Each lock holds a group; each sluice carries it on to the next.",
           "portrait": "emmy-boundary"
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 13.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "What one sluice sends is exactly what the next one drains. That’s exact. Null could learn something here."
+          "text": "Exact means what pours in is exactly what the next sluice drains to zero."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Stuck between two zeros, that lock has to be ℤ."
+          "text": "Zeros either side, so that lock has to be $ℤ$."
         },
         {
           "t": 20.8,
-          "end": 24,
+          "end": 24.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s how a place’s holes and its parts’ holes pin each other down. One more step, and we pin down a sphere."
+          "text": "Zeros pin a group down. One more step and they pin down his sphere."
         }
       ],
       "title_card": {
@@ -3584,31 +3584,31 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 5.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cut out what’s deep inside the part, and nothing about the pair changes."
+          "text": "If the collar counts as nothing, cut deep inside it and nothing changes. Leave a margin."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Three holes in the collar, and the count didn’t flinch."
+          "text": "Three holes in the collar, and the count didn’t even flinch."
         },
         {
           "t": 16.4,
           "end": 21,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And a disk with its rim squashed is a sphere. Climb, and every sphere has exactly one hole — in its own dimension."
+          "text": "Crush the rim and the disk closes into a sphere. Every sphere has one hole."
         },
         {
           "t": 21.2,
-          "end": 25.6,
+          "end": 26.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One hole. Null’s sphere included. He was lying to us."
+          "text": "One hole, in its own dimension. His sphere too. My number wasn’t wrong. It just couldn’t see it."
         }
       ],
       "title_card": {
@@ -3680,31 +3680,31 @@
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 12.7,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A needle on a dial. Spin it however you like, courier. The Crown doesn’t read dials."
+          "text": "A needle on a dial, Gyroid. The Crown doesn’t read needles."
         },
         {
           "t": 16.4,
-          "end": 20.6,
+          "end": 20.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "It reads proofs. The Degree Dial counts how many times a map wraps a sphere round itself — and a number like that can’t be folded."
+          "text": "It reads numbers that can’t change. Every sphere map has one, its degree, and no bending moves it."
         },
         {
           "t": 20.8,
           "end": 25.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Inside-out counts as minus one."
+          "text": "Inside out counts as minus one. Do two maps and the counts multiply."
         },
         {
           "t": 26.4,
-          "end": 29.8,
+          "end": 30,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And wind can’t cover a sphere without a calm spot. Prove it, and the Delta goes on the Chart."
+          "text": "Show $−1$ can’t bend into $1$, and the hole is proved."
         }
       ],
       "title_card": {
@@ -3769,31 +3769,31 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 6.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Built cell by cell, a place gives up its holes with almost no work. The Foundry way."
+          "text": "Built cell by cell, a place gives up its holes for almost no work. We worked this way at the Foundry."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Walk the rim and count the arrows. The Dial reads them."
+          "text": "Walk the rim, count the arrows. Torus: zero and zero."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The projective plane’s disk wraps its edge twice. Go round twice and it’s filled."
+          "text": "This disk wraps its one loop twice. Twice round is filled in."
         },
         {
           "t": 20.8,
-          "end": 24,
+          "end": 24.1,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Once, it’s a hole. Twice, it’s not. Weird. Null would hate this place."
+          "text": "Once round is a hole and twice round isn’t? That’s strange."
         }
       ],
       "title_card": {
@@ -3851,24 +3851,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 5.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Two patches and their overlap tell you the whole place’s holes."
+          "text": "Two patches and their overlap. Know their holes and you know the whole place’s."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Like the Clasp at the Glue Works — but for holes."
+          "text": "Like the Clasp at the Glue Works. Only for holes."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Mind the overlap. That’s where the surprises hide — and where Null hides his."
+          "text": "Watch the overlap. That’s where the surprises are, and where he hides his."
         }
       ],
       "title_card": {
@@ -3929,28 +3929,28 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Count even or odd instead of whole numbers."
+          "text": "Count even or odd instead of whole numbers. One plus one is zero here."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Klein bottle lit up! It had a hole the whole time?"
+          "text": "The Klein bottle lit up! It had a hole all along?"
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Its top hole only shows when arrows don’t matter. Null’s census missed it. His counts are never the whole story."
+          "text": "One you only see when arrows stop mattering. His census missed it."
         },
         {
           "t": 18.4,
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Sorry, frog. Flipping does nothing here."
+          "text": "Sorry, frog. Flipping doesn’t do anything here."
         }
       ],
       "title_card": {
@@ -4011,28 +4011,28 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The Commutator’s patrols followed us down."
+          "text": "The Commutator’s patrols followed us all the way down."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 14.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Here only totals count. $a$, $b$, $a$ back, $b$ back totals nothing."
+          "text": "Here only totals count. Round $a$, round $b$, back round $a$, back round $b$: that totals nothing."
         },
         {
           "t": 18.4,
           "end": 22.6,
           "speaker": "The Commutator",
           "portrait": "commutator",
-          "text": "So your counting forgets order. I’ll remember that, courier. So will my master."
+          "text": "So your counting forgets order. I’ll remember that, courier."
         },
         {
           "t": 22.8,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "That sounded like a threat."
+          "text": "Was that a threat?"
         }
       ],
       "title_card": {
@@ -4048,7 +4048,7 @@
       "level_id": "2-B1",
       "status": "scripted",
       "story_start": 0,
-      "story_end": 22,
+      "story_end": 36,
       "pace": [
         [
           0,
@@ -4068,16 +4068,16 @@
         {
           "id": "B",
           "start": 8,
-          "end": 16,
+          "end": 30,
           "title": "Inside",
           "description": "The inside lights gold, the outside stays dark."
         },
         {
           "id": "C",
-          "start": 16,
-          "end": 22,
+          "start": 30,
+          "end": 36,
           "title": "Title",
-          "description": "Title card at 16: “World 2 · Bonus — Classic Moves”."
+          "description": "Title card at 30: “World 2 · Bonus — Classic Moves”."
         }
       ],
       "captions": [
@@ -4086,19 +4086,33 @@
           "end": 4.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Obviously a wall has an inside."
+          "text": "A wall that closes up obviously has an inside."
         },
         {
           "t": 8.4,
-          "end": 13.6,
+          "end": 15.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Obvious, and famously hard to prove. Now we have the tools."
+          "text": "Obvious, and famously hard to prove for a wall this wiggly. Take the wall away and count what’s left: $H̃₀ ≅ ℤ$, so two pieces."
+        },
+        {
+          "t": 15.6,
+          "end": 21.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Hatcher, Proposition 2B.1: remove any embedded circle from $S²$ and what’s left has $H̃₀ ≅ ℤ$. One more piece than one."
+        },
+        {
+          "t": 21.8,
+          "end": 29.6,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "The proof splits the wall into two arcs. Taking out an arc never disconnects anything, and Mayer–Vietoris glues the two answers together."
         }
       ],
       "title_card": {
-        "t": 16,
-        "end": 22
+        "t": 30,
+        "end": 36
       }
     },
     {
@@ -4109,7 +4123,7 @@
       "level_id": "2-B2",
       "status": "scripted",
       "story_start": 0,
-      "story_end": 22,
+      "story_end": 44.4,
       "pace": [
         [
           0,
@@ -4129,16 +4143,16 @@
         {
           "id": "B",
           "start": 8,
-          "end": 16,
+          "end": 38.4,
           "title": "The still spot",
           "description": "The beam rests on one arrow-free spot."
         },
         {
           "id": "C",
-          "start": 16,
-          "end": 22,
+          "start": 38.4,
+          "end": 44.4,
           "title": "Title",
-          "description": "Title card at 16: “World 2 · Bonus — Fixed Ideas”."
+          "description": "Title card at 38.4: “World 2 · Bonus — Fixed Ideas”."
         }
       ],
       "captions": [
@@ -4147,19 +4161,47 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Brouwer's Basin, grown up: add the traces, find the still point."
+          "text": "Brouwer’s Basin, grown up. Add up the traces on homology."
         },
         {
           "t": 8.4,
           "end": 13.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Not zero — so somewhere, the beam lands where it started."
+          "text": "If the total isn’t zero, somewhere the beam lands right where it started."
+        },
+        {
+          "t": 13.8,
+          "end": 21.4,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "On each $Hₙ$, ignoring torsion, $f_*$ is a matrix. Its trace adds up the diagonal: how much of each hole $f$ sends back onto itself."
+        },
+        {
+          "t": 21.6,
+          "end": 29.8,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "Alternate the signs and add over every $n$: that’s the Lefschetz number $τ(f)$. Theorem 2C.3: if $τ(f) ≠ 0$, $f$ has a fixed point."
+        },
+        {
+          "t": 30.0,
+          "end": 35.0,
+          "speaker": "Emmy Boundary",
+          "portrait": "emmy-boundary",
+          "text": "On a disk only $H₀$ survives and $f_*$ there is $1$, so $τ = 1$. That’s Brouwer again."
+        },
+        {
+          "t": 35.2,
+          "end": 38.0,
+          "speaker": "Gyroid",
+          "portrait": "gyroid",
+          "text": "Only that way round, though. $τ = 0$ proves nothing."
         }
       ],
       "title_card": {
-        "t": 16,
-        "end": 22
+        "t": 38.4,
+        "end": 44.4
       }
     },
     {
@@ -4380,24 +4422,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Delta we cut things down to their edges. Here we read them."
+          "text": "In the Delta we cut places down to their edges. Here we write a number on every edge, and read them."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Give every edge a value — the pool reads the triangles for me."
+          "text": "Put a number on every edge, and the pool adds them up round each triangle for me."
         },
         {
           "t": 16.4,
-          "end": 20.6,
+          "end": 23.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A reading that balances everywhere but can’t come from points sees a hole — from the other side."
+          "text": "Numbers that add to zero round every tile, but can’t come from heights on the points: that’s how a reading finds a hole."
         },
         {
           "t": 24.2,
@@ -4462,24 +4504,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Readings mostly match the holes we counted in the Delta. Mostly."
+          "text": "What these readings find mostly matches the holes we counted in the Delta. Mostly."
         },
         {
           "t": 8.4,
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The doubled loop from Cell Block — it climbed a terrace."
+          "text": "That’s the loop that shrinks if you go round it twice. It just climbed a terrace."
         },
         {
           "t": 12.8,
-          "end": 17.6,
+          "end": 19.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Twisted holes show up one floor higher in readings. Null never plans for that. We will."
+          "text": "Twisted holes show up one floor higher when you read them. He never planned for that. We will."
         }
       ],
       "title_card": {
@@ -4544,17 +4586,17 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Read a triangle’s front edge with one reading and its back edge with another."
+          "text": "Read a triangle’s front edge with one reading, its back edge with another, and multiply."
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 16.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The Cup Caster does it for you: two readings in, one out. This is the weapon for his twins."
+          "text": "The Cup Caster does the multiplying. Two readings in, one out. That’s what we take to his twins."
         },
         {
           "t": 16.4,
@@ -4568,7 +4610,7 @@
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For two loop readings, yes. Signs matter here."
+          "text": "For two loop readings, yes. Here the order costs you a sign."
         }
       ],
       "title_card": {
@@ -4633,38 +4675,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The twins. The torus is already going grey at the edges."
+          "text": "The twins. The torus is going grey at the edges… but that window’s still lit."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On the torus, the two loop readings multiply to the top."
+          "text": "On the torus, the two loop readings multiply to the top class."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "On the bouquet, they never meet. Nothing lights."
+          "text": "On the bouquet they never meet. Nothing lights."
         },
         {
           "t": 20.8,
-          "end": 24,
+          "end": 24.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Different products, different places. Light it, Gyroid — put the torus on the Chart."
+          "text": "Same groups, different products, so not the same place. Light it, Gyroid, and the torus goes on the Chart."
         },
         {
           "t": 24.4,
           "end": 27.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One lit, one dark. Not the same place. Not yours, Null."
+          "text": "One lit, one dark. Hang on in there, whoever you are. You’re staying."
         }
       ],
       "title_card": {
@@ -4722,17 +4764,17 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A product of places has products of readings. Rows times columns."
+          "text": "A point of a product is a pair of points, so its readings come in pairs too. Rows times columns."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 14.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Circle times circle — the torus again. Still standing. Good."
+          "text": "Circle times circle. The torus again, still standing. Good."
         }
       ],
       "title_card": {
@@ -4790,14 +4832,14 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In this garden, one lantern makes all the others."
+          "text": "In this garden, one class makes all the others, just by multiplying itself."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
           "text": "Square, cube… right to the top. And then nothing."
@@ -4865,9 +4907,9 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 7.0,
           "speaker": "Emmy Boundary",
-          "text": "Past the gardens, the coast begins to mirror itself.",
+          "text": "Past the gardens, the coast starts folding back on itself.",
           "portrait": "emmy-boundary"
         },
         {
@@ -4882,14 +4924,14 @@
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then this cliff can’t be oriented. Like the Möbius band."
+          "text": "Then there’s no saying which way is round on this cliff. It’s a Möbius band."
         },
         {
           "t": 18.4,
-          "end": 23.6,
+          "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The two choices make a cover. The Sheet Compass sees it — the same one that found me on sheet two."
+          "text": "Put both choices over every point and you get a cover. The Sheet Compass can ride it, the same one that found me on sheet two."
         }
       ],
       "title_card": {
@@ -4954,24 +4996,24 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On a closed, oriented place, every hole has a twin reading on the other side."
+          "text": "On a closed, orientable place, every class on this side has a twin on the other."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
           "text": "Dimension $k$ on this side, $n − k$ on that one."
         },
         {
           "t": 18.4,
-          "end": 23.6,
+          "end": 25.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Twisted? Count mod 2 and the mirror still works. A real manifold always has its twins. Remember that at the station."
+          "text": "Twisted? Count mod 2 and the mirror still works. A real closed manifold always has its twins. Remember that at the station."
         }
       ],
       "title_card": {
@@ -5029,17 +5071,17 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On a closed manifold, every lantern has a partner. Their product is the top."
+          "text": "On a closed orientable manifold, every class has a partner. Multiply the two and you reach the top."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Same holes — but only one middle lantern squares to the top."
+          "text": "Same groups, but only one of these middle lanterns squares to the top."
         },
         {
           "t": 18.4,
@@ -10795,17 +10837,17 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A cochain is a reading: $φ$ puts a number on every edge, and so on every chain. Hatcher writes $Cⁿ(X; G) = $ Hom$(Cₙ(X), G)$."
+          "text": "A 1-cochain $φ$ puts a number on every edge. Read it on a path by adding the numbers along it. Hatcher writes $Cⁿ(X; G) = $ Hom$(Cₙ(X), G)$."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Its coboundary reads a triangle through its boundary: $δφ(σ) = φ(∂σ)$. Here that’s $2 − 0 + 1 = 3$."
+          "text": "Its coboundary gives each triangle the sum of $φ$ round its edges: $δφ(σ) = φ(∂σ)$. Here that’s $2 − 0 + 1 = 3$."
         },
         {
           "t": 12.4,
@@ -10819,7 +10861,7 @@
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And since $δφ = φ∂$, $δδ = φ∂∂ = 0$ — for free!"
+          "text": "And since $δφ = φ∂$, $δδ = φ∂∂ = 0$. For free!"
         },
         {
           "t": 24.4,
@@ -10837,17 +10879,17 @@
         },
         {
           "t": 36.4,
-          "end": 41.4,
+          "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A 0-cochain reads the points, and its coboundary reads each edge as $δf[v w] = f(w) − f(v)$."
+          "text": "A 0-cochain puts a number on each point, like a height. Its coboundary gives each edge head minus tail: $δf[v w] = f(w) − f(v)$."
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "An edge reading that comes from points like this is a coboundary."
+          "text": "An edge reading that comes from heights like this is a coboundary."
         },
         {
           "t": 46.4,
@@ -10858,10 +10900,10 @@
         },
         {
           "t": 52.8,
-          "end": 57.6,
+          "end": 58.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "$H¹$ = Ker δ / Im δ — cohomology sees the hole too!"
+          "text": "Cocycles modulo coboundaries: $H¹$ = Ker δ / Im δ. It sees the hole too!"
         },
         {
           "t": 58.4,
@@ -10875,7 +10917,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Read instead of cut: cochains, coboundaries, and cohomology."
+          "text": "Numbers on cells, kept when they balance, ignored when they’re just differences: cohomology."
         }
       ],
       "title_card": {
@@ -10954,10 +10996,10 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cohomology is built from the same chains as homology, so it shouldn’t be a surprise that one determines the other."
+          "text": "Cohomology is read off the same chains as homology, so it’s no surprise that one almost determines the other."
         },
         {
           "t": 6.8,
@@ -10971,7 +11013,7 @@
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For the torus every summand is free, and Hom$(ℤ, ℤ) = ℤ$: each one stays on its own floor."
+          "text": "For the torus every piece is free, and Hom$(ℤ, ℤ) = ℤ$: each one stays on its own floor."
         },
         {
           "t": 19.8,
@@ -11034,7 +11076,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Free parts stay; torsion climbs one degree."
+          "text": "Free parts stay on their floor. Torsion climbs one degree."
         }
       ],
       "title_card": {
@@ -11141,10 +11183,10 @@
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now the torus. $α$ reads the $a$ edges, $β$ the $b$ edges. Cast $α ⌣ β$ on each triangle…"
+          "text": "Now the torus. $α$ reads $1$ on the $a$ edges, $β$ on the $b$ edges, both on the diagonal. Cast $α ⌣ β$ on each triangle…"
         },
         {
           "t": 30.2,
@@ -11162,10 +11204,10 @@
         },
         {
           "t": 41.8,
-          "end": 45.8,
+          "end": 46.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "For two 1-classes, $β ⌣ α = −α ⌣ β$. So $α ⌣ α$ must be $0$."
+          "text": "For two 1-classes, $β ⌣ α = −α ⌣ β$. So $α ⌣ α = −α ⌣ α$, which forces it to be $0$."
         },
         {
           "t": 46.4,
@@ -11338,7 +11380,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Same groups, different products. Sorry, Null."
+          "text": "Same groups, different products. The torus stays."
         },
         {
           "t": 58.4,
@@ -11656,7 +11698,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So no such map exists. That’s the heart of Borsuk–Ulam!"
+          "text": "So no such map exists. That’s the idea behind Borsuk–Ulam!"
         },
         {
           "t": 58.4,
@@ -12074,10 +12116,10 @@
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Proposition 3.38: this pairing is nonsingular, modulo torsion. Every class has a partner it cups with to $±1$."
+          "text": "Proposition 3.38: this pairing is nonsingular, modulo torsion. Every generator has a partner it cups with to $±1$."
         },
         {
           "t": 12.4,
@@ -12133,7 +12175,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So it isn’t a closed manifold — and it isn’t $ℂP²$!"
+          "text": "So it isn’t a closed orientable manifold, and it isn’t $ℂP²$!"
         },
         {
           "t": 58.4,
@@ -12233,24 +12275,24 @@
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 11.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each edge’s arrow runs from its lower corner to its higher one. That’s all an arrow means: which end comes first."
+          "text": "Each arrow runs from the lower corner to the higher. It just says which end comes first."
         },
         {
           "t": 12.4,
-          "end": 17.4,
+          "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A Δ-complex glues simplices along their faces, but only in order — first corner onto first corner."
+          "text": "A Δ-complex glues simplices face to face, but only in order: first corner onto first corner."
         },
         {
           "t": 17.8,
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So turn one arrow round so the two copies of $c$ agree… and they glue into a square."
+          "text": "So I turn one arrow round so both copies of $c$ agree… and they glue into a square."
         },
         {
           "t": 24.4,
@@ -12271,7 +12313,7 @@
           "end": 43,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Turn one blue arrow round. Same pieces, different gluing: a Klein bottle."
+          "text": "Turn one blue arrow round. Same pieces, glued differently: a Klein bottle."
         },
         {
           "t": 43.4,
@@ -12282,31 +12324,31 @@
         },
         {
           "t": 48.4,
-          "end": 53.8,
+          "end": 54.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Twist both pairs for $ℝP²$ — but now a triangle’s arrows run in a circle. No corner comes first, so it isn’t a simplex."
+          "text": "Twist both pairs for $ℝP²$, and a triangle’s arrows run in a circle. No first corner: not a simplex."
         },
         {
           "t": 54.2,
-          "end": 57.8,
+          "end": 58.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Turning $c$ just moves the problem. Turn a whole blue pair instead — two vertices this time."
+          "text": "Turning $c$ just moves the problem. Turn a whole blue pair: two vertices."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the yard: click an arrow with the Cell-Smith (2) to turn it round, then click the gold press to fold."
+          "text": "In the yard: click an arrow with the Cell Hammer (2) to turn it round, then click the gold press to fold."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Ordered triangles, glued in order: Hatcher’s Δ-complexes."
+          "text": "Triangles with ordered corners, glued in order. That’s a Δ-complex."
         }
       ],
       "title_card": {
@@ -12388,14 +12430,14 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "An $n$-chain is a sum of $n$-simplices with whole-number coefficients — like $2[v₀v₁] − [v₁v₂]$ here."
+          "text": "A chain is a sum of edges, or of triangles, with whole numbers in front: $2[v₀v₁] − [v₁v₂]$ here."
         },
         {
           "t": 6.8,
           "end": 11.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Chains add like vectors. Hatcher calls the group of them $Δₙ(X)$."
+          "text": "Chains add like vectors. Hatcher calls the group of $n$-chains $Δₙ(X)$."
         },
         {
           "t": 12.4,
@@ -12409,28 +12451,28 @@
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The minus one is the edge you walk backwards going round."
+          "text": "The minus is the edge I walk backwards going round."
         },
         {
           "t": 24.4,
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Add triangles and their boundaries add too. Each inside edge is counted twice…"
+          "text": "Add triangles and their boundaries add too. Each inside edge gets counted twice…"
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…and cancels only when the signs are right. $[v₀v₃v₄]$ runs the other way round, so it gets $−1$. What’s left is the rim."
+          "text": "…and cancels only with the right signs. $[v₀v₃v₄]$ runs the other way, so it gets $−1$. Left over: the rim."
         },
         {
           "t": 36.4,
-          "end": 42.6,
+          "end": 42.9,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now take the boundary of that boundary. $∂[ab] = b − a$, and each vertex comes in once and goes out once."
+          "text": "Now the boundary of that boundary. $∂[ab] = b − a$, end minus start, and each corner is entered once and left once."
         },
         {
           "t": 43,
@@ -12441,31 +12483,31 @@
         },
         {
           "t": 46.4,
-          "end": 51.6,
+          "end": 52,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A chain with zero boundary is a cycle. Every boundary is one — like this loop round the filled tile."
+          "text": "A chain with zero boundary is a cycle. Every boundary is one, like this loop round the filled tile."
         },
         {
           "t": 52,
-          "end": 57.6,
+          "end": 58.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "But the loop round the missing tile is a cycle that isn’t a boundary. $Hₙ$ = Ker ∂ / Im ∂ counts exactly those: $H₁ ≅ ℤ$."
+          "text": "But the loop round the missing tile is a cycle that bounds nothing. $Hₙ$ = Ker ∂ / Im ∂ counts those: $H₁ ≅ ℤ$."
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 63.7,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the marsh: equip the Boundary Blade (7) and click a triangle or an edge to set its coefficient."
+          "text": "In the marsh: equip the Boundary Blade (7) and click a triangle or an edge to set its number."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Chains, their boundaries, and the holes left over: simplicial homology."
+          "text": "Chains, their boundaries, and the holes left over. That’s simplicial homology."
         }
       ],
       "title_card": {
@@ -12544,24 +12586,24 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A singular $n$-simplex is any continuous map $σ: Δⁿ → X$. For $n = 1$ that’s a path — smooth, wiggly, swinging wide."
+          "text": "A singular $n$-simplex is any continuous map $σ: Δⁿ → X$. For $n = 1$ that’s a path: smooth, wiggly, swinging wide."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Or one that never moves at all. No straight edges, no tidy gluing — that’s what lets this work for every space."
+          "text": "Or one that never moves. No straight edges, no gluing to get right, so it works for every space."
         },
         {
           "t": 12.4,
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "The boundary is the same formula as before. For a path, $∂σ = σ(1) − σ(0)$: end minus start, however it bends."
+          "text": "The boundary formula is the same. For a path, $∂σ = σ(1) − σ(0)$: end minus start, however it bends."
         },
         {
           "t": 19.8,
@@ -12575,35 +12617,35 @@
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cycles work as before too. $α + β + γ + δ$ closes up, and it goes round the pond."
+          "text": "Cycles work the same too. $α + β + γ + δ$ closes up, and it goes round the pond."
         },
         {
           "t": 30.2,
-          "end": 35.6,
+          "end": 36.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$γ − ε$ closes up as well — but a singular 2-simplex fills the stone strip between them, so it’s a boundary."
+          "text": "$γ − ε$ closes up as well. But a singular 2-simplex can fill the stone strip between them, so it’s a boundary."
         },
         {
           "t": 36.4,
           "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now bend a cycle. However you push it, it still goes round the pond once…"
+          "text": "Now bend a cycle. Push it however you like; it still goes round the pond once…"
         },
         {
           "t": 42.2,
-          "end": 47.6,
+          "end": 48.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…because homotopic maps induce the same map on homology. Hatcher’s Theorem 2.10."
+          "text": "…because the bend sweeps out a filled strip. Homotopic maps induce the same map on homology: Theorem 2.10."
         },
         {
           "t": 48.4,
-          "end": 52.4,
+          "end": 52.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Squeeze the thick ring onto its middle circle — a homotopy equivalence."
+          "text": "Squeeze the thick ring onto its middle circle. That’s a homotopy equivalence."
         },
         {
           "t": 52.8,
@@ -12614,17 +12656,17 @@
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 64.3,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Shallows: the Blade (7) cuts paths and sets their coefficients; the Tide Glass (3) bends and squeezes."
+          "text": "In the Shallows: the Blade (7) cuts paths and sets their numbers; the Tide Glass (3) bends and squeezes."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Any simplex will do — and homotopy never changes the count."
+          "text": "Any simplex will do, and bending never changes the count."
         }
       ],
       "title_card": {
@@ -12703,10 +12745,10 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.5,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A sequence of groups and maps is exact at a group when the image of the map in equals the kernel of the map out."
+          "text": "A row of groups is exact at a group when what the map in delivers is exactly what the map out kills."
         },
         {
           "t": 6.8,
@@ -12727,14 +12769,14 @@
           "end": 23.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Send $1$ to $2$ — gold on blue. Exact!"
+          "text": "Send $1$ to $2$: gold on blue. Exact!"
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Put zeros at both ends: $0 → A → B → C → 0$ is a short exact sequence. $A$ goes in one-to-one; $B$ maps onto $C$."
+          "text": "Zeros at both ends, $0 → A → B → C → 0$, make a short exact sequence. $A$ goes in one-to-one; $B$ maps onto $C$."
         },
         {
           "t": 30.2,
@@ -12748,7 +12790,7 @@
           "end": 41.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Relative homology $Hₙ(X, A)$ counts chains in $X$, treating anything inside $A$ as zero."
+          "text": "Relative homology $Hₙ(X, A)$ counts chains in $X$ but treats anything inside $A$ as zero."
         },
         {
           "t": 42.2,
@@ -12769,7 +12811,7 @@
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The whole disk — and its boundary is the rim!"
+          "text": "The whole disk, and its boundary is the rim!"
         },
         {
           "t": 58.4,
@@ -12780,10 +12822,10 @@
         },
         {
           "t": 64.4,
-          "end": 69.4,
+          "end": 69.9,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In equals drained, all along the line: exact sequences."
+          "text": "In from the left equals drained to zero on the right, all along the row. Exact sequences."
         }
       ],
       "title_card": {
@@ -12869,10 +12911,10 @@
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So cutting part of $A$ away ought to change nothing. Excision says it doesn’t — with one condition."
+          "text": "So cutting part of $A$ away ought to change nothing. Excision says it doesn’t, with one condition."
         },
         {
           "t": 12.4,
@@ -12890,10 +12932,10 @@
         },
         {
           "t": 24.4,
-          "end": 29.8,
+          "end": 30.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A region that pokes out of $A$ can’t go — nor can $A$ itself, whose closure touches its own inner edge."
+          "text": "A region that pokes out of $A$ can’t go. Nor can $A$ itself: its closure touches its own inner edge."
         },
         {
           "t": 30.2,
@@ -12942,7 +12984,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cut deep, collapse, climb: excision, and the homology of spheres."
+          "text": "Cut deep, crush, climb. Excision, and the homology of spheres."
         }
       ],
       "title_card": {
@@ -13021,10 +13063,10 @@
       "captions": [
         {
           "t": 0.8,
-          "end": 6.4,
+          "end": 6.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A map $f: Sⁿ → Sⁿ$ sends $Hₙ(Sⁿ) ≅ ℤ$ to itself, so all it can do is multiply by an integer — the degree of $f$."
+          "text": "A map $f: Sⁿ → Sⁿ$ sends $Hₙ(Sⁿ) ≅ ℤ$ to itself, so it can only multiply by a whole number: its degree."
         },
         {
           "t": 6.8,
@@ -13038,7 +13080,7 @@
           "end": 19.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Pulling the band tight is a homotopy, and homotopic maps have the same degree. Here, $2$."
+          "text": "Pulling the band tight is a homotopy, and homotopic maps have the same degree. Here it’s $2$."
         },
         {
           "t": 19.8,
@@ -13059,7 +13101,7 @@
           "end": 35.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Turning the circle inside out is a reflection, with degree $−1$. So $z² ∘ z⁻³$ winds $−6$ times."
+          "text": "$z⁻³$ winds three times backwards, degree $−3$. Follow it with $z²$ and you get $2 × (−3) = −6$."
         },
         {
           "t": 36.4,
@@ -13077,10 +13119,10 @@
         },
         {
           "t": 48.4,
-          "end": 52.4,
+          "end": 52.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Comb a sphere and there’s always a calm spot. If $S²$ could be combed, sliding along the hairs would make the antipodal map homotopic to the identity…"
+          "text": "If $S²$ could be combed, sliding along the hairs would turn the identity into the antipodal map…"
         },
         {
           "t": 52.8,
@@ -13101,7 +13143,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One integer for every sphere map — and it decides a lot."
+          "text": "One whole number for every sphere map, and it settles a lot."
         }
       ],
       "title_card": {
@@ -13194,10 +13236,10 @@
         },
         {
           "t": 12.4,
-          "end": 19.4,
+          "end": 19.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cellular chains have one generator per cell. To find $d₂$, walk once round the disk’s rim: $+1$ for each arrow with you, $−1$ against."
+          "text": "Cellular chains have one generator per cell. For $d₂$, walk once round the disk’s rim: $+1$ for each arrow with you, $−1$ against."
         },
         {
           "t": 19.8,
@@ -13250,17 +13292,17 @@
         },
         {
           "t": 58.4,
-          "end": 63.6,
+          "end": 63.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the Block: the Cell-Smith (2) attaches cells; the Degree Dial (8) sets each letter in $d₂$."
+          "text": "In the Block: the Cell Hammer (2) attaches cells; the Degree Dial (8) sets each letter in $d₂$."
         },
         {
           "t": 64.4,
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Fewer pieces, same holes: cellular homology."
+          "text": "Fewer pieces, the same holes. That’s cellular homology."
         }
       ],
       "title_card": {
@@ -13342,14 +13384,14 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Mayer–Vietoris: if the interiors of $A$ and $B$ cover $X$, then $… → Hₙ(A∩B) → Hₙ(A) ⊕ Hₙ(B) → Hₙ(X) → Hₙ₋₁(A∩B) → …$ is exact."
+          "text": "Mayer–Vietoris: $… → Hₙ(A∩B) → Hₙ(A) ⊕ Hₙ(B) → Hₙ(X) → Hₙ₋₁(A∩B) → …$ is exact."
         },
         {
           "t": 6.8,
-          "end": 11.6,
+          "end": 12.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Choose patches you already understand, and exactness does the rest."
+          "text": "It needs the interiors of $A$ and $B$ to cover $X$. Pick patches you understand; exactness does the rest."
         },
         {
           "t": 12.4,
@@ -13419,7 +13461,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Two patches and their overlap: Mayer–Vietoris."
+          "text": "Two patches and their overlap. That’s Mayer–Vietoris."
         }
       ],
       "title_card": {
@@ -13550,14 +13592,14 @@
           "end": 47.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "$H₂(K; ℤ₂) = ℤ₂$. Mod 2, a flip can’t hurt you."
+          "text": "$H₂(K; ℤ₂) = ℤ₂$. Mod 2, a flip can’t cancel anything."
         },
         {
           "t": 48.4,
-          "end": 52.4,
+          "end": 52.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Over $ℤ$, a closed surface has $H₂ = ℤ$ exactly when it’s orientable — Hatcher proves this in Chapter 3."
+          "text": "Over $ℤ$, a closed surface has $H₂ = ℤ$ exactly when it’s orientable (Chapter 3)."
         },
         {
           "t": 52.8,
@@ -13578,7 +13620,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Change the coefficients, change what you can see."
+          "text": "Same cells, new arithmetic, and different holes come into view."
         }
       ],
       "title_card": {
@@ -13660,7 +13702,7 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A loop in the figure-eight is a word in $a$, $b$ and their inverses. In $π₁$, the only move is canceling a letter against its inverse right beside it."
+          "text": "In $π₁$ a loop is a word in $a$, $b$ and inverses. The only move: cancel a letter against its inverse beside it."
         },
         {
           "t": 6.8,
@@ -13688,7 +13730,7 @@
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A commutator, $aba⁻¹b⁻¹$, is a real loop in $π₁$ of the figure-eight — it never cancels there."
+          "text": "A commutator, $aba⁻¹b⁻¹$, is a real loop in $π₁$ of the figure-eight. It never cancels there."
         },
         {
           "t": 30.2,
@@ -13716,14 +13758,14 @@
           "end": 52.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Hatcher’s Theorem 2A.1: $π₁(X) → H₁(X)$ is onto, and its kernel is exactly the commutator subgroup."
+          "text": "Theorem 2A.1: $π₁ → H₁$ is onto, and its kernel is the commutator subgroup."
         },
         {
           "t": 52.8,
           "end": 57.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So $H₁$ is $π₁$ abelianized — even the Commutator’s own word dissolves!"
+          "text": "So $H₁$ is $π₁$ abelianized. Even the Commutator’s own word dissolves!"
         },
         {
           "t": 58.4,

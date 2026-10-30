@@ -26,7 +26,7 @@ export const STATIONS = {
   hollow: {
     blueprint: 'The Hollow, Seen',
     arrive: [
-      E('This band is a map $S¹ → S¹$: each point of a circle sent somewhere round the post. It goes forward, back, then forward again.'),
+      E('This band is a map $S¹ → S¹$: each point of a circle sent somewhere round the post. It winds forward and back a few times.'),
       E('Pull it tight with the Dial. Each click takes out one back-and-forth. Watch what doesn’t change.'),
     ],
     early: [E('Not this gate yet. Finish the earlier one first; NEXT on the map shows which.')],
@@ -88,14 +88,14 @@ export const STATIONS = {
     ],
     early: [E('Not this gate yet. Finish the earlier one first; NEXT on the map shows which.')],
     goals: [
-      { type: 'action', hint: 'Comb the sphere three ways with the Dial', done: [G('There’s always a calm spot. Always two!'), E('You can’t comb $S²$ flat. A circle you can: point every hair the same way round.')] },
+      { type: 'action', hint: 'Comb the sphere three ways with the Dial', done: [G('There’s always a calm spot. Always two!'), E('At least one, anyway. Two is just how it falls here; the theorem only promises one.'), E('You can’t comb $S²$ flat. A circle you can: point every hair the same way round.')] },
       {
         type: 'ask',
         question: 'Why can’t $S²$ be combed? If it could, the antipodal map would be homotopic to…',
         options: ['the identity — but their degrees, $−1$ and $1$, differ', 'a constant map — but degree $0$ is impossible', 'a reflection, which is impossible'],
         answer: 'the identity — but their degrees, $−1$ and $1$, differ',
         wrong: [E('A perfect combing lets every point walk along its hair, half way round the sphere, to its opposite point. Walking from the identity to what?')],
-        right: [E('If every hair lay flat, each point could slide along its hair to its opposite. That’s a homotopy from the identity, degree $1$, to the antipodal map, degree $−1$. Impossible. Theorem 2.28: $Sⁿ$ combs only when $n$ is odd.'), E('And a number like $−1$ can’t be folded. The Delta Sphere goes on the Chart, Gyroid. Look up.'), G('The lights. They’re coming back on.'), N('…Ten thousand windows. Someone will sit up by every one of them tonight.'), E('The gate’s north of this one.')],
+        right: [E('If every hair lay flat, each point could slide along its hair to its opposite. That’s a homotopy from the identity, degree $1$, to the antipodal map, degree $−1$. Impossible.'), E('Theorem 2.28: $Sⁿ$ can be combed only when $n$ is odd.'), E('And if his sphere were a point, every map of it would bend into every other, and $−1$ would equal $1$. It doesn’t. The Delta Sphere goes on the Chart, Gyroid. Look up.'), G('The lights. They’re coming back on.'), N('…Ten thousand windows. Someone will sit up by every one of them tonight.'), E('The gate’s north of this one.')],
       },
     ],
   },

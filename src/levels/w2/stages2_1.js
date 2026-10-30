@@ -22,7 +22,7 @@ export const OPENING = [
   G('Glued how? Can I just stick any edge onto any edge?'),
   E('Only with the arrows matching. An edge’s arrow says which end comes first, and first goes onto first. Glue triangles that way and Hatcher calls it a Δ-complex.'),
   E('Hold the Cell Hammer, that’s 2, and click an arrow to turn it round. Click the gold press to fold the tiles. First yard is west of here; follow the NEXT ring on your map.'),
-  E('The two little islands off the first yard, north-east and east, are commons. Beasts graze there. Go if you want the practice; the work doesn’t need them.'),
+  E('The two little islands off the first yard, north-east and east, are commons. The east one has beasts. Go if you want the practice; the work doesn’t need them.'),
 ]
 
 export const STATIONS = {
@@ -103,7 +103,7 @@ export const STATIONS = {
         options: ['1', '2', '3'],
         answer: '2',
         wrong: [E('Follow the corners again. With both pairs twisted, the four corners fall into two groups, not one.')],
-        right: [E('Two vertices, three edges, two triangles. Count them with alternating signs and $χ = 2 − 3 + 2 = 1$; the torus gave $χ = 0$. Different numbers, different places.'), E('That’s the yard. The gate is north of this one. Somewhere past it, those lights are waiting to be counted.')],
+        right: [E('Two vertices, three edges, two triangles. Count them with alternating signs and $χ = 2 − 3 + 2 = 1$; the torus gave $χ = 0$.'), E('At the Cell Block we’ll see $χ$ can’t change however you cut a place. Then different numbers really do mean different places.'), E('That’s the yard. The gate is north of this one. Somewhere past it, those lights are waiting to be counted.')],
       },
     ],
   },

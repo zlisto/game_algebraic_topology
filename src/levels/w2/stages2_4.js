@@ -15,13 +15,13 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['exact', 'chase', 'pair', 'five']
 
 export const OPENING = [
-  G('Emmy. Back at the sphere, before it went dark, he said I run like Wren. Who’s Wren?'),
+  G('Emmy. On the citadel, he said I don’t look down when I run, and that Wren never did either. Who’s Wren?'),
   E('…Someone who carried the post. Before you were born.'),
   G('That’s not an answer.'),
   E('No. It’s the part I can say standing on a lock gate. Ask me again when the Delta’s safe. I mean that.'),
   E('The Chase Channels. Each lock holds a group, a set of tiles you can add. Each sluice is a map: it carries every tile in one lock to a tile in the next.'),
   E('A row is exact at a lock when what pours in from the left is exactly what the right sluice drains to $0$. Not more, not less.'),
-  G('What comes in is what drains out. Okay.'),
+  G('So whatever comes in is exactly what the next gate turns to nothing.'),
   E('The Blade (7) resets a sluice gate. First channel is north-west; follow the NEXT ring. Three commons hang off it, east and north-east. One has beasts.'),
 ]
 
@@ -67,9 +67,11 @@ export const STATIONS = {
   pair: {
     blueprint: 'A Place and a Part',
     arrive: [
-      E('Now homology. Take a place $X$ and a part $A$ inside it. Relative homology $Hₙ(X, A)$ counts chains in $X$ but treats anything lying in $A$ as $0$. So a chain counts as a cycle if its boundary lies in $A$.'),
+      E('Now homology. Take a place $X$ and a part $A$ inside it. Relative homology $Hₙ(X, A)$ counts chains in $X$ but treats anything in $A$ as $0$.'),
+      E('So a chain counts as a cycle as long as its boundary lies in $A$.'),
       E('Here $X$ is a disk and $A$ is its rim. The whole disk is a relative cycle: its boundary is the rim, and the rim counts as $0$.'),
       E('Every pair gives a long exact row: $… → Hₙ(A) → Hₙ(X) → Hₙ(X, A) →∂ Hₙ₋₁(A) → …$ One lock is unknown, $H₂(D², S¹)$. Click it with the Blade to try groups until the whole row is exact.'),
+      E('It comes from the chase. Chains in $A$ sit inside chains in $X$, and what’s left over is relative chains. A short exact row of chains always stretches into a long one.'),
     ],
     early: [E('Not this channel yet. Finish the earlier one first; NEXT on the map shows which.')],
     goals: [

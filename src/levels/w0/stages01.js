@@ -194,7 +194,7 @@ export const STAGES = [
     ],
     camera: { pos: [0.9, 9.2, 7.4], target: [0.9, 0, 0.6] },
     intro: [
-      N('Such patience, little courier. My Crown is faster. Behold — four retractions of my own. Tell me what’s wrong with them, if you can.'),
+      N('You’re patient, Gyroid. My Crown is faster. Here are four retractions of my own. Tell me what’s wrong with them, if you can.'),
       E('Every one of them breaks a rule. Watch each one, then name the rule it breaks.'),
     ],
     forgeries: [
@@ -204,7 +204,7 @@ export const STAGES = [
       { id: 'torn', broken: 'continuous', explain: 'The left and right halves were sent to opposite ends — neighbors in the middle tore apart.' },
     ],
     success: [
-      N('…Clever. But you still can’t prove a ring isn’t a point. Remember that, courier, when I come for yours.'),
+      N('…Clever. But you still can’t prove a ring isn’t a point. Remember that when I come for yours.'),
       E('Not yet. But we will. The reef holds, Gyroid — for today.'),
     ],
   },

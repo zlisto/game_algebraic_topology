@@ -21,7 +21,7 @@ export const BEACON_OFFSET = [0, -2.1]
 export const NULL_AT = [0, -7.3]
 
 export const OPENING = [
-  N('Welcome to the top of my spire, courier. That speck on the sea is Haven. Three trials. Each round, I show you three things happening on my floor.'),
+  N('Come up, Gyroid. That speck on the sea is Haven. Three trials. Each round, I show you three things happening on my floor.'),
   N('Some are honest. Some are my forgeries. Lash the beacon over a forgery — and spare the honest ones, or my Crown will cut you.'),
 ]
 

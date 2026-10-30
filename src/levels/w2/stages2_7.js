@@ -18,7 +18,7 @@ export const OPENING = [
   E('The Cell Block. Here places come in crates. A $0$-cell is a point, a $1$-cell is an edge, a $2$-cell is a disk.'),
   E('You build one dimension at a time: points first, then edges with their ends on the points, then disks with their rims glued onto the edges. Hatcher calls that a CW complex.'),
   G('Why bother, if triangles work?'),
-  E('Because the torus took two triangles, three edges and a vertex, and in crates it takes four cells. Fewer pieces, the same holes. That’s how we did it at the Foundry. He could build a torus in four moves without looking.'),
+  E('Because in triangles the torus took six pieces, and in crates it takes four. Fewer pieces, the same holes. That’s how we worked at the Foundry. He could build a torus in four moves without looking.'),
   E('Cell Hammer on 2, Degree Dial on 8. First block is north-west; follow the NEXT ring. Two commons with beasts sit east and north-west of it.'),
 ]
 
@@ -54,6 +54,7 @@ export const STATIONS = {
       E('Cellular chains work like the Marsh: one generator per cell. Both loops start and end at the one point, so their boundaries are $0$. The only real work is $d₂$, the boundary of the disk.'),
       E('Here’s the torus disk with its rim word drawn on: $a$, $b$, $a$ backwards, $b$ backwards.'),
       E('Walk once round the rim, counter-clockwise from the bottom-left. For each letter, $+1$ every time its arrow goes your way, $−1$ every time it doesn’t. Those totals are $d₂$.'),
+      E('Hold the Degree Dial (8) and click a letter’s lever to step its number. Then switch to the Cell Hammer (2) and click the press to attach the disk.'),
     ],
     early: [E('Not this block yet. Finish the earlier one first; NEXT on the map shows which.')],
     goals: [
@@ -64,7 +65,7 @@ export const STATIONS = {
         options: ['$ℤ$ — the $2$-cell itself is a cycle', '$0$', '$ℤ²$'],
         answer: '$ℤ$ — the $2$-cell itself is a cycle',
         wrong: [E('$H₂ = $ Ker $d₂$: the $2$-chains with zero boundary. If $d₂$ is zero, which ones are those?')],
-        right: [E('Right. Next block is north-west, on the NEXT ring.')],
+        right: [E('Right. Hatcher proves this cell count gives the same homology as the singular one, Theorem 2.35, so four cells is enough.'), E('Next block is north-west, on the NEXT ring.')],
       },
     ],
   },

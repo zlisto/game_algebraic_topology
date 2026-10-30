@@ -18,12 +18,12 @@
         { "id": "E", "start": 30, "end": 34, "title": "Title", "description": "Title card: World 3 · Castle — The Counterfeit Station." }
       ],
       "captions": [
-        { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "The Counterfeit Station: where every line in Winding World meets. Tonight, every train runs to one platform." },
+        { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "The Counterfeit Station, where every line in the Winding World meets. Tonight every train runs to one platform." },
         { "t": 7.2, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Look at the boards. ℤ, ℤ², ℤ. Every one reads like a torus. Same groups, Gyroid. That proves nothing yet." },
-        { "t": 13.4, "end": 17.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Welcome to my station, courier. A torus, a ℂP², a closed manifold. I am whatever your counts say I am." },
+        { "t": 13.4, "end": 18.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Welcome to my station, post-runner. A torus, a ℂP², a closed manifold. I am whatever your counts say I am." },
         { "t": 18.6, "end": 21, "speaker": "Gyroid", "portrait": "gyroid", "text": "a b a⁻¹ b⁻¹. The Commutator. I’d know that word anywhere." },
         { "t": 21.4, "end": 25.4, "speaker": "Count Null", "portrait": "count-null", "text": "Gyroid. Emmy. My marshal keeps this station now. Three trials. Fail one, and I fold the Cup Product Gardens. Every lantern. Every path." },
-        { "t": 25.6, "end": 27.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "We don’t just count any more. We multiply." },
+        { "t": 25.6, "end": 27.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Counting is what fooled us at the twins. Multiply. He can’t fake a product." },
         { "t": 27.8, "end": 29.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then let’s see what he’s really wearing." }
       ],
       "title_card": { "t": 30, "end": 34 }
@@ -50,9 +50,9 @@
         { "id": "E", "start": 55, "end": 65, "title": "World 3 complete", "description": "Card: World 3 complete — Cup Product Gardens restored." }
       ],
       "captions": [
-        { "t": 0.6, "end": 3.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Three trials. Three rings. Your station was never any of the things it claimed." },
+        { "t": 0.6, "end": 3.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Three disguises, and not one of them multiplied right. Your station was never what it claimed." },
         { "t": 3.6, "end": 6.4, "speaker": "The Commutator", "portrait": "commutator", "text": "Master. One more chance. I can still be anything you need." },
-        { "t": 7.6, "end": 12.6, "speaker": "Count Null", "portrait": "count-null", "text": "Hush, marshal. You did your best. It was not enough. Courier, one last lesson before I go." },
+        { "t": 7.6, "end": 13.2, "speaker": "Count Null", "portrait": "count-null", "text": "Hush, marshal. You did your best. It wasn’t enough. Gyroid, one more lesson before I go." },
         { "t": 13.4, "end": 16.6, "speaker": "Count Null", "portrait": "count-null", "text": "Take any map from S³ to S². Read it with your rings. Every one of them." },
         { "t": 16.8, "end": 19.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "It pulls H²(S²) back into H²(S³)… and that’s zero. Every class reads zero." },
         { "t": 19.6, "end": 22.4, "speaker": "Count Null", "portrait": "count-null", "text": "Then it is nothing. Every map S³ → S² is trivial. A point in a sphere’s clothing. Like him." },
@@ -62,10 +62,10 @@
         { "t": 33.2, "end": 35.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Got you. He’d have folded you with the floor." },
         { "t": 35.6, "end": 38, "speaker": "The Commutator", "portrait": "commutator", "text": "My loops… all four. He never once said my name." },
         { "t": 38.2, "end": 41, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "That’s what my presses do now. To anyone who stops being useful to him." },
-        { "t": 41.4, "end": 44.6, "speaker": "Count Null", "portrait": "count-null", "text": "Climb my Spire, courier. Up there, every map S³ → S² is trivial. Prove one isn’t, or the sky is next." },
+        { "t": 41.4, "end": 44.8, "speaker": "Count Null", "portrait": "count-null", "text": "You went back for him. She would have too. …Climb my Spire, Gyroid. Prove one map S³ → S² isn’t trivial, or the sky goes next." },
         { "t": 44.8, "end": 47, "speaker": "Narrator", "hold": false, "text": "And Count Null rose on a ribbon of violet, up the Postnikov Spire." },
-        { "t": 47.6, "end": 51.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "f* kills every class. Pulling back can’t see this map. So we count the maps themselves: homotopy groups." },
-        { "t": 51.6, "end": 55, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we climb. Bend it, don’t break it, and prove it. All the way to the top." }
+        { "t": 47.6, "end": 51.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Every class pulls back to zero, so cohomology is blind to this map. We’ll have to count the maps themselves: homotopy groups." },
+        { "t": 51.6, "end": 57.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we climb. And when I get to the top, I’m asking him about her myself." }
       ],
       "title_card": { "t": 59, "end": 65 }
     }

@@ -13,10 +13,13 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['settle', 'table']
 
 export const OPENING = [
-  N('Rest, courier. It’s the last calm you’ll get.'),
-  E('Stable Ground. Up here, suspending changes nothing — the numbers settle.'),
-  G('First calm place in four worlds.'),
-  E('The wall shows Hatcher’s table: stem $k$ in each row, $πₙ₊ₖ(Sⁿ)$ for $n = 2$ to $6$ across. Sling on 4.'),
+  N('Sit a moment, Gyroid. She always stopped on the last landing before the climb home. Said the view was worth the ache.'),
+  G('…'),
+  E('Don’t answer him. Not here.'),
+  G('I wasn’t going to.'),
+  E('Stable Ground. On the Landing, lifting a map one dimension sometimes changed its group. Up here it stops changing. The numbers settle.'),
+  E('The wall is Hatcher’s table of sphere groups. Each row is a stem: fix $k$ and read $πₙ₊ₖ(Sⁿ)$ as $n$ goes from $2$ to $6$.'),
+  E('Sling’s on 4. First station’s north-west; follow the NEXT ring. Two commons off it, north-east and east. Beasts on the east one.'),
 ]
 
 const act = (hint, done) => ({ type: 'action', hint, done })
@@ -24,41 +27,55 @@ const act = (hint, done) => ({ type: 'action', hint, done })
 export const STATIONS = {
   settle: {
     blueprint: 'Settle',
-    arrive: [E('For each stem, mark the first tile where Freudenthal says the suspensions are all isomorphisms from then on. Click it with the Sling.')],
-    early: [E('Not yet — finish the floor below first. Follow NEXT on the map.')],
+    arrive: [
+      E('Moving one tile right along a row is one suspension: a map $Sⁿ⁺ᵏ → Sⁿ$ slung up to $Sⁿ⁺ᵏ⁺¹ → Sⁿ⁺¹$.'),
+      E('Freudenthal says that step is an isomorphism once the sphere is big enough compared with the stem: $n ≥ k + 2$. For each stem, mark the first tile where that kicks in. Click it with the Sling.'),
+    ],
+    early: [E('Not this one yet. The NEXT ring on your map shows where to go.')],
     goals: [
-      act('Mark where each of the four stems settles', [G('Each stem settles one step later than the one before.'), E('$n ≥ k + 2$: that’s $i = n + k < 2n − 1$, the Freudenthal range.')]),
+      act('Mark where each of the four stems settles', [
+        G('Stem $0$ at $n = 2$, stem $1$ at $3$… each one settles a step later than the one before.'),
+        E('Because the condition is $n ≥ k + 2$. It’s the same as $i = n + k < 2n − 1$, the range you learned on the Landing, written for a stem.'),
+      ]),
       {
         type: 'ask',
         question: 'Stem 3 is $ℤ₂$, $ℤ₁₂$, $ℤ × ℤ₁₂$, then $ℤ₂₄$, $ℤ₂₄$. Why does it keep changing at first?',
         options: ['Below $n = k + 2$ the suspension needn’t be an isomorphism', 'The table is wrong', 'Stems never settle'],
         answer: 'Below $n = k + 2$ the suspension needn’t be an isomorphism',
-        wrong: [E('Freudenthal only promises isomorphisms in its range.')],
-        right: [E('Right. Next: write down the stable values.')],
+        wrong: [E('Freudenthal only promises an isomorphism inside its range. Where does stem $3$’s range start?')],
+        right: [E('Right. Before $n = 5$ nothing’s promised, and the group jumps about. Now write down where each stem ends up. Next station’s north, on the NEXT ring.')],
       },
     ],
   },
   table: {
     blueprint: 'The Table',
-    arrive: [E('Set each stem’s stable value — $πₖˢ$ — on the pedestals to the right. Click a pedestal with the Sling to change it.')],
-    early: [E('Not yet — finish the floor below first. Follow NEXT on the map.')],
+    arrive: [
+      E('Once a stem settles, its value is the same however high you go. That value is the stable homotopy group, $πₖˢ$.'),
+      E('Set each stem’s stable value on the pedestals to the right. Click a pedestal with the Sling to change it.'),
+    ],
+    early: [E('Not yet. Finish the station before this one; NEXT on your map points the way.')],
     goals: [
-      act('Set all four stable values', [G('$ℤ$, $ℤ₂$, $ℤ₂$, $ℤ₂₄$.'), E('The stable homotopy groups of spheres. Nobody knows them all — but the first few are on our wall.')]),
+      act('Set all four stable values', [
+        G('$ℤ$, $ℤ₂$, $ℤ₂$, $ℤ₂₄$.'),
+        E('Stem $0$ is degree, $ℤ$. Stem $1$ is the Hopf map, slung up until it’s $ℤ₂$. Further out the stems get wild. Nobody knows them all.'),
+        G('First place in four worlds where nothing moves under my feet. I don’t know what to do with my hands.'),
+        E('Hold on to that feeling. You’ll want it at the top.'),
+      ]),
       {
         type: 'ask',
         question: 'What is the stable group $π₃ˢ$?',
         options: ['$ℤ₂₄$', '$ℤ₁₂$', '$ℤ × ℤ₁₂$'],
         answer: '$ℤ₂₄$',
-        wrong: [E('Read the stable end of stem 3.')],
-        right: [E('Stable ground. The gate’s open.')],
+        wrong: [E('Read stem $3$ at its right-hand end, where it has stopped changing.')],
+        right: [E('$ℤ₂₄$. The gate’s open, north of here.')],
       },
     ],
   },
 }
 
 export const HINTS = {
-  knockout: E('Hearts back — your marks stay. Lash the spawn and carry on.'),
-  wrongSection: (name) => E(`The next floor is ${name} — follow NEXT on the map.`),
+  knockout: E('Hearts back. Your marks are still there. Lash the spawn and keep going.'),
+  wrongSection: (name) => E(`${name} is next. Follow the NEXT ring on your map.`),
 }
 
 export const DEFINITION = {
@@ -69,11 +86,11 @@ export const DEFINITION = {
 
 export function emmyAdvice(state) {
   const { current, done, goal, here, enemies, phase } = state
-  if (phase !== 'play') return [E('Finish this line first.')]
-  if (enemies?.[here.site]) return [E('Lash the violet spawn first (1).')]
+  if (phase !== 'play') return [E('Finish this conversation first.')]
+  if (enemies?.[here.site]) return [E('Spawn first. Lash them (1).')]
   if (!current || here.site !== current) {
     const next = STATION_ORDER.find((id) => !done[id])
-    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Stable ground reached. Walk to the gate.')]
+    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Every stem’s settled. The gate’s north.')]
   }
   if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
   if (current === 'settle') return [E('In stem $k$, click the tile with $n = k + 2$.')]

@@ -13,7 +13,7 @@ export const STATION_ORDER = ['facade', 'false_powers', 'no_twin']
 
 export const OPENING = [
   C('Welcome to my station. Count my holes, read my groups — I match anything you name.'),
-  E('Groups can match. Rings can’t lie. Every disguise he wears, we test with a cup product.'),
+  E('He can copy the groups. He can’t copy what they multiply to. Every disguise he wears, we test with a cup product.'),
   G('Three disguises, three casts.'),
   E('One of his guards has no body at all — a de Rham Spectre, a field circling a hole. Nothing touches it while it circulates. Run a full loop around it to force it exact, then lash it while it’s only a gradient. (Hatcher only mentions de Rham in passing; this one is from beyond the book.)'),
   E('Cup Caster on 9.'),
@@ -40,7 +40,7 @@ export const STATIONS = {
   },
   false_powers: {
     blueprint: 'False Powers',
-    arrive: [C('Behold: $ℂP²$. $ℤ$ in degrees $0$, $2$, $4$.'), E('So does $S² ∨ S⁴$. On $ℂP²$, $α²$ generates $H⁴$. Climb $ℂP²$ to $α²$, then try his.')],
+    arrive: [C('Then I am $ℂP²$. $ℤ$ in degrees $0$, $2$, $4$. Count them.'), E('So does $S² ∨ S⁴$. On $ℂP²$, $α²$ generates $H⁴$. Climb $ℂP²$ to $α²$, then try his.')],
     early: [E('Not yet — finish the façade first. Follow NEXT on the map.')],
     goals: [
       act('Climb ℂP² to α², then cast α² on his', [G('His $H⁴$ is there — but $α$ can’t reach it.'), E('$α² = 0$ on $S² ∨ S⁴$. $H*(ℂP²) = ℤ[α]/(α³)$. Not $ℂP²$.')]),

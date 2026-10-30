@@ -19,7 +19,7 @@ export const OPENING = [
   E('Not any more. The Singular Shallows. Each deck is a ring of stone round a pond, and the pond isn’t part of the place. That’s the hole.'),
   E('In the Yard a simplex was a straight tile. Here it can be any continuous map into the place: a path that bends, loops back, or never moves at all. Hatcher calls those singular simplices.'),
   G('Sounds messy.'),
-  E('It is. But the Blade works on them exactly as before. Blade on 7, Tide Glass on 3. First deck is north; follow the NEXT ring. Commons with beasts sit north-east and north-west of it.'),
+  E('It is. But the Blade works on them just as before. Blade on 7, Tide Glass on 3. First deck is north; follow the NEXT ring. Commons sit north-east and north-west of it; the north-west one has beasts.'),
 ]
 
 export const STATIONS = {
@@ -62,7 +62,7 @@ export const STATIONS = {
     ],
   },
   bend: {
-    blueprint: 'Bend, Don’t Change',
+    blueprint: 'Bend the Loop',
     arrive: [
       E('A loop round the pond. Click with the Tide Glass (3) and the loop bulges toward where you click. It can’t cross the water.'),
       E('Bend it until it passes over all three buoys.'),

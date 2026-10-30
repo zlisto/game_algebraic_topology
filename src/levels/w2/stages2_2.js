@@ -20,7 +20,7 @@ export const OPENING = [
   E('Yes, exactly that. A chain is a list of edges, or triangles, each with a whole number in front: $2[v₀v₁] − [v₁v₂]$ means edge $v₀v₁$ twice, and edge $v₁v₂$ once the wrong way.'),
   E('And this is the Boundary Blade. It takes any chain to its boundary, its edge. He named it after me, back when we still made jokes about our work.'),
   G('He. You mean Null.'),
-  E('Equip it with 7. First deck is north-west; follow the NEXT ring. The two islands east and north-east of it are commons, beasts and all, if you want them.'),
+  E('Equip it with 7. First deck is north-west; follow the NEXT ring. The two islands east and north-east of it are commons; the east one has beasts, if you want them.'),
 ]
 
 export const STATIONS = {

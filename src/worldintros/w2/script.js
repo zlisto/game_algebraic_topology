@@ -43,7 +43,7 @@ export const WORLD2_INTRO = {
     C(31.8, 35.0, 'Count Null', 'Good morning, Gyroid. Did you sleep? I didn’t. I was tidying the Delta.'),
     C(35.4, 39.4, 'Count Null', 'All these little islands. Only triangles, glued at the edges. Unglue them gently, and there is nothing left to grieve.'),
     C(39.6, 41.4, 'Gyroid', 'Touch one more island and I’ll—'),
-    C(41.6, 45.4, 'Count Null', 'Count? Then count, courier. Every triangle you miss, I fold. And everyone standing on it.'),
+    C(41.6, 45.4, 'Count Null', 'Count? Then count, Gyroid. Every triangle you miss, I fold, and everyone standing on it.'),
     C(46.4, 49.6, 'Emmy Boundary', 'Then we don’t miss one. The Tile Yard first, to the west.'),
     C(49.8, 51.6, 'Gyroid', 'West. Before he finds the first one we miss.'),
   ],

@@ -87,7 +87,7 @@ export const STATIONS = {
     ],
     early: [E('Not this field yet. Finish the earlier one first; NEXT on the map shows which.')],
     goals: [
-      act('Clasp both annuli on, then find $H₁$ of the torus', [G('ℤ². Round the tube, and round the ring.'), E('One loop from each side of $∂$, and they’re independent. Round the tube comes from the patches. Round the ring comes from the two-piece overlap.')]),
+      act('Clasp both annuli on, then find $H₁$ of the torus', [G('ℤ². Round the tube, and round the ring.'), E('One loop is the core of an annulus, running round inside a patch. The other crosses: out through $A$, over one overlap into $B$, back over the other. It exists because the overlap is in two pieces.'), E('And the overlap’s two core loops, run opposite ways, die in $A ⊕ B$. That kernel is $H₂(T) ≅ ℤ$, the torus’s skin.')]),
       {
         type: 'ask',
         question: 'Mayer–Vietoris needs $A$ and $B$ to be…',
