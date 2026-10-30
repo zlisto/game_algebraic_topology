@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import EndpointGardensScene, { BIN_COLORS, ROUTE_LABEL, smoothRoute } from '../../levels/w1/EndpointGardensScene'
@@ -127,6 +128,7 @@ export default function Level1_1({ concept, onBackToTitle, onNext, onGo, startAt
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1, SITE[STATION_ORDER[skipTo]].pos[1] + 3] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash') // the Landing Commons come first: Lash in hand
+  useLoadout(['lash', 'spool', 'glass'], setTool) // the buttons: F, J, K, L
   const [glassT, setGlassTState] = useState(0)
   const glassTRef = useRef(0)
   const setGlassT = useCallback((v) => {

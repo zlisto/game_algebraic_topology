@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import Commons from '../../world/Commons'
+import Commons from '../../world/CommonsIsland'
 import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useRef } from 'react'

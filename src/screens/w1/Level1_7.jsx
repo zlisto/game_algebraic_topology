@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import GlueScene from '../../levels/w1/GlueScene'
@@ -136,6 +137,7 @@ export default function Level1_7({ concept, onBackToTitle, onNext, onGo, startAt
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1.2, SITE[STATION_ORDER[skipTo]].pos[1] + 3.2] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('smith')
+  useLoadout(['lash', 'smith', 'clasp'], setTool) // the buttons: F, J, K, L
   const [waveOn, setWaveOn] = useState(false)
   const [askOpen, setAskOpen] = useState(false)
   const [orderOpen, setOrderOpen] = useState(false)

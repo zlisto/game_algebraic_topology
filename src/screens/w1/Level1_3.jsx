@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import WindingRoadScene from '../../levels/w1/WindingRoadScene'
@@ -105,6 +106,7 @@ export default function Level1_3({ concept, onBackToTitle, onNext, onGo, startAt
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0], SITE[STATION_ORDER[skipTo]].pos[1] + 3] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash') // the commons come first: Lash in hand; the decks say when to take the Cord
+  useLoadout(['lash', 'glass', 'cord'], setTool) // the buttons: F, J, K, L
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)

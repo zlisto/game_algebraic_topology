@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import PushForwardScene from '../../levels/w1/PushForwardScene'
@@ -115,6 +116,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, onGo, startAt
   const [enemies, setEnemies] = useState({})
   const jammed = (enemies.projector_deck || 0) > 0 // spawn on the Projector terrace jam the projector
   const [tool, setTool] = useState('cord')
+  useLoadout(['lash', 'cord', 'sling'], setTool) // the buttons: F, J, K, L
   const [waveOn, setWaveOn] = useState(false)
   const [waveSpawned, setWaveSpawned] = useState(false)
   const [askOpen, setAskOpen] = useState(false)

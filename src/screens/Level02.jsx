@@ -1,3 +1,4 @@
+import { useLoadout } from '../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import FlatsScene from '../levels/w0/FlatsScene'
@@ -218,6 +219,7 @@ export default function Level02({ concept, onBackToTitle, onNext, onGo, startAt 
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash')
   const [glassUnlocked, setGlassUnlocked] = useState(skipTo > 0)
+  useLoadout(glassUnlocked ? ['lash', 'spool', 'glass'] : ['lash', 'spool'], setTool) // the buttons: F, J, K, L
   const [glassT, setGlassTState] = useState(0)
   const glassTRef = useRef(0)
   const [spooling, setSpooling] = useState(false)

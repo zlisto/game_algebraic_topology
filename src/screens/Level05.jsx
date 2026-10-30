@@ -1,3 +1,4 @@
+import { useLoadout } from '../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ConeScene from '../levels/w0/ConeScene'
@@ -116,6 +117,7 @@ export default function Level05({ concept, onBackToTitle, onNext, onGo, startAt 
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? W(SITE[STATION_ORDER[skipTo]], [0, 2.4]) : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash')
+  useLoadout(['lash', 'smith'], setTool) // the buttons: F, J, K, L
   const [waveOn, setWaveOn] = useState(false)
   const [askOpen, setAskOpen] = useState(false)
   const [exitOpen, setExitOpen] = useState(false)

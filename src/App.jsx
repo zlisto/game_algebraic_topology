@@ -1,3 +1,4 @@
+import ButtonHud from './controls/ButtonHud'
 import ModelView from './dev/ModelView'
 import PrologueScreen from './movies/prologue'
 import { useCallback, useEffect, useState } from 'react'
@@ -726,6 +727,7 @@ export default function App() {
         onReplayIntro={() => go('intro')}
         onNext={() => go(CASTLE_NEXT[screen] || NEXT[screen] || 'title')}
       />
+      <ButtonHud />
     </div>
   )
 }

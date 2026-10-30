@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import BasinScene from '../../levels/w1/BasinScene'
@@ -106,6 +107,7 @@ export default function Level1_4({ concept, onBackToTitle, onNext, onGo, startAt
   )
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('cord')
+  useLoadout(['lash', 'glass', 'cord'], setTool) // the buttons: F, J, K, L
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)

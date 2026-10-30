@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import UnderCoverScene, { buildTracks } from '../../levels/w1/UnderCoverScene'
@@ -98,6 +99,7 @@ export default function Level1_8({ concept, onBackToTitle, onNext, onGo, startAt
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1, SITE[STATION_ORDER[skipTo]].pos[1] + 3] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('cord')
+  useLoadout(['lash', 'cord', 'compass'], setTool) // the buttons: F, J, K, L
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)

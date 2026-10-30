@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import DeckHallsScene from '../../levels/w1/DeckHallsScene'
@@ -93,6 +94,7 @@ export default function Level1_10({ concept, onBackToTitle, onNext, onGo, startA
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1.2, SITE[STATION_ORDER[skipTo]].pos[1] + 3] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('compass')
+  useLoadout(['lash', 'compass'], setTool) // the buttons: F, J, K, L
   const [exitOpen, setExitOpen] = useState(false)
   const [levelClear, setLevelClear] = useState(false)
   const [lesson, setLesson] = useState(false)

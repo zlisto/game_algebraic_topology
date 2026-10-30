@@ -13,11 +13,12 @@ import { Star } from '../levels/w0/StarPortal'
 import MathText from '../screens/MathText'
 import { BEASTS, CELLS, CELLS_REF, HATCHER, RELICS, cellsUnlocked } from './data'
 import { readCodex } from './store'
+import { ITEMS, LASH, SLOT_KEYS, SLOT_LABELS, getFound, getSlots, levelTools, inLevel, setSlot } from '../controls/loadout'
 
 /**
- * The codex: everything the player has met, from the pause menu or the title screen.
- *   Bestiary — the spaces you've fought, with their invariants · Relics — the reward objects
- *   Cells — the building blocks · Notes — each level's definition from the book and Emmy's summary
+ * The menu (Tab in play) and codex: everything the player has met, from the pause menu or the title screen.
+ *   Items — what you carry, and which item sits on J, K and L · Bestiary — the spaces you've fought
+ *   Relics — the reward objects · Cells — the building blocks · Concepts — each level's definition and Emmy's summary
  */
 
 export const VIEW = {
@@ -90,21 +91,31 @@ function Preview({ children, y = 1 }) {
 }
 
 const BLURB = {
+  items: 'Pick an item, then press J, K or L (or click a button below) to put it on that button. F is always the Lash.',
   bestiary: 'Every beast is a space. Its lash count is one of its invariants.',
   relics: 'Each level’s reward: a picture of the idea it proved.',
   cells: 'The building blocks every cell complex is glued from.',
-  notes: 'Each level you clear: the book’s definition, and Emmy’s summary where she gave one.',
+  notes: 'Each idea as you learn it: the book’s definition, and Emmy’s summary where she gave one.',
 }
 
 function useCodex() {
   const [c, setC] = useState(readCodex)
+  const [, bump] = useState(0)
   useEffect(() => {
     const on = () => setC(readCodex())
+    const lo = () => bump((n) => n + 1)
     window.addEventListener('codex-update', on)
-    return () => window.removeEventListener('codex-update', on)
+    window.addEventListener('loadout-update', lo)
+    return () => {
+      window.removeEventListener('codex-update', on)
+      window.removeEventListener('loadout-update', lo)
+    }
   }, [])
   return c
 }
+
+/** The item order in the menu: roughly the order you find them. */
+const ITEM_ORDER = ['spool', 'glass', 'smith', 'cord', 'sling', 'clasp', 'compass', 'blade', 'dial', 'wand', 'caster']
 
 function List({ items, sel, onSel, label, tab, locked = '?' }) {
   return (
@@ -113,7 +124,7 @@ function List({ items, sel, onSel, label, tab, locked = '?' }) {
         <li key={it.key}>
           <button type="button" className={`${sel === i ? 'on' : ''} ${it.got ? '' : 'locked'}`} disabled={!it.got} onClick={() => onSel(i)}>
             <span className="codex-sym">{it.got ? it.sym : it.hint || locked}</span>
-            <span>{it.got ? label(it) : tab === 'relics' ? 'not found yet' : 'not beaten yet'}</span>
+            <span>{it.got ? label(it) : tab === 'relics' || tab === 'items' ? 'not found yet' : 'not beaten yet'}</span>
           </button>
         </li>
       ))}
@@ -121,16 +132,31 @@ function List({ items, sel, onSel, label, tab, locked = '?' }) {
   )
 }
 
-export default function CodexMenu({ onClose }) {
+export default function CodexMenu({ onClose, initialTab = 'items' }) {
   const c = useCodex()
-  const [tab, setTab] = useState('bestiary')
+  const [tab, setTab] = useState(initialTab)
   const [sel, setSel] = useState(0)
+  const found = getFound()
+  const items = [
+    { ...LASH, key: 'lash', got: true, sym: LASH.glyph },
+    ...ITEM_ORDER.map((id) => ({ ...ITEMS[id], key: id, got: found.includes(id), sym: ITEMS[id].glyph, hint: '?' })),
+  ]
+  const curItem = tab === 'items' && items[sel]?.got ? items[sel] : null
+  const curRef = useRef(null)
+  curRef.current = curItem
   useEffect(() => {
     const k = (e) => {
-      if (e.code === 'Escape') {
+      if (e.code === 'Escape' || e.code === 'Tab') {
+        e.preventDefault()
         e.stopPropagation()
         onClose()
+        return
       }
+      // the game's buttons never reach the game while the menu is open
+      const slot = SLOT_KEYS.indexOf(e.code)
+      if (slot >= 0 || e.code === 'KeyF' || e.code === 'KeyG' || e.code === 'KeyE') e.stopPropagation()
+      // on the Items tab, J / K / L put the chosen item on that button
+      if (slot >= 0 && curRef.current && curRef.current.key !== 'lash') setSlot(slot, curRef.current.key)
     }
     window.addEventListener('keydown', k, true)
     return () => window.removeEventListener('keydown', k, true)
@@ -146,10 +172,10 @@ export default function CodexMenu({ onClose }) {
       const m = n.kicker.match(/World (\d+)(?: complete)?(?: · (Level [\w-]+|Castle|Bonus))?/i)
       return { ...n, key: k, got: true, sym: m ? `W${m[1]} · ${m[2] ? m[2].replace(/Level /i, '') : 'Castle'}` : '★' }
     })
-  const lists = { bestiary: beasts, relics, cells, notes }
+  const lists = { items, bestiary: beasts, relics, cells, notes }
   const list = lists[tab]
-  const counts = { bestiary: beasts.filter((x) => x.got).length, relics: relics.filter((x) => x.got).length, cells: cellsOn ? CELLS.length : 0, notes: notes.length }
-  const totals = { bestiary: BEASTS.length, relics: RELICS.length, cells: CELLS.length, notes: null }
+  const counts = { items: items.filter((x) => x.got).length, bestiary: beasts.filter((x) => x.got).length, relics: relics.filter((x) => x.got).length, cells: cellsOn ? CELLS.length : 0, notes: notes.length }
+  const totals = { items: items.length, bestiary: BEASTS.length, relics: RELICS.length, cells: CELLS.length, notes: null }
   // a new tab opens on its first entry you've found
   useEffect(() => setSel(Math.max(0, list.findIndex((x) => x.got))), [tab]) // eslint-disable-line react-hooks/exhaustive-deps
   const cur = list[sel]?.got ? list[sel] : null
@@ -158,7 +184,7 @@ export default function CodexMenu({ onClose }) {
     <div className="codex" role="dialog" aria-label="Codex">
       <div className="codex-card">
         <div className="codex-tabs" role="tablist">
-          {[['bestiary', 'Bestiary'], ['relics', 'Relics'], ['cells', 'Cells'], ['notes', 'Notes']].map(([id, label]) => (
+          {[['items', 'Items'], ['bestiary', 'Bestiary'], ['notes', 'Concepts'], ['relics', 'Relics'], ['cells', 'Cells']].map(([id, label]) => (
             <button key={id} type="button" role="tab" aria-selected={tab === id} className={tab === id ? 'on' : ''} onClick={() => setTab(id)}>
               {label}
             </button>
@@ -172,13 +198,14 @@ export default function CodexMenu({ onClose }) {
             <p className="codex-blurb">{BLURB[tab]}</p>
             <p className="codex-count">{totals[tab] ? `${counts[tab]} of ${totals[tab]} found` : `${counts[tab]} lessons recorded`}</p>
             {tab === 'notes' && !notes.length ? (
-              <p className="codex-empty">No notes yet. Each level you clear records its definition from the book here.</p>
+              <p className="codex-empty">No concepts yet. Each level you clear records its idea, with the book’s definition, here.</p>
             ) : (
               <List items={list} sel={sel} onSel={setSel} tab={tab} label={(it) => it.name || it.title} />
             )}
           </div>
           <div className="codex-detail">
-            {!cur && <p className="codex-empty">{tab === 'cells' ? 'Clear the Skeleton Foundry (World 0 · Level 4) to log the cells.' : tab === 'relics' ? 'Collect a relic in its level to log it here.' : 'Defeat one to log it here.'}</p>}
+            {cur && tab === 'items' && <ItemDetail it={cur} />}
+            {!cur && <p className="codex-empty">{tab === 'items' ? 'Find this item in a level to carry it.' : tab === 'cells' ? 'Clear the Skeleton Foundry (World 0 · Level 4) to log the cells.' : tab === 'relics' ? 'Collect a relic in its level to log it here.' : 'Defeat one to log it here.'}</p>}
             {cur && tab === 'bestiary' && (
               <>
                 <Preview y={0.9}><BeastModel type={cur.type} /></Preview>
@@ -226,5 +253,28 @@ export default function CodexMenu({ onClose }) {
         </div>
       </div>
     </div>
+  )
+}
+
+/** An item: what it does, and which button it's on. Pick a button to put it there. */
+function ItemDetail({ it }) {
+  const slots = getSlots()
+  const here = levelTools()
+  const lash = it.key === 'lash'
+  return (
+    <>
+      <div className="codex-preview item-glyph"><span>{it.glyph}</span></div>
+      <h3>{it.name}</h3>
+      {inLevel() && <p className="codex-sub">{lash || here.includes(it.key) ? 'You carry it in this level.' : 'Not used in this level.'}</p>}
+      <p>{it.text}</p>
+      <div className="item-buttons">
+        <span className={`item-btn ${lash ? 'on' : ''}`}><kbd>F</kbd> {LASH.name}</span>
+        {SLOT_LABELS.map((k, i) => (
+          <button type="button" key={k} className={`item-btn ${slots[i] === it.key ? 'on' : ''}`} disabled={lash} onClick={() => setSlot(i, it.key)}>
+            <kbd>{k}</kbd> {slots[i] ? `${ITEMS[slots[i]].glyph} ${ITEMS[slots[i]].name}` : 'empty'}
+          </button>
+        ))}
+      </div>
+    </>
   )
 }

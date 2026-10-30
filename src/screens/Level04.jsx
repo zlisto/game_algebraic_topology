@@ -1,3 +1,4 @@
+import { useLoadout } from '../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import FoundryScene from '../levels/w0/FoundryScene'
@@ -162,6 +163,7 @@ export default function Level04({ concept, onBackToTitle, onNext, onGo, startAt 
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? SITE[STATION_ORDER[skipTo]].pos.map((v, i) => v + (i ? 2.2 : 0)) : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash')
+  useLoadout(['lash', 'smith'], setTool) // the buttons: F, J, K, L
   const [waveOn, setWaveOn] = useState(false)
   const [chiOpen, setChiOpen] = useState(false)
   const [exitOpen, setExitOpen] = useState(false)

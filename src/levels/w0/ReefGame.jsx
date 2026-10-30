@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import Gyroid from '../../characters/Gyroid'
 import Lash from './Lash'
 import { beastMet } from '../../codex/store'
+import { SLOT_KEYS, equip, getSlots, setHeld } from '../../controls/loadout'
 import { sfxCrack, sfxHammer, sfxHit, sfxHurt, sfxPop, sfxRefuse, sfxRoot, sfxWhoosh } from '../../audio/chip'
 import {
   BacktrackSpawn,
@@ -61,6 +62,7 @@ import {
 } from './worldTools'
 
 export { WORLD_TOOLS } from './worldTools'
+
 
 /**
  * The playable layer of Retract Reef. Gyroid runs (WASD / arrows) and carries two
@@ -457,6 +459,8 @@ export default function ReefGame({
   const pickHit = useMemo(() => new THREE.Vector3(), [])
   const toolRef = useRef(tool) // the tool in hand, for key handlers set up once
   toolRef.current = tool
+  const playRef = useRef(playEnabled) // the buttons only act while you're playing (not in dialogue, pause or a lesson)
+  playRef.current = playEnabled && !onPier
   if (import.meta.env.DEV) {
     // dev inspection / test shortcuts
     window.__game = {
@@ -475,15 +479,27 @@ export default function ReefGame({
     onHearts?.(state.current.hearts)
     const MOVE = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
     const down = (e) => {
-      if (e.target.tagName === 'INPUT' && e.target.type === 'text') return
+      if (e.target.closest?.('input, textarea, select, [contenteditable]')) return
       if (MOVE.includes(e.code)) {
         keys.current[e.code] = true
         e.preventDefault() // movement keys never nudge a focused slider or scroll the page
       }
-      if (camYawRef && e.code === 'KeyF' && !e.repeat) {
-        // F always means the Lash: with another tool out, switch to it (every level binds 1 to the Lash) and crack
-        if (toolRef.current !== 'lash') window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Digit1', key: '1' }))
-        keys.current.lashAhead = performance.now()
+      // the buttons (src/controls/loadout.js): F is the Lash; J, K and L use the item set on them
+      if (!playRef.current) return
+      if (e.code === 'KeyF' && !e.repeat) {
+        equip('lash')
+        keys.current.useAhead = { tool: 'lash', at: performance.now() }
+      }
+      const slot = SLOT_KEYS.indexOf(e.code)
+      if (slot >= 0 && !e.repeat) {
+        const item = getSlots()[slot]
+        if (item && equip(item)) {
+          // items that take clicks here fire at once; ones you just hold (the Tide Glass in most levels) go in hand
+          if (actionTools.has(item) || STROKE_TOOLS.has(item)) keys.current.useAhead = { tool: item, at: performance.now() }
+        } else {
+          sfxRefuse()
+          window.dispatchEvent(new CustomEvent('loadout-miss', { detail: { slot, item } }))
+        }
       }
       if (e.code === 'KeyG' && !e.repeat) {
         // the lash's stance: chain (strike chains) or cochain (evaluate on the dual)
@@ -505,6 +521,8 @@ export default function ReefGame({
     // run once per mount (the board remounts per stage)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => setHeld(tool), [tool]) // the corner buttons light the one in hand
 
   useEffect(() => {
     if (!purge) return
@@ -543,6 +561,7 @@ export default function ReefGame({
     // --- movement (WASD / arrows)
     let mx = 0
     let mz = 0
+    if (keys.current.useAhead && performance.now() - keys.current.useAhead.at > 400) keys.current.useAhead = null // a press that never landed
     if (playEnabled && !onPier) {
       const k = keys.current
       mx = (k.KeyD || k.ArrowRight ? 1 : 0) - (k.KeyA || k.ArrowLeft ? 1 : 0)
@@ -563,11 +582,16 @@ export default function ReefGame({
         mx = -Math.sin(yaw) * f + Math.cos(yaw) * r
         mz = -Math.cos(yaw) * f - Math.sin(yaw) * r
       }
-      if (k.lashAhead) {
-        // F: lash toward the mouse if it's over the ground, else straight ahead
-        // waits a moment for the switch to the Lash to land, then cracks
-        if (tool === 'lash' || performance.now() - k.lashAhead > 400) k.lashAhead = false
-        if (tool === 'lash') {
+      const ua = k.useAhead
+      if (ua && tool !== 'lash' && tool === ua.tool) {
+        // J / K / L: use the item toward the mouse if it's over the ground, else just ahead
+        k.useAhead = null
+        clicks.current.push(aim.current ? [...aim.current] : [s.x + Math.sin(s.face) * 1.2, s.z + Math.cos(s.face) * 1.2])
+      } else if (ua && performance.now() - ua.at > 400) k.useAhead = null // the switch never landed
+      if (ua && ua.tool === 'lash' && tool === 'lash') {
+        // F: the lash, toward a beast if one is in reach; waits a moment for the switch to the Lash to land
+        k.useAhead = null
+        {
           // aim assist: a live beast close by and roughly ahead takes the lash, wherever the mouse is
           // (only beasts the lash can actually reach; ahead first, then the nearest from any side)
           let best = null

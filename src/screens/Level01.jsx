@@ -1,3 +1,4 @@
+import { useLoadout } from '../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useExitTrigger } from './exitTrigger'
@@ -163,6 +164,7 @@ export default function Level01({ concept, onBackToTitle, onNext, onGo, startAt 
   const [knockouts, setKnockouts] = useState(0)
   const [checkpoint, setCheckpoint] = useState(startPos)
   const [tool, setTool] = useState('lash')
+  useLoadout(['lash', 'spool'], setTool) // the buttons: F, J, K, L
   const [spooling, setSpooling] = useState(false)
   const [lines, setLines] = useState([])
   const [lineIdx, setLineIdx] = useState(0)

@@ -1,3 +1,4 @@
+import { useLoadout } from '../../controls/loadout'
 /**
  * Shared World 2 level shell: dialogue, hearts, Emmy, map, exit, clear card.
  * Each Level2_K passes stations config + Scene + goal handlers via props/hooks.
@@ -142,6 +143,7 @@ export default function LevelShell({
   )
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState(tools[0] || 'lash')
+  useLoadout(tools, setTool) // the buttons: F, J, K, L
   const [stance, setStance] = useState('chain') // the lash's stance (G): chain or cochain
   useEffect(() => {
     const on = (ev) => setStance(ev.detail)
@@ -612,7 +614,7 @@ export default function LevelShell({
         )}
         {playEnabled && !toast && (
           <div className="hint">
-            <MathText text={current && here.site === current ? stepText : `WASD · ${tools.map((t) => `${keyOf(t)} ${WORLD_TOOLS[t]?.label || t}`).join(' · ')} · Talk to Emmy (E)`} />
+            <MathText text={current && here.site === current ? stepText : 'WASD to move · F Lash · J K L your items · E talk to Emmy · Tab menu'} />
           </div>
         )}
       </div>

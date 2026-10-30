@@ -1,3 +1,4 @@
+import { useLoadout } from '../controls/loadout'
 import { Canvas } from '@react-three/fiber'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TimberScene from '../levels/w0/TimberScene'
@@ -124,6 +125,7 @@ export default function Level06({ concept, onBackToTitle, onNext, onGo, startAt 
   const [checkpoint, setCheckpoint] = useState(() => (skipTo ? [SITE[STATION_ORDER[skipTo]].pos[0] + 1.2, SITE[STATION_ORDER[skipTo]].pos[1] + 3.2] : layout.start))
   const [enemies, setEnemies] = useState({})
   const [tool, setTool] = useState('lash')
+  useLoadout(['lash', 'spool', 'smith'], setTool) // the buttons: F, J, K, L
   const [waveOn, setWaveOn] = useState(false)
   const [waveSpawned, setWaveSpawned] = useState(false)
   const [askOpen, setAskOpen] = useState(false)

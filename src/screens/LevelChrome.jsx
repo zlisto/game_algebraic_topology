@@ -3,6 +3,7 @@ import { duckMusic } from '../audio/chip'
 import MathText from './MathText'
 import CodexMenu from '../codex/CodexMenu'
 import { noteSeen } from '../codex/store'
+import { clearMenuTab, peekMenuTab, requestMenu } from '../controls/loadout'
 
 /**
  * Shared level chrome for the third-person overworld levels (0-1, 0-2, …): Esc pause and its menu,
@@ -27,9 +28,14 @@ export function usePause(disabled) {
   const [paused, setPaused] = useState(false)
   useEffect(() => {
     const onKey = (e) => {
-      if (e.code !== 'Escape' || disabled) return
+      if (e.code === 'Tab') e.preventDefault() // in a level, Tab is the menu, never browser focus
+      if ((e.code !== 'Escape' && e.code !== 'Tab') || disabled) return
       e.preventDefault()
-      setPaused((p) => !p)
+      setPaused((p) => {
+        if (!p && e.code === 'Tab') requestMenu('items') // Tab opening: the menu, on its Items tab
+        else clearMenuTab()
+        return !p
+      })
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -41,8 +47,10 @@ export function usePause(disabled) {
 }
 
 export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
-  const [codex, setCodex] = useState(false)
-  if (codex) return <CodexMenu onClose={() => setCodex(false)} />
+  const [menu] = useState(peekMenuTab) // opened with Tab: straight to the menu
+  useEffect(clearMenuTab, [])
+  const [codex, setCodex] = useState(menu || false)
+  if (codex) return <CodexMenu initialTab={codex === true ? 'items' : codex} onClose={() => (menu ? onResume() : setCodex(false))} />
   return (
     <div className="win-banner pause">
       <div className="win-card">
@@ -54,7 +62,7 @@ export function PauseMenu({ title, progress, onResume, onRestart, onTitle }) {
             Resume
           </button>
           <button type="button" className="btn" onClick={() => setCodex(true)}>
-            Codex · bestiary, relics, notes
+            Menu · items, bestiary, concepts
           </button>
           {onRestart && (
             <button type="button" className="btn" onClick={onRestart}>
