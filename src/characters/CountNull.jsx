@@ -209,12 +209,12 @@ export default function CountNull({ script, scale = 1 }) {
         </group>
 
         {/* resting (right) sleeve and curled hand */}
-        <group position={[-0.42, 2.2, 0.02]} rotation={[0.05, 0, -0.12]}>
+        <group position={[-0.36, 2.2, 0.02]} rotation={[0.05, 0, -0.12]}>
           <NullPart name="nl_rest" />
         </group>
 
         {/* raised (left) arm: open palm, fragments orbiting above it */}
-        <group ref={arm} position={[0.42, 2.2, 0.02]}>
+        <group ref={arm} position={[0.36, 2.2, 0.02]}>
           <NullPart name="nl_upper" />
           <group ref={forearm} position={[0, -0.52, 0]}>
             <NullPart name="nl_fore" />

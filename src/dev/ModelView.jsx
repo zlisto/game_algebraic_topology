@@ -50,7 +50,7 @@ export default function ModelView() {
   else if (m === 'null') {
     body = <CountNull script={() => ({ gesture: g, crown: 0.3 })} />
     fit = { dist: 7, h: 2.2, look: 1.7 }
-  } else if (m === 'commutator') body = <Commutator script={() => ({ gesture: g, cloak: 1, crack: 0 })} />
+  } else if (m === 'commutator') body = <Commutator script={() => ({ gesture: g, cloak: 0, crack: 0 })} />
   else if (VIEW[m] || SPAWN_VIEW[m]) {
     body = createElement(VIEW[m] || SPAWN_VIEW[m], { e: beast })
     fit = { dist: 3.2, h: 1.4, look: 0.7 }
