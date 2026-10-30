@@ -19,7 +19,8 @@ preloadModels('commutator')
 function ribbon(sign) {
   const pts = Array.from({ length: 48 }, (_, i) => {
     const a = (i / 48) * Math.PI * 2
-    return new THREE.Vector3(sign * (-0.2 + Math.sin(a) * 0.22), 0.32 + 0.15 * (1 - Math.cos(a)) + 0.02, sign * Math.sin(2 * a) * 0.05)
+    // a tall teardrop pinched at the helm's tip
+    return new THREE.Vector3(sign * 0.17 * Math.sin(a) * (1 - Math.cos(a)) / 2, 0.4 * (1 - Math.cos(a)) / 2, Math.sin(2 * a) * 0.03)
   })
   return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, true), 64, 0.02, 8, true)
 }
@@ -83,18 +84,18 @@ export default function CommutatorRig({ pose, scale = 1 }) {
           </group>
         </group>
         {/* the copper spiral over the left shoulder, the dark crescent over the right */}
-        <group position={[-0.5, 1.35, -0.18]} rotation={[0, 0.3, 0.4]}>
+        <group position={[-0.58, 1.2, -0.15]} rotation={[0, 0.3, 0.4]} scale={1.25}>
           <Part model="commutator" name="cm_spiral" />
         </group>
         <group position={[0.48, 1.4, -0.18]} rotation={[0, -0.3, 0.2]}>
           <Part model="commutator" name="cm_crescent" />
         </group>
         {/* his two ribbon loops, a and b, rising from the helm */}
-        <group ref={ribbons} position={[0, 1.6, 0]}>
-          <mesh geometry={geo.a}>
+        <group ref={ribbons} position={[0, 2.0, 0]}>
+          <mesh geometry={geo.a} rotation={[0, 0, -0.3]}>
             <meshStandardMaterial ref={ribA} color="#b07aff" emissive="#8a5aff" emissiveIntensity={1.4} toneMapped={false} />
           </mesh>
-          <mesh geometry={geo.b}>
+          <mesh geometry={geo.b} rotation={[0, 0, 0.3]}>
             <meshStandardMaterial ref={ribB} color="#7fa8ff" emissive="#5a7aff" emissiveIntensity={1.4} toneMapped={false} />
           </mesh>
         </group>
