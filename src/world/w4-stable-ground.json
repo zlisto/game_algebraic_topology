@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 8 Stable Ground — Stable Ground. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 8 Stable Ground — Stable Ground. Spire side-view: floors stacked south. · layout: ring",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -25.2,
-    "maxZ": 16
+    "minX": -18,
+    "maxX": 26,
+    "minZ": -43,
+    "maxZ": 24
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    16
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        16
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "Settle",
       "stage": "station",
       "pos": [
-        0,
-        2
+        -8.0,
+        7.86
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "The Table",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        -0.0,
+        -22.0
       ],
       "shape": {
         "add": [
@@ -86,42 +86,127 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        15.04,
+        -0.53
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "glitch",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0.0,
-        9.8
+        -0.84,
+        15.14
       ],
       "b": [
-        0.0,
-        6.6
+        -4.78,
+        11.14
       ]
     },
     {
       "a": [
-        2.91,
-        -1.56
+        -6.81,
+        3.42
       ],
       "b": [
-        6.09,
-        -5.44
+        -1.19,
+        -17.56
+      ]
+    },
+    {
+      "a": [
+        -1.4,
+        -3.57
+      ],
+      "b": [
+        -5.7,
+        3.88
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        -8.8
+      ],
+      "b": [
+        0.0,
+        -17.4
+      ]
+    },
+    {
+      "a": [
+        2.64,
+        -18.23
+      ],
+      "b": [
+        13.43,
+        -2.82
+      ]
+    },
+    {
+      "a": [
+        12.41,
+        0.43
+      ],
+      "b": [
+        -3.68,
+        6.29
       ]
     }
   ],
   "exit": {
     "gate": [
-      9,
-      -18.7
+      -0.0,
+      -32.1
     ],
     "a": [
-      9,
-      -13.6
+      -0.0,
+      -26.6
     ],
     "b": [
-      9,
-      -21.2
+      -0.0,
+      -34.6
     ],
     "to": "next"
   },

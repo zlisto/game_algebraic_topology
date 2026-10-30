@@ -19,10 +19,10 @@
     "captions": [
       { "t": 1.4, "end": 6.4, "speaker": "Narrator", "text": "Past the Bastion's north gate, the roads ran out into the Delta. And in the Delta stood Null's sphere." },
       { "t": 7.4, "end": 11.0, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Look at the loops on it, Gyroid. Every one he draws slides off and shrinks to nothing." },
-      { "t": 11.2, "end": 12.9, "speaker": "Gyroid", "portrait": "gyroid", "text": "So he's hiding where my number can't follow. Cute. Keep the portal open." },
+      { "t": 11.2, "end": 12.9, "speaker": "Gyroid", "portrait": "gyroid", "text": "Where my number can't follow." },
       { "t": 21.8, "end": 25.4, "speaker": "Count Null", "portrait": "count-null", "text": "Gyroid. You gave Haven back its hole. Emmy must be so proud of you." },
       { "t": 25.6, "end": 27.9, "speaker": "Count Null", "portrait": "count-null", "text": "But this is my sphere. Here, every loop comes home to nothing." },
-      { "t": 28.4, "end": 31.0, "speaker": "Count Null", "portrait": "count-null", "text": "Three trials, courier. Fail one, and my Crown takes the Delta." },
+      { "t": 28.4, "end": 31.0, "speaker": "Count Null", "portrait": "count-null", "text": "Three trials, Gyroid. Fail one, and the Crown takes the Delta. Gently." },
       { "t": 31.2, "end": 33.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Not this time." }
     ],
     "title_card": { "t": 33.6, "end": 38 }
@@ -50,7 +50,7 @@
     "captions": [
       { "t": 1.4, "end": 4.6, "speaker": "Narrator", "hold": false, "text": "The Crown flung Gyroid off the citadel, down onto the causeway." },
       { "t": 5.0, "end": 7.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "I'm fine. I'm fine. Where is he?" },
-      { "t": 9.0, "end": 13.6, "speaker": "Count Null", "portrait": "count-null", "text": "Here, courier. The Delta Sphere: ten thousand lights. It looks hollow, doesn't it? Prove it has a hole." },
+      { "t": 9.0, "end": 13.6, "speaker": "Count Null", "portrait": "count-null", "text": "Here, Gyroid. The Delta Sphere: ten thousand lights. It looks hollow, doesn't it? Prove it has a hole." },
       { "t": 15.6, "end": 19.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "One loop, right round it. Count it… It slides. It's sliding off!" },
       { "t": 19.6, "end": 21.0, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Try another way round!" },
       { "t": 24.4, "end": 26.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Zero. It reads zero. Every loop shrinks." },
@@ -59,10 +59,10 @@
       { "t": 33.6, "end": 36.2, "speaker": "Narrator", "hold": false, "text": "A sphere became a disk. A disk became a point." },
       { "t": 37.8, "end": 40.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "No. No! I counted! I counted, and it still came out zero!" },
       { "t": 40.6, "end": 42.9, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Your count didn't fail, Gyroid. It can't see this kind of hole." },
-      { "t": 43.4, "end": 46.4, "speaker": "Count Null", "portrait": "count-null", "text": "Your number reads zero, courier." },
-      { "t": 46.6, "end": 48.5, "speaker": "Count Null", "portrait": "count-null", "text": "No hole you can prove. So, no hole at all. The rest of the Delta is next." },
+      { "t": 43.4, "end": 46.4, "speaker": "Count Null", "portrait": "count-null", "text": "Your number reads zero, Gyroid." },
+      { "t": 46.6, "end": 48.5, "speaker": "Count Null", "portrait": "count-null", "text": "Then no hole at all. Sleep well." },
       { "t": 48.8, "end": 50.2, "speaker": "Narrator", "hold": false, "text": "And Count Null was gone, deep into the Delta." },
-      { "t": 50.8, "end": 54.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "A loop only feels a hole it can wind around. A sphere's hole is a hollow. We need a count that sees what a surface encloses: higher holes." },
+      { "t": 50.8, "end": 54.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "A loop can't wind round a hollow. We need a count that sees what a surface wraps around." },
       { "t": 55.2, "end": 58.4, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then we count that. Every triangle in this delta if we have to. And the sphere goes back on the Chart." },
       { "t": 58.6, "end": 60.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Homology. Down into the Delta." }
     ],

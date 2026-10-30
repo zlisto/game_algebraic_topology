@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 10 Fibration Station — Fibration Station. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 10 Fibration Station — Fibration Station. Spire side-view: floors stacked south. · layout: spine",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -36.2,
-    "maxZ": 16
+    "minX": -25,
+    "maxX": 25,
+    "minZ": -67,
+    "maxZ": 22
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    14
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        14
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "Lift",
       "stage": "station",
       "pos": [
-        0,
-        2
+        -15,
+        -3
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "Make It Fibre",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        15,
+        -10.5
       ],
       "shape": {
         "add": [
@@ -93,7 +93,7 @@
       "stage": "station",
       "pos": [
         0,
-        -20
+        -46
       ],
       "shape": {
         "add": [
@@ -117,52 +117,156 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        0
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        -15
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "fiber_wraith",
+          0.8,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "id": "commons_3",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        0,
+        -30
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
     }
   ],
   "causeways": [
     {
       "a": [
         0.0,
-        9.8
+        12.8
       ],
       "b": [
         0.0,
-        6.6
+        2.8
       ]
     },
     {
       "a": [
-        2.91,
-        -1.56
+        0.0,
+        -2.8
       ],
       "b": [
-        6.09,
-        -5.44
+        0.0,
+        -12.2
       ]
     },
     {
       "a": [
-        6.09,
-        -12.56
+        0.0,
+        -17.8
       ],
       "b": [
-        2.91,
-        -16.44
+        0.0,
+        -27.2
+      ]
+    },
+    {
+      "a": [
+        -2.75,
+        -0.55
+      ],
+      "b": [
+        -10.49,
+        -2.1
+      ]
+    },
+    {
+      "a": [
+        2.68,
+        -14.2
+      ],
+      "b": [
+        10.59,
+        -11.82
+      ]
+    },
+    {
+      "a": [
+        0.0,
+        -32.8
+      ],
+      "b": [
+        0.0,
+        -41.4
+      ]
+    },
+    {
+      "a": [
+        -13.48,
+        -7.34
+      ],
+      "b": [
+        -1.52,
+        -41.66
       ]
     }
   ],
   "exit": {
     "gate": [
       0,
-      -29.7
+      -56.1
     ],
     "a": [
       0,
-      -24.599999999999998
+      -50.6
     ],
     "b": [
       0,
-      -32.2
+      -58.6
     ],
     "to": "next"
   },

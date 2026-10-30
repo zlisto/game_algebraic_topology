@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 9 Maps Are Classes — The Classing Room. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 9 Maps Are Classes — The Classing Room. Spire side-view: floors stacked south. · layout: zigzag",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -25.2,
-    "maxZ": 16
+    "minX": -36,
+    "maxX": 36,
+    "minZ": -35,
+    "maxZ": 22
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    14
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        14
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "Pull Back",
       "stage": "station",
       "pos": [
-        0,
-        2
+        9,
+        0
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "Readings Are Maps",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        -9,
+        -14
       ],
       "shape": {
         "add": [
@@ -86,42 +86,114 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        -26,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          0.8,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        26,
+        -20
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0.0,
-        9.8
+        0.65,
+        12.99
       ],
       "b": [
-        0.0,
-        6.6
+        6.51,
+        3.87
       ]
     },
     {
       "a": [
-        2.91,
-        -1.56
+        5.37,
+        -2.82
       ],
       "b": [
-        6.09,
-        -5.44
+        -5.37,
+        -11.18
+      ]
+    },
+    {
+      "a": [
+        4.47,
+        -0.78
+      ],
+      "b": [
+        -23.24,
+        -5.53
+      ]
+    },
+    {
+      "a": [
+        -4.47,
+        -14.78
+      ],
+      "b": [
+        23.24,
+        -19.53
       ]
     }
   ],
   "exit": {
     "gate": [
-      9,
-      -18.7
+      -9,
+      -24.1
     ],
     "a": [
-      9,
-      -13.6
+      -9,
+      -18.6
     ],
     "b": [
-      9,
-      -21.2
+      -9,
+      -26.6
     ],
     "to": "next"
   },

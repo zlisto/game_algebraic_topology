@@ -202,7 +202,7 @@ export default function Level1_5({ concept, onBackToTitle, onNext, onGo, startAt
             sfxZoot()
             setExitOpen(true)
           }
-          return say([...(ls || []), { speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text: 'All four terraces done — the north gate opens.' }], 'after')
+          return say([...(ls || []), { speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text: 'That’s all four terraces. The north gate’s open.' }], 'after')
         }
         return say(ls)
       }

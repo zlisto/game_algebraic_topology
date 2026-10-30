@@ -16,11 +16,13 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['two_tri', 'torus_glue', 'flip_arrow', 'wrong_order']
 
 export const OPENING = [
-  E('The grey is already in the Delta, Gyroid. Null’s sphere is folding, and no loop can prove it shouldn’t. So we learn to count with triangles.'),
-  E('The Tile Yard. Out here every space is built from triangles — simplices — glued along their edges.'),
-  G('Glued how? Can I just stick any edge to any edge?'),
-  E('Only edge to edge with the arrows matching: an edge’s first vertex goes onto the other edge’s first vertex. Hatcher calls the result a Δ-complex.'),
-  E('Click an arrow with the Cell Hammer (2) to turn it round. Click the gold press to fold the tiles up. The first yard is to the west.'),
+  G('Ten thousand lights on that sphere, Emmy. I counted loops round it and every one slid off.'),
+  E('Loops only feel a hole they can wind round. A sphere’s hole is a hollow. To see it we need to count the pieces a place is made of, all of them.'),
+  E('So we start where the Delta starts: the Tile Yard. Every island out here is triangles, glued along their edges.'),
+  G('Glued how? Can I just stick any edge onto any edge?'),
+  E('Only with the arrows matching. An edge’s arrow says which end comes first, and first goes onto first. Glue triangles that way and Hatcher calls it a Δ-complex.'),
+  E('Hold the Cell Hammer, that’s 2, and click an arrow to turn it round. Click the gold press to fold the tiles. First yard is west of here; follow the NEXT ring on your map.'),
+  E('The two little islands off the first yard, north-east and east, are commons. Beasts graze there. Go if you want the practice; the work doesn’t need them.'),
 ]
 
 export const STATIONS = {
@@ -28,19 +30,19 @@ export const STATIONS = {
     blueprint: 'Two Triangles',
     target: 'square',
     arrive: [
-      E('Two triangles, each with its own copy of the violet edge $c$. Glue them along it and you get a square.'),
-      E('But look at the arrows on the two copies. They point opposite ways. Turn one round, then press.'),
+      E('Two triangles. Each one has its own copy of the violet edge $c$. Glue them along $c$ and you get a square.'),
+      E('Look at the arrows on the two copies, though. They point opposite ways, so the press would put a start on an end. Turn one round, then press.'),
     ],
-    early: [E('Not yet — finish the earlier yard first. Follow NEXT on the map.')],
+    early: [E('Not this one yet. There’s an earlier yard to finish; follow NEXT on the map.')],
     goals: [
-      { type: 'action', hint: 'Make both copies of $c$ point the same way, then click the press', done: [G('They slid right together!'), E('Matching arrows: first corner onto first corner, last onto last. That’s a square.')] },
+      { type: 'action', hint: 'Make both copies of $c$ point the same way, then click the press', done: [G('Oh, they just slid together.'), E('First corner onto first corner, last onto last. Two triangles, one edge shared: a square.')] },
       {
         type: 'ask',
         question: 'Why did the two arrows on $c$ have to agree?',
         options: ['Gluing sends each edge’s first vertex onto the other’s first vertex', 'Edges can only be glued if they point north', 'The longer edge has to go on top'],
         answer: 'Gluing sends each edge’s first vertex onto the other’s first vertex',
-        wrong: [E('Think about what the arrow records: which end of the edge comes first.')],
-        right: [E('Right. In a Δ-complex the vertices come in order, and gluing keeps the order.'), E('Next yard, east along the causeway: fold this square into a torus.')],
+        wrong: [E('What does an arrow actually record? Which end of the edge comes first.')],
+        right: [E('Yes. In a Δ-complex every simplex has its corners in order, and gluing has to keep that order.'), E('Next yard is north. Follow the NEXT ring; we fold this square into a torus.')],
       },
     ],
   },
@@ -48,19 +50,19 @@ export const STATIONS = {
     blueprint: 'The Torus',
     target: 'torus',
     arrive: [
-      E('Now the outside edges. The two orange sides are both $a$; the two blue sides are both $b$. The press glues $a$ to $a$ and $b$ to $b$.'),
-      E('Make this fold into a torus. Try the press first if you like — see what you get.'),
+      E('Now the outside edges. Both orange sides are called $a$, both blue sides are $b$. The press glues $a$ onto $a$ and $b$ onto $b$, arrows matching.'),
+      E('Set the arrows so it folds into a torus. Or press it first and see what you get. I won’t tell.'),
     ],
-    early: [E('Not yet — finish the earlier yard first. Follow NEXT on the map.')],
+    early: [E('Not this one yet. There’s an earlier yard to finish; follow NEXT on the map.')],
     goals: [
-      { type: 'action', hint: 'Set the arrows so the square folds into a torus, then press', done: [G('A doughnut!'), E('Both $a$ arrows the same way, both $b$ arrows the same way. Roll $a$ to $a$ into a tube, then $b$ to $b$ closes it into a ring.')] },
+      { type: 'action', hint: 'Set the arrows so the square folds into a torus, then press', done: [G('A doughnut!'), E('Both $a$ arrows the same way, both $b$ arrows the same way. $a$ onto $a$ rolls a tube; $b$ onto $b$ bends the tube round and closes it.')] },
       {
         type: 'ask',
         question: 'After gluing, how many vertices does this torus have?',
         options: ['1', '2', '4'],
         answer: '1',
-        wrong: [E('Follow the corners: the gluing sends all four corners of the square to the same point.')],
-        right: [E('One vertex, three edges $a$, $b$, $c$, two triangles. That’s Hatcher’s torus.'), E('Next yard is north of the first one.')],
+        wrong: [E('Follow the corners. Each gluing pulls two corners together. Where do all four end up?')],
+        right: [E('One. So the torus is one vertex, three edges $a$, $b$, $c$, and two triangles. That’s the whole list, and it’s Hatcher’s torus.'), E('Next yard is north-east. Follow the NEXT ring.')],
       },
     ],
   },
@@ -68,20 +70,20 @@ export const STATIONS = {
     blueprint: 'Flip an Arrow',
     target: 'klein',
     arrive: [
-      E('Same tiles, set up as a torus. Turn just one arrow round and press, and see what happens.'),
-      G('Just one?'),
-      E('Make me a Klein bottle.'),
+      E('Same two tiles, set up as a torus again. Turn just one outside arrow round and press.'),
+      G('One arrow? That’s it?'),
+      E('That’s it. Make me a Klein bottle.'),
     ],
-    early: [E('Not yet — finish the earlier yard first. Follow NEXT on the map.')],
+    early: [E('Not this one yet. There’s an earlier yard to finish; follow NEXT on the map.')],
     goals: [
-      { type: 'action', hint: 'Fold the square into a Klein bottle', done: [G('It goes through itself!'), E('Only in our three-dimensional picture. The Klein bottle itself doesn’t cross itself; it just won’t fit in 3D without doing so.')] },
+      { type: 'action', hint: 'Fold the square into a Klein bottle', done: [G('It goes straight through itself!'), E('Only in our picture. The Klein bottle doesn’t cross itself. It just can’t be drawn in three dimensions without crossing.')] },
       {
         type: 'ask',
         question: 'The torus and the Klein bottle use the same two triangles. What makes them different?',
         options: ['One pair of matching arrows points opposite ways', 'The Klein bottle has an extra vertex', 'The Klein bottle’s diagonal is longer'],
         answer: 'One pair of matching arrows points opposite ways',
-        wrong: [E('Count again: one vertex, three edges, two triangles, same as the torus. Only the arrows changed.')],
-        right: [E('Exactly — same pieces, different gluing. Last yard is to the east.')],
+        wrong: [E('Count the pieces again: one vertex, three edges, two triangles, same as the torus. The only thing you touched was an arrow.')],
+        right: [E('Same pieces, glued differently. So a list of pieces can’t be the whole story; how they’re glued matters. Last yard is east, on the NEXT ring.')],
       },
     ],
   },
@@ -89,27 +91,27 @@ export const STATIONS = {
     blueprint: 'Wrong Order',
     target: 'rp2',
     arrive: [
-      E('Twist both pairs and you get the projective plane, $ℝP²$. These arrows are already twisted — press and see.'),
-      E('If a triangle turns red, its arrows run round in a circle. Then no corner comes first, so it isn’t a simplex with ordered vertices.'),
+      E('Twist both pairs and you get the projective plane, $ℝP²$. These arrows are already twisted. Press and see.'),
+      E('If a triangle turns red, its three arrows chase each other round in a circle. Then no corner comes first, and it isn’t a simplex any more: a simplex needs its corners in order.'),
     ],
-    early: [E('Not yet — finish the earlier yard first. Follow NEXT on the map.')],
+    early: [E('Not this one yet. There’s an earlier yard to finish; follow NEXT on the map.')],
     goals: [
-      { type: 'action', hint: 'Fold an ℝP² whose triangles both have a first vertex', done: [G('Got it — and neither triangle is red.'), E('That’s Hatcher’s ℝP²: both pairs twisted, with an order on every triangle.')] },
+      { type: 'action', hint: 'Fold an ℝP² whose triangles both have a first vertex', done: [G('Got it. Neither triangle’s red.'), E('Both pairs twisted, and every triangle still has a first, second and third corner. That’s Hatcher’s $ℝP²$.')] },
       {
         type: 'ask',
         question: 'How many vertices does this $ℝP²$ have?',
         options: ['1', '2', '3'],
         answer: '2',
-        wrong: [E('Follow the corners again. With both pairs twisted, the corners fall into two groups.')],
-        right: [E('Two vertices, three edges, two triangles. $χ = 2 − 3 + 2 = 1$, while the torus had $χ = 0$.'), E('The gate’s open — south of the last yard.')],
+        wrong: [E('Follow the corners again. With both pairs twisted, the four corners fall into two groups, not one.')],
+        right: [E('Two vertices, three edges, two triangles. Count them with alternating signs and $χ = 2 − 3 + 2 = 1$; the torus gave $χ = 0$. Different numbers, different places.'), E('That’s the yard. The gate is north of this one. Somewhere past it, those lights are waiting to be counted.')],
       },
     ],
   },
 }
 
 export const HINTS = {
-  knockout: E('Hearts back — your tiles stay as they were. Lash the spawn and carry on.'),
-  wrongSection: (name) => E(`The next yard is ${name} — follow NEXT on the map.`),
+  knockout: E('Hearts back, Gyroid. Your tiles are just as you left them. Lash the spawn and carry on.'),
+  wrongSection: (name) => E(`The next yard is ${name}. Follow the NEXT ring on your map.`),
 }
 
 export const DEFINITION = {
@@ -121,17 +123,17 @@ export const DEFINITION = {
 export function emmyAdvice(state) {
   const { current, done, goal, here, enemies, phase, bag } = state
   const check = current && current !== 'two_tri' ? squareSurface(bag?.arrows?.[current] || START_ARROWS[current]) : null
-  if (phase !== 'play') return [E('Finish this line first.')]
-  if (enemies?.[here.site]) return [E('Lash the violet spawn first (1), then get back to the tiles.')]
+  if (phase !== 'play') return [E('Let me finish this first.')]
+  if (enemies?.[here.site]) return [E('Spawn first. Lash it (1), then we get back to the tiles.')]
   if (!current || here.site !== current) {
     const next = STATION_ORDER.find((id) => !done[id])
-    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Every yard is done. Walk through the gate to the south.')]
+    return next ? [HINTS.wrongSection(STATIONS[next].blueprint)] : [E('Every yard’s done. The gate is north of the last one.')]
   }
-  if (goal?.type === 'ask') return [E('Answer the question when it opens.')]
-  if (current === 'two_tri') return [E('The two violet arrows sit on the same edge $c$. Click one with the Cell Hammer so they agree, then click the press.')]
-  if (current === 'torus_glue') return [E('For a torus, the two orange $a$ arrows must point the same way, and so must the two blue $b$ arrows.')]
-  if (current === 'flip_arrow') return [E('One pair the same way, the other pair opposite. Turn one outside arrow round, nothing else.')]
+  if (goal?.type === 'ask') return [E('The question’s waiting for you. Answer it when it opens.')]
+  if (current === 'two_tri') return [E('Both violet arrows sit on the same edge $c$. Click one with the Cell Hammer (2) so they agree, then click the press.')]
+  if (current === 'torus_glue') return [E('For a torus, the two orange $a$ arrows point the same way, and so do the two blue $b$ arrows.')]
+  if (current === 'flip_arrow') return [E('One pair the same way, the other pair opposite. Turn one outside arrow round and leave everything else alone.')]
   if (check?.lowerCyclic || check?.upperCyclic)
-    return [E('A red triangle’s arrows chase each other in a circle. Turning $c$ round just moves the problem to the other triangle — turn a whole pair of outside arrows instead, keeping them twisted.')]
+    return [E('A red triangle’s arrows chase each other round, so no corner comes first. Turning $c$ only moves the problem to the other triangle. Turn a whole pair of outside arrows instead, keeping them twisted.')]
   return [E('Both pairs twisted, and no triangle whose arrows go round in a circle.')]
 }

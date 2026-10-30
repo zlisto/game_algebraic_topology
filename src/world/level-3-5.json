@@ -1,10 +1,10 @@
 {
-  "note": "Product Parterre (World 3 · Level 3-5).",
+  "note": "Product Parterre (World 3 · Level 3-5). · layout: zigzag",
   "bounds": {
-    "minX": -22,
-    "maxX": 22,
-    "minZ": -47,
-    "maxZ": 20
+    "minX": -36,
+    "maxX": 36,
+    "minZ": -63,
+    "maxZ": 22
   },
   "causewayWidth": 1.5,
   "start": [
@@ -36,8 +36,8 @@
       "name": "Row Times Column",
       "stage": "station",
       "pos": [
-        0,
-        6
+        9,
+        0
       ],
       "shape": {
         "add": [
@@ -60,8 +60,8 @@
       "name": "Sphere Times Sphere",
       "stage": "station",
       "pos": [
-        12,
-        -6
+        -9,
+        -14
       ],
       "shape": {
         "add": [
@@ -90,8 +90,8 @@
       "name": "Torsion in the Soil",
       "stage": "station",
       "pos": [
-        0,
-        -18
+        9,
+        -28
       ],
       "shape": {
         "add": [
@@ -120,8 +120,8 @@
       "name": "Design a Parterre",
       "stage": "station",
       "pos": [
-        -12,
-        -30
+        -9,
+        -42
       ],
       "shape": {
         "add": [
@@ -138,62 +138,144 @@
         3.8
       ],
       "enemies": []
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        -26,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "spider",
+          0.8,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        26,
+        -34
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "moth",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0.0,
-        12.6
+        0.76,
+        12.82
       ],
       "b": [
-        0.0,
-        10.6
+        6.51,
+        3.87
       ]
     },
     {
       "a": [
-        3.25,
-        2.75
+        5.37,
+        -2.82
       ],
       "b": [
-        8.75,
-        -2.75
+        -5.37,
+        -11.18
       ]
     },
     {
       "a": [
-        8.75,
-        -9.25
+        -5.37,
+        -16.82
       ],
       "b": [
-        3.25,
-        -14.75
+        5.37,
+        -25.18
       ]
     },
     {
       "a": [
-        -3.25,
-        -21.25
+        5.37,
+        -30.82
       ],
       "b": [
-        -8.75,
-        -26.75
+        -5.37,
+        -39.18
+      ]
+    },
+    {
+      "a": [
+        9.0,
+        -4.6
+      ],
+      "b": [
+        9.0,
+        -23.4
+      ]
+    },
+    {
+      "a": [
+        4.47,
+        -0.78
+      ],
+      "b": [
+        -23.24,
+        -5.53
+      ]
+    },
+    {
+      "a": [
+        13.34,
+        -29.53
+      ],
+      "b": [
+        23.36,
+        -33.07
       ]
     }
   ],
   "exit": {
     "gate": [
-      -12,
-      -40.5
+      -9,
+      -52.1
     ],
     "a": [
-      -12,
-      -34.6
+      -9,
+      -46.6
     ],
     "b": [
-      -12,
-      -43
+      -9,
+      -54.6
     ],
     "to": "next"
   }

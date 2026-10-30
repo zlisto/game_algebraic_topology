@@ -2,6 +2,9 @@ import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Lightning, cached, merge, piece } from './Beasts'
+import { Part, preloadModels } from './models'
+
+preloadModels('cohomology')
 
 /**
  * The cohomology wing of the bestiary (World 3, the Cup Product Gardens; design/BESTIARY.md).
@@ -73,41 +76,16 @@ export function HarpySpawn({ e }) {
   })
   return (
     <group ref={g}>
-      {/* the lattice body: a crystal of triangles */}
-      <mesh ref={body} scale={[0.17, 0.24, 0.17]}>
+      {/* the sculpted raptor (tools/cohomology_blender.py), and a crystal core that flares when it has just fed */}
+      <Part model="cohomology" name="harpy_body" />
+      <mesh ref={body} position={[0, 0.02, 0.1]} scale={0.055}>
         <icosahedronGeometry args={[1, 0]} />
         <meshStandardMaterial color="#3a2a5a" emissive="#7a4ad8" emissiveIntensity={0.6} flatShading roughness={0.3} />
       </mesh>
-      <mesh scale={[0.18, 0.25, 0.18]}>
-        <icosahedronGeometry args={[1, 0]} />
-        <meshBasicMaterial color={CYAN} wireframe toneMapped={false} />
-      </mesh>
-      {/* head, beak and cold eyes */}
-      <group position={[0, 0.3, 0.06]}>
-        <mesh scale={0.09}>
-          <icosahedronGeometry args={[1, 0]} />
-          <meshStandardMaterial color="#3a2a5a" emissive="#7a4ad8" emissiveIntensity={0.6} flatShading />
-        </mesh>
-        <mesh position={[0, -0.02, 0.1]} rotation={[Math.PI / 2, 0, 0]}>
-          <coneGeometry args={[0.025, 0.09, 4]} />
-          <meshBasicMaterial color="#e8d8ff" toneMapped={false} />
-        </mesh>
-        {[-1, 1].map((s) => (
-          <mesh key={s} position={[s * 0.04, 0.02, 0.075]}>
-            <sphereGeometry args={[0.014, 8, 6]} />
-            <meshBasicMaterial color={CYAN} toneMapped={false} />
-          </mesh>
-        ))}
-      </group>
-      {/* lattice wings */}
+      {/* its wings */}
       {[1, -1].map((s, i) => (
-        <group key={s} position={[s * 0.12, 0.12, 0]} scale={[s, 1, 1]} ref={(el) => (wings.current[i] = el)}>
-          <mesh geometry={wingGeo()}>
-            <meshBasicMaterial color="#c0a0ff" wireframe transparent opacity={0.85} toneMapped={false} />
-          </mesh>
-          <mesh geometry={wingGeo()}>
-            <meshBasicMaterial color="#6a3aaa" transparent opacity={0.25} side={THREE.DoubleSide} depthWrite={false} />
-          </mesh>
+        <group key={s} position={[s * 0.1, 0.12, -0.02]} scale={[s, 1, 1]} ref={(el) => (wings.current[i] = el)}>
+          <Part model="cohomology" name="harpy_wing" />
         </group>
       ))}
       {/* measurement planes orbiting it, each etched with its dual graph */}
@@ -173,30 +151,11 @@ export function SpiderSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh ref={legs} geometry={legsGeo()}>
-        <meshBasicMaterial color={graded ? '#ffd27a' : VIOLET} toneMapped={false} />
-      </mesh>
-      {/* abdomen with the two crossed sigils (α and β), and the head with its eye cluster */}
-      <mesh position={[0, 0.06, -0.14]} scale={[0.2, 0.17, 0.24]}>
-        <sphereGeometry args={[1, 18, 14]} />
-        <meshPhysicalMaterial color={graded ? '#3a2410' : '#1f1028'} clearcoat={1} roughness={0.25} emissive={graded ? '#8a5a10' : '#3a0f5e'} emissiveIntensity={e.flash > 0 ? 2 : 0.5} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 0.05, 0.22, -0.14]} rotation={[Math.PI / 2, 0, s * 0.6]}>
-          <torusGeometry args={[0.06, 0.008, 4, 16, Math.PI]} />
-          <meshBasicMaterial color="#ff8cff" toneMapped={false} />
-        </mesh>
-      ))}
-      <mesh position={[0, 0.04, 0.12]} scale={[0.11, 0.09, 0.11]}>
-        <sphereGeometry args={[1, 14, 10]} />
-        <meshPhysicalMaterial color="#1f1028" clearcoat={1} roughness={0.25} emissive="#3a0f5e" emissiveIntensity={0.5} />
-      </mesh>
-      {[[-0.04, 0.08], [0.04, 0.08], [-0.02, 0.11], [0.02, 0.11]].map(([x, y], i) => (
-        <mesh key={i} position={[x, y, 0.22]}>
-          <sphereGeometry args={[0.013, 6, 5]} />
-          <meshBasicMaterial color="#f4e8ff" toneMapped={false} />
-        </mesh>
-      ))}
+      <group ref={legs}>
+        <Part model="cohomology" name="spider_legs" />
+      </group>
+      {/* abdomen with the crossed sigils (α and β), the head with its eye cluster (sculpted) */}
+      <Part model="cohomology" name="spider" />
       {/* graded up: a filled 2-form web beneath it — lines became a plane */}
       <mesh ref={web} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.38, 0]} visible={false}>
         <circleGeometry args={[0.75, 8]} />
@@ -212,6 +171,7 @@ export function SpectreSpawn({ e }) {
   const g = useRef()
   const swirl = useRef()
   const flow = useRef()
+  const ring = useRef()
   const streams = useMemo(
     () =>
       cached('spectre-streams', () =>
@@ -241,6 +201,8 @@ export function SpectreSpawn({ e }) {
     swirl.current.visible = !exact
     flow.current.visible = exact
     swirl.current.rotation.y += dt * 2.4 // circulating round its hole
+    ring.current.visible = !exact
+    ring.current.rotation.z += dt * 1.6
     swirl.current.children.forEach((m, i) => (m.material.opacity = 0.45 + 0.4 * Math.sin(t * 3 + i)))
     if (exact) flow.current.position.z = ((t * 0.8) % 0.3) - 0.15 // a mere gradient, flowing one way
   })
@@ -261,13 +223,10 @@ export function SpectreSpawn({ e }) {
       <mesh ref={flow} geometry={gradient} visible={false}>
         <meshBasicMaterial color="#9fe6ff" transparent opacity={0.7} toneMapped={false} />
       </mesh>
-      {/* a faint face in the swirl */}
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 0.06, 0.12, 0.3]}>
-          <sphereGeometry args={[0.022, 8, 6]} />
-          <meshBasicMaterial color={VIOLET} toneMapped={false} />
-        </mesh>
-      ))}
+      {/* its body: a ring of twisted wisps standing up, a skull caught in it (sculpted) */}
+      <group ref={ring}>
+        <Part model="cohomology" name="spectre" />
+      </group>
       {/* the loop you've run round it so far, glowing as it closes */}
       {e.windFrac > 0 && !e.exact && (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.8, 0]}>
@@ -287,6 +246,17 @@ export function ColossusSpawn({ e }) {
   const maxHp = e.maxHp || 6
   const broken = maxHp - e.hp // joints shattered so far
   const next = e.nextStance || 'chain'
+  const mats = useMemo(
+    () => ({
+      stone: new THREE.MeshStandardMaterial({ color: '#2a2236', roughness: 0.9 }),
+      light: new THREE.MeshStandardMaterial({ color: '#b03cff', transparent: true, opacity: 0.9, roughness: 0.4 }),
+    }),
+    [],
+  )
+  mats.stone.emissive.set(next === 'chain' ? '#ffb347' : '#000000')
+  mats.stone.emissiveIntensity = next === 'chain' ? 0.07 : 0
+  mats.light.emissive.set(next === 'cochain' ? CYAN : '#8a5aff')
+  mats.light.emissiveIntensity = next === 'cochain' ? 1.8 : 1.1
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + (e.seed || 0)
     place(g.current, e, 0.95 + Math.sin(t * 1.1) * 0.04, 0.8, 1.6)
@@ -295,16 +265,14 @@ export function ColossusSpawn({ e }) {
   return (
     <group ref={g}>
       {/* the heavy stone body, upside down below (chains) — glows when it's the one to strike */}
-      <mesh position={[0, -0.32, 0]} rotation={[0, 0, 0]}>
-        <torusGeometry args={[0.3, 0.12, 10, 24]} />
-        <meshStandardMaterial color="#3a3644" roughness={0.95} flatShading emissive={next === 'chain' ? '#ffb347' : '#000000'} emissiveIntensity={next === 'chain' ? 0.35 : 0} />
-      </mesh>
+      <group position={[0, -0.32, 0]}>
+        <Part model="cohomology" name="colossus_base" mats={{ stone: mats.stone }} />
+      </group>
       {/* the luminous body above (cochains) */}
       <group ref={top}>
-        <mesh position={[0, 0.32, 0]}>
-          <torusGeometry args={[0.3, 0.12, 10, 24]} />
-          <meshStandardMaterial color="#c9a8ff" emissive={next === 'cochain' ? CYAN : '#8a5aff'} emissiveIntensity={next === 'cochain' ? 1.4 : 0.7} transparent opacity={0.85} />
-        </mesh>
+        <group position={[0, 0.32, 0]} rotation={[0, Math.PI / 2, 0]}>
+          <Part model="cohomology" name="colossus_top" mats={{ light: mats.light }} />
+        </group>
       </group>
       {/* the single intersection point at the waist */}
       <mesh>

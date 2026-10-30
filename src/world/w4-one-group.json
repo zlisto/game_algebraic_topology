@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 5 One Group Per Floor — One-Group Floors. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 5 One Group Per Floor — One-Group Floors. Spire side-view: floors stacked south. · layout: fork",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -25.2,
-    "maxZ": 16
+    "minX": -23,
+    "maxX": 34,
+    "minZ": -32,
+    "maxZ": 23
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    15
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        15
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "Kill Above",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        -13,
+        -11
       ],
       "shape": {
         "add": [
@@ -86,13 +86,58 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        13,
+        -11
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        24,
+        -2
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "cube_sentry",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
         0.0,
-        9.8
+        13.8
       ],
       "b": [
         0.0,
@@ -101,27 +146,47 @@
     },
     {
       "a": [
-        2.91,
-        -1.56
+        3.25,
+        -1.25
       ],
       "b": [
-        6.09,
-        -5.44
+        11.02,
+        -9.02
+      ]
+    },
+    {
+      "a": [
+        -3.25,
+        -1.25
+      ],
+      "b": [
+        -9.75,
+        -7.75
+      ]
+    },
+    {
+      "a": [
+        4.54,
+        1.24
+      ],
+      "b": [
+        21.24,
+        -1.54
       ]
     }
   ],
   "exit": {
     "gate": [
-      9,
-      -18.7
+      -13,
+      -21.1
     ],
     "a": [
-      9,
-      -13.6
+      -13,
+      -15.6
     ],
     "b": [
-      9,
-      -21.2
+      -13,
+      -23.6
     ],
     "to": "next"
   },

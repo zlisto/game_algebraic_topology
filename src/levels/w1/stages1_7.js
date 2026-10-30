@@ -10,8 +10,10 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['circle_press', 'torus_press', 'half_turn', 'two_pieces']
 
 export const OPENING = [
-  N('Another disk, Emmy? You always did think crushing a loop made you clever.'),
-  E('It makes a relation. Glue a disk along a loop, and that word slides across the disk to nothing.'),
+  N('Gluing disks again, Emmy? You always did think filling a hole was the same as mending it.'),
+  E('And you used to know the difference.'),
+  G('Emmy?'),
+  E('Later. Glue a disk along a loop and the loop has somewhere to go: across the disk, down to nothing. Its word becomes a relation.'),
   E('The Cell Hammer (2) presses disks. The Van Kampen Clasp (5) joins what two pieces agree on.'),
   E('Each press you finish leaves a Glue Ring: two wire rings overlapping, the overlap glowing gold, two pieces glued along what they share. Collect all four and the Warp Portal at the north end opens. First press — straight ahead.'),
 ]
@@ -30,42 +32,49 @@ export const STATIONS = {
     blueprint: 'Kill one loop',
     arrive: [
       E('One loop district, one furnace. Forge the point, walk the track for edge $a$, then glue a disk along $a$.'),
-      E('After the press, the loop is a relation: $a = 1$. Every patrol that only walked $a$ has nothing left to stand on.'),
-      E('And watch that pale cross-cap: a Projective specter, built like the projective plane, where twice round is nothing. One lash (1) only flips it over. Land the second within about two seconds, or it settles back and you start again.'),
+      E('After the press, the loop becomes a relation, $a = 1$. Any patrol that only ever walked $a$ has nothing left to stand on.'),
+      E('And watch that pale cross-cap. It’s a Projective specter, built like the projective plane, where twice round is nothing. One lash (1) only flips it over. Land the second within about two seconds, or it settles back and you start again.'),
     ],
     goals: [
       { type: 'point', done: [] },
-      { type: 'edges', n: 1, done: [E('Edge $a$. Now walk $a$ once — out, round, back — and click the furnace to press a disk along it.')] },
-      { type: 'disk', word: 'a', expect: 'disk', done: [E('The disk filled the loop. In the group, $a$ is trivial now.'), G('So the word on the rim vanished.')] },
-      { type: 'trivial', word: 'a', start: [E('Walk $a$ once more — out, round, back.')], done: [E('Walked again, $a$ slides across the disk to nothing. The fundamental group here is trivial.'), E('North-west next: the torus word.')] },
+      { type: 'edges', n: 1, done: [E('Edge $a$. Now walk $a$ once (out, round, back) and click the furnace to press a disk along it.')] },
+      { type: 'disk', word: 'a', expect: 'disk', done: [E('The disk filled the loop. In the group, $a$ is trivial now.'), G('So the word round the rim just… vanished.')] },
+      { type: 'trivial', word: 'a', start: [E('Walk $a$ once more: out, round, back.')], done: [E('Walked again, $a$ slides across the disk to nothing. The fundamental group here is trivial.'), E('North-west next: the torus word.')] },
     ],
-    early: [E('The first press is ahead — not yet.')],
+    early: [E('The first press is ahead. Not yet.')],
   },
   torus_press: {
     blueprint: 'The torus relation',
     arrive: [
-      E('Two loops, $a$ and $b$. This is the Commutator’s favorite word — until we glue along it.'),
+      E('Two loops, $a$ and $b$, and the Commutator’s favourite word. Until we glue along it.'),
       E('Forge both edges, walk $a b a⁻¹ b⁻¹$, and press.'),
     ],
     goals: [
       { type: 'point', done: [] },
-      { type: 'edges', n: 2, done: [E('Figure-eight skeleton. Spell $a b a⁻¹ b⁻¹$ with your feet, then press.')] },
+      { type: 'edges', n: 2, done: [E('A figure-eight skeleton. Spell $a b a⁻¹ b⁻¹$ with your feet, then press.')] },
       {
         type: 'disk',
         word: 'a b a- b-',
         expect: 'torus',
-        done: [E('The bouquet folded into a torus. The relation is $a b a⁻¹ b⁻¹ = 1$ — equivalently, $a b = b a$.'), G('The patrol word just died.')],
+        done: [
+          E('The bouquet folded up into a torus. The relation is $a b a⁻¹ b⁻¹ = 1$, which is the same as saying $a b = b a$.'),
+          G('His patrol word just died.'),
+          G('Emmy. “You used to know the difference.” You knew him. Before he was Null.'),
+          E('We built these presses together. He was the best press-hand I ever worked beside. And the gentlest.'),
+          G('What happened to him?'),
+          E('Someone he loved didn’t come home. …Walk the word again, Gyroid.'),
+        ],
       },
-      { type: 'trivial', word: 'a b a- b-', start: [E('Now walk $a b a⁻¹ b⁻¹$ again.')], done: [G('It slid to nothing!'), E('So $a b a⁻¹ b⁻¹ = 1$, which says $a b = b a$: the two loops commute. That’s the torus again, $π₁(T²) ≅ ℤ × ℤ$ — built this time from one point, two edges and one disk.'), E('North-east next: Half Turn.')] },
+      { type: 'trivial', word: 'a b a- b-', start: [E('Walk $a b a⁻¹ b⁻¹$ one more time.')], done: [G('It slid to nothing!'), E('So $a b a⁻¹ b⁻¹ = 1$, which says $a b = b a$: the two loops commute. That’s the torus again, $π₁(T²) ≅ ℤ × ℤ$, built this time from one point, two edges and one disk.'), E('North-east next: Half Turn.')] },
     ],
     early: [E('The torus press is north-west of the first press.')],
   },
   half_turn: {
     blueprint: 'ℤ₂',
     arrive: [
-      E('One loop again — but this time glue the disk along $a a$: twice round, the same way. That builds the projective plane.'),
-      N('Walk it twice and pretend it means nothing. Once still counts.'),
-      E('He’s right that once counts — that’s why the Projective specter here shrugs off one lash. Two in quick succession, $a a$, and it’s gone.'),
+      E('One loop again, but this time glue the disk along $a a$: twice round, the same way. That builds the projective plane.'),
+      N('Twice round, and it’s nothing. Once round, and it stays with you. Some roads only get walked once, Emmy.'),
+      E('…Leave it. Gyroid, the Projective specter here shrugs off one lash. Two in quick succession, $a a$, and it’s gone.'),
     ],
     goals: [
       { type: 'point', done: [] },
@@ -74,47 +83,47 @@ export const STATIONS = {
         type: 'disk',
         word: 'a a',
         expect: 'rp2',
-        done: [E('Relation $a² = 1$. The group is $ℤ₂$: two classes, “once” and “twice”.')],
+        done: [E('Relation $a² = 1$. The group is $ℤ₂$, with two classes: once round, and not at all. Twice round counts as not at all.')],
       },
       {
         type: 'order',
         answer: 'aa',
-        wrong: [E('Not quite. $a$ is still visible once. $a a$ is the word that slides away.')],
-        right: [E('Right: $a$ survives; $a a$ does not. The group is $⟨ a | a² ⟩ ≅ ℤ₂$.'), E('North-west to the overlap deck — van Kampen’s turn.')],
+        wrong: [E('Not quite. $a$ on its own still survives. $a a$ is the word that slides away.')],
+        right: [E('Right: $a$ survives and $a a$ doesn’t. The group is $⟨ a | a² ⟩ ≅ ℤ₂$.'), E('North-west to the overlap deck. Van Kampen’s turn.')],
       },
     ],
-    early: [E('Half Turn is north-east of the first press — after the torus.')],
+    early: [E('Half Turn is north-east of the first press, after the torus.')],
   },
   two_pieces: {
     blueprint: 'Van Kampen',
     arrive: [
-      E('Two pieces, west and east, overlap in the middle. The loop round the overlap is called $a$ in the west piece and $b$ in the east one — the same loop, two names.'),
-      E('Forge both loops. Then stand on the amber clasp in the middle with the Van Kampen Clasp (5) and click: it glues the two pieces’ groups together along the overlap.'),
+      E('Two pieces, west and east, overlapping in the middle. The loop round the overlap is called $a$ in the west piece and $b$ in the east one. Same loop, two names.'),
+      E('Forge both loops. Then stand on the amber clasp in the middle with the Van Kampen Clasp (5) and click. It glues the two pieces’ groups together along the overlap.'),
     ],
     goals: [
       { type: 'point', done: [] },
-      { type: 'edges', n: 2, side: 'both', done: [E('West track is $a$; east track is $b$. Both meet the overlap.')] },
-      { type: 'clasp', done: [E('Glued: the overlap’s loop is $a$ on one side and $b$ on the other, so the relation is $a b⁻¹ = 1$, that is $a = b$. One generator left: $π₁ ≅ ℤ$.')] },
+      { type: 'edges', n: 2, side: 'both', done: [E('West track is $a$, east track is $b$. Both meet the overlap.')] },
+      { type: 'clasp', done: [E('Glued. The overlap’s loop is $a$ on one side and $b$ on the other, so the relation is $a b⁻¹ = 1$, that is, $a = b$. One generator left: $π₁ ≅ ℤ$.')] },
       {
         type: 'ask',
         question: 'After the clasp, is a b⁻¹ trivial?',
         choices: ['Yes — a and b are the same loop', 'No — order still matters'],
         answer: 0,
-        wrong: [E('On the overlap, $c$ is both $a$ and $b$. The clasp adds $a b⁻¹$ as a relation.')],
-        right: [E('That’s van Kampen’s theorem: take the free product of the pieces’ groups, then add a relation for each loop in the overlap. Here it collapses to $ℤ$.'), G('Sheetwater next — gather every Glue Ring, then the Warp Portal past the north gate.')],
+        wrong: [E('The overlap loop is $a$ seen from the west and $b$ seen from the east. It’s one loop, so the clasp adds $a b⁻¹ = 1$.')],
+        right: [E('That’s van Kampen. With open, path-connected pieces and overlap: take every word mixing letters from both groups, nothing commuting across, then make each overlap loop’s two names equal.'), E('Here it all collapses to $ℤ$.'), G('Sheetwater next. Gather every Glue Ring, then the Warp Portal past the north gate.')],
       },
     ],
-    early: [E('The overlap deck is north — finish the torus and half-turn first.')],
+    early: [E('The overlap deck is north. Finish the torus and the half turn first.')],
     wave: true,
   },
 }
 
 export const HINTS17 = {
-  knockout: E('Hearts back — progress stays. Re-glue any disk an Unglue tore.'),
-  spawn: E('Clear the spawn first — the press will not stamp while they crowd the furnace.'),
+  knockout: E('Hearts back, and your progress stays. Re-glue any disk an Unglue tore.'),
+  spawn: E('Clear the spawn first. The press won’t stamp while they’re crowding the furnace.'),
   torn: E('An Unglue ripped an edge. Lash it, then walk that track again.'),
-  clasp: E('Middle of the deck, Van Kampen Clasp (5), click the amber clasp.'),
-  patrol: E('That patrol’s word died in the group — one lash dissolves it.'),
+  clasp: E('Middle of the deck: Van Kampen Clasp (5), then click the amber clasp.'),
+  patrol: E('That patrol’s word is dead in the group. One lash dissolves it.'),
 }
 
 export const DEFINITION17 = {
@@ -128,17 +137,17 @@ export function emmyAdvice17(state) {
   const { current, done, goal, here, site, pres, wordWalk, enemies, waveOn } = state
   if (!current) return [E('Gather every Glue Ring, then walk out through the gate into the Warp Portal. Sheetwater waits, and I’m right behind you.')]
   if (here !== current)
-    return [E(`${site?.name || current} is the live press: follow the map’s NEXT ring. The commons on the way are crawling with Null’s beasts. A Projective specter only flips on one lash, so land the second inside about two seconds. I’m right behind you.`)]
-  if (enemies) return [E('Lash the spawn — they block the press and tear disks. A Projective specter needs two lashes inside about two seconds; one alone only flips it.')]
-  if (!goal) return [E('Section clear. Follow the map to NEXT.')]
-  if (goal.type === 'point') return [E('Stand on the furnace · Cell Hammer (2) · click to forge the point.')]
+    return [E(`${site?.name || current} is the live press. Follow the map’s NEXT ring. The commons on the way are crawling with Null’s beasts. A Projective specter only flips on one lash, so land the second inside about two seconds. I’m right behind you.`)]
+  if (enemies) return [E('Lash the spawn. They block the press and tear disks. A Projective specter needs two lashes inside about two seconds; one alone only flips it.')]
+  if (!goal) return [E('This press is done. Follow the map to NEXT.')]
+  if (goal.type === 'point') return [E('Stand on the furnace with the Cell Hammer (2) and click to forge the point.')]
   if (goal.type === 'edges') return [E(`Walk each track out and back until ${goal.n} edge(s) are forged.`)]
-  if (goal.type === 'disk') return [E(`Walked: ${wordWalk || '—'}. Match the blueprint, click the furnace.`)]
-  if (goal.type === 'trivial') return [E(`Walk ${goal.word === 'a' ? '$a$' : '$a b a⁻¹ b⁻¹$'} with the Cell Hammer (2) — out, round and back for each letter. The disk makes it slide to nothing.`)]
+  if (goal.type === 'disk') return [E(`You’ve walked: ${wordWalk || '—'}. Match the blueprint, then click the furnace.`)]
+  if (goal.type === 'trivial') return [E(`Walk ${goal.word === 'a' ? '$a$' : '$a b a⁻¹ b⁻¹$'} with the Cell Hammer (2), out, round and back for each letter. The disk lets it slide to nothing.`)]
   if (goal.type === 'order') return [E('Which word is trivial now, $a$ or $a a$? Open the question panel.')]
   if (goal.type === 'clasp') return HINTS17.clasp
   if (goal.type === 'ask') return [E('Answer the clasp question on the panel.')]
   if (goal.type === 'patrol') return HINTS17.patrol
-  if (waveOn) return [E('Unglue wave — re-glue before relations are lost.')]
+  if (waveOn) return [E('Unglue wave! Re-glue before the relations are lost.')]
   return [E('Keep gluing.')]
 }

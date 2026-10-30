@@ -14,8 +14,9 @@ const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })
 export const STATION_ORDER = ['projector_deck', 'retract_deck', 'two_roads', 'shadows_deck']
 
 export const OPENING = [
-  E('The Torus Terraces. Here maps carry loops from one space to another — and every map sends loops to loops.'),
-  G('Push it forward!'),
+  E('The Torus Terraces. Here we watch maps carry loops from one space to another. Any map sends a loop to a loop.'),
+  G('Sorry. I keep looking back at Haven.'),
+  E('Look all you like. It’s inked on the Chart now. He can’t take it back.'),
   E('Every terrace you finish leaves a Torus Pair: a glassy torus with its two loops, $a$ round the long way and $b$ through the hole, the two loops every torus loop is built from. Collect all four and the Warp Portal at the north end opens.'),
   E('The Projector terrace is just ahead.'),
 ]
@@ -33,8 +34,8 @@ export const STATIONS = {
   projector_deck: {
     blueprint: 'The Projector',
     arrive: [
-      E('A map $f$ from one circle to another carries every loop with it: a loop $γ$ becomes $f ∘ γ$. On $π₁$ that’s the induced map, written $f∗$.'),
-      E('This projector is the map $z ↦ z²$: it wraps the source circle twice round the target. Cord (4): run one lap of the gold source circle counter-clockwise, seen from above, the same $+1$ as on the Winding Road. Then click the projector.'),
+      E('A map $f$ from one circle to another carries every loop along with it: a loop $γ$ becomes $f ∘ γ$. On $π₁$ that gives the induced map, written $f∗$.'),
+      E('This projector is the map $z ↦ z²$: it wraps the source circle twice round the target. Cord (4): run one lap of the gold source circle counter-clockwise seen from above, the same $+1$ as on the Winding Road. Then click the projector.'),
       E('Mind the Möbius prowler. It takes two lashes (1), and the first one cuts it down the middle into one band twice as long, which then runs twice as fast. Strike, then be ready to strike again.'),
     ],
     goals: [
@@ -44,8 +45,8 @@ export const STATIONS = {
         needSource: 1,
         needTarget: 2,
         done: [
-          G('One lap on the source became two laps on the target!'),
-          E('$z ↦ z²$ sends winding $1$ to $2$, and winding $k$ to $2k$: on $π₁(S¹) ≅ ℤ$ the induced map is “times 2”. Maps of spaces become maps of groups.'),
+          G('One lap on the source came out as two laps on the target!'),
+          E('$z ↦ z²$ sends winding $1$ to $2$, and winding $k$ to $2k$. On $π₁(S¹) ≅ ℤ$ the induced map is “times 2”. A map of spaces hands you a map of groups.'),
           E('Retract Check is west.'),
         ],
       },
@@ -55,7 +56,7 @@ export const STATIONS = {
   retract_deck: {
     blueprint: 'Retract Check',
     arrive: [
-      E('This terrace is a ring of stone round a sunken pool — an annulus. Unlike the basin in No Way Out, it has a hole, so it can be pushed straight out from the pool onto its rim. That’s a retraction.'),
+      E('This terrace is a ring of stone round a sunken pool: an annulus. Unlike the basin at No Way Out, it has a hole, so you can push it straight out from the pool onto its rim. That push is a retraction.'),
       E('Cord (4): run the pink inner road round the pool twice. The retraction carries your loop out onto the rim.'),
     ],
     goals: [
@@ -64,8 +65,8 @@ export const STATIONS = {
         w1: 1,
         w2: 2,
         done: [
-          G('Two laps inside — two laps on the rim.'),
-          E('Pushing out to the rim never changes how a rim loop winds: the retraction $r$ undoes the inclusion, $r ∘ i = $ identity.'),
+          G('Two laps inside, two laps on the rim.'),
+          E('The push leaves the rim where it is, so a rim loop pushed out comes back as itself. The retraction $r$ undoes the inclusion $i$ of the rim: $r ∘ i = $ identity.'),
         ],
       },
       {
@@ -74,10 +75,10 @@ export const STATIONS = {
         options: ['Yes — inside the ring they could merge', 'No — the retraction would push them back apart'],
         answer: 1,
         right: [
-          E('Right. If they could slide together inside, pushing that slide out to the rim would slide them together on the rim — and $1 ≠ 2$ there. So $i∗ : π₁(A) → π₁(X)$ is one-to-one.'),
-          E('Two Roads next — east, past the Projector.'),
+          E('Right. If they could slide together inside, pushing that slide out would slide them together on the rim itself, where they wind $1$ and $2$ times. So $i∗ : π₁(A) → π₁(X)$ is one-to-one.'),
+          E('Two Roads next, east past the Projector.'),
         ],
-        wrong: [E('Suppose they could. Push the whole slide out with the retraction: now they slide together on the rim itself — but there they wind $1$ and $2$ times. Impossible.')],
+        wrong: [E('Suppose they could. Push the whole slide out with the retraction, and now they slide together on the rim itself. But on the rim they wind $1$ and $2$ times. That can’t happen.')],
       },
     ],
     early: [E('Finish the Projector first, then come to the ring with the pool.')],
@@ -85,21 +86,22 @@ export const STATIONS = {
   two_roads: {
     blueprint: 'Two Roads',
     arrive: [
-      E('A torus, laid flat: this square plaza with its opposite gates glued. Walk out through the east gate and you come straight back in at the west — that trip is the loop $a$. Out the north, in at the south: the loop $b$.'),
-      E('The grid to the east is the plane that covers the torus. Each trip through a gate moves your lift one square. Go through gate $a$ once and gate $b$ once.'),
+      E('A torus, laid flat: this square plaza with its opposite gates glued. Walk out through the east gate and you come straight back in at the west. That trip is the loop $a$. Out the north, in at the south: the loop $b$.'),
+      E('The grid to the east is the plane that covers the torus. Every trip through a gate moves your lift one square. Go through gate $a$ once and gate $b$ once.'),
     ],
     goals: [
       {
         type: 'grid',
         need: [1, 1],
-        done: [G('The lift is at $(1, 1)$.'), E('Now the other order. Press “Back to the start”, then go through the other gate first.')],
+        done: [G('The lift’s at $(1, 1)$.'), E('Now try the other order. Press “Back to the start”, then go through the other gate first.')],
       },
       {
         type: 'swap',
         need: [1, 1],
         done: [
           G('Same square, $(1, 1)$, either way round!'),
-          E('So $a b = b a$: on the torus the two loops commute, and a loop is just a pair of whole numbers. $π₁(T²) ≅ ℤ × ℤ$.'),
+          E('Same square means same loop: the plane has no holes, so the two lifts slide onto each other up there, and that slide drops down onto the torus.'),
+          E('So $a b = b a$. On the torus the two loops commute, and a loop is just a pair of whole numbers: $π₁(T²) ≅ ℤ × ℤ$.'),
           E('Last terrace: Shadows, to the north-west.'),
         ],
       },
@@ -109,8 +111,8 @@ export const STATIONS = {
   shadows_deck: {
     blueprint: 'Shadows',
     arrive: [
-      E('The torus is a product, $S¹ × S¹$. A loop on it casts a shadow on each factor circle, and the two shadows determine the loop.'),
-      E('The board wants the loop $(2, 3)$. Cord (4): run the gold first-factor circle twice and the cyan second-factor circle three times, counter-clockwise seen from above ($+1$ a lap). A clockwise lap counts $−1$, so it takes a lap off. Then press Rebuild.'),
+      E('The torus is a product, $S¹ × S¹$. A loop on it casts a shadow on each factor circle, and those two shadows pin the loop down completely.'),
+      E('The board wants the loop $(2, 3)$. Cord (4): run the gold first-factor circle twice and the cyan second-factor circle three times, counter-clockwise seen from above ($+1$ a lap). A clockwise lap counts $−1$, so it takes one off. Then press Rebuild.'),
     ],
     goals: [
       {
@@ -118,8 +120,8 @@ export const STATIONS = {
         given: [2, 3],
         need: [2, 3],
         done: [
-          E('$π₁(S¹ × S¹) ≅ π₁(S¹) × π₁(S¹) ≅ ℤ × ℤ$. The pair $(2, 3)$ is the loop; each number is a shadow.'),
-          G('Shadows match — loop rebuilt!'),
+          E('$π₁(S¹ × S¹) ≅ π₁(S¹) × π₁(S¹) ≅ ℤ × ℤ$. The pair $(2, 3)$ is the loop, and each number is one of its shadows.'),
+          G('Shadows match. Loop rebuilt!'),
           E('Imps! Lash them (1).'),
         ],
       },
@@ -163,7 +165,7 @@ export function emmyAdvice15(state) {
     return [E('Now click the brass projector.')]
   }
   if (g.type === 'retract') return [E(`Cord (4): run the pink inner road round the pool — ${g.w2} laps.`)]
-  if (g.type === 'ask') return [E('Think about pushing a slide out to the rim.')]
+  if (g.type === 'ask') return [E('Think about what happens if you push a slide out to the rim.')]
   if (g.type === 'grid') return [E('Walk out through the east gate (that’s $a$) and through the north gate (that’s $b$), once each, in either order.')]
   if (g.type === 'swap') return [HINTS.swap]
   if (g.type === 'shadows') return [HINTS.shadows]

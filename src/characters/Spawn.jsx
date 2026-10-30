@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Lightning, cached, merge, piece } from './Beasts'
 
-preloadModels('beasts_w234', 'beasts_w1')
+preloadModels('beasts_w234', 'beasts_w1', 'beasts_w0')
 
 /**
  * Count Null's spawn, modeled on the concept sheets in assets/characters/enemies/:
@@ -312,6 +312,13 @@ export function SnapperSpawn({ e }) {
 // ---------------------------------------------------------------- mirror spawn (0-3)
 
 function MirrorBody({ e, ghost, axis }) {
+  const ghostMats = useMemo(
+    () => ({
+      crystal: new THREE.MeshStandardMaterial({ color: '#6c4aa8', metalness: 1, roughness: 0.08, emissive: '#5a1ea8', emissiveIntensity: 0.9, flatShading: true, transparent: true, opacity: 0.35, depthWrite: false }),
+      crystalEdge: new THREE.MeshBasicMaterial({ color: '#b070ff', transparent: true, opacity: 0.35, toneMapped: false }),
+    }),
+    [],
+  )
   const g = useRef()
   const core = useRef()
   const eye = useRef()
@@ -326,29 +333,14 @@ function MirrorBody({ e, ghost, axis }) {
     core.current.rotation.y = t * 0.9 * (ghost ? -1 : 1)
     core.current.rotation.x = Math.sin(t * 0.7) * 0.3
     eye.current.scale.y = 1 - 0.85 * Math.max(0, Math.sin(t * 0.9) - 0.95) / 0.05
-    if (ghost) core.current.material.opacity = 0.32 + Math.sin(t * 7) * 0.08 // the reflection flickers
+    if (ghost) ghostMats.crystal.opacity = 0.32 + Math.sin(t * 7) * 0.08 // the reflection flickers
   })
   return (
     <group ref={g}>
-      {/* a faceted mirror-crystal body */}
-      <mesh ref={core}>
-        <icosahedronGeometry args={[0.32, 0]} />
-        <meshStandardMaterial
-          color={ghost ? '#6c4aa8' : '#2a1e3d'}
-          metalness={1}
-          roughness={0.08}
-          emissive="#5a1ea8"
-          emissiveIntensity={ghost ? 0.9 : 0.5}
-          flatShading
-          transparent={ghost}
-          opacity={ghost ? 0.35 : 1}
-          depthWrite={!ghost}
-        />
-      </mesh>
-      <mesh scale={1.1}>
-        <icosahedronGeometry args={[0.32, 0]} />
-        <meshBasicMaterial color={VIOLET} wireframe transparent opacity={ghost ? 0.35 : 0.85} toneMapped={false} />
-      </mesh>
+      {/* a cluster of mirror-crystal shards (tools/beasts_w0_blender.py); its reflection is glassy and see-through */}
+      <group ref={core}>
+        <Part model="beasts_w0" name="mirror_body" mats={ghost ? ghostMats : undefined} />
+      </group>
       {/* one wide eye — lavender on the real one, hollow on its reflection */}
       <group ref={eye} position={[0, 0.04, 0.27]}>
         <mesh scale={[0.12, 0.07, 0.04]}>
@@ -407,14 +399,7 @@ export function UnglueSpawn({ e }) {
   return (
     <group ref={g}>
       {/* the body: a long needle */}
-      <mesh rotation={[Math.PI / 2.4, 0, 0]}>
-        <coneGeometry args={[0.1, 0.5, 8]} />
-        {obsidian()}
-      </mesh>
-      <mesh rotation={[Math.PI / 2.4, 0, 0]} scale={1.12}>
-        <coneGeometry args={[0.1, 0.5, 8]} />
-        <meshBasicMaterial color={VIOLET} side={THREE.BackSide} transparent opacity={0.55} toneMapped={false} />
-      </mesh>
+      <Part model="beasts_w0" name="unglue_body" />
       {/* the ripper hook */}
       <group ref={hook} position={[0, 0.05, 0.2]}>
         <mesh position={[0, 0.06, 0.06]} rotation={[0, 0, Math.PI / 2]}>
@@ -465,14 +450,7 @@ export function ConerSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh scale={[1, 0.7, 1]}>
-        <octahedronGeometry args={[0.28, 0]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh scale={[1.08, 0.76, 1.08]}>
-        <octahedronGeometry args={[0.28, 0]} />
-        <meshBasicMaterial color={VIOLET} wireframe transparent opacity={0.8} toneMapped={false} />
-      </mesh>
+      <Part model="beasts_w0" name="coner_body" />
       <group ref={rotor} position={[0, 0.28, 0]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.32, 0.02, 6, 32]} />

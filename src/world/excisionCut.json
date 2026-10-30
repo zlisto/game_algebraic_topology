@@ -1,10 +1,10 @@
 {
-  "note": "World 2 · Level 2-5 Cut and Paste — Excision Cut",
+  "note": "World 2 · Level 2-5 Cut and Paste — Excision Cut · layout: zigzag",
   "bounds": {
-    "minX": -22,
-    "maxX": 22,
-    "minZ": -22,
-    "maxZ": 18
+    "minX": -36,
+    "maxX": 36,
+    "minZ": -63,
+    "maxZ": 22
   },
   "causewayWidth": 1.5,
   "start": [
@@ -36,8 +36,8 @@
       "name": "Cut Deep",
       "stage": "station",
       "pos": [
-        -10,
-        4
+        9,
+        0
       ],
       "shape": {
         "add": [
@@ -66,8 +66,8 @@
       "name": "Collapse",
       "stage": "station",
       "pos": [
-        10,
-        4
+        -9,
+        -14
       ],
       "shape": {
         "add": [
@@ -96,8 +96,8 @@
       "name": "The Ladder",
       "stage": "station",
       "pos": [
-        -10,
-        -10
+        9,
+        -28
       ],
       "shape": {
         "add": [
@@ -131,8 +131,8 @@
       "name": "Too Close to the Edge",
       "stage": "station",
       "pos": [
-        10,
-        -10
+        -9,
+        -42
       ],
       "shape": {
         "add": [
@@ -155,82 +155,144 @@
           -2.5
         ]
       ]
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        -26,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "quarry_golem",
+          0.8,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        26,
+        -34
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "sphere",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0,
-        12.4
-      ],
-      "b": [
-        -6.4,
-        6.6
-      ]
-    },
-    {
-      "a": [
-        0,
-        12.4
+        0.65,
+        12.99
       ],
       "b": [
         6.4,
-        6.6
+        4.04
       ]
     },
     {
       "a": [
-        -5.6,
-        1.6
+        5.21,
+        -2.95
       ],
       "b": [
-        5.6,
-        1.6
+        -5.21,
+        -11.05
       ]
     },
     {
       "a": [
-        -10,
-        -0.8
+        -5.21,
+        -16.95
       ],
       "b": [
-        -10,
-        -5.2
+        5.21,
+        -25.05
       ]
     },
     {
       "a": [
-        10,
-        -0.8
+        5.21,
+        -30.95
       ],
       "b": [
-        10,
-        -5.2
+        -5.21,
+        -39.05
       ]
     },
     {
       "a": [
-        -5.6,
-        -12
+        9.0,
+        -4.8
       ],
       "b": [
-        5.6,
-        -12
+        9.0,
+        -23.2
+      ]
+    },
+    {
+      "a": [
+        4.27,
+        -0.81
+      ],
+      "b": [
+        -23.24,
+        -5.53
+      ]
+    },
+    {
+      "a": [
+        13.53,
+        -29.6
+      ],
+      "b": [
+        23.36,
+        -33.07
       ]
     }
   ],
   "exit": {
     "gate": [
-      0,
-      -16.5
+      -9,
+      -52.3
     ],
     "a": [
-      0,
-      -12
+      -9,
+      -46.8
     ],
     "b": [
-      0,
-      -18.6
+      -9,
+      -54.8
     ],
     "to": "next"
   }

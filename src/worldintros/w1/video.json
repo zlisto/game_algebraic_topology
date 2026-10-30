@@ -20,14 +20,14 @@
     { "t": 5.3, "end": 7.9, "speaker": "Gyroid", "portrait": "gyroid", "text": "He’s not even hiding. He wants us to see." },
     { "t": 8.1, "end": 10.7, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "He wants to be followed. He never runs without a reason." },
     { "t": 13.0, "end": 17.1, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Bouquet Bastion. Every road leaves the beacon and comes home to it. Every one." },
-    { "t": 17.3, "end": 20.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven’s roads came home like that. Every one." },
-    { "t": 21.0, "end": 25.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The Commutator’s patrols. Red loop, violet loop, red back, violet back. Always that order, never another." },
+    { "t": 17.3, "end": 20.8, "speaker": "Gyroid", "portrait": "gyroid", "text": "Haven’s did too. Every morning, back to the guild lamp." },
+    { "t": 21.0, "end": 25.4, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The Commutator’s patrols. First loop, second loop, first back, second back. Always that order, never another." },
     { "t": 27.2, "end": 31.0, "speaker": "Count Null", "portrait": "count-null", "text": "Gyroid. You walked all night. You must be so tired." },
     { "t": 31.3, "end": 35.5, "speaker": "Count Null", "portrait": "count-null", "text": "Count the loops here, if it comforts you. Every count will come to nothing, the way Haven’s did." },
     { "t": 35.8, "end": 40.0, "speaker": "Count Null", "portrait": "count-null", "text": "Then I’ll fold the Bastion gently. Beacon, gardens, every lamp on every ring. No one gets lost on a point." },
     { "t": 41.7, "end": 45.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "You folded Haven because I couldn’t prove it. I’m going to learn how. Then that Crown is mine." },
     { "t": 45.3, "end": 49.1, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Then we start small. Endpoint Gardens: two gates, a hundred paths. Learn which ones are really the same." },
-    { "t": 49.4, "end": 51.2, "speaker": "Gyroid", "portrait": "gyroid", "text": "Then let’s roll." }
+    { "t": 49.4, "end": 51.2, "speaker": "Gyroid", "portrait": "gyroid", "text": "Fine. Show me the gardens." }
   ],
   "title_card": { "t": 51.6, "end": 57.6 }
 }

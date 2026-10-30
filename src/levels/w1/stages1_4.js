@@ -17,18 +17,18 @@ const N = (text) => ({ speaker: 'Count Null', portrait: 'count-null', text })
 export const STATION_ORDER = ['retractor', 'still_point', 'roots', 'antipodes']
 
 export const OPENING = [
-  N('Squash the basin onto its rim, courier. The way I squashed your home.'),
-  E('Null’s Retractor wants to push the whole basin — a disk — onto its rim circle, without moving the rim. You have the tools to show it can’t.'),
-  E('Each deck you finish leaves a Still Point: a little wire disk whose arrows swirl round and round, and one gold dot in the middle that never moves — the fixed point no map of the disk can get rid of. Collect all four and the Warp Portal at the north end opens.'),
-  E('The Retractor deck is just ahead.'),
+  N('My Retractor, Gyroid. It presses a basin flat onto its rim, the way I pressed Haven. Nobody felt a thing.'),
+  E('It wants to push the whole basin, a disk, onto its rim circle without moving the rim. If a ring could really be folded to a point, that machine would work. You can show it can’t.'),
+  E('Each deck you finish leaves a Still Point: a little wire disk whose arrows swirl round one gold dot that never moves, the fixed point no map of the disk can get rid of. Collect all four and the Warp Portal at the north end opens.'),
+  E('The Retractor deck’s just ahead.'),
 ]
 
 export const STATIONS = {
   retractor: {
     blueprint: 'Break the Retractor',
     arrive: [
-      E('First the rim. Winding Cord (4): walk the rim road once round. The pink arrow over you points the way the rim loop goes — watch it turn once.'),
-      E('Then we’ll shrink that loop through the disk with the Tide Glass, and see what the Retractor does with it.'),
+      E('Start with the rim. Winding Cord (4): walk the rim road once round. The pink arrow over your head points the way the rim loop is going. Watch it turn once.'),
+      E('Then we’ll shrink that loop into the disk with the Tide Glass and see what the Retractor does with it.'),
     ],
     goals: [
       {
@@ -36,27 +36,29 @@ export const STATIONS = {
         winding: 1,
         done: [
           G('One lap, and the arrow turned once.'),
-          E('The rim loop winds once: in $π₁(S¹) ≅ ℤ$ it’s $1$. Now take the Tide Glass (3) and press X to shrink it into the disk — in a disk, every loop shrinks to a point.'),
-          E('Watch the Retractor: it must push each shrinking loop back out onto the rim.'),
+          E('So the rim loop winds once: in $π₁(S¹) ≅ ℤ$ it’s $1$. Now take the Tide Glass (3) and press X to shrink it into the disk. In a disk, every loop shrinks to a point.'),
+          E('Watch the Retractor. It has to push every one of those shrinking loops back out onto the rim.'),
         ],
       },
       {
         type: 'shrink',
         wave: true,
         done: [
-          E('There. Every pushed-out loop still wound once — and the last one is a single point, which winds zero. A winding number can’t jump from $1$ to $0$ along a slide. The Retractor tore.'),
-          G('So there’s no way to squash the disk onto its rim, holding the rim still.'),
-          E('No retraction $D² → S¹$ — so a ring is not a point. Not probably: proved. Now — drones! Lash them (1) before they drag you off.'),
+          E('There. Every loop it pushed out still wound once, and the last one is a single point, which winds zero. Along a slide a winding number can’t jump from $1$ to $0$. The Retractor tore.'),
+          G('So you can’t squash the disk onto its rim with the rim held still. And if a ring could fold to a point, you could.'),
+          E('No retraction $D² → S¹$. A ring is not a point, Gyroid. Not probably. Proved.'),
+          G('…Proved.'),
+          E('Drones! Lash them (1) before they drag you off.'),
         ],
       },
       { type: 'guard', done: [E('Deck clear. The Still Point is west.')] },
     ],
-    early: [E('The Retractor deck is first — straight ahead.')],
+    early: [E('The Retractor deck is first, straight ahead.')],
   },
   still_point: {
     blueprint: 'Find the still tile',
     arrive: [
-      E('The basin’s current carries every tile somewhere else in the basin — a map $h$ of the disk to itself. Each arrow points from a tile toward where it’s carried.'),
+      E('The basin’s current carries every tile to some spot in the basin: a map $h$ of the disk to itself. Each arrow points from a tile toward where it gets carried.'),
       E('Walk the rim once with the Cord (4) and count the arrow over you. If it turns, some tile inside isn’t carried anywhere.'),
     ],
     goals: [
@@ -64,51 +66,63 @@ export const STATIONS = {
         type: 'rim',
         winding: 1,
         done: [
-          E('The arrow turned once on the rim. If no tile were still, every arrow would have a direction, and shrinking the rim loop inward would carry a loop that turns once down to one that doesn’t turn — impossible.'),
-          E('So a still tile exists: a fixed point, $h(x) = x$. Find it — the arrows shrink toward it — and click it.'),
+          E('The arrow turned once on the rim. If no tile were still, every arrow would have a direction, and shrinking the rim loop inward would carry a count of one down to the zero of a tiny loop. Counts can’t jump.'),
+          E('So a still tile has to exist: a fixed point, $h(x) = x$. Find it (the arrows shrink toward it) and click it.'),
         ],
       },
-      { type: 'still', done: [G('There — its arrow shrinks to nothing.'), E('Brouwer’s fixed point theorem: every map from the disk to itself keeps some point still. East now, to the root pool.')] },
+      { type: 'still', done: [G('There. Its arrow shrinks to nothing.'), E('That’s Brouwer’s fixed point theorem: every map from the disk to itself keeps some point still. East now, to the root pool.')] },
     ],
     early: [E('Finish the Retractor proof first.')],
   },
   roots: {
     blueprint: 'Three roots',
     arrive: [
-      E('The arrows here follow the polynomial $p(z) = z³ − a³$. Walk the rim once with the Cord (4) and count the arrow over you.'),
-      E('Careful: a Möbius prowler guards this pool. Two lashes (1) — but the first cuts it down the middle into one band twice as long, and it runs twice as fast. Be ready to strike again.'),
+      E('Here the arrows follow the polynomial $p(z) = z³ − a³$. Walk the rim once with the Cord (4) and count the arrow over you.'),
+      E('Careful, a Möbius prowler guards this pool. Two lashes (1), but the first cuts it down the middle into one band twice as long, and that runs twice as fast. Be ready to strike again.'),
     ],
     goals: [
       {
         type: 'rim',
         winding: 3,
         done: [
-          G('One lap — and the arrow turned three times!'),
-          E('On a big circle $z³ − a³$ behaves like $z³$, which winds three times. So $p$ must be zero somewhere inside — that’s Hatcher’s proof of the fundamental theorem of algebra. Find the zeros: the whirlpools where the arrows shrink away. Click each one.'),
+          G('One lap, and the arrow turned three times!'),
+          E('On a big circle, $z³ − a³$ behaves like $z³$, and $z³$ winds three times. A count that isn’t zero means $p$ has to vanish somewhere inside. That’s Hatcher’s proof of the fundamental theorem of algebra.'),
+          E('Find the zeros: the whirlpools where the arrows shrink away. Click each one.'),
         ],
       },
-      { type: 'roots', count: 3, done: [G('Three whirlpools, three roots.'), E('A degree-3 polynomial has 3 roots. Last deck: the sphere of Antipodes, north.')] },
+      { type: 'roots', count: 3, done: [G('Three whirlpools, three roots.'), E('Degree three, three roots, and here all three are different. Last deck: the sphere of Antipodes, north.')] },
     ],
     early: [E('The Still Point comes before the root pool.')],
   },
   antipodes: {
     blueprint: 'Opposite match',
     arrive: [
-      E('A sphere, with weather stations. Each reads two numbers — say, temperature and pressure: a map $f : S² → ℝ²$.'),
-      N('And I promise no two opposite stations agree.'),
-      E('Borsuk–Ulam says he’s wrong: some point and its opposite always read exactly the same. Click a station, then the one opposite it.'),
+      E('A sphere, with weather stations. Each one reads two numbers that change smoothly as you walk, say temperature and pressure. That’s a map $f : S² → ℝ²$.'),
+      N('Opposite sides of the world, Gyroid. They never agree. Some things are simply too far apart to meet again.'),
+      E('He’s wrong. The Borsuk–Ulam theorem says some point and its opposite always read exactly the same. Click a station, then the one opposite it.'),
     ],
     goals: [
       {
         type: 'pair',
         done: [
-          E('Opposite stations, identical readings: $f(x) = f(−x)$. That’s the Borsuk–Ulam theorem — no map from the sphere to the plane can keep all opposite points apart.'),
-          E('The basin is clear. Gyroid — look south. Something on the horizon just lit up. The exit gate is open to the north; gather every Still Point and the Warp Portal there will take us on.'),
+          E('Opposite stations, identical readings: $f(x) = f(−x)$. No map from the sphere to the plane can keep every pair of opposite points apart.'),
+          E('Why? If no pair matched, $f(x) − f(−x)$ on the equator would wind an odd number of times, yet it shrinks over the top hemisphere. Odd isn’t zero.'),
+          E('That’s the whole basin proved. Gyroid. Look south. Something on the horizon just lit up.'),
+          G('Is that…?'),
+          E('Go and see. The exit gate’s open to the north. Gather every Still Point and the Warp Portal there will take us on.'),
         ],
       },
-      { type: 'exit', done: [E('That’s Haven’s beacon. Go on — the Torus Terraces are north, and we have a world to put back.')] },
+      {
+        type: 'exit',
+        done: [
+          E('That’s Haven’s beacon.'),
+          G('Someone lit the guild lamp. They’re back. Emmy, they’re all back!'),
+          N('A lamp in a window. I know how long those burn, Gyroid. Don’t keep them waiting.'),
+          E('…Come on. The Torus Terraces are north, and there’s a world to put back.'),
+        ],
+      },
     ],
-    early: [E('Match antipodes after the root pool.')],
+    early: [E('Match the antipodes after the root pool.')],
   },
 }
 
@@ -130,13 +144,13 @@ export function emmyAdvice14(state) {
   const { current, goal, progress, stationId, enemies } = state
   if (!current) return [E('Every deck is proved and the gate north is open. Gather every Still Point, then into the Warp Portal. I’m right behind you.')]
   if (stationId !== current)
-    return [E(`${state.siteName(current)} is next: follow the NEXT ring on the map. The commons between the decks are open ground, full of Null’s beasts, so keep the Lash (1) ready. I’ll stay right behind you.`)]
-  if (enemies > 0) return [E('Lash the spawn (1) first — retractor drones drag you about, and whirl tops spin. A Möbius prowler takes two, and runs twice as fast after the first.')]
+    return [E(`${state.siteName(current)} is next. Follow the NEXT ring on the map. The commons between the decks are full of Null’s beasts, so keep the Lash (1) ready. I’ll stay right behind you.`)]
+  if (enemies > 0) return [E('Lash the spawn (1) first. Retractor drones drag you about and whirl tops spin you; a Möbius prowler takes two lashes, and runs twice as fast after the first.')]
   if (!goal) return [E('Walk on to the next deck.')]
-  if (goal.type === 'rim') return [E(`Winding Cord (4): walk the whole rim road once round without stepping off it. Watch the pink arrow over your head — it should turn ${goal.winding} time${goal.winding === 1 ? '' : 's'}.`)]
-  if (goal.type === 'shrink') return [E('Tide Glass (3), then press X: the white loop shrinks toward the centre. Keep going all the way.')]
-  if (goal.type === 'still') return [E('Click the tile where the arrows shrink to nothing — they swirl round it.')]
-  if (goal.type === 'roots') return [E(`Three whirlpools where the arrows shrink away — click each (${progress.roots ?? 0}/3 found).`)]
+  if (goal.type === 'rim') return [E(`Winding Cord (4): walk the whole rim road once round without stepping off it. Watch the pink arrow over your head. It should turn ${goal.winding} time${goal.winding === 1 ? '' : 's'}.`)]
+  if (goal.type === 'shrink') return [E('Tide Glass (3), then press X: the white loop shrinks toward the centre. Keep going, all the way.')]
+  if (goal.type === 'still') return [E('Click the tile where the arrows shrink to nothing. They swirl round it.')]
+  if (goal.type === 'roots') return [E(`Three whirlpools where the arrows shrink away. Click each one (${progress.roots ?? 0}/3 found).`)]
   if (goal.type === 'pair') return [E('Click a station, then the station straight opposite it through the centre. You want two opposite ones whose readings are exactly the same, in the same order.')]
   if (goal.type === 'guard') return [E('Lash the retractor drones (1) until the deck is clear.')]
   if (goal.type === 'exit') return [E('The gate is open to the north.')]

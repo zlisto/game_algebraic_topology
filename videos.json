@@ -1942,37 +1942,37 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 7.2,
           "speaker": "Narrator",
-          "text": "In Bouquet Bastion, couriers kept a ledger — not of parcels, but of routes. Haven kept one too, once."
+          "text": "In Bouquet Bastion the post-runners kept a ledger of routes, not parcels. Haven kept one too, pinned up by the sorting desk."
         },
         {
           "t": 7.4,
-          "end": 11.6,
+          "end": 14.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Two routes are the same delivery if one slides into the other while both ends stay at their gates."
+          "text": "Two routes count as the same delivery if you can slide one onto the other while both ends stay at their gates."
         },
         {
           "t": 15.4,
           "end": 19.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Left of the hedge and right of the hedge won’t slide together. I can feel it."
+          "text": "The top route and the bottom one won’t slide together. The hedge is in the way. I can feel it."
         },
         {
           "t": 19.6,
-          "end": 22.8,
+          "end": 23.1,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Feeling isn’t proof — that’s what cost us Haven. Sort them, and keep that hedge in mind. It’s the first hole we’ll prove."
+          "text": "You felt Haven’s hole too. Feeling wasn’t enough."
         },
         {
           "t": 23.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Snappers. Of course."
+          "text": "Snappers. Course there are."
         }
       ],
       "title_card": {
@@ -2037,38 +2037,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 7.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A route that leaves the beacon and comes home is a loop. Loops are what we’ll count."
+          "text": "A route that leaves the beacon and comes back to it is a loop. Loops are what we’re going to count."
         },
         {
           "t": 7.4,
-          "end": 11,
+          "end": 15.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Your Lash can close them now. Every loop you run, it remembers."
+          "text": "Your Lash can close them now. Run a loop and it’ll remember it for you."
         },
         {
           "t": 15.4,
           "end": 19.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Out along the petal, then the same loop backwards… it all slides down to standing still."
+          "text": "Out round the petal, then the same petal backwards… and the whole trip shrinks down to standing still."
         },
         {
           "t": 20,
           "end": 23,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every loop has an undo. That’s what makes them a group — and a group is something Null can’t argue with."
+          "text": "Every loop can be undone. That makes them a group."
         },
         {
           "t": 23.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "And those hooded things are running it the wrong way round. On purpose."
+          "text": "And those hooded things are running the petals backwards. On purpose."
         }
       ],
       "title_card": {
@@ -2139,31 +2139,31 @@
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Each lap down here is one turn up there. Watch your shadow on the helix."
+          "text": "Every lap you run down here takes you one floor up there. Watch your shadow on the helix."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "However I wiggle, I end up on the same floor."
+          "text": "However much I wiggle, I end up on the same floor."
         },
         {
           "t": 20.8,
-          "end": 24,
+          "end": 24.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Sliding can’t change it. That number belongs to the loop. Gyroid — that’s it. That’s a number the Crown has to respect."
+          "text": "It can’t slide. Gyroid, that’s a number the Crown has to respect."
         },
         {
           "t": 24.4,
           "end": 27.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Winders. They’ve stolen turns of the road. Unwind them first — then lash."
+          "text": "Winders. They’ve stolen turns of the road. Unwind them first, then lash."
         }
       ],
       "title_card": {
@@ -2228,30 +2228,30 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.8,
+          "end": 8.0,
           "speaker": "Narrator",
-          "text": "Null had left a machine in the basin: the Retractor, built to squash a disk onto its rim — the same trick he used on Haven."
+          "text": "Null had left a machine in the basin: the Retractor, built to press a disk flat onto its rim. The same trick he’d used on Haven."
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 16.0,
           "speaker": "Count Null",
           "portrait": "count-null",
-          "text": "A basin is just its edge, with filling. Squeeze out the filling. Squeeze out the hole. Simple."
+          "text": "A basin’s just a rim with filling, Gyroid. Press the filling out to the rim, and the rim folds down after it. It doesn’t hurt."
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "The rim loop winds once. Inside the basin, it shrinks to nothing."
+          "text": "The rim loop winds once. But inside the basin it shrinks to nothing."
         },
         {
           "t": 20.8,
-          "end": 25.6,
+          "end": 26.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So the Retractor would have to turn nothing back into one lap. It can’t — winding numbers don’t jump. Prove it here, and you’ve proved the ring."
+          "text": "Push that shrink out onto the rim and one lap turns into zero. Winding numbers can’t jump. It tears."
         },
         {
           "t": 26.4,
@@ -2326,35 +2326,35 @@
           "end": 4.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Gyroid. Look back — on the horizon."
+          "text": "It’s still burning, Gyroid."
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 15.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Haven. It’s got its hole back. The beacon’s lit — they’re home!"
+          "text": "I keep checking it’s real. Haven, with its hole back. Every window lit."
         },
         {
           "t": 15.4,
           "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Open the parcel now. It’s my Chart: every province, every hole. A place we prove gets inked on it — and the Crown can’t take back what’s inked."
+          "text": "Open the parcel now. It’s my Chart: every province, every hole. Anything we prove gets inked on it, and the Crown can’t take back what’s inked."
         },
         {
           "t": 19.8,
           "end": 23.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So that’s why he wanted it. Then let’s ink the whole world."
+          "text": "I’ve been carrying it since the reef. So that’s why he wanted it. Then we ink the whole world."
         },
         {
           "t": 24,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Starting with — hey! Get off that projector!"
+          "text": "Starting with… hey! Get off that projector!"
         }
       ],
       "title_card": {
@@ -2419,16 +2419,16 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Narrator",
-          "text": "Here, every lap left a mark — a letter in a word only the loop could spell."
+          "text": "Here every lap left a mark: a letter, in a word only the loop could spell."
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 16.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Orange is $a$, blue is $b$. Run one backwards and you get its inverse — and opposites side by side cancel."
+          "text": "Orange is $a$, blue is $b$. Run one backwards and you get its inverse, and a letter right beside its inverse cancels."
         },
         {
           "t": 16.4,
@@ -2442,14 +2442,14 @@
           "end": 24,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And it never will. Here, order matters. That’s his whole power — a word that won’t undo."
+          "text": "And it never will, not on these petals. Here, order matters."
         },
         {
           "t": 24.4,
           "end": 27.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "It’s coming for you. Unravel it from its last letter first."
+          "text": "It’s coming for you. Take it apart from its last letter."
         }
       ],
       "title_card": {
@@ -2514,38 +2514,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 7.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Glue a disk onto a loop, and the loop can slide across it and vanish. Same press as the Foundry."
+          "text": "Glue a disk onto a loop and the loop can slide across it and vanish. Same press as the Foundry."
         },
         {
           "t": 7.4,
-          "end": 11,
+          "end": 15.0,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So a disk is a way to make a word mean nothing."
+          "text": "So gluing a disk is how you make a word mean nothing."
         },
         {
           "t": 15.4,
           "end": 20,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Glue one along $a$, $b$, $a$ back, $b$ back — the Commutator’s own word — and the figure-eight becomes a torus. Now $a$ then $b$ is $b$ then $a$."
+          "text": "Glue one along $a$, $b$, $a$ back, $b$ back, the Commutator’s own word, and the figure-eight becomes a torus. Then $a$ then $b$ is $b$ then $a$."
         },
         {
           "t": 20.2,
           "end": 23.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "His patrol word just died."
+          "text": "So his patrol word just… stops meaning anything."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "On a torus. Out here he still has the figure-eight. Careful."
+          "text": "Careful. Out here he still has his figure-eight."
         }
       ],
       "title_card": {
@@ -2610,37 +2610,37 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.8,
+          "end": 8.0,
           "speaker": "Narrator",
-          "text": "Above the figure-eight hung three glass copies of it — and every step below echoed above."
+          "text": "Above the figure-eight hung three glass copies of it, and every step below echoed above."
         },
         {
           "t": 8.4,
-          "end": 12.6,
+          "end": 16.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Gyroid! The sheets shifted — I’m stuck up on sheet two! Find a route whose lift ends here!"
+          "text": "Gyroid! He’s hung the beacon up on sheet two! Find a route whose lift ends up there!"
         },
         {
           "t": 16.4,
           "end": 20.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Every lap down here moves my lift up there — along the edge with the same letter."
+          "text": "Every lap I run down here moves my lift up there, along the edge with the same letter."
         },
         {
           "t": 20.8,
-          "end": 25.8,
+          "end": 26.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Then find a cover where $a$ then $b$ closes and $b$ then $a$ doesn’t. That proves his order — not just feels it."
+          "text": "Then find a cover where $a$ then $b$ closes and $b$ then $a$ doesn’t. That proves his order matters. Not a hunch. A proof."
         },
         {
           "t": 26.4,
           "end": 29.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Hold on. I’m coming up."
+          "text": "Hang on. I’m coming up."
         }
       ],
       "title_card": {
@@ -2705,38 +2705,38 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Tell the Stacks which loops should close, and they’ll build you a cover for it. Null used to love this place."
+          "text": "Tell the Stacks which loops should close and they’ll build the cover for you. He used to love it here."
         },
         {
           "t": 8.4,
           "end": 12.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Twice around closes, once doesn’t — two sheets."
+          "text": "Twice round closes, once doesn’t. Two sheets."
         },
         {
           "t": 15.4,
           "end": 20,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "And if nothing should close at all, you get the endless tree. Every word ends somewhere new."
+          "text": "And if nothing at all should close, you get the endless tree. Every word ends somewhere new."
         },
         {
           "t": 20.2,
           "end": 23.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "It goes on forever."
+          "text": "It just keeps going."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So does the plane over a torus. Up here, every road ends somewhere. Nothing is lost. That’s what he forgot."
+          "text": "So does the plane over a torus."
         }
       ],
       "title_card": {
@@ -2801,16 +2801,16 @@
       "captions": [
         {
           "t": 0.6,
-          "end": 4.6,
+          "end": 8.0,
           "speaker": "Narrator",
-          "text": "In the Deck Halls, whole floors moved together — and nothing changed. The Commutator’s last post in the Bastion."
+          "text": "In the Deck Halls whole floors moved together, and nothing changed. It was the Commutator’s last post in the Bastion."
         },
         {
           "t": 8.4,
-          "end": 12.4,
+          "end": 15.0,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A shuffle that carries the whole cover onto itself is a symmetry of the cover. Those form a group too."
+          "text": "A shuffle that carries the whole cover onto itself is a symmetry of the cover. Those make a group too."
         },
         {
           "t": 15.4,
@@ -2824,14 +2824,14 @@
           "end": 23.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "…and you get the projective plane — the sphere covers it twice. And Null? He’s gone ahead, to a sphere of his own."
+          "text": "…and you get the projective plane. The sphere covers it twice. And Null’s gone on ahead, to a sphere of his own."
         },
         {
           "t": 24.2,
           "end": 25.8,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "One lash, every floor. Then after him."
+          "text": "Then we go after him."
         }
       ],
       "title_card": {
@@ -2892,14 +2892,14 @@
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Fell the tree… three petals. Two sheets, three petals."
+          "text": "Shrink the tree to a point… three petals left. Two sheets, three petals."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every subgroup of a free group is free. And now you can count its generators."
+          "text": "So every subgroup of a free group is free, and now you can count its generators. Here, three."
         }
       ],
       "title_card": {
@@ -2960,14 +2960,14 @@
           "end": 12.6,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "So nothing above loops matters. The loops are the whole story."
+          "text": "So nothing above the loops matters. The loops are the whole story."
         },
         {
           "t": 12.8,
           "end": 17.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "One group, one space. Mathematicians call them K of G, one."
+          "text": "Its loops tell you everything about it. Mathematicians call a space like that a K of G, one."
         }
       ],
       "title_card": {
@@ -7392,7 +7392,7 @@
           "end": 6.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A covering space sits over a space in sheets. Here, two sheets over one loop. Run the loop below, and your lift — the teal bead — runs a matching path above."
+          "text": "A covering space hangs over a space in sheets: here, two over one loop. Your lift, the white bead, copies every step you take below."
         },
         {
           "t": 6.8,
@@ -7462,7 +7462,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "A cover sees what the loops downstairs can’t."
+          "text": "Now go and find me a cover that tells $ab$ from $ba$."
         }
       ],
       "title_card": {
@@ -7607,7 +7607,7 @@
           "end": 61.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "In the gardens: hold the Spool and click a route to pick it up, then drop it in a ledger bin. Same bin, same class."
+          "text": "In the gardens, hold the Spool and click a route to pick it up, then drop it in a ledger bin. Same bin, same class."
         },
         {
           "t": 61.8,
@@ -7621,7 +7621,7 @@
           "end": 69.4,
           "speaker": "Gyroid",
           "portrait": "gyroid",
-          "text": "Slide the route, never the gates. Got it."
+          "text": "So the route can wander all it likes, as long as both ends stay put."
         }
       ],
       "title_card": {
@@ -7762,10 +7762,10 @@
         },
         {
           "t": 48.9,
-          "end": 54.6,
+          "end": 55.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "So $[f] ↦ [h f h̄]$ matches every loop at $x₁$ with one at $x₀$ — an isomorphism. Nothing is gained or lost."
+          "text": "So $[f] ↦ [h f h̄]$ matches every loop at $x₁$ with one at $x₀$. It’s an isomorphism: nothing gained, nothing lost."
         },
         {
           "t": 55.4,
@@ -7786,7 +7786,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "That’s $π₁$ at a point. Go practise on the Bastion’s beacons."
+          "text": "That’s the fundamental group at one point. Go and try it on the Bastion’s beacons."
         }
       ],
       "title_card": {
@@ -7896,7 +7896,7 @@
           "end": 29.8,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Now deform the loop. Its lift sways too — but the end can only sit on a floor, and it can’t jump from one floor to the next."
+          "text": "Now deform the loop. Its lift sways too, but the end can only sit on a floor, and it can’t hop from one floor to the next."
         },
         {
           "t": 30,
@@ -7952,7 +7952,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every loop on the circle is a whole number. Go read the floors."
+          "text": "Every loop on the circle comes down to one whole number. Go and read the floors."
         }
       ],
       "title_card": {
@@ -8066,10 +8066,10 @@
         },
         {
           "t": 30,
-          "end": 37.6,
+          "end": 38.2,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Walk the rim: the arrow turns once. If no arrow were zero, the rim loop could shrink and stop turning — impossible. So some point stays put: $h(x) = x$. That’s Brouwer’s theorem."
+          "text": "The arrow turns once round the rim. With no zero arrow, shrinking the rim would take one to zero. So some point stays put: $h(x) = x$. That’s Brouwer’s theorem."
         },
         {
           "t": 38.4,
@@ -8111,7 +8111,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "If the rim count isn’t zero, something inside has to give."
+          "text": "So if the count round the rim isn’t zero, something inside has to give."
         }
       ],
       "title_card": {
@@ -8256,7 +8256,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Maps push loops forward — and a torus loop is just a pair of numbers."
+          "text": "So a map pushes loops forward, and on a torus a loop is just a pair of whole numbers."
         }
       ],
       "title_card": {
@@ -8415,7 +8415,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Laps are letters."
+          "text": "Go and spell some words."
         }
       ],
       "title_card": {
@@ -8545,7 +8545,7 @@
           "end": 59.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Cell-Smith (2): click the furnace to forge the point, then walk out round a track and back for an edge."
+          "text": "Cell Hammer (2): click the furnace to forge the point, then walk out round a track and back for an edge."
         },
         {
           "t": 60,
@@ -8559,7 +8559,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every disk you glue is a relation."
+          "text": "Each disk you glue adds one relation. Go and press some."
         }
       ],
       "title_card": {
@@ -8705,7 +8705,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Every connected cover is a subgroup."
+          "text": "Every connected cover is really a choice of which loops close. Go and choose some."
         }
       ],
       "title_card": {
@@ -8794,7 +8794,7 @@
           "end": 19.6,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "When deck transformations can reach every sheet, the cover is normal. This one isn’t."
+          "text": "When deck transformations can reach every sheet, the cover is normal, like that one. The next one isn’t."
         },
         {
           "t": 20,
@@ -8850,7 +8850,7 @@
           "end": 69.4,
           "speaker": "Emmy Boundary",
           "portrait": "emmy-boundary",
-          "text": "Symmetries of covers — and the sphere wrapped twice round $ℝP²$."
+          "text": "Turn the covers, then walk the sphere. Null’s trail runs out through the north gate."
         }
       ],
       "title_card": {

@@ -404,7 +404,7 @@ export default function Level1_7({ concept, onBackToTitle, onNext, onGo, startAt
     }
     sfxWrong()
     setWord([])
-    say([{ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text: `That walked ${wordText(word) || 'nothing'} — blueprint wants ${goal.word || 'rim → point'}. Walk it again.` }], 'play')
+    say([{ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text: `You walked ${wordText(word) || 'nothing'}, but the blueprint wants ${goal.word || 'rim → point'}. Walk it again.` }], 'play')
   }
 
   ribbonApi.current = {

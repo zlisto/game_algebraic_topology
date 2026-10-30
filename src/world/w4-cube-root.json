@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 1 Cube Root — Cube Hall. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 1 Cube Root — Cube Hall. Spire side-view: floors stacked south. · layout: zigzag",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -47.2,
-    "maxZ": 16
+    "minX": -36,
+    "maxX": 36,
+    "minZ": -63,
+    "maxZ": 22
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    14
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        14
       ],
       "shape": {
         "add": [
@@ -36,8 +36,8 @@
       "name": "Pinned Cubes",
       "stage": "station",
       "pos": [
-        0,
-        2
+        9,
+        0
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "Stack",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        -9,
+        -14
       ],
       "shape": {
         "add": [
@@ -92,8 +92,8 @@
       "name": "Pass Each Other",
       "stage": "station",
       "pos": [
-        0,
-        -20
+        9,
+        -28
       ],
       "shape": {
         "add": [
@@ -118,7 +118,7 @@
       "stage": "station",
       "pos": [
         -9,
-        -31
+        -42
       ],
       "shape": {
         "add": [
@@ -142,62 +142,144 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        -26,
+        -6
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "cube_sentry",
+          0.8,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        26,
+        -34
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "cube_sentry",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
-        0.0,
-        9.8
+        0.65,
+        12.99
       ],
       "b": [
-        0.0,
-        6.6
+        6.51,
+        3.87
       ]
     },
     {
       "a": [
-        2.91,
-        -1.56
+        5.37,
+        -2.82
       ],
       "b": [
-        6.09,
-        -5.44
+        -5.37,
+        -11.18
       ]
     },
     {
       "a": [
-        6.09,
-        -12.56
+        -5.37,
+        -16.82
       ],
       "b": [
-        2.91,
-        -16.44
+        5.37,
+        -25.18
       ]
     },
     {
       "a": [
-        -2.91,
-        -23.56
+        5.37,
+        -30.82
       ],
       "b": [
-        -6.09,
-        -27.44
+        -5.37,
+        -39.18
+      ]
+    },
+    {
+      "a": [
+        9.0,
+        -4.6
+      ],
+      "b": [
+        9.0,
+        -23.4
+      ]
+    },
+    {
+      "a": [
+        4.47,
+        -0.78
+      ],
+      "b": [
+        -23.24,
+        -5.53
+      ]
+    },
+    {
+      "a": [
+        13.34,
+        -29.53
+      ],
+      "b": [
+        23.36,
+        -33.07
       ]
     }
   ],
   "exit": {
     "gate": [
       -9,
-      -40.7
+      -52.1
     ],
     "a": [
       -9,
-      -35.6
+      -46.6
     ],
     "b": [
       -9,
-      -43.2
+      -54.6
     ],
     "to": "next"
   },

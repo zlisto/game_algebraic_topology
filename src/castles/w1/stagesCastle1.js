@@ -97,10 +97,10 @@ export function wordClaimTrue(id) {
 
 // ---------------------------------------------------------------- the dialogue
 export const OPENING = [
-  N('Welcome to the top of my sphere, courier. Haven has its hole back, and its proof sits on Emmy’s Chart. Well done.'),
-  N('Here, every loop comes home to nothing. Three trials. Each round I show you three things on my floor. Some honest, some forged.'),
-  N('Lash the beacon by a forgery and spare the honest ones. Lash an honest one, and my Crown cuts you.'),
-  E('Everything we learned in the Bastion, Gyroid: paths, lifts, words. Watch each one all the way through before you lash.'),
+  N('Gyroid. Haven has its hole back, and its proof is inked on Emmy’s Chart. I watched the guild lamp come on. That was well done.'),
+  N('Up here, every loop comes home to nothing. Three trials. Each round I’ll set three things on my floor. Some are honest. Some are forged.'),
+  N('Lash the beacon beside a forgery and spare the honest ones. Lash an honest one and my Crown will cut you. I’d rather it didn’t.'),
+  E('It’s everything from the Bastion, Gyroid: paths, lifts, words. Watch each one all the way through before you lash.'),
 ]
 
 export const TRIALS = [
@@ -108,8 +108,8 @@ export const TRIALS = [
     name: 'Same loop?',
     blurb: 'Two loops from the gold post. They deform into each other, post held still, exactly when they wind round the hole the same number of times.',
     intro: [
-      N('Trial one. Pairs of loops on rings of rock, both starting at the gold post. I say each pair deforms into each other, with the post held still.'),
-      E('Then they must have the same winding number. Count the laps round the hole, and watch which way each bead runs: anticlockwise is +1, clockwise is −1.'),
+      N('Trial one. Pairs of loops on rings of rock, both starting at the gold post. I say each loop in a pair can be deformed into the other with the post held still.'),
+      E('Then they’d need the same winding number. Count the laps round the hole, and watch which way each bead runs: counter-clockwise is +1, clockwise is −1.'),
     ],
     rounds: [
       [['once', 'wobble'], ['once', 'back'], ['twice', 'once']],
@@ -117,22 +117,22 @@ export const TRIALS = [
     ],
     honest: ['once+wobble', 'thereback+still', 'back+backwob'],
     why: {
-      'once+back': 'One winds once anticlockwise, +1. The other winds once clockwise, −1. Different winding numbers, so no deformation with the post fixed can carry one to the other.',
+      'once+back': 'One winds once counter-clockwise, +1. The other winds once clockwise, −1. Different winding numbers, so no deformation with the post fixed can carry one to the other.',
       'twice+once': 'One goes round the hole twice, the other once: 2 against 1. π₁ of a ring is ℤ, and different numbers are different loops.',
       'petal+once': 'The petal never goes round the hole, so its winding number is 0. The other winds once. 0 ≠ 1.',
     },
     spared: {
-      'once+wobble': 'Both wind once anticlockwise. Wobbles don’t matter: same winding number, so they deform into each other. Honest.',
+      'once+wobble': 'Both wind once counter-clockwise. Wobbles don’t matter: same winding number, so they deform into each other. Honest.',
       'thereback+still': 'Once round and straight back is +1 then −1, which is 0. It shrinks to the loop that just stays at the post. Honest.',
       'back+backwob': 'Both wind once clockwise: −1 and −1. The same element of π₁, so they’re homotopic. Honest.',
     },
-    done: [N('You can count to one. Charming.'), N('Count while you run, then. Spawn!')],
+    done: [N('You can count. Good.'), N('Now count while you run.')],
   },
   {
     name: 'Forged lifts',
     blurb: 'A lift sits right above its loop at every moment, stays on the helix, and never jumps. From level 0 it ends at the winding number.',
     intro: [
-      N('Trial two. My helix. Every loop on the floor has a lift: a path on the helix, sitting right above the loop the whole way.'),
+      N('Trial two. My helix. Every loop on the floor has a lift: a path on the helix that sits right above the loop the whole way round.'),
       E('Once you know where a lift starts, it’s unique. From level 0 it ends at the loop’s winding number. A real lift never jumps, never leaves the helix, and never strays from above its loop.'),
       G('Watch the bead up top and the bead on the floor together. Got it.'),
     ],
@@ -153,13 +153,13 @@ export const TRIALS = [
       liftback: 'Once round clockwise, one floor down: from 0 to −1. Honest.',
       from1: 'It started on level 1, not 0. That’s allowed: it’s the same lift moved up a floor. Once round still climbs one floor, from 1 to 2. Honest.',
     },
-    done: [N('Floors. Ladders. Little beads.'), N('Let us see how your ladders hold up against my menagerie.')],
+    done: [N('Floors and ladders and little beads. You’ve learned so much.'), N('My menagerie, then.')],
   },
   {
     name: 'Word claims',
     blurb: 'On the figure-eight, π₁ is free on a and b: cancel a letter only next to its own inverse. Nothing commutes. On the torus, a b a⁻¹ b⁻¹ = 1.',
     intro: [
-      N('Trial three. Words. A loop on my figure-eight spells a word in a and b, and I tell you which words are equal.'),
+      N('Trial three. Words. A loop on my figure-eight spells a word in a and b, and I’ll tell you which words are equal.'),
       E('On the figure-eight, π₁ is the free group on a and b. The only legal move is cancelling a letter next to its own inverse. Nothing commutes.'),
       E('A torus is different. Its square glues a disk along a b a⁻¹ b⁻¹, so on the torus that word shrinks. Check which space each claim is about.'),
     ],
@@ -178,7 +178,7 @@ export const TRIALS = [
       cancel2: 'a a⁻¹ cancels, then b b⁻¹. What’s left is a. Honest.',
       torus: 'On the torus, π₁ is ℤ × ℤ. The loop a b a⁻¹ b⁻¹ runs round the edge of the square, and the square shrinks to its corner, taking the loop with it. Honest, on the torus.',
     },
-    done: [N('Enough!'), N('Crown! Guard me!')],
+    done: [N('…That’s enough.'), N('Crown. Guard me.')],
   },
 ]
 
@@ -202,15 +202,16 @@ export const GUARD = [
 
 /** After the final phase, into the end card and the outro. */
 export const FINAL = [
-  N('Every forgery exposed. Every guard broken. You’re very good at loops, Gyroid.'),
+  N('Every forgery found. Every guard broken. You’re very good at loops, Gyroid.'),
   G('Then it’s over. Take off the Crown.'),
-  N('Over? We haven’t talked about my sphere yet.'),
-  N('Off my sphere, courier. Stand on the causeway with Emmy. You’ll want a good view.'),
+  N('You don’t look down when you run. Wren never did either.'),
+  G('…Who’s Wren?'),
+  N('Off my sphere, Gyroid. Go and stand on the causeway with Emmy. You’ll want a good view.'),
 ]
 
 export const HINTS_CASTLE = {
-  wrong: (why) => [N(`Ha! That one was honest. ${why}`), N('My Crown punishes the unjust. Shards!')],
-  knockout: E('Up, Gyroid! Shake it off. Null has restarted the round.'),
+  wrong: (why) => [N(`That one was honest, Gyroid. ${why}`), N('The Crown cuts anyone who strikes the honest. I did warn you.')],
+  knockout: E('Up, Gyroid. Up! He’s restarted the round.'),
 }
 
 export const DEFINITION_CASTLE1 = {

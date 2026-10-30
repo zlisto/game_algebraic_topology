@@ -1,15 +1,15 @@
 {
-  "note": "World 4 · Level 7 Hop Off — The Hopf Ring. Spire side-view: floors stacked south.",
+  "note": "World 4 · Level 7 Hop Off — The Hopf Ring. Spire side-view: floors stacked south. · layout: fork",
   "bounds": {
-    "minX": -16,
-    "maxX": 16,
-    "minZ": -47.2,
-    "maxZ": 16
+    "minX": -24,
+    "maxX": 36,
+    "minZ": -57,
+    "maxZ": 23
   },
   "causewayWidth": 1.4,
   "start": [
     0,
-    11
+    15
   ],
   "sites": [
     {
@@ -18,7 +18,7 @@
       "kind": "start",
       "pos": [
         0,
-        11
+        15
       ],
       "shape": {
         "add": [
@@ -61,8 +61,8 @@
       "name": "Linked",
       "stage": "station",
       "pos": [
-        9,
-        -9
+        13,
+        -11
       ],
       "shape": {
         "add": [
@@ -93,7 +93,7 @@
       "stage": "station",
       "pos": [
         0,
-        -20
+        -24
       ],
       "shape": {
         "add": [
@@ -117,8 +117,8 @@
       "name": "Null's Answer",
       "stage": "station",
       "pos": [
-        -9,
-        -31
+        -14,
+        -36
       ],
       "shape": {
         "add": [
@@ -142,13 +142,58 @@
         ]
       ],
       "beacon": null
+    },
+    {
+      "id": "commons_1",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        -13,
+        -11
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "id": "commons_2",
+      "name": "Commons",
+      "kind": "commons",
+      "pos": [
+        26,
+        -30
+      ],
+      "shape": {
+        "add": [
+          {
+            "type": "circle",
+            "cx": 0,
+            "cz": 0,
+            "r": 3.4
+          }
+        ]
+      },
+      "enemies": [
+        [
+          "fiber_wraith",
+          0.8,
+          -0.6
+        ]
+      ]
     }
   ],
   "causeways": [
     {
       "a": [
         0.0,
-        9.8
+        13.8
       ],
       "b": [
         0.0,
@@ -157,47 +202,77 @@
     },
     {
       "a": [
-        2.91,
-        -1.56
+        -3.25,
+        -1.25
       ],
       "b": [
-        6.09,
-        -5.44
+        -11.02,
+        -9.02
       ]
     },
     {
       "a": [
-        6.09,
-        -12.56
+        3.25,
+        -1.25
       ],
       "b": [
-        2.91,
-        -16.44
+        9.75,
+        -7.75
       ]
     },
     {
       "a": [
-        -2.91,
-        -23.56
+        9.75,
+        -14.25
       ],
       "b": [
-        -6.09,
-        -27.44
+        3.25,
+        -20.75
+      ]
+    },
+    {
+      "a": [
+        -11.02,
+        -12.98
+      ],
+      "b": [
+        -3.25,
+        -20.75
+      ]
+    },
+    {
+      "a": [
+        -3.49,
+        -26.99
+      ],
+      "b": [
+        -10.51,
+        -33.01
+      ]
+    },
+    {
+      "a": [
+        4.48,
+        -25.03
+      ],
+      "b": [
+        23.27,
+        -29.37
       ]
     }
   ],
   "exit": {
     "gate": [
-      -9,
-      -40.7
+      -14,
+      -46.1
     ],
     "a": [
-      -9,
-      -35.6
+      -14,
+      -40.6
     ],
     "b": [
-      -9,
-      -43.2
+      -14,
+      -48.6
     ],
     "to": "next"
   },

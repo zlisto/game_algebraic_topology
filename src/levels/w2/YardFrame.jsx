@@ -1,4 +1,5 @@
 import { useFrame } from '@react-three/fiber'
+import Commons from '../../world/Commons'
 import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useRef } from 'react'
@@ -117,6 +118,11 @@ export default function YardFrame({
             <circleGeometry args={[s.def.add[0].r || 2, 32]} />
             <meshStandardMaterial color={deckColor || '#26302c'} roughness={0.85} />
           </mesh>
+        ))}
+      {sites
+        .filter((s) => s.kind === 'commons')
+        .map((s) => (
+          <Commons key={s.id} site={s} color={deckColor} />
         ))}
       {stations.map((s) => (
         <group key={s.id}>

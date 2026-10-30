@@ -1,4 +1,5 @@
 import { useFrame } from '@react-three/fiber'
+import Commons from '../../world/Commons'
 import { Sparkles, Stars } from '@react-three/drei'
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
 import { useRef } from 'react'
@@ -128,6 +129,11 @@ export default function SpireScene({
         .filter((s) => s.stage === 'station' || s.kind === 'start')
         .map((s) => (
           <FloorPad key={s.id} site={s} accent={accent} active={s.id === current} />
+        ))}
+      {sites
+        .filter((s) => s.kind === 'commons')
+        .map((s) => (
+          <Commons key={s.id} site={s} color="#1c1a2a" accent={accent || '#a259ff'} />
         ))}
       <ExitGate exit={layout.exit} open={exitOpen} />
       <group scale={S}>
