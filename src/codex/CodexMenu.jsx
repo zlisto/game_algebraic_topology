@@ -6,6 +6,8 @@ import { ColossusSpawn, HarpySpawn, SpectreSpawn, SpiderSpawn } from '../charact
 import {
   BacktrackSpawn, ConerSpawn, CubeSentrySpawn, DeckGuardSpawn, FiberWraithSpawn, GlitchSpawn, LiftlingSpawn, LoopBiterSpawn,
   MirrorSpawn, PatrolSpawn, RetractorSpawn, ShardSpawn, SnapperSpawn, TwistThiefSpawn, UnglueSpawn, WinderSpawn,
+  WhirlSpawn, ProjectorImpSpawn, FlipperSpawn, BogSpawn, CrumplerSpawn, LeakSpawn, QuarryGolemSpawn, GaleSpawn, EchoSpawn,
+  VineChokerSpawn, MothSpawn, SeamWraithSpawn,
 } from '../characters/Spawn'
 import { Star } from '../levels/w0/StarPortal'
 import MathText from '../screens/MathText'
@@ -25,6 +27,8 @@ export const VIEW = {
   biter: LoopBiterSpawn, backtrack: BacktrackSpawn, winder: WinderSpawn, retractor: RetractorSpawn, patrol: PatrolSpawn,
   unglue: UnglueSpawn, liftling: LiftlingSpawn, deck_guard: DeckGuardSpawn, cube_sentry: CubeSentrySpawn, glitch: GlitchSpawn,
   fiber_wraith: FiberWraithSpawn, twist_thief: TwistThiefSpawn,
+  whirl: WhirlSpawn, projector_imp: ProjectorImpSpawn, flipper: FlipperSpawn, bog: BogSpawn, crumpler: CrumplerSpawn, leak: LeakSpawn,
+  quarry_golem: QuarryGolemSpawn, gale: GaleSpawn, echo: EchoSpawn, vine_choker: VineChokerSpawn, moth: MothSpawn, seam_wraith: SeamWraithSpawn,
 }
 
 /** A beast standing still for its portrait, turning slowly. */

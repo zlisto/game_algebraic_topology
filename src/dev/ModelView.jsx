@@ -55,6 +55,17 @@ export default function ModelView() {
     body = createElement(VIEW[m] || SPAWN_VIEW[m], { e: beast })
     fit = { dist: 3.2, h: 1.4, look: 0.7 }
   }
+  // ?list=a,b,c — a row of beasts, for checking a batch at once
+  const list = p.get('list')
+  if (list) {
+    const names = list.split(',')
+    body = names.map((n, i) => (
+      <group key={n} position={[(i - (names.length - 1) / 2) * 1.35, 0, 0]}>
+        {(VIEW[n] || SPAWN_VIEW[n]) && createElement(VIEW[n] || SPAWN_VIEW[n], { e: { ...beast, type: n, seed: i } })}
+      </group>
+    ))
+    fit = { dist: 1.2 * names.length + 2, h: 1.6, look: 0.6 }
+  }
   const dist = parseFloat(p.get('dist') || fit.dist)
   const h = parseFloat(p.get('h') || fit.h)
   return (

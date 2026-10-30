@@ -1,7 +1,10 @@
 import { useFrame } from '@react-three/fiber'
+import { Part, preloadModels } from './models'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Lightning, cached, merge, piece } from './Beasts'
+
+preloadModels('beasts_w234', 'beasts_w1')
 
 /**
  * Count Null's spawn, modeled on the concept sheets in assets/characters/enemies/:
@@ -754,14 +757,12 @@ export function HedgeSpawn({ e }) {
     const t = clock.elapsedTime + e.seed
     place(g.current, e, 0.3, 0.4, t, 0.8 + (e.rooting || 0) * 0.7)
     bud.current.rotation.y = t * 2
-    bud.current.material.emissiveIntensity = 0.8 + (e.rooting || 0) * 1.6
   })
   return (
     <group ref={g}>
-      <mesh ref={bud}>
-        <icosahedronGeometry args={[0.26, 0]} />
-        <meshStandardMaterial color="#17101f" emissive="#8060d0" emissiveIntensity={1} flatShading toneMapped={false} />
-      </mesh>
+      <group ref={bud}>
+        <Part model="beasts_w1" name="hedge" />
+      </group>
       <mesh position={[0, -0.27, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.28, 0.5, 12]} />
         {glow(VIOLET, { transparent: true, opacity: 0.35 })}
@@ -781,17 +782,10 @@ export function RetractorSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <octahedronGeometry args={[0.3, 0]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
+      <Part model="beasts_w1" name="retractor" />
       <mesh ref={ring} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.46, 0.04, 6, 20]} />
         {glow(VIOLET)}
-      </mesh>
-      <mesh position={[0, -0.34, 0]}>
-        <cylinderGeometry args={[0.02, 0.02, 0.5, 5]} />
-        {glow('#ffb347')}
       </mesh>
     </group>
   )
@@ -808,10 +802,9 @@ export function WhirlSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh ref={top} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.3, 0.6, 6]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
+      <group ref={top}>
+        <Part model="beasts_w1" name="whirl" />
+      </group>
       <mesh position={[0, 0.34, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.2, 0.34, 16]} />
         {glow(LAVENDER, { transparent: true, opacity: 0.6 })}
@@ -831,12 +824,9 @@ export function ProjectorImpSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <sphereGeometry args={[0.26, 10, 8]} />
-        {obsidian()}
-      </mesh>
-      <mesh ref={cone} position={[0, 0.26, 0]}>
-        <coneGeometry args={[0.12, 0.28, 6]} />
+      <Part model="beasts_w1" name="projector_imp" />
+      <mesh ref={cone} position={[0, 0.2, 0.42]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.16, 0.36, 12, 1, true]} />
         <meshStandardMaterial color="#6040a0" emissive="#b090ff" emissiveIntensity={1.4} toneMapped={false} />
       </mesh>
     </group>
@@ -858,17 +848,10 @@ export function PatrolSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <capsuleGeometry args={[0.28, 0.6, 6, 12]} />
-        {obsidian()}
-      </mesh>
+      <Part model="beasts_w1" name="patrol" />
       <mesh ref={knot} position={[0.38, 0.3, 0]} rotation={[0, 0, 0.4]}>
         <torusGeometry args={[0.22, 0.05, 8, 20]} />
         {glow('#ffb347')}
-      </mesh>
-      <mesh position={[0, 0.12, 0.27]} scale={[1, 0.18, 0.4]}>
-        <sphereGeometry args={[0.3, 8, 6]} />
-        {glow(VIOLET)}
       </mesh>
     </group>
   )
@@ -886,8 +869,9 @@ export function LiftlingSpawn({ e }) {
   })
   return (
     <group ref={g}>
+      <Part model="beasts_w1" name="liftling" />
       <mesh ref={gem}>
-        <octahedronGeometry args={[0.3, 0]} />
+        <octahedronGeometry args={[0.13, 0]} />
         <meshStandardMaterial color="#17101f" emissive="#8a5aff" emissiveIntensity={1.2} flatShading toneMapped={false} />
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
@@ -908,14 +892,7 @@ export function StackSentinelSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh position={[0, 0.8, 0]}>
-        <cylinderGeometry args={[0.32, 0.42, 1.5, 8]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0, 1.7, 0]}>
-        <coneGeometry args={[0.25, 0.5, 8]} />
-        <meshStandardMaterial color="#ffb347" emissive="#ffb347" emissiveIntensity={1.2} toneMapped={false} />
-      </mesh>
+      <Part model="beasts_w1" name="stack_sentinel" />
     </group>
   )
 }
@@ -930,14 +907,7 @@ export function DeckGuardSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <capsuleGeometry args={[0.22, 0.5, 4, 8]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0, 0.5, 0]}>
-        <octahedronGeometry args={[0.12, 0]} />
-        {glow('#ffb347')}
-      </mesh>
+      <Part model="beasts_w1" name="deck_guard" />
     </group>
   )
 }
@@ -953,19 +923,14 @@ export function BacktrackSpawn({ e }) {
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
     place(g.current, e, 0.55 + Math.sin(t * 5) * 0.05, 0.4, t, 1)
-    body.current.rotation.y = -t * 3
+    body.current.rotation.y = Math.PI + Math.sin(t * 2) * 0.35 // it runs backwards: its face looks back the way it came
     tail.current.children.forEach((c, i) => (c.material.opacity = 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(t * 8 - i * 1.3))))
   })
   return (
     <group ref={g}>
-      <mesh ref={body}>
-        <coneGeometry args={[0.28, 0.62, 7]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0, 0.12, 0.2]}>
-        <sphereGeometry args={[0.06, 8, 6]} />
-        {glow('#ff8ad8')}
-      </mesh>
+      <group ref={body}>
+        <Part model="beasts_w1" name="backtrack" />
+      </group>
       <group ref={tail}>
         {[0, 1, 2].map((i) => (
           <mesh key={i} position={[0, -0.05, -0.34 - i * 0.24]} rotation={[-Math.PI / 2, 0, Math.PI]}>
@@ -1001,11 +966,8 @@ export function WinderSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <octahedronGeometry args={[0.24, 0]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh ref={core} position={[0, 0.36, 0]}>
+      <Part model="beasts_w1" name="winder" />
+      <mesh ref={core} position={[0, 0.4, 0]}>
         <sphereGeometry args={[0.09, 10, 8]} />
         <meshBasicMaterial color="#9060ff" toneMapped={false} />
       </mesh>
@@ -1031,14 +993,7 @@ export function EchoSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh scale={[-1, 1, 1]}>
-        <capsuleGeometry args={[0.2, 0.45, 4, 8]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0, 0.55, 0.08]}>
-        <sphereGeometry args={[0.12, 8, 6]} />
-        {glow('#c090ff')}
-      </mesh>
+      <Part model="beasts_w234" name="echo" />
     </group>
   )
 }
@@ -1053,14 +1008,7 @@ export function VineChokerSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <torusGeometry args={[0.35, 0.08, 6, 16]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0, 0.5, 0]} rotation={[0.3, 0, 0.2]}>
-        <cylinderGeometry args={[0.04, 0.06, 1.1, 6]} />
-        {glow('#a060ff')}
-      </mesh>
+      <Part model="beasts_w234" name="vine_choker" />
     </group>
   )
 }
@@ -1068,22 +1016,24 @@ export function VineChokerSpawn({ e }) {
 /** Moth swarm (3-3): snuffs lanterns — one lash. */
 export function MothSpawn({ e }) {
   const g = useRef()
+  const wL = useRef()
+  const wR = useRef()
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
     place(g.current, e, 0.9 + Math.sin(t * 4) * 0.15, 0.4, t, 0.85)
+    const f = Math.sin(t * 16) * 0.7
+    wL.current.rotation.z = 0.15 + f
+    wR.current.rotation.z = -0.15 - f
   })
   return (
     <group ref={g}>
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 0.18, 0, 0]} rotation={[0, 0, s * 0.4]}>
-          <sphereGeometry args={[0.14, 6, 4]} />
-          {obsidian({ flatShading: true })}
-        </mesh>
-      ))}
-      <mesh>
-        <sphereGeometry args={[0.1, 8, 6]} />
-        {glow('#d0a0ff')}
-      </mesh>
+      <Part model="beasts_w234" name="moth" />
+      <group ref={wL} position={[0.085, 0.034, 0.0]}>
+        <Part model="beasts_w234" name="moth_wing" />
+      </group>
+      <group ref={wR} position={[-0.085, 0.034, 0.0]}>
+        <Part model="beasts_w234" name="moth_wing" scale={[-1, 1, 1]} />
+      </group>
     </group>
   )
 }
@@ -1098,14 +1048,7 @@ export function SeamWraithSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <coneGeometry args={[0.35, 1.4, 5]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0, 0.5, 0.1]}>
-        <sphereGeometry args={[0.15, 8, 6]} />
-        {glow('#ff70d0')}
-      </mesh>
+      <Part model="beasts_w234" name="seam_wraith" />
     </group>
   )
 }
@@ -1120,14 +1063,7 @@ export function FlipperSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <boxGeometry args={[0.45, 0.25, 0.55]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0, 0.25, 0]}>
-        <octahedronGeometry args={[0.18, 0]} />
-        {glow('#b070ff')}
-      </mesh>
+      <Part model="beasts_w234" name="flipper" />
     </group>
   )
 }
@@ -1141,14 +1077,7 @@ export function BogSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <sphereGeometry args={[0.42, 10, 8]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0, 0.25, 0.15]} scale={[1.2, 0.6, 0.8]}>
-        <sphereGeometry args={[0.2, 8, 6]} />
-        {glow('#9060ff')}
-      </mesh>
+      <Part model="beasts_w234" name="bog" />
     </group>
   )
 }
@@ -1163,14 +1092,7 @@ export function CrumplerSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <dodecahedronGeometry args={[0.28, 0]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0.1, 0.15, 0]}>
-        <octahedronGeometry args={[0.1, 0]} />
-        {glow('#c080ff')}
-      </mesh>
+      <Part model="beasts_w234" name="crumpler" />
     </group>
   )
 }
@@ -1184,14 +1106,7 @@ export function LeakSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <sphereGeometry args={[0.16, 8, 6]} />
-        {glow('#b070ff')}
-      </mesh>
-      <mesh position={[0, -0.2, 0]}>
-        <coneGeometry args={[0.08, 0.3, 6]} />
-        {obsidian()}
-      </mesh>
+      <Part model="beasts_w234" name="leak" />
     </group>
   )
 }
@@ -1206,18 +1121,7 @@ export function QuarryGolemSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <boxGeometry args={[0.55, 0.7, 0.45]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh position={[0, 0.55, 0]}>
-        <boxGeometry args={[0.4, 0.35, 0.35]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0, 0.7, 0.15]}>
-        <sphereGeometry args={[0.1, 8, 6]} />
-        {glow('#ff70d0')}
-      </mesh>
+      <Part model="beasts_w234" name="quarry_golem" />
     </group>
   )
 }
@@ -1232,12 +1136,7 @@ export function GaleSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      {[0, 1, 2].map((i) => (
-        <mesh key={i} position={[Math.cos(i * 2.1) * 0.15, Math.sin(i) * 0.1, Math.sin(i * 2.1) * 0.15]}>
-          <sphereGeometry args={[0.1, 6, 4]} />
-          {glow('#d0a0ff')}
-        </mesh>
-      ))}
+      <Part model="beasts_w234" name="gale" />
     </group>
   )
 }
@@ -1255,14 +1154,7 @@ export function CubeSentrySpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh>
-        <boxGeometry args={[0.55, 0.55, 0.55]} />
-        {obsidian({ flatShading: true })}
-      </mesh>
-      <mesh>
-        <boxGeometry args={[0.58, 0.58, 0.58]} />
-        {glow('#a060ff', { transparent: true, opacity: 0.35, wireframe: true })}
-      </mesh>
+      <Part model="beasts_w234" name="cube_sentry" />
     </group>
   )
 }
@@ -1276,12 +1168,7 @@ export function GlitchSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      {[0, 1, 2].map((i) => (
-        <mesh key={i} position={[(i - 1) * 0.18, Math.sin(i) * 0.1, 0]}>
-          <boxGeometry args={[0.12, 0.28, 0.08]} />
-          {glow(i % 2 ? '#c090ff' : '#8060d0')}
-        </mesh>
-      ))}
+      <Part model="beasts_w234" name="glitch" />
     </group>
   )
 }
@@ -1296,14 +1183,7 @@ export function FiberWraithSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.4, 0.05, 6, 24]} />
-        {glow('#88ccff')}
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[0.16, 8, 6]} />
-        {obsidian()}
-      </mesh>
+      <Part model="beasts_w234" name="fiber_wraith" />
     </group>
   )
 }
@@ -1318,14 +1198,7 @@ export function TwistThiefSpawn({ e }) {
   })
   return (
     <group ref={g}>
-      <mesh position={[0, 0.15, 0]}>
-        <sphereGeometry args={[0.2, 8, 6]} />
-        {obsidian()}
-      </mesh>
-      <mesh position={[0.28, 0.05, 0]} rotation={[0, 0, -0.6]}>
-        <boxGeometry args={[0.35, 0.12, 0.18]} />
-        {glow('#e0aaff')}
-      </mesh>
+      <Part model="beasts_w234" name="twist_thief" />
     </group>
   )
 }
