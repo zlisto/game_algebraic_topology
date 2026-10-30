@@ -1,4 +1,5 @@
 import ModelView from './dev/ModelView'
+import PrologueScreen from './movies/prologue'
 import { useCallback, useEffect, useState } from 'react'
 import TitleScreen from './screens/TitleScreen'
 import IntroCutscene from './screens/IntroCutscene'
@@ -514,6 +515,7 @@ const Lesson4_12 = w4Lesson(12, ObstructionLesson, ObstructionLessonOverlay, "Ob
 const SCREENS = {
   ...(import.meta.env.DEV ? { modelview: ModelView } : {}), // dev: ?screen=modelview&m=null
   title: TitleScreen,
+  prologue: PrologueScreen,
   intro: IntroCutscene,
   level1: Level01,
   movie02: Movie02,
@@ -675,7 +677,7 @@ const W3_CHAIN = Object.fromEntries(
   ]),
 )
 Object.assign(W3_CHAIN, { moviec3: 'castle3', castle3: 'outroc3', outroc3: 'world4' })
-const NEXT = { ...W1_CHAIN, ...W4_CHAIN, ...W2_CHAIN, ...W3_CHAIN, castle0: 'world1', outroc0: 'world1', world1: 'movie1-1', world2: 'movie2-1', world3: 'movie3-1', world4: 'movie4-1', level1: 'movie02', movie02: 'lesson02', lesson02: 'level2', level2: 'movie03', movie03: 'lesson03', lesson03: 'level3', level3: 'movie04', movie04: 'lesson04', lesson04: 'level4', level4: 'movie05', movie05: 'lesson05', lesson05: 'level5', level5: 'movie06', movie06: 'lesson06', lesson06: 'level6', movie0b: 'lesson0b', lesson0b: 'level0b', level6: 'moviec0', moviec0: 'castle0' }
+const NEXT = { prologue: 'intro', ...W1_CHAIN, ...W4_CHAIN, ...W2_CHAIN, ...W3_CHAIN, castle0: 'world1', outroc0: 'world1', world1: 'movie1-1', world2: 'movie2-1', world3: 'movie3-1', world4: 'movie4-1', level1: 'movie02', movie02: 'lesson02', lesson02: 'level2', level2: 'movie03', movie03: 'lesson03', lesson03: 'level3', level3: 'movie04', movie04: 'lesson04', lesson04: 'level4', level4: 'movie05', movie05: 'lesson05', lesson05: 'level5', level5: 'movie06', movie06: 'lesson06', lesson06: 'level6', movie0b: 'lesson0b', lesson0b: 'level0b', level6: 'moviec0', moviec0: 'castle0' }
 
 export default function App() {
   const [screen, setScreen] = useState(
@@ -717,7 +719,7 @@ export default function App() {
         {...opts}
         onGo={go}
         concept={concept}
-        onNewGame={() => go('intro')}
+        onNewGame={() => go('prologue')}
         onSkipIntro={() => go('level1')}
         onIntroDone={() => go('level1')}
         onBackToTitle={() => go('title')}

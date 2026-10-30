@@ -1,0 +1,185 @@
+{
+  "id": "prologue",
+  "title": "The Road Round the Hollow",
+  "plays": "New Game, before the intro",
+  "world": 0,
+  "status": "scripted",
+  "story_start": 0,
+  "story_end": 74,
+  "pace": [
+    [
+      0,
+      null,
+      0.85
+    ]
+  ],
+  "synopsis": "Twenty years before the Crown. Ansel and Emmy run the Skeleton Foundry, pressing roads that nobody could get lost on. Ansel's daughter Wren carries the post. She takes the road round the Hollow in a storm and the rim gives way. Ansel searches the edge all night and finds only her satchel. Back at the Foundry he turns the presses on the world, forges the Crown and puts on the mask. Emmy names what he has become: Null.",
+  "scenes": [
+    {
+      "id": "A",
+      "start": 0,
+      "end": 13.5,
+      "title": "The Foundry, warm",
+      "description": "Firelight and the thump of presses. Ansel at the great press, Emmy at the bench."
+    },
+    {
+      "id": "B",
+      "start": 13.5,
+      "end": 27,
+      "title": "Wren",
+      "description": "Wren runs in with the post satchel and a lantern, kisses her father's sleeve, and heads out."
+    },
+    {
+      "id": "C",
+      "start": 27,
+      "end": 38,
+      "title": "The Hollow road",
+      "description": "Dusk and a storm. Wren walks the ring road round the Hollow. Lightning. The rim cracks and falls away; her lantern tumbles into the dark."
+    },
+    {
+      "id": "D",
+      "start": 38,
+      "end": 50,
+      "title": "The search",
+      "description": "Night and rain. Ansel at the broken edge with a lantern. He finds her satchel. Emmy arrives and cannot reach him."
+    },
+    {
+      "id": "E",
+      "start": 50,
+      "end": 68,
+      "title": "The Crown",
+      "description": "The Foundry gone cold and violet. Ansel works the press alone and forges a crown. He puts on a porcelain mask; the crown lights."
+    },
+    {
+      "id": "F",
+      "start": 68,
+      "end": 74,
+      "title": "Title",
+      "description": "Twenty years later."
+    }
+  ],
+  "captions": [
+    {
+      "t": 0.6,
+      "end": 5.0,
+      "speaker": "Narrator",
+      "hold": false,
+      "text": "Twenty years ago, at the Skeleton Foundry, they pressed the roads of the Winding World."
+    },
+    {
+      "t": 5.4,
+      "end": 9.2,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "Ansel, that press is running hot again. You'll flatten the bench."
+    },
+    {
+      "t": 9.4,
+      "end": 13.4,
+      "speaker": "Ansel",
+      "text": "Look at it, Emmy. Flat as a table. Nobody gets lost on a road like that."
+    },
+    {
+      "t": 14.2,
+      "end": 17.8,
+      "speaker": "Wren",
+      "text": "Dad! The post boat's late again. I'll take the Hollow road and be back for supper."
+    },
+    {
+      "t": 18.0,
+      "end": 21.4,
+      "speaker": "Ansel",
+      "text": "Go the long way round, by the lamps. And keep that lantern lit."
+    },
+    {
+      "t": 21.6,
+      "end": 24.8,
+      "speaker": "Wren",
+      "text": "Leave the lamp in the window. I'll see it from the bridge."
+    },
+    {
+      "t": 25.0,
+      "end": 27.4,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "She's your daughter, all right."
+    },
+    {
+      "t": 27.8,
+      "end": 32.0,
+      "speaker": "Narrator",
+      "hold": false,
+      "text": "The road round the Hollow had carried the post for a hundred years."
+    },
+    {
+      "t": 35.0,
+      "end": 38.0,
+      "speaker": "Narrator",
+      "hold": false,
+      "text": "That night, the rim gave way."
+    },
+    {
+      "t": 38.6,
+      "end": 41.2,
+      "speaker": "Ansel",
+      "text": "Wren? Wren!"
+    },
+    {
+      "t": 41.6,
+      "end": 45.0,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "Ansel, come away from the edge. Please. We'll search again at first light."
+    },
+    {
+      "t": 45.2,
+      "end": 49.8,
+      "speaker": "Ansel",
+      "text": "She went round it every day, Emmy. Every day it brought her home. Then it didn't."
+    },
+    {
+      "t": 50.6,
+      "end": 54.4,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "Ansel, that press was built for gravel. Put it down."
+    },
+    {
+      "t": 54.8,
+      "end": 59.0,
+      "speaker": "Ansel",
+      "text": "If nothing had a hole, nothing could fall through it. No one would ever wait at a window again."
+    },
+    {
+      "t": 59.4,
+      "end": 62.2,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "Flatten the Hollow and the whole island goes with it. Every house on it. Wren loved that road."
+    },
+    {
+      "t": 62.4,
+      "end": 66.8,
+      "speaker": "Ansel",
+      "text": "I left the lamp in the window all night, Emmy. I'm done leaving lamps. Call me nothing at all."
+    },
+    {
+      "t": 67.0,
+      "end": 68.8,
+      "speaker": "Emmy Boundary",
+      "portrait": "emmy-boundary",
+      "text": "…Null."
+    },
+    {
+      "t": 69.4,
+      "end": 73.6,
+      "speaker": "Narrator",
+      "hold": false,
+      "text": "Twenty years later, someone else set out with the post."
+    }
+  ],
+  "title_card": {
+    "t": 69.2,
+    "end": 74
+  }
+}

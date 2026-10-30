@@ -17,6 +17,7 @@ preloadModels('null')
  * `script(t)` → { gesture, crown, crownY }
  *   gesture: 0 hand at side … 1 hand thrust forward
  *   crown:   0..1 crown glow / beam charge
+ *   crownOn: false hides the crown (before he forged it) · mask: 0 bare-faced hood … 1 masked · bare: no fragments
  */
 
 const VIOLET = '#a259ff'
@@ -45,13 +46,22 @@ function shell(geo, d = 0.009) {
   return g
 }
 
-function NullPartInner({ name, rim = true }) {
+// Ansel's robes before the turn (the prologue): brown wool, not obsidian
+const WARM = {
+  robe: new THREE.MeshStandardMaterial({ color: '#5a3c28', roughness: 0.85 }),
+  robeDark: new THREE.MeshStandardMaterial({ color: '#3e2a1c', roughness: 0.9 }),
+  trim: new THREE.MeshStandardMaterial({ color: '#7a5636', roughness: 0.7 }),
+  chevron: new THREE.MeshStandardMaterial({ color: '#8a6a40', roughness: 0.6, metalness: 0.3 }),
+  glove: new THREE.MeshStandardMaterial({ color: '#4a3424', roughness: 0.7 }),
+}
+
+function NullPartInner({ name, rim = true, palette }) {
   const parts = useModelParts('null')
   const list = parts[name]
   if (!list) return null
   return list.map((p, i) => (
     <group key={i}>
-      <mesh geometry={p.geometry} material={p.material} />
+      <mesh geometry={p.geometry} material={(palette === 'warm' && WARM[p.material.name]) || p.material} />
       {rim && !NO_RIM.has(p.material.name) && <mesh geometry={shell(p.geometry)} material={RIM} />}
     </group>
   ))
@@ -157,13 +167,16 @@ export function NullCrown({ glowRef }) {
   )
 }
 
-export default function CountNull({ script, scale = 1 }) {
+export default function CountNull({ script, scale = 1, palette }) {
   const root = useRef()
   const arm = useRef()
   const forearm = useRef()
   const crown = useRef()
   const orb = useRef()
   const glowRef = useRef(0)
+  const maskG = useRef()
+  const lightA = useRef()
+  const fragG = useRef()
   const cur = useRef({ gesture: 0 })
 
   useFrame(({ clock }, dt) => {
@@ -176,17 +189,26 @@ export default function CountNull({ script, scale = 1 }) {
     arm.current.rotation.x = THREE.MathUtils.lerp(-0.5, -1.45, c.gesture)
     arm.current.rotation.z = THREE.MathUtils.lerp(0.42, 0.14, c.gesture)
     forearm.current.rotation.x = THREE.MathUtils.lerp(-1.0, -0.12, c.gesture)
+    crown.current.visible = s.crownOn !== false
+    maskG.current.visible = (s.mask ?? 1) > 0.5
+    fragG.current.visible = !s.bare
+    RIM.opacity = 0.85 * (s.rim ?? 1)
+    RIM.visible = (s.rim ?? 1) > 0.02
     crown.current.position.y = CROWN_Y + (s.crownY ?? 0) + Math.sin(t * 1.6) * 0.025
     crown.current.rotation.y = Math.sin(t * 0.3) * 0.5
-    orb.current.emissiveIntensity = 0.8 + s.crown * 2.5 + Math.sin(t * 2) * 0.2
+    const lit = s.rim ?? 1 // before the turn: no glow at all
+    orb.current.emissiveIntensity = (0.8 + s.crown * 2.5 + Math.sin(t * 2) * 0.2) * lit
+    if (lightA.current) lightA.current.intensity = 2.2 * lit
   })
 
   return (
     <group scale={scale}>
       <group ref={root}>
         {/* robes, drapes, the chevroned panel, the mantle and the pointed hood (sculpted) */}
-        <NullPart name="nl_body" />
-        <NullPart name="nl_mask" rim={false} />
+        <NullPart name="nl_body" palette={palette} />
+        <group ref={maskG}>
+          <NullPart name="nl_mask" rim={false} />
+        </group>
         {/* the chest orb and the collar orb */}
         <group position={[0, 1.72, 0.42]}>
           <mesh>
@@ -210,21 +232,21 @@ export default function CountNull({ script, scale = 1 }) {
 
         {/* resting (right) sleeve and curled hand */}
         <group position={[-0.36, 2.2, 0.02]} rotation={[0.05, 0, -0.12]}>
-          <NullPart name="nl_rest" />
+          <NullPart name="nl_rest" palette={palette} />
         </group>
 
         {/* raised (left) arm: open palm, fragments orbiting above it */}
         <group ref={arm} position={[0.36, 2.2, 0.02]}>
-          <NullPart name="nl_upper" />
+          <NullPart name="nl_upper" palette={palette} />
           <group ref={forearm} position={[0, -0.52, 0]}>
-            <NullPart name="nl_fore" />
-            <group position={[0, -0.72, 0.32]}>
+            <NullPart name="nl_fore" palette={palette} />
+            <group ref={fragG} position={[0, -0.72, 0.32]}>
               <Fragments />
             </group>
           </group>
         </group>
 
-        <pointLight position={[0.9, 2.6, 1.6]} color={VIOLET} intensity={2.2} distance={4} />
+        <pointLight ref={lightA} position={[0.9, 2.6, 1.6]} color={VIOLET} intensity={2.2} distance={4} />
         <pointLight position={[-0.7, 0.4, -0.9]} color="#ff9a3c" intensity={1.1} distance={2.6} />
       </group>
     </group>
