@@ -1,7 +1,11 @@
 import { useFrame } from '@react-three/fiber'
+import { Part, preloadModels } from './models'
 import { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Lightning, cached, merge, piece } from './Beasts'
+
+preloadModels('bestiary')
+const KLEIN_FLASH = new THREE.MeshStandardMaterial({ color: '#3a1e4e', emissive: '#d070ff', emissiveIntensity: 2 })
 
 /**
  * The topological bestiary (design/BESTIARY.md), past the Sphere and Torus. Each body IS its
@@ -149,7 +153,7 @@ export function ProjectiveSpawn({ e }) {
   const mist = useRef()
   const seam = useRef()
   const clock2 = useRef()
-  const geo = useMemo(() => surface(crossCap, 72, 28), [])
+  const seamMat = useMemo(() => new THREE.MeshBasicMaterial({ color: MAGENTA, toneMapped: false }), [])
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
     place(g.current, e, 0.75 + Math.sin(t * 1.7) * 0.08, 0.5)
@@ -158,7 +162,7 @@ export function ProjectiveSpawn({ e }) {
     const want = e.flipped ? 0 : Math.PI
     sheet.current.rotation.x += (want - sheet.current.rotation.x) * 0.15
     sheet.current.rotation.y = Math.sin(t * 0.8) * 0.4
-    seam.current.material.color.set(e.flipped ? '#5cf0ff' : MAGENTA)
+    seamMat.color.set(e.flipped ? '#5cf0ff' : MAGENTA)
     clock2.current.visible = !!e.flipped
     if (e.flipped) clock2.current.scale.setScalar(Math.max(0.05, (e.torsionClock || 0) / 2.2))
     mist.current.rotation.y = -t * 0.6
@@ -166,30 +170,19 @@ export function ProjectiveSpawn({ e }) {
   return (
     <group ref={g}>
       <group ref={sheet} rotation={[Math.PI, 0, 0]} scale={1.35}>
-        <mesh geometry={geo}>
-          <meshPhysicalMaterial color="#241236" emissive="#5a1a9a" emissiveIntensity={0.55} transparent opacity={0.9} roughness={0.25} clearcoat={0.8} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh geometry={geo} scale={1.04}>
-          <meshBasicMaterial color="#b070ff" side={THREE.BackSide} transparent opacity={0.4} toneMapped={false} depthWrite={false} />
-        </mesh>
-        {/* the line of self-intersection: the segment of the vertical axis where the sheet passes through itself */}
-        <mesh ref={seam} position={[0, -0.18, 0]}>
-          <cylinderGeometry args={[0.014, 0.014, 0.36, 6]} />
-          {glow(MAGENTA)}
+        {/* the cross-cap, sculpted (tools/bestiary_blender.py): a bowl below, a split dome above */}
+        <group rotation={[Math.PI, 0, 0]}>
+          <Part model="bestiary" name="projective" />
+        </group>
+        {/* the line of self-intersection down its cleft (cyan once flipped) */}
+        <group rotation={[Math.PI, 0, 0]}>
+          <Part model="bestiary" name="projective_seam" mats={{ glow: seamMat }} />
+        </group>
+        <mesh ref={seam} visible={false}>
+          <boxGeometry args={[0.01, 0.01, 0.01]} />
+          <meshBasicMaterial />
         </mesh>
       </group>
-      {/* glowing eyes, big enough to read from overhead */}
-      {[-1, 1].map((s) => (
-        <mesh key={s} position={[s * 0.12, 0.3, 0.24]}>
-          <sphereGeometry args={[0.06, 10, 8]} />
-          {glow('#f4e8ff')}
-        </mesh>
-      ))}
-      {/* the pinch point blazes: a star where the sheet meets itself */}
-      <mesh position={[0, 0.55, 0]} scale={[0.06, 0.12, 0.06]}>
-        <octahedronGeometry args={[1, 0]} />
-        {glow('#ff8cff')}
-      </mesh>
       {/* torsion countdown: shrinks to nothing as the 2.2 s window closes */}
       <mesh ref={clock2} position={[0, 0.85, 0]} rotation={[Math.PI / 2, 0, 0]} visible={false}>
         <torusGeometry args={[0.25, 0.025, 6, 32]} />
@@ -226,43 +219,17 @@ export const klein = (uu, vv) => {
 export function KleinSpawn({ e }) {
   const g = useRef()
   const body = useRef()
-  const geo = useMemo(() => {
-    const geom = surface(klein, 90, 28)
-    geom.center()
-    return geom
-  }, [])
   useFrame(({ clock }) => {
     const t = clock.elapsedTime + e.seed
     place(g.current, e, 0.95 + Math.sin(t * 1.4) * 0.05, 0.6)
-    body.current.rotation.z = Math.sin(t * 0.5) * 0.3 + (e.flipped ? Math.PI : 0) // the torsion pair: a single lash turns it over
+    body.current.rotation.z = Math.sin(t * 0.5) * 0.2 + (e.flipped ? Math.PI : 0) // the torsion pair: a single lash turns it over
   })
   return (
     <group ref={g}>
-      <group ref={body} rotation={[-Math.PI / 2 + 0.5, 0, 0]} scale={1.5}>
-        <mesh geometry={geo}>
-          <meshPhysicalMaterial color="#3a1e4e" roughness={0.2} metalness={0.2} clearcoat={1} emissive="#6a1ea0" emissiveIntensity={e.flash > 0 ? 2 : 0.55} side={THREE.DoubleSide} />
-        </mesh>
-        <mesh geometry={geo} scale={1.05}>
-          <meshBasicMaterial color="#c070ff" side={THREE.BackSide} transparent opacity={0.45} toneMapped={false} depthWrite={false} />
-        </mesh>
+      {/* the bottle, sculpted (tools/bestiary_blender.py): a toothed bulb, its ribbed neck plunging back in through its side */}
+      <group ref={body} scale={1.15}>
+        <Part model="bestiary" name="klein" mats={e.flash > 0 ? { shell: KLEIN_FLASH } : undefined} />
       </group>
-      {/* the maw on its flared base */}
-      <group position={[0, 0.05, 0.34]}>
-        {Array.from({ length: 10 }, (_, i) => {
-          const a = (i / 10) * Math.PI * 2
-          return (
-            <mesh key={i} position={[Math.cos(a) * 0.12, Math.sin(a) * 0.12, 0]} rotation={[0, 0, a + Math.PI / 2]}>
-              <coneGeometry args={[0.02, 0.07, 4]} />
-              {glow('#f0a8ff')}
-            </mesh>
-          )
-        })}
-      </group>
-      {/* where the neck pierces its own wall */}
-      <mesh position={[0.02, 0.05, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <torusGeometry args={[0.1, 0.012, 6, 24]} />
-        {glow(MAGENTA)}
-      </mesh>
       {e.hp <= 2 && (
         // free loop severed: a crack glows across the body
         <mesh position={[0, 0.12, 0.16]} rotation={[0, 0, 0.7]}>

@@ -617,7 +617,7 @@ export default function LevelCastle4({ onBackToTitle, onNext, onGo, startAt }) {
         <EmmyEndCard
           kicker="World 4 complete · The Null Crown is broken"
           title="The Null Crown"
-          learned="Higher homotopy groups are maps of spheres, abelian from π₂ on. Cellular approximation clears them below the dimension, and above it the Hopf map makes π₃(S²) ≅ ℤ. A fibration hands you a long exact sequence; Hurewicz matches πₙ with Hₙ only in the first degree. And Null’s last law fell: S² and S³ × ℂP∞ have the same groups, but Whitehead needs a map, and their k-invariants, the twists, are different. The twists are the space."
+          learned="Higher homotopy groups are maps of spheres, abelian from π₂ on. Cellular approximation clears them below the dimension, and above it the Hopf map makes π₃(S²) ≅ ℤ. A fibration hands you a long exact sequence; Hurewicz matches πₙ with Hₙ only in the first degree. And Null’s last law fell: S² and S³ × ℂP∞ have the same groups, but Whitehead needs a map, and their k-invariants, the twists, are different, so they are different spaces."
           ahead="Every place we proved is on the Chart: Haven’s winding, the sphere’s H₂, the torus’s cup product, the Hopf map, the twist in the tower. The Crown can’t fold any of them. There’s one delivery left, Gyroid. It’s addressed to me."
           definition={DEFINITION_CASTLE}
           defLabel="World 4 in the book (after Hatcher)"

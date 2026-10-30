@@ -192,7 +192,7 @@ function chartTexture() {
   g.textAlign = 'center'
   g.fillText('The Chart of the Winding World', W / 2, 66)
   g.font = 'italic 15px Georgia, serif'
-  g.fillText('E. Boundary, cartographer · delivered by Gyroid, courier', W / 2, 92)
+  g.fillText('E. Boundary, cartographer · delivered by Gyroid, post-runner', W / 2, 92)
   // the map: world x ∈ [-62, 62] → canvas, z ∈ [-95, 50]
   const X = (x) => 70 + ((x + 62) / 124) * (W - 140)
   const Y = (z) => 110 + ((z + 95) / 145) * (H - 170)

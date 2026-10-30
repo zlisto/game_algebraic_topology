@@ -52,7 +52,7 @@ export default function Level4_3(props) {
   }
 
   const renderRules = ({ current, goal, bag }) => {
-    const line = current === 'sort' ? `marked: ${Object.values(bag.bins || {}).filter(Boolean).length} / 4` : `couriers sent: ${Object.keys(bag.sent?.[current] || {}).length} / 3`
+    const line = current === 'sort' ? `marked: ${Object.values(bag.bins || {}).filter(Boolean).length} / 4` : `runners sent: ${Object.keys(bag.sent?.[current] || {}).length} / 3`
     return (
       <>
         <h3>{STATIONS[current].blueprint}</h3>

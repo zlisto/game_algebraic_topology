@@ -11,7 +11,7 @@ import { MovieFx, ShotCamera, within } from '../w2/shots'
 /**
  * Intro movie for World 4 · Level 3, "Weak Spot" (videos.json level-4-3-intro):
  *   A 0–8    two rooms of homotopy meters face each other
- *   B 8–18   couriers run along a map: every one arrives green
+ *   B 8–18   runners go along a map: every one arrives green
  *   C 18–22  another pair: the same numbers, but no route between them
  *   D 22–26  title card
  */

@@ -6,7 +6,7 @@
  * isomorphic homotopy groups but are not homotopy equivalent (their H₂ differ) — no map induces
  * those isomorphisms.
  *
- * Reading Wand (0): send a courier along f from one meter to its partner; sort a pair.
+ * Reading Wand (0): send a runner along f from one meter to its partner; sort a pair.
  */
 const E = (text) => ({ speaker: 'Emmy Boundary', portrait: 'emmy-boundary', text })
 const G = (text) => ({ speaker: 'Gyroid', portrait: 'gyroid', text })

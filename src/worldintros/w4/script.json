@@ -19,16 +19,16 @@
   ],
   "captions": [
     { "t": 0.6, "end": 6.6, "speaker": "Narrator", "hold": false, "text": "From the broken station they ran the viaduct north, until it ended in the air. Ahead stood the Postnikov Spire. At its top, the Crown burned." },
-    { "t": 7.4, "end": 9.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "He climbed his own tower. He’s waiting at the top." },
-    { "t": 9.8, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Each floor wraps one dimension higher. Loops down here. Spheres up there. And at the top, spheres wrapped round spheres." },
+    { "t": 7.4, "end": 9.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "Twenty years he’s been building that. He’ll be waiting at the top." },
+    { "t": 9.8, "end": 12.8, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Each floor wraps one dimension higher. Loops down here, spheres up there, and at the top, spheres wrapped round spheres." },
     { "t": 14.0, "end": 16.6, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "The Cube Hall. Squares and cubes with their whole edge pinned to one point. Every one of them is a sphere in disguise." },
     { "t": 18.0, "end": 20.6, "speaker": "Gyroid", "portrait": "gyroid", "text": "And those rings, higher up. Every one is linked through every other. Not one comes loose." },
     { "t": 22.2, "end": 25.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Near the top, the floors are twisted. Something holds them together that no single floor shows." },
     { "t": 29.9, "end": 33.2, "speaker": "Count Null", "portrait": "count-null", "text": "Emmy. Gyroid. You came all this way. I’m glad. I would hate for you to watch this from below." },
     { "t": 33.4, "end": 36.8, "speaker": "Count Null", "portrait": "count-null", "text": "Every floor of my Spire is one group. π₁, π₂, π₃. Give me the groups, and I can rebuild any space you love. The twists between them are ornament." },
-    { "t": 37.0, "end": 40.6, "speaker": "Count Null", "portrait": "count-null", "text": "So I will fold the ornaments first. Then the sky. Then you. It won’t hurt, I promise. A point has nowhere to fall." },
-    { "t": 41.2, "end": 44.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "You said every map S³ → S² is trivial. I’m going to find one that isn’t. Then I’m coming for that Crown." },
-    { "t": 44.2, "end": 47.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "Bend it, don’t break it, and prove it. First floor, Gyroid: the Cube Hall." }
+    { "t": 37.0, "end": 40.6, "speaker": "Count Null", "portrait": "count-null", "text": "So the twists go first, and then the rest. It won’t hurt, Gyroid. I promise you that. A point has nowhere to fall." },
+    { "t": 41.2, "end": 44.0, "speaker": "Gyroid", "portrait": "gyroid", "text": "You said every map S³ → S² is trivial. I’m going to find one that isn’t. Then I’m coming up to talk to you." },
+    { "t": 44.2, "end": 47.2, "speaker": "Emmy Boundary", "portrait": "emmy-boundary", "text": "One floor at a time. The Cube Hall first. Stay close to me on the stairs, Gyroid." }
   ],
   "title_card": { "t": 52, "end": 57 }
 }

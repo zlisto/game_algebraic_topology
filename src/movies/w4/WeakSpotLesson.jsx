@@ -11,8 +11,8 @@ import { LESSON_SHOTS, LessonBeats, MovieFx, ShotCamera, within } from '../w2/sh
 /**
  * Lesson for World 4 · Level 3, "Weak Spot" (videos.json level-4-3-lesson), Hatcher §4.1 pp. 346–348:
  *   A 0–12   weak homotopy equivalence: f_* iso on every πₙ
- *   B 12–24  S¹ ↪ ℝ² − 0: every courier green — Whitehead: a homotopy equivalence
- *   C 24–36  S² → point: the π₂ courier fails
+ *   B 12–24  S¹ ↪ ℝ² − 0: every runner green — Whitehead: a homotopy equivalence
+ *   C 24–36  S² → point: the π₂ runner fails
  *   D 36–46  ℝP² and S² × ℝP∞: same groups, no map
  *   E 46–58  sorting pairs
  *   F 58–64  how to play
@@ -41,8 +41,8 @@ export function WeakSpotLessonOverlay({ t }) {
         [12.4, 24, 'Whitehead', ['between connected CW complexes:', 'weak equivalence ⟹ homotopy equivalence']],
         [24.4, 36, 'A weak spot', ['$S² →$ point', '$π₂$: $ℤ → 0$ fails']],
         [36.4, 46, 'No map', ['ℝP², $S² × ℝP∞$: same $πₙ$', 'different $H₂$ — not equivalent']],
-        [46.4, 58, 'The certificate', ['a map', 'and every courier green']],
-        [58.4, 64, 'At the Weak Spot', ['Reading Wand (0)', 'send couriers, sort pairs']],
+        [46.4, 58, 'The certificate', ['a map', 'and every runner green']],
+        [58.4, 64, 'At the Weak Spot', ['Reading Wand (0)', 'send runners, sort pairs']],
       ]}
       summary={{ t: 64, title: 'Whitehead’s theorem', items: ['Iso on every $πₙ$, via a map', '⟹ homotopy equivalence (CW)', 'Numbers alone prove nothing'], cite: 'Hatcher §4.1, pp. 346–348 (Theorem 4.5)' }}
     />

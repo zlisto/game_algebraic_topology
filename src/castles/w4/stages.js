@@ -76,7 +76,7 @@ export const TRIALS = [
       ['f_pi3zero', 'h_abel', 'f_pi1abel'],
       ['h_degree', 'f_pi4s3', 'h_pi3s2'],
     ],
-    done: [N('Hm. You remember your spheres.'), N('Let us see if you remember how they hang together. Spawn: the cube sentries first.')],
+    done: [N('You remember your spheres. She taught you well.'), N('Now how they hang together. The cube sentries first, I think.')],
   },
   {
     name: 'Exact sequences',
@@ -90,14 +90,14 @@ export const TRIALS = [
       ['h_les3', 'f_hur3', 'h_loop'],
       ['f_les2', 'h_hur1', 'f_loopshift'],
     ],
-    done: [N('You read the row more carefully than she ever taught me to.'), N('Earring. Wraiths. Make him tired.')],
+    done: [N('You read the row more carefully than she ever taught me to.'), N('Earring. Wraiths. Make him tired, not hurt.')],
   },
   {
     name: 'Same groups, same space?',
     blurb: 'Same groups are not enough. Whitehead needs a map; the k-invariants hold the glue; an obstruction is a class.',
     intro: [
       N('Trial three. My law, Gyroid. Give me a space’s homotopy groups and I give you the space. Twists are ornament.'),
-      G('We climbed a tower that says otherwise.'),
+      G('We climbed a tower that says otherwise. The twists were holding it up.'),
       N('Then prove it again. Here. In front of my Crown.'),
     ],
     rounds: [
@@ -105,15 +105,18 @@ export const TRIALS = [
       ['f_rp2', 'h_obs', 'f_cochain'],
       ['f_ornament', 'h_kzero', 'h_torus'],
     ],
-    done: [N('…'), N('Every trial. Every one.'), N('Then I won’t argue any more. Shards — all of you.')],
+    done: [N('…'), N('Every card. You didn’t miss one.'), N('Then I’m done arguing. Shards, all of you.')],
   },
 ]
 
 export const OPENING = [
-  N('Welcome to the Crown, Gyroid. Emmy. You climbed every floor of my Spire to stand here.'),
+  N('Gyroid. Emmy. You climbed every floor of my Spire to stand here. I did wonder if you would.'),
   N('Look down. The whole Winding Way, every road that winds round a hole. From up here it would be so easy to make it quiet.'),
   E('It isn’t yours to make quiet, Null.'),
-  N('Three trials, as before. Then my Crown. Then, I think, a long rest for everyone.'),
+  G('I said I’d ask you about her when I got to the top. I’m at the top.'),
+  N('…Not here, Gyroid. Not with the Crown listening.'),
+  G('Then after. I’m not going anywhere.'),
+  N('Three trials, as before. Then my Crown. Then, I think, everyone gets to rest.'),
 ]
 
 /** The waves between trials, the hardest beasts in the bestiary. [type, x, z] (+ hp). */
@@ -142,28 +145,28 @@ export const FACETS = [
     law: 'Haven Ring is a point.',
     proofs: ['pf_pi2s1', 'pf_pi1s1', 'pf_conn'],
     answer: 'pf_pi1s1',
-    broke: [G('A loop that winds once never shrinks. Haven is not a point. Proved once, proved for good.')],
+    broke: [G('Haven’s road winds once round the lake, and a loop that winds once never shrinks. Haven isn’t a point. You don’t get it back.')],
   },
   {
     name: 'Sphere',
     law: 'The sphere is a point: every loop on it shrinks.',
     proofs: ['pf_h2', 'pf_below2', 'pf_pi1s2'],
     answer: 'pf_h2',
-    broke: [E('$H₂(S²) ≅ ℤ$. Loops can’t see the hole a sphere encloses. Homology can.')],
+    broke: [E('$H₂(S²) ≅ ℤ$. Every loop on a sphere shrinks, so loops can’t see the hollow inside. Homology counts the whole surface, and it can.')],
   },
   {
     name: 'Twins',
     law: 'The torus and $S¹ ∨ S¹ ∨ S²$ are the same: their counts match.',
     proofs: ['pf_homology', 'pf_chi', 'pf_cup'],
     answer: 'pf_cup',
-    broke: [G('Counts match, products don’t. The torus multiplies. Your twin can’t.')],
+    broke: [G('The counts match. The products don’t: on the torus $α ⌣ β$ isn’t zero, and on your twin every product is.')],
   },
   {
     name: 'Hopf',
     law: 'Every map $S³ → S²$ is trivial.',
     proofs: ['pf_hopf', 'pf_h3', 'pf_below3'],
     answer: 'pf_hopf',
-    broke: [E('Linked circles, every one. $π₃(S²) ≅ ℤ$, and the Hopf map generates it.')],
+    broke: [E('Every pair of circles linked once, and the exact row says why that matters: $π₃(S²) ≅ ℤ$, and the Hopf map generates it.')],
   },
   {
     name: 'Ornament',
@@ -178,7 +181,7 @@ export const FACETS = [
 export const PROOFS = {
   pf_pi1s1: { vis: 'helix', claim: '$π₁(S¹) ≅ ℤ$: a loop that winds once never shrinks' },
   pf_pi2s1: { vis: 'slip', claim: '$π₂(S¹) = 0$', why: 'True. And a point’s $π₂$ is $0$ as well. A fact both places share proves nothing about either.' },
-  pf_conn: { vis: 'loops', claim: '$S¹$ is path-connected', why: 'So is a point, little courier. That proves my case, not yours.' },
+  pf_conn: { vis: 'loops', claim: '$S¹$ is path-connected', why: 'So is a point, Gyroid. That proves my case, not yours.' },
   pf_h2: { vis: 'hurewicz', claim: '$H₂(S²) ≅ ℤ$: the sphere encloses a hole' },
   pf_pi1s2: { vis: 'slip', claim: '$π₁(S²) = 0$', why: 'That is my evidence, not yours. A point has $π₁ = 0$ too.' },
   pf_below2: { vis: 'stem', claim: '$πₖ(S²) = 0$ for $k < 2$', why: 'True below the dimension, and true of a point. You need something a point does not have.' },
@@ -196,11 +199,11 @@ export const PROOFS = {
 export const CROWN_INTRO = [
   N('You’ve broken my trials. The Crown remains.'),
   N('Five facets, Gyroid. One for every law I gave this world. Lash them all you like. A law falls only to a proof.'),
-  N('Shards. Take the courier.'),
+  N('Shards. Take him. Gently.'),
 ]
 /** The Commutator arrives, the first time a fury wave or the facets begin. */
 export const COMMUTATOR_ARRIVES = [
-  C('Courier. The shards are mine. Break his Crown.'),
+  C('You went back for me, runner. The shards are mine now. Break his Crown.'),
   N('Marshal. You were always so particular about order.'),
   C('$ab$ is not $ba$, master. And this world is not yours.'),
 ]
@@ -209,18 +212,20 @@ export const FACET_INTRO = (f) => [N(`Facet ${f + 1}. ${FACETS[f].law}`), E('Str
 
 /** Null shouts once, here, when the last facet breaks. */
 export const SHOUT = [
-  E('Same groups, different glue. $S²$’s first k-invariant is not zero. The twists are the space, Null.'),
-  N('ENOUGH! THEY ARE HOLES, EMMY! EVERY ONE OF THEM IS SOMEONE WHO DIDN’T COME HOME!'),
-  E('…I know. I lost him too.'),
+  E('Same groups, different glue. $S²$’s first k-invariant isn’t zero, and the product’s is. You can’t rebuild a place from its groups, Null.'),
+  N('They’re holes, Emmy! Every one of them is a road somebody didn’t come home on!'),
+  G('Tell me about her. Not the road. Her.'),
+  N('…She swung the lantern from the bridge, so I’d know she was nearly home. Every night. I’d see it and put the kettle on.'),
+  E('I know. I loved her too.'),
   N('Then help me close them.'),
   E('No. We put them on the Chart, so nobody gets lost in them again. That’s what we built the presses for.'),
-  C('The Crown is falling to the floor. Its seals. Six of them. Now, courier!'),
+  C('The Crown’s down on the dais. Six seals round it. Now, runner!'),
 ]
 
 export const FINALE = [
   N('…It was supposed to keep them safe.'),
   E('It was supposed to keep them found. We can still do that part. Together, if you want.'),
-  G('Every place on the Chart, Null. Haven too. Nobody gets folded now. Not even you.'),
+  G('Every place is on the Chart, Null. Haven too. Nobody gets folded now. Not even you.'),
 ]
 
 export const HINTS_CASTLE = {

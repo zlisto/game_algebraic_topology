@@ -3,11 +3,11 @@ import YardFrame from '../w2/YardFrame'
 
 /**
  * Weak Spot (4-3): Whitehead's theorem. Two rooms X and Y, each with a column of homotopy meters
- * π₁, π₂, π₃. A map f: X → Y sends couriers from each meter to the matching one; a courier glows
- * green when f* is an isomorphism on that πₙ. If every courier is green, f is a weak equivalence —
+ * π₁, π₂, π₃. A map f: X → Y sends runners from each meter to the matching one; a runner glows
+ * green when f* is an isomorphism on that πₙ. If every runner is green, f is a weak equivalence —
  * and between CW complexes, Whitehead says, a homotopy equivalence.
- *   match — S¹ ↪ ℝ² − 0: every courier green
- *   weak  — S² → a point: the π₂ courier fails
+ *   match — S¹ ↪ ℝ² − 0: every runner green
+ *   weak  — S² → a point: the π₂ runner fails
  *   nomap — ℝP² and S² × ℝP∞: the same groups, but no map to carry them
  *   sort  — four pairs: which does Whitehead certify?
  */

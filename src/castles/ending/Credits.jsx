@@ -44,7 +44,7 @@ const PEOPLE = [
 ]
 
 const CAST = [
-  ['Gyroid', 'a courier from Haven Ring'],
+  ['Gyroid', 'a post-runner from Haven Ring'],
   ['Emmy Boundary', 'cartographer; she built the presses'],
   ['Count Null', 'who lost someone on a road that wound away'],
   ['The Commutator', 'Null’s marshal, who turned at the Crown'],
